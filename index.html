@@ -398,6 +398,7 @@ function parseData(){
   horses.sort((a,b)=>b.norm-a.norm);
 
   const rname=document.getElementById('rname').value.trim();
+  currentRaceName = rname;
   document.getElementById('odds-race-tag').innerHTML=rname
     ?`<div class="race-tag">◎ ${rname}</div>`:'';
 
@@ -485,7 +486,7 @@ function calcAll(){
   }
 
   const fund=parseInt(document.getElementById('fund').value)||0;
-  const rname=document.getElementById('rname').value.trim()||'レース分析';
+  const rname=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
   if(!fund){alert('資金を入力してください');sw('setup');return;}
 
   const byNorm=[...horses].sort((a,b)=>b.norm-a.norm);
@@ -739,7 +740,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
 // ---- GitHub レース選択機能 ----
-let ghData = null; // 全日付データ { "2026-05-06": {races:[...]}, ... }
+let ghData = null;
+let currentRaceName = ''; // 全日付データ { "2026-05-06": {races:[...]}, ... }
 
 async function fetchRaceList(){
   const btn = document.getElementById('fetch-btn');
@@ -832,7 +834,7 @@ function onRaceChange(){
   horses.sort((a,b) => b.norm - a.norm);
 
   // Set race name
-  document.getElementById('rname') && (document.getElementById('rname').value = race.raceName);
+  currentRaceName = race.raceName;
 
   // Render horse list with normalized win rate
   const hl = document.getElementById('horse-list');
