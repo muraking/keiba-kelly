@@ -196,6 +196,26 @@ textarea:focus{border-color:var(--gold)}
       <div class="field"><label>総資金（円）</label>
         <input type="number" id="fund" placeholder="例: 10000" inputmode="numeric">
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field" style="margin-bottom:0">
+          <label>最大購入点数</label>
+          <select id="max-bets" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
+            <option value="1">1点</option>
+            <option value="2">2点</option>
+            <option value="3" selected>3点</option>
+            <option value="4">4点</option>
+            <option value="5">5点</option>
+            <option value="6">6点</option>
+            <option value="7">7点</option>
+            <option value="8">8点</option>
+            <option value="99">制限なし</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>最大投資額（円）</label>
+          <input type="number" id="max-invest" placeholder="制限なし" inputmode="numeric" style="height:40px">
+        </div>
+      </div>
     </div>
 
     <div style="margin-bottom:20px">
@@ -330,10 +350,20 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
     <div style="margin-bottom:16px">
-      <div class="sh">指数データを共有（管理者）</div>
-      <p class="hint">予想サイトから当日全レース分のテキストを貼り付けてGitHubに保存。他のユーザーが自動で読み込めます。</p>
+      <div class="sh">指数データを保存（管理者）</div>
+      <p class="hint">予想サイトから全レース分のテキストをまとめて貼り付け。日付を指定して保存できます。</p>
       <div class="field">
-        <textarea id="admin-raw" rows="12" placeholder="全レース分の指数テキストをまとめて貼り付け&#10;&#10;2026/5/6 門別 1R ...&#10;◎ 5 【72.2%】 アークオブライフ ...&#10;&#10;2026/5/6 門別 2R ...&#10;◎ 10 【72.6%】 セイランマクフィ ..."></textarea>
+        <label>対象日付（空欄=今日の日本時間）</label>
+        <input type="date" id="admin-date" style="width:100%;height:40px;padding:0 12px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
+      </div>
+      <div class="field">
+        <label>指数テキスト（全レース分まとめて）</label>
+        <textarea id="admin-raw" rows="10" placeholder="2026/5/6 門別 1R C4ー3 14:20 ダ1000 右 晴 良 [21.8]
+◎ 5 【72.2%】 アークオブライフ 小野楓馬 NaN [72.2];
+○ 6 【49.4%】 フレアリングバロン 桑村真明 NaN [61.8];
+...
+2026/5/6 門別 2R ...
+◎ 10 【72.6%】 セイランマクフィ ..."></textarea>
       </div>
       <button class="btn btn-green" onclick="saveToGitHub()" id="save-btn">
         ☁ GitHubに保存して共有
@@ -342,13 +372,11 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
     <div>
-      <div class="sh">共有データを読み込む（全ユーザー）</div>
-      <p class="hint">GitHubに保存された当日の指数データを読み込みます。</p>
-      <button class="btn btn-outline" onclick="loadFromGitHub()" style="height:40px;font-size:13px">
-        ↓ GitHubから指数を読み込む
+      <div class="sh">保存済みデータ管理（管理者）</div>
+      <button class="btn btn-outline" onclick="loadDateList()" style="height:38px;font-size:13px;margin-bottom:10px">
+        一覧を表示・更新
       </button>
-      <div id="load-status" style="margin-top:10px"></div>
-      <div id="race-list" style="margin-top:12px"></div>
+      <div id="date-list-area"></div>
     </div>
   </div>
 
@@ -489,25 +517,61 @@ function calcAll(){
   const rname=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
   if(!fund){alert('資金を入力してください');sw('setup');return;}
 
-  const byNorm=[...horses].sort((a,b)=>b.norm-a.norm);
-  const mainPool=byNorm.filter(h=>h.tanEV&&h.tanEV>100);
-  const top3=mainPool.slice(0,3);
-  const subPool=horses.filter(h=>h.tanEV&&h.tanEV>100&&h.tanEV<300&&!top3.includes(h))
-    .sort((a,b)=>b.tanEV-a.tanEV);
-  const sub1=subPool[0]||null;
-  const renders=[...top3.map((h,i)=>({...h,_t:'main',_r:i+1}))];
-  if(sub1) renders.push({...sub1,_t:'sub'});
+  const maxBets = parseInt(document.getElementById('max-bets')?.value)||3;
+  const maxInvest = parseInt(document.getElementById('max-invest')?.value)||Infinity;
 
-  let html=`<div class="race-tag" style="margin-bottom:14px">◎ ${rname}</div>`;
-  let ttl=0;
+  // 期待値100超の馬を抽出
+  const evPool = [...horses].filter(h=>h.tanEV&&h.tanEV>100);
+
+  let renders = [];
+  if(maxBets <= 4){
+    // 4点以内：勝率上位maxBets頭（元の動作）＋サブ1頭
+    const byNorm = evPool.sort((a,b)=>b.norm-a.norm);
+    const topN = byNorm.slice(0, maxBets).map((h,i)=>({...h,_t:'main',_r:i+1}));
+    const subPool = evPool.filter(h=>h.tanEV<300&&!topN.find(x=>x.num===h.num))
+      .sort((a,b)=>b.tanEV-a.tanEV);
+    renders = [...topN];
+    if(subPool[0] && topN.length < maxBets) renders.push({...subPool[0],_t:'sub'});
+    else if(subPool[0]) renders.push({...subPool[0],_t:'sub'});
+  } else {
+    // 5点以上：期待値高い順にmaxBets頭
+    renders = evPool
+      .sort((a,b)=>b.tanEV-a.tanEV)
+      .slice(0, maxBets)
+      .map((h,i)=>({...h,_t:'main',_r:i+1}));
+  }
+
+  const raceClassLabel = (typeof currentRaceClass !== 'undefined' && currentRaceClass) ? ` ${currentRaceClass}` : '';
+  const startTimeLabel = (typeof currentStartTime !== 'undefined' && currentStartTime) ? ` 発走${currentStartTime}` : '';
+  let html=`<div class="race-tag" style="margin-bottom:14px">◎ ${rname}${raceClassLabel}${startTimeLabel}</div>`;
+
+  // 各馬の賭け額を事前計算（ケリーf>0なら最低100円保証）
+  const betMap={};
+  renders.forEach(h=>{
+    if(!h.tanOdds){betMap[h.num]=0;return;}
+    const kf=halfKelly(h.norm,h.tanOdds);
+    betMap[h.num]=kf>0?Math.max(100,Math.floor(fund*kf/100)*100):0;
+  });
+
+  // 最大投資額を超える場合は按分して調整
+  let ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
+  if(ttl>0 && ttl>maxInvest){
+    const scale=maxInvest/ttl;
+    renders.forEach(h=>{
+      if(betMap[h.num]>0){
+        betMap[h.num]=Math.max(100,Math.floor(betMap[h.num]*scale/100)*100);
+      }
+    });
+    ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
+  }
 
   if(!renders.length){
     html+='<div class="msg">期待値100超の馬が見つかりません<br><small style="color:var(--text3)">オッズが入力されているか確認してください</small></div>';
   } else {
     for(const h of renders){
       const isM=h._t==='main';
-      let tb=0,fb=0;
-      if(h.tanOdds){tb=Math.floor(fund*halfKelly(h.norm,h.tanOdds)/100)*100;ttl+=tb;}
+      const tb=betMap[h.num]||0;
+      const kf=h.tanOdds?halfKelly(h.norm,h.tanOdds):0;
       const ev=h.tanEV,evS=ev?ev.toFixed(0):'−',evC=ev>=150?'g':ev>=100?'a':'';
       html+=`<div class="rc ${isM?'main':'sub'}">
         <div class="rc-top">
@@ -522,28 +586,35 @@ function calcAll(){
         <div class="divider"></div>`;
       if(h.tanOdds){
         const ret=tb>0?'→ ¥'+Math.round(tb*h.tanOdds).toLocaleString():'';
-        html+=`<div class="brow"><span class="brow-label">単勝 ${h.tanOdds}倍</span>
-          ${tb>0?`<span class="chip chip-g">¥${tb.toLocaleString()} ${ret}</span>`:'<span class="chip chip-na">推奨なし</span>'}
+        html+=`<div class="brow">
+          <span class="brow-label">単勝 ${h.tanOdds}倍<span style="font-size:10px;color:var(--text3);margin-left:6px">ケリー${(kf*100).toFixed(1)}%</span></span>
+          ${tb>0?`<span class="chip chip-g">¥${tb.toLocaleString()} ${ret}</span>`:'<span class="chip chip-na">推奨なし(f≦0)</span>'}
         </div>`;
       }
-
       html+='</div>';
     }
-    const used=ttl,rate=fund>0?(used/fund*100).toFixed(1):0;
+    const rate=fund>0?(ttl/fund*100).toFixed(1):0;
     html+=`<div class="total-box"><div class="sg">
-      <div class="sm"><div class="sl">合計投資額</div><div class="sv">¥${used.toLocaleString()}</div></div>
+      <div class="sm"><div class="sl">合計投資額</div><div class="sv">¥${ttl.toLocaleString()}</div></div>
       <div class="sm"><div class="sl">資金使用率</div><div class="sv ${parseFloat(rate)>30?'a':'g'}">${rate}%</div></div>
     </div></div>`;
   }
 
-  html+=`<div class="sh" style="margin-top:4px">全馬 期待値一覧</div>`;
-  const allS=[...horses].filter(h=>h.tanOdds).sort((a,b)=>(b.tanEV||0)-(a.tanEV||0));
+  html+=`<div class="sh" style="margin-top:4px">全馬 期待値一覧</div>
+  <div style="display:grid;grid-template-columns:24px 1fr 40px 44px 44px;gap:4px;padding:0 4px 6px;border-bottom:0.5px solid var(--border);margin-bottom:2px">
+    <span></span><span style="font-size:10px;color:var(--text3)">馬名</span>
+    <span style="font-size:10px;color:var(--text3);text-align:right">勝率</span>
+    <span style="font-size:10px;color:var(--text3);text-align:right">オッズ</span>
+    <span style="font-size:10px;color:var(--text3);text-align:right">期待値</span>
+  </div>`;
+  const allS=[...horses].sort((a,b)=>(b.tanEV||0)-(a.tanEV||0));
   for(const h of allS){
     const ev=h.tanEV,ec=ev>=150?'hi':ev>=100?'mid':'lo';
-    html+=`<div class="ev-row">
+    html+=`<div style="display:grid;grid-template-columns:24px 1fr 40px 44px 44px;gap:4px;align-items:center;padding:7px 4px;border-bottom:0.5px solid var(--border)">
       <div class="ev-num">${h.num}</div>
       <div class="ev-name">${h.name}</div>
       <div class="ev-pct">${(h.norm*100).toFixed(1)}%</div>
+      <div style="font-size:12px;font-weight:500;text-align:right;font-family:'DM Mono',monospace;color:var(--text2)">${h.tanOdds?h.tanOdds+'倍':'−'}</div>
       <div class="ev-val ${ec}">${ev?ev.toFixed(0):'−'}</div>
     </div>`;
   }
@@ -583,51 +654,76 @@ const GH_BRANCH = 'main';
 const GH_FILE = 'data/indices.json';
 const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
 
+// 日本時間で今日の日付を取得
+function getTodayJST(){
+  const now = new Date();
+  const jst = new Date(now.getTime() + 9*60*60*1000);
+  return jst.toISOString().split('T')[0];
+}
+
 function saveToken(){
   const t = document.getElementById('gh-token').value.trim();
   if(!t){alert('トークンを入力してください');return;}
   localStorage.setItem('kk_gh_token', t);
   document.getElementById('gh-token').value = '';
+  document.getElementById('gh-token').placeholder = 'トークン保存済み（変更する場合のみ入力）';
   alert('トークンを保存しました');
 }
 
 function loadToken(){
-  const t = localStorage.getItem('kk_gh_token') || '';
-  if(document.getElementById('gh-token')) document.getElementById('gh-token').value = '';
-  return t;
+  return localStorage.getItem('kk_gh_token') || '';
+}
+
+// 現在のJSONをGitHubから取得（SHA付き）
+async function getCurrentData(token){
+  try {
+    const r = await fetch(GH_API, { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }});
+    if(!r.ok) return { sha: null, data: { dates: {} } };
+    const meta = await r.json();
+    const content = JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+    // 旧フォーマット（単一日付）を新フォーマットに変換
+    if(!content.dates){
+      const dates = {};
+      if(content.date && content.races && content.races.length){
+        dates[content.date] = { races: content.races, updated: content.updated };
+      }
+      return { sha: meta.sha, data: { dates } };
+    }
+    return { sha: meta.sha, data: content };
+  } catch(e){
+    return { sha: null, data: { dates: {} } };
+  }
 }
 
 async function saveToGitHub(){
   const token = loadToken();
-  if(!token){alert('先にトークンを保存してください');return;}
+  if(!token){ alert('先にトークンを保存してください'); return; }
   const raw = document.getElementById('admin-raw').value.trim();
-  if(!raw){alert('指数データを貼り付けてください');return;}
+  if(!raw){ alert('指数データを貼り付けてください'); return; }
 
   const btn = document.getElementById('save-btn');
   const st = document.getElementById('save-status');
   btn.disabled = true;
-  st.innerHTML = '<div class="status st-warn"><span style="font-family:monospace">...</span> GitHubに保存中...</div>';
+  st.innerHTML = '<div class="status st-warn">... GitHubに保存中...</div>';
 
-  // Parse all races from raw text
   const allRaces = parseAllRaces(raw);
   if(!allRaces.length){
     st.innerHTML = '<div class="status st-err">レースデータを読み取れませんでした</div>';
-    btn.disabled = false;
-    return;
+    btn.disabled = false; return;
   }
 
-  const today = new Date().toISOString().split('T')[0];
-  const payload = { date: today, races: allRaces, updated: new Date().toISOString() };
+  // 日付入力欄から日付を取得（なければJST今日）
+  const dateInput = document.getElementById('admin-date').value;
+  const targetDate = dateInput || getTodayJST();
 
   try {
-    // Get current SHA if file exists
-    let sha = null;
-    try {
-      const r = await fetch(GH_API, { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }});
-      if(r.ok){ const d = await r.json(); sha = d.sha; }
-    } catch(e){}
+    const { sha, data } = await getCurrentData(token);
+    // 指定日付のデータを追記・上書き
+    data.dates[targetDate] = { races: allRaces, updated: new Date().toISOString() };
 
-    const body = { message: `Update indices ${today}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2)))), branch: GH_BRANCH };
+    const json = JSON.stringify(data, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(json)));
+    const body = { message: `Update indices ${targetDate}`, content: encoded, branch: GH_BRANCH };
     if(sha) body.sha = sha;
 
     const res = await fetch(GH_API, {
@@ -637,7 +733,9 @@ async function saveToGitHub(){
     });
 
     if(res.ok){
-      st.innerHTML = `<div class="status st-ok">✓ ${allRaces.length}レースを保存しました（${today}）</div>`;
+      const dateCount = Object.keys(data.dates).length;
+      st.innerHTML = `<div class="status st-ok">✓ ${targetDate} に ${allRaces.length}レースを保存しました（計${dateCount}日分）</div>`;
+      document.getElementById('admin-raw').value = '';
     } else {
       const err = await res.json();
       st.innerHTML = `<div class="status st-err">エラー: ${err.message}</div>`;
@@ -648,100 +746,61 @@ async function saveToGitHub(){
   btn.disabled = false;
 }
 
-async function loadFromGitHub(){
-  const st = document.getElementById('load-status');
-  const rl = document.getElementById('race-list');
-  st.innerHTML = '<div class="status st-warn">読み込み中...</div>';
-  rl.innerHTML = '';
+async function deleteDate(date){
+  if(!confirm(`${date} のデータを削除しますか？`)) return;
+  const token = loadToken();
+  if(!token){ alert('トークンが必要です'); return; }
 
   try {
-    // Use raw.githubusercontent.com for public read (no token needed)
-    const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
-    const res = await fetch(url);
-    if(!res.ok) throw new Error('ファイルが見つかりません。まだ保存されていない可能性があります。');
-    const data = await res.json();
+    const { sha, data } = await getCurrentData(token);
+    if(!data.dates[date]){ alert('データが見つかりません'); return; }
+    delete data.dates[date];
 
-    const today = new Date().toISOString().split('T')[0];
-    const dateLabel = data.date === today ? '今日' : data.date;
-    st.innerHTML = `<div class="status st-ok">✓ ${dateLabel}のデータ: ${data.races.length}レース</div>`;
+    const json = JSON.stringify(data, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(json)));
+    const body = { message: `Delete indices ${date}`, content: encoded, branch: GH_BRANCH, sha };
 
-    // Build race selection list
-    rl.innerHTML = '<div class="sh" style="margin-top:12px">レースを選択して設定タブへ</div>';
-    for(const race of data.races){
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-outline';
-      btn.style.cssText = 'margin-bottom:8px;height:auto;padding:10px 14px;text-align:left;display:block';
-      btn.innerHTML = `<div style="font-size:13px;font-weight:500;color:var(--text)">${race.raceName}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${race.horses.length}頭</div>`;
-      btn.onclick = () => loadRaceToSetup(race);
-      rl.appendChild(btn);
+    const res = await fetch(GH_API, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if(res.ok){
+      document.getElementById('save-status').innerHTML = `<div class="status st-ok">✓ ${date} を削除しました</div>`;
+      loadDateList();
+    } else {
+      alert('削除に失敗しました');
     }
   } catch(e){
-    st.innerHTML = `<div class="status st-err">${e.message}</div>`;
+    alert('エラー: ' + e.message);
   }
 }
 
-function loadRaceToSetup(race){
-  // Set race name
-  document.getElementById('rname').value = race.raceName;
-  // Set raw text area (rebuild from parsed data)
-  const lines = race.horses.map(h => {
-    const mark = h.rank===1?'◎':h.rank===2?'○':h.rank===3?'▲':h.rank===4?'△':h.rank===5?'☆':'－';
-    return `${mark} ${h.num} 【${h.pct.toFixed(1)}%】 ${h.name} 騎手 NaN [0]`;
-  });
-  document.getElementById('raw').value = lines.join('\n');
-  // Parse and go to odds tab
-  parseData();
-  sw('odds');
+async function loadDateList(){
+  const token = loadToken();
+  const st = document.getElementById('date-list-area');
+  if(!token){ st.innerHTML = ''; return; }
+  try {
+    const { data } = await getCurrentData(token);
+    const dates = Object.keys(data.dates).sort().reverse();
+    if(!dates.length){ st.innerHTML = '<p style="font-size:12px;color:var(--text3)">保存済みデータなし</p>'; return; }
+    st.innerHTML = dates.map(d => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)">
+        <div>
+          <div style="font-size:13px;color:var(--text)">${d}</div>
+          <div style="font-size:11px;color:var(--text2)">${data.dates[d].races.length}レース</div>
+        </div>
+        <button onclick="deleteDate('${d}')" style="background:var(--red-bg);border:0.5px solid rgba(248,113,113,0.3);color:var(--red);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit">削除</button>
+      </div>`).join('');
+  } catch(e){}
 }
 
-function parseAllRaces(raw){
-  const races = [];
-  // Split into race blocks by detecting race header lines
-  const lines = raw.split(/[;\n]/).map(l=>l.trim()).filter(l=>l);
-  let currentRace = null;
-  let currentHorses = [];
-  let raceNameBuffer = '';
-
-  for(const line of lines){
-    // Detect race header: contains year/date pattern and R (race number)
-    const headerM = line.match(/(\d{4}\/\d{1,2}\/\d{1,2}\s+.+?\s+\d+R\s+.+?)(?:\s+\d+:\d+)?/);
-    if(headerM && !line.match(/[◎○▲△☆－]/)){
-      // Save previous race
-      if(currentRace && currentHorses.length){
-        races.push({ raceName: currentRace, horses: currentHorses });
-      }
-      currentRace = headerM[1].replace(/\s+/g,' ').trim();
-      currentHorses = [];
-      continue;
-    }
-
-    // Detect horse line
-    let m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+\d+\([+-]?\d+\)/);
-    if(!m) m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+NaN/);
-    if(m && currentRace){
-      const markToRank = {'◎':1,'○':2,'▲':3,'△':4,'☆':5,'－':6};
-      currentHorses.push({ rank: markToRank[m[1]]||6, num: parseInt(m[2]), pct: parseFloat(m[3]), name: m[4].trim() });
-    }
-  }
-  // Last race
-  if(currentRace && currentHorses.length){
-    races.push({ raceName: currentRace, horses: currentHorses });
-  }
-  return races;
-}
-
-// Load token into field on admin tab open
-document.addEventListener('DOMContentLoaded', ()=>{
-  const saved = localStorage.getItem('kk_gh_token');
-  // don't show token in field, just indicate saved
-  const field = document.getElementById('gh-token');
-  if(field && saved) field.placeholder = 'トークン保存済み（変更する場合のみ入力）';
-});
-
-
-// ---- GitHub レース選択機能 ----
+// ---- GitHub レース選択（設定タブ）----
 let ghData = null;
-let currentRaceName = ''; // 全日付データ { "2026-05-06": {races:[...]}, ... }
+let currentRaceName = '';
+let currentRaceClass = '';
+let currentStartTime = '';
 
 async function fetchRaceList(){
   const btn = document.getElementById('fetch-btn');
@@ -754,39 +813,33 @@ async function fetchRaceList(){
     const res = await fetch(url);
     if(!res.ok) throw new Error('データが見つかりません。共有タブから保存してください。');
     const data = await res.json();
-    if(!data.races || !data.races.length) throw new Error('レースデータが空です。共有タブから保存してください。');
 
-    // Build date map: support both single-date and multi-date formats
-    ghData = {};
-    if(data.dates) {
-      // multi-date format
+    // 新旧フォーマット対応
+    if(data.dates){
       ghData = data.dates;
+    } else if(data.races && data.races.length){
+      ghData = {};
+      ghData[data.date || '不明'] = { races: data.races };
     } else {
-      // single-date format (current)
-      const key = data.date || '不明';
-      ghData[key] = { races: data.races };
+      throw new Error('レースデータが空です。共有タブから保存してください。');
     }
 
-    // Populate date select
     const ds = document.getElementById('date-select');
     ds.innerHTML = '<option value="">-- 日付を選択 --</option>';
     Object.keys(ghData).sort().reverse().forEach(d => {
       const opt = document.createElement('option');
       opt.value = d;
-      opt.textContent = d + '（' + ghData[d].races.length + 'レース）';
+      opt.textContent = `${d}（${ghData[d].races.length}レース）`;
       ds.appendChild(opt);
     });
 
-    // If only one date, auto-select
+    // 1日分しかない場合は自動選択
     const dates = Object.keys(ghData);
-    if(dates.length === 1){
-      ds.value = dates[0];
-      onDateChange();
-    }
+    if(dates.length === 1){ ds.value = dates[0]; onDateChange(); }
 
     document.getElementById('date-area').style.display = 'block';
     st.innerHTML = `<div class="status st-ok">✓ ${Object.keys(ghData).length}日分のデータを取得しました</div>`;
-  } catch(e) {
+  } catch(e){
     st.innerHTML = `<div class="status st-err">${e.message}</div>`;
   }
   btn.disabled = false;
@@ -794,55 +847,55 @@ async function fetchRaceList(){
 
 function onDateChange(){
   const date = document.getElementById('date-select').value;
-  const raceArea = document.getElementById('race-select-area');
-  const preview = document.getElementById('horse-preview');
-  preview.style.display = 'none';
+  document.getElementById('race-select-area').style.display = 'none';
+  document.getElementById('horse-preview').style.display = 'none';
   horses = [];
-
-  if(!date || !ghData[date]){ raceArea.style.display = 'none'; return; }
+  if(!date || !ghData[date]) return;
 
   const rs = document.getElementById('race-select');
   rs.innerHTML = '<option value="">-- レースを選択 --</option>';
   ghData[date].races.forEach((race, i) => {
     const opt = document.createElement('option');
     opt.value = i;
-    opt.textContent = race.raceName;
+    const timeStr = race.startTime ? ` ${race.startTime}` : '';
+    const classStr = race.raceClass ? ` ${race.raceClass}` : '';
+    opt.textContent = `${race.raceName}${timeStr}${classStr}`;
     rs.appendChild(opt);
   });
-  raceArea.style.display = 'block';
+  document.getElementById('race-select-area').style.display = 'block';
 }
 
 function onRaceChange(){
   const date = document.getElementById('date-select').value;
   const idx = document.getElementById('race-select').value;
   const preview = document.getElementById('horse-preview');
-  if(!date || idx === '' || !ghData[date]) { preview.style.display = 'none'; return; }
+  if(!date || idx === '' || !ghData[date]){ preview.style.display = 'none'; return; }
 
   const race = ghData[date].races[parseInt(idx)];
   if(!race){ preview.style.display = 'none'; return; }
 
-  // Set horses
   const tot = race.horses.reduce((s,h) => s + h.pct, 0);
   horses = race.horses.map(h => ({
-    num: h.num,
-    pct: h.pct,
-    name: h.name,
-    norm: h.pct / tot,
-    tanOdds: null,
-    fukuOdds: null
+    num: h.num, pct: h.pct, name: h.name,
+    norm: h.pct / tot, tanOdds: null, fukuOdds: null
   }));
   horses.sort((a,b) => b.norm - a.norm);
-
-  // Set race name
   currentRaceName = race.raceName;
+  currentRaceClass = race.raceClass || '';
+  currentStartTime = race.startTime || '';
 
-  // Render horse list with normalized win rate
+  // レース情報ヘッダー表示
   const hl = document.getElementById('horse-list');
-  hl.innerHTML = '';
+  const classStr = race.raceClass || '';
+  const timeStr = race.startTime || '';
+  hl.innerHTML = `<div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;margin-bottom:10px">
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${race.raceName}</div>
+    ${classStr ? `<div style="font-size:12px;color:var(--gold);margin-bottom:2px">${classStr}</div>` : ''}
+    ${timeStr ? `<div style="font-size:12px;color:var(--text2)">発走 ${timeStr}</div>` : ''}
+  </div>`;
   const marks = ['◎','○','▲','△','☆'];
   horses.forEach((h, i) => {
     const mark = i < 5 ? marks[i] : '－';
-    const bar = Math.round(h.norm * 100);
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--border)';
     row.innerHTML = `
@@ -855,7 +908,6 @@ function onRaceChange(){
       </div>`;
     hl.appendChild(row);
   });
-
   preview.style.display = 'block';
   document.getElementById('nb-setup').classList.add('done');
 }
@@ -865,6 +917,53 @@ function goToOdds(){
   buildManual();
   sw('odds');
 }
+
+function parseAllRaces(raw){
+  const races = [];
+  const lines = raw.split(/[;\n]/).map(l => l.trim()).filter(l => l);
+  let current = null;
+  let currentHorses = [];
+
+  for(const line of lines){
+    // レースヘッダー検出: 年/月/日 競馬場 NR クラス名 時刻 ...
+    const hm = line.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\S+)\s+(\d+R)\s+(.+?)\s+(\d{1,2}:\d{2})\s+/);
+    if(hm && !line.match(/[◎○▲△☆－]/)){
+      if(current && currentHorses.length){
+        races.push({ ...current, horses: currentHorses });
+      }
+      const month = hm[2], day = hm[3], venue = hm[4], rnum = hm[5];
+      const raceClass = hm[6].trim();
+      const startTime = hm[7];
+      current = {
+        raceName: `${month}/${day} ${venue} ${rnum}`,
+        raceClass,
+        startTime,
+        venue,
+        raceNum: rnum
+      };
+      currentHorses = [];
+      continue;
+    }
+
+    // 馬データ検出（体重あり・なし両対応）
+    let m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+\d+\([+-]?\d+\)/);
+    if(!m) m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+NaN/);
+    if(m && current){
+      const markToRank = {'◎':1,'○':2,'▲':3,'△':4,'☆':5,'－':6};
+      currentHorses.push({ rank: markToRank[m[1]]||6, num: parseInt(m[2]), pct: parseFloat(m[3]), name: m[4].trim() });
+    }
+  }
+  if(current && currentHorses.length){
+    races.push({ ...current, horses: currentHorses });
+  }
+  return races;
+}
+
+window.addEventListener('load', ()=>{
+  const saved = localStorage.getItem('kk_gh_token');
+  const field = document.getElementById('gh-token');
+  if(field && saved) field.placeholder = 'トークン保存済み（変更する場合のみ入力）';
+});
 
 </script>
 </body>
