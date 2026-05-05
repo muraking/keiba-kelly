@@ -338,7 +338,7 @@ textarea:focus{border-color:var(--gold)}
 let horses=[], mode='manual';
 
 function sw(t){
-  ['setup','odds','result'].forEach(n=>{
+  ['setup','odds','result','admin'].forEach(n=>{
     document.getElementById('p-'+n).classList.toggle('on',n===t);
     document.getElementById('nb-'+n).classList.toggle('on',n===t);
   });
