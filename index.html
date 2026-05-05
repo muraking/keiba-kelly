@@ -196,21 +196,46 @@ textarea:focus{border-color:var(--gold)}
       <div class="field"><label>総資金（円）</label>
         <input type="number" id="fund" placeholder="例: 10000" inputmode="numeric">
       </div>
-      <div class="field"><label>レース名（任意）</label>
-        <input type="text" id="rname" placeholder="例: 園田11R 兵庫CS">
+    </div>
+
+    <div style="margin-bottom:20px">
+      <div class="sh">GitHubからレースを選択</div>
+      <button class="btn btn-gold" onclick="fetchRaceList()" id="fetch-btn" style="margin-bottom:10px">
+        ↓ レース一覧を読み込む
+      </button>
+      <div id="fetch-status"></div>
+      <div id="date-area" style="display:none">
+        <div class="field" style="margin-top:10px">
+          <label>日付</label>
+          <select id="date-select" onchange="onDateChange()" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
+            <option value="">-- 日付を選択 --</option>
+          </select>
+        </div>
+        <div class="field" id="race-select-area" style="display:none">
+          <label>レース</label>
+          <select id="race-select" onchange="onRaceChange()" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
+            <option value="">-- レースを選択 --</option>
+          </select>
+        </div>
       </div>
     </div>
+
+    <div id="horse-preview" style="display:none;margin-bottom:20px">
+      <div class="sh">出走馬・正規化勝率</div>
+      <div id="horse-list"></div>
+      <button class="btn btn-green" onclick="goToOdds()" style="margin-top:12px">
+        ▶ オッズ入力へ
+      </button>
+    </div>
+
     <div>
-      <div class="sh">指数データ</div>
-      <p class="hint">予想サイトの1レース分テキストをそのまま貼り付け</p>
+      <div class="sh">手動入力</div>
+      <p class="hint" style="margin-bottom:8px">GitHubにデータがない場合はこちら</p>
       <div class="field">
-        <textarea id="raw" rows="10" placeholder="◎ 1 【69.1%】 サトノボヤージュ 戸崎圭太 NaN [66.2];
-○ 3 【63.6%】 スマートジュリアス 武豊 NaN [63.9];
-▲ 6 【57.5%】 エコロレーヴ 團野大成 NaN [61.2];
-△ 7 【40.6%】 エブリーポッシブル 岩田望来 NaN [53.8];
+        <textarea id="raw" rows="6" placeholder="◎ 1 【69.1%】 サトノボヤージュ 戸崎圭太 NaN [66.2];
 ..."></textarea>
       </div>
-      <button class="btn btn-gold" onclick="parseData()">▶ 指数を読み込む</button>
+      <button class="btn btn-outline" onclick="parseData()" style="height:40px;font-size:13px">▶ 手動で読み込む</button>
     </div>
 
   </div>
@@ -711,6 +736,133 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const field = document.getElementById('gh-token');
   if(field && saved) field.placeholder = 'トークン保存済み（変更する場合のみ入力）';
 });
+
+
+// ---- GitHub レース選択機能 ----
+let ghData = null; // 全日付データ { "2026-05-06": {races:[...]}, ... }
+
+async function fetchRaceList(){
+  const btn = document.getElementById('fetch-btn');
+  const st = document.getElementById('fetch-status');
+  btn.disabled = true;
+  st.innerHTML = '<div class="status st-warn">読み込み中...</div>';
+
+  try {
+    const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('データが見つかりません。共有タブから保存してください。');
+    const data = await res.json();
+    if(!data.races || !data.races.length) throw new Error('レースデータが空です。共有タブから保存してください。');
+
+    // Build date map: support both single-date and multi-date formats
+    ghData = {};
+    if(data.dates) {
+      // multi-date format
+      ghData = data.dates;
+    } else {
+      // single-date format (current)
+      const key = data.date || '不明';
+      ghData[key] = { races: data.races };
+    }
+
+    // Populate date select
+    const ds = document.getElementById('date-select');
+    ds.innerHTML = '<option value="">-- 日付を選択 --</option>';
+    Object.keys(ghData).sort().reverse().forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d;
+      opt.textContent = d + '（' + ghData[d].races.length + 'レース）';
+      ds.appendChild(opt);
+    });
+
+    // If only one date, auto-select
+    const dates = Object.keys(ghData);
+    if(dates.length === 1){
+      ds.value = dates[0];
+      onDateChange();
+    }
+
+    document.getElementById('date-area').style.display = 'block';
+    st.innerHTML = `<div class="status st-ok">✓ ${Object.keys(ghData).length}日分のデータを取得しました</div>`;
+  } catch(e) {
+    st.innerHTML = `<div class="status st-err">${e.message}</div>`;
+  }
+  btn.disabled = false;
+}
+
+function onDateChange(){
+  const date = document.getElementById('date-select').value;
+  const raceArea = document.getElementById('race-select-area');
+  const preview = document.getElementById('horse-preview');
+  preview.style.display = 'none';
+  horses = [];
+
+  if(!date || !ghData[date]){ raceArea.style.display = 'none'; return; }
+
+  const rs = document.getElementById('race-select');
+  rs.innerHTML = '<option value="">-- レースを選択 --</option>';
+  ghData[date].races.forEach((race, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = race.raceName;
+    rs.appendChild(opt);
+  });
+  raceArea.style.display = 'block';
+}
+
+function onRaceChange(){
+  const date = document.getElementById('date-select').value;
+  const idx = document.getElementById('race-select').value;
+  const preview = document.getElementById('horse-preview');
+  if(!date || idx === '' || !ghData[date]) { preview.style.display = 'none'; return; }
+
+  const race = ghData[date].races[parseInt(idx)];
+  if(!race){ preview.style.display = 'none'; return; }
+
+  // Set horses
+  const tot = race.horses.reduce((s,h) => s + h.pct, 0);
+  horses = race.horses.map(h => ({
+    num: h.num,
+    pct: h.pct,
+    name: h.name,
+    norm: h.pct / tot,
+    tanOdds: null,
+    fukuOdds: null
+  }));
+  horses.sort((a,b) => b.norm - a.norm);
+
+  // Set race name
+  document.getElementById('rname') && (document.getElementById('rname').value = race.raceName);
+
+  // Render horse list with normalized win rate
+  const hl = document.getElementById('horse-list');
+  hl.innerHTML = '';
+  const marks = ['◎','○','▲','△','☆'];
+  horses.forEach((h, i) => {
+    const mark = i < 5 ? marks[i] : '－';
+    const bar = Math.round(h.norm * 100);
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--border)';
+    row.innerHTML = `
+      <div style="width:18px;font-size:13px;color:var(--gold);flex-shrink:0;text-align:center">${mark}</div>
+      <div style="width:26px;height:26px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);color:var(--gold);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace">${h.num}</div>
+      <span style="flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.name}</span>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:13px;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</div>
+        <div style="font-size:10px;color:var(--text3)">指数${h.pct.toFixed(1)}%</div>
+      </div>`;
+    hl.appendChild(row);
+  });
+
+  preview.style.display = 'block';
+  document.getElementById('nb-setup').classList.add('done');
+}
+
+function goToOdds(){
+  if(!horses.length){ alert('レースを選択してください'); return; }
+  buildManual();
+  sw('odds');
+}
 
 </script>
 </body>
