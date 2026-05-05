@@ -202,8 +202,8 @@ textarea:focus{border-color:var(--gold)}
           <select id="max-bets" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
             <option value="1">1点</option>
             <option value="2">2点</option>
-            <option value="3" selected>3点</option>
-            <option value="4">4点</option>
+            <option value="3">3点</option>
+            <option value="4" selected>4点</option>
             <option value="5">5点</option>
             <option value="6">6点</option>
             <option value="7">7点</option>
@@ -517,25 +517,35 @@ function calcAll(){
   const rname=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
   if(!fund){alert('資金を入力してください');sw('setup');return;}
 
-  const maxBets = parseInt(document.getElementById('max-bets')?.value)||3;
+  const maxBets = parseInt(document.getElementById('max-bets')?.value)||4;
   const maxInvest = parseInt(document.getElementById('max-invest')?.value)||Infinity;
 
   // 期待値100超の馬を抽出
   const evPool = [...horses].filter(h=>h.tanEV&&h.tanEV>100);
 
   let renders = [];
-  if(maxBets <= 4){
-    // 4点以内：勝率上位maxBets頭（元の動作）＋サブ1頭
-    const byNorm = evPool.sort((a,b)=>b.norm-a.norm);
-    const topN = byNorm.slice(0, maxBets).map((h,i)=>({...h,_t:'main',_r:i+1}));
-    const subPool = evPool.filter(h=>h.tanEV<300&&!topN.find(x=>x.num===h.num))
-      .sort((a,b)=>b.tanEV-a.tanEV);
-    renders = [...topN];
-    if(subPool[0] && topN.length < maxBets) renders.push({...subPool[0],_t:'sub'});
-    else if(subPool[0]) renders.push({...subPool[0],_t:'sub'});
+  if(maxBets <= 3){
+    // 1〜3点：勝率が高く期待値100超の馬をmaxBets頭
+    renders = [...evPool]
+      .sort((a,b)=>b.norm-a.norm)
+      .slice(0, maxBets)
+      .map((h,i)=>({...h,_t:'main',_r:i+1}));
+
+  } else if(maxBets === 4){
+    // 4点：勝率上位3頭＋サブ1頭（期待値100超・300未満・勝率上位3頭以外で期待値最高）
+    const top3 = [...evPool]
+      .sort((a,b)=>b.norm-a.norm)
+      .slice(0, 3)
+      .map((h,i)=>({...h,_t:'main',_r:i+1}));
+    const sub = [...evPool]
+      .filter(h=>h.tanEV<300&&!top3.find(x=>x.num===h.num))
+      .sort((a,b)=>b.tanEV-a.tanEV)[0];
+    renders = [...top3];
+    if(sub) renders.push({...sub,_t:'sub'});
+
   } else {
     // 5点以上：期待値高い順にmaxBets頭
-    renders = evPool
+    renders = [...evPool]
       .sort((a,b)=>b.tanEV-a.tanEV)
       .slice(0, maxBets)
       .map((h,i)=>({...h,_t:'main',_r:i+1}));
