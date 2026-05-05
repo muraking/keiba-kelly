@@ -216,6 +216,14 @@ textarea:focus{border-color:var(--gold)}
           <input type="number" id="max-invest" placeholder="制限なし" inputmode="numeric" style="height:40px">
         </div>
       </div>
+      <div class="field" style="margin-top:10px;margin-bottom:0">
+        <label>ケリー基準</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px">
+          <button id="kelly-half" class="kelly-btn kelly-on" onclick="setKelly('half')">ハーフ<br><span style="font-size:10px;opacity:.7">×1/2</span></button>
+          <button id="kelly-quarter" class="kelly-btn" onclick="setKelly('quarter')">クォーター<br><span style="font-size:10px;opacity:.7">×1/4</span></button>
+          <button id="kelly-full" class="kelly-btn" onclick="setKelly('full')">フル<br><span style="font-size:10px;opacity:.7">×1/1</span></button>
+        </div>
+      </div>
     </div>
 
     <div style="margin-bottom:20px">
@@ -500,9 +508,19 @@ function parsePaste(){
   }
 }
 
+let kellyFraction = 0.5; // default: half kelly
+
+function setKelly(type){
+  kellyFraction = type==='full'?1.0:type==='quarter'?0.25:0.5;
+  ['half','quarter','full'].forEach(t=>{
+    const btn=document.getElementById('kelly-'+t);
+    if(btn) btn.classList.toggle('kelly-on', t===type);
+  });
+}
+
 function halfKelly(p,odds){
   const b=odds-1,q=1-p,k=(b*p-q)/b;
-  return Math.max(0,k/2);
+  return Math.max(0,k*kellyFraction);
 }
 
 function calcAll(){
@@ -575,6 +593,36 @@ function calcAll(){
     ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
   }
 
+  // トリガミ排除：各馬の払戻額 < 合計投資額 になる馬は賭け額を調整
+  // 払戻 = 賭け額 × オッズ
+  // トリガミ条件: 賭け額 × オッズ ≤ 合計投資額
+  // → 最低必要賭け額 = ceil(合計投資額 / オッズ / 100) * 100
+  // これを超えない場合は当該馬への賭けを0にして再計算
+  let changed = true;
+  let safetyCount = 0;
+  while(changed && safetyCount < 10){
+    changed = false;
+    safetyCount++;
+    const currentTtl = Object.values(betMap).reduce((s,v)=>s+v,0);
+    renders.forEach(h=>{
+      if(!betMap[h.num]||!h.tanOdds) return;
+      const payout = betMap[h.num]*h.tanOdds;
+      if(payout <= currentTtl){
+        // トリガミ → 最低必要賭け額を計算
+        const minBet = Math.ceil(currentTtl/h.tanOdds/100)*100+100;
+        if(minBet > fund*0.8){
+          // 資金の80%超が必要なら諦めて除外
+          betMap[h.num]=0;
+          changed=true;
+        } else {
+          betMap[h.num]=minBet;
+          changed=true;
+        }
+      }
+    });
+  }
+  ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
+
   if(!renders.length){
     html+='<div class="msg">期待値100超の馬が見つかりません<br><small style="color:var(--text3)">オッズが入力されているか確認してください</small></div>';
   } else {
@@ -595,10 +643,19 @@ function calcAll(){
         </div>
         <div class="divider"></div>`;
       if(h.tanOdds){
-        const ret=tb>0?'→ ¥'+Math.round(tb*h.tanOdds).toLocaleString():'';
+        const ret = tb>0 ? Math.round(tb*h.tanOdds) : 0;
+        const profit = tb>0 ? ret-ttl : 0; // 払戻 - 合計投資額 = 純利益
+        const kellyLabel = kellyFraction===1?'フル':kellyFraction===0.25?'クォーター':'ハーフ';
         html+=`<div class="brow">
-          <span class="brow-label">単勝 ${h.tanOdds}倍<span style="font-size:10px;color:var(--text3);margin-left:6px">ケリー${(kf*100).toFixed(1)}%</span></span>
-          ${tb>0?`<span class="chip chip-g">¥${tb.toLocaleString()} ${ret}</span>`:'<span class="chip chip-na">推奨なし(f≦0)</span>'}
+          <span class="brow-label">単勝 ${h.tanOdds}倍
+            <span style="font-size:10px;color:var(--text3);margin-left:6px">${kellyLabel} ${(kf*100).toFixed(1)}%</span>
+          </span>
+          ${tb>0
+            ? `<div style="text-align:right">
+                <span class="chip chip-g">¥${tb.toLocaleString()}</span>
+                <div style="font-size:10px;color:var(--green);margin-top:2px">払戻¥${ret.toLocaleString()} 純利+¥${profit.toLocaleString()}</div>
+               </div>`
+            : '<span class="chip chip-na">推奨なし(f≦0)</span>'}
         </div>`;
       }
       html+='</div>';
