@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="競馬Kelly">
+<meta name="theme-color" content="#0f0f0f">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>競馬ケリーアナライザー</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#0f0f0f;--bg2:#191919;--bg3:#222;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#f0ede8;--text2:#8a8680;--text3:#4a4845;
+  --gold:#d4af6a;--gold2:#b8934a;
+  --green:#4ade80;--green-bg:rgba(74,222,128,0.09);--green-bd:rgba(74,222,128,0.22);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,0.09);--blue-bd:rgba(96,165,250,0.22);
+  --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.09);
+  --red:#f87171;--red-bg:rgba(248,113,113,0.09);
+  --r:10px;--r2:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+.app{max-width:430px;margin:0 auto;padding-bottom:90px}
+
+/* header */
+.hdr{padding:18px 16px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px}
+.hdr-ico{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hdr-ico svg{width:22px;height:22px}
+.hdr h1{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.hdr p{font-size:11px;color:var(--text2);margin-top:1px}
+
+/* nav */
+.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:10px 12px;border-bottom:0.5px solid var(--border);background:var(--bg)}
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border:none;background:transparent;color:var(--text3);border-radius:var(--r);cursor:pointer;font-size:10px;font-family:inherit;transition:.15s;position:relative}
+.nb.on{background:var(--bg3);color:var(--gold)}
+.nb .dot{width:5px;height:5px;border-radius:50%;background:var(--green);display:none;position:absolute;top:5px;right:calc(50% - 16px)}
+.nb.done .dot{display:block}
+.nb-ico{font-size:20px}
+
+/* page */
+.page{display:none;padding:16px}
+.page.on{display:block}
+
+/* typography */
+.sh{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sh::after{content:'';flex:1;height:0.5px;background:var(--border)}
+.hint{font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.7}
+
+/* form */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:500}
+input[type=number],input[type=text]{width:100%;height:44px;padding:0 14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:15px;font-family:inherit;outline:none;-webkit-appearance:none;transition:border-color .15s}
+input:focus{border-color:var(--gold)}
+textarea{width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:12px;font-family:'DM Mono',monospace;padding:12px;resize:none;outline:none;line-height:1.8;transition:border-color .15s}
+textarea:focus{border-color:var(--gold)}
+
+/* buttons */
+.btn{width:100%;height:48px;border:none;border-radius:var(--r);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
+.btn:active{transform:scale(0.98);opacity:.9}
+.btn-gold{background:var(--gold);color:#0f0f0f}
+.btn-green{background:var(--green);color:#0f0f0f}
+.btn-outline{background:transparent;border:0.5px solid var(--border2);color:var(--text2);height:40px;font-size:13px}
+.btn-sm{height:40px;font-size:13px}
+
+/* odds table */
+.odds-hd{display:grid;grid-template-columns:30px 1fr 80px;gap:6px;padding:0 4px 8px;border-bottom:0.5px solid var(--border);margin-bottom:10px}
+.odds-hd span{font-size:10px;color:var(--text3);text-align:center;font-weight:500;letter-spacing:.04em}
+.odds-hd span:nth-child(2){text-align:left}
+.orow{display:grid;grid-template-columns:30px 1fr 80px;gap:6px;align-items:center;margin-bottom:9px}
+.num-b{width:30px;height:30px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);color:var(--gold);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace}
+.orow .hn{font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mi{width:100%;height:38px;padding:0 6px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:8px;color:var(--text);font-size:14px;font-family:'DM Mono',monospace;text-align:center;outline:none;-webkit-appearance:none;transition:border-color .15s}
+.mi:focus{border-color:var(--gold)}
+
+/* paste mode */
+.paste-box{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:10px}
+.paste-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.paste-num{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);width:24px;text-align:right;flex-shrink:0}
+.paste-name{flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.paste-odds{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:148px;flex-shrink:0}
+.paste-label{font-size:9px;color:var(--text3);margin-bottom:2px;text-align:center;letter-spacing:.04em}
+
+/* workflow card */
+.wf-card{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:16px;margin-bottom:12px}
+.wf-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.wf-step:last-child{margin-bottom:0}
+.wf-num{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#0f0f0f;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.wf-body h3{font-size:13px;font-weight:700;margin-bottom:3px}
+.wf-body p{font-size:12px;color:var(--text2);line-height:1.6}
+.wf-body code{font-family:'DM Mono',monospace;font-size:11px;background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--gold)}
+
+/* result */
+.rc{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:10px;position:relative;overflow:hidden}
+.rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.rc.main::before{background:var(--green)}
+.rc.sub::before{background:var(--blue)}
+.rc-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rc-top .num-b{width:34px;height:34px;font-size:14px}
+.rc-top .hn{flex:1;font-size:15px;font-weight:700}
+.badge{font-size:10px;padding:3px 10px;border-radius:99px;font-weight:700;letter-spacing:.04em}
+.badge-g{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-bd)}
+.badge-b{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-bd)}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.sm{background:var(--bg3);border-radius:var(--r);padding:10px 12px}
+.sm .sl{font-size:10px;color:var(--text2);margin-bottom:3px;font-weight:500;letter-spacing:.03em}
+.sm .sv{font-size:19px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace}
+.sv.g{color:var(--green)}.sv.a{color:var(--amber)}.sv.b{color:var(--blue)}
+.divider{height:0.5px;background:var(--border);margin:10px 0}
+.brow{display:flex;align-items:center;justify-content:space-between;padding:7px 0}
+.brow-label{font-size:12px;color:var(--text2)}
+.chip{font-size:12px;font-weight:700;padding:5px 12px;border-radius:99px;font-family:'DM Mono',monospace}
+.chip-g{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-bd)}
+.chip-b{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-bd)}
+.chip-na{background:var(--bg3);color:var(--text3);font-size:11px}
+.total-box{background:var(--bg3);border-radius:var(--r2);padding:14px;margin-bottom:16px}
+.ev-row{display:grid;grid-template-columns:30px 1fr 46px 46px;gap:6px;align-items:center;padding:8px 4px;border-bottom:0.5px solid var(--border)}
+.ev-row:last-child{border-bottom:none}
+.ev-num{font-size:10px;color:var(--text2);font-family:'DM Mono',monospace;font-weight:700;text-align:center}
+.ev-name{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-pct{font-size:11px;color:var(--text3);text-align:right;font-family:'DM Mono',monospace}
+.ev-val{font-size:12px;font-weight:700;text-align:right;font-family:'DM Mono',monospace}
+.ev-val.hi{color:var(--green)}.ev-val.mid{color:var(--amber)}.ev-val.lo{color:var(--text3)}
+.msg{text-align:center;padding:30px 16px;color:var(--text2);font-size:13px;line-height:1.7}
+.race-tag{display:inline-flex;align-items:center;gap:6px;background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.2);border-radius:99px;padding:4px 12px;font-size:12px;color:var(--amber);font-weight:500;margin-bottom:14px}
+.seg{display:flex;background:var(--bg3);border-radius:var(--r);padding:3px;gap:3px;margin-bottom:14px}
+.seg-btn{flex:1;height:34px;border:none;background:transparent;color:var(--text2);border-radius:8px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s}
+.seg-btn.on{background:var(--bg2);color:var(--text);border:0.5px solid var(--border2)}
+.status{padding:10px 12px;border-radius:var(--r);font-size:12px;margin-bottom:10px;line-height:1.5}
+.st-ok{background:var(--green-bg);border:0.5px solid var(--green-bd);color:var(--green)}
+.st-warn{background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.2);color:var(--amber)}
+
+#pw-screen{position:fixed;inset:0;background:#0f0f0f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px}
+.pw-icon{width:56px;height:56px;background:#d4af6a;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.pw-icon svg{width:30px;height:30px}
+.pw-title{font-size:18px;font-weight:700;color:#f0ede8;margin-bottom:6px;letter-spacing:-.02em}
+.pw-sub{font-size:12px;color:#8a8680;margin-bottom:28px}
+.pw-input{width:100%;max-width:280px;height:48px;background:#191919;border:0.5px solid rgba(255,255,255,0.15);border-radius:12px;color:#f0ede8;font-size:16px;text-align:center;font-family:inherit;outline:none;letter-spacing:.1em;margin-bottom:12px;-webkit-appearance:none}
+.pw-input:focus{border-color:#d4af6a}
+.pw-btn{width:100%;max-width:280px;height:48px;background:#d4af6a;color:#0f0f0f;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+.pw-err{font-size:12px;color:#f87171;margin-top:8px;min-height:18px}
+</style>
+</head>
+<body>
+
+<div id="pw-screen">
+  <div class="pw-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#0f0f0f" stroke-width="2.2" stroke-linecap="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  </div>
+  <div class="pw-title">競馬ケリーアナライザー</div>
+  <div class="pw-sub">パスワードを入力してください</div>
+  <input class="pw-input" type="password" id="pw-input" placeholder="••••••" autocomplete="off"
+    onkeydown="if(event.key==='Enter')checkPw()">
+  <button class="pw-btn" onclick="checkPw()">入力</button>
+  <div class="pw-err" id="pw-err"></div>
+</div>
+
+<div class="app">
+  <div class="hdr">
+    <div class="hdr-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0f0f0f" stroke-width="2.2" stroke-linecap="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <div>
+      <h1>競馬ケリーアナライザー</h1>
+      <p>指数×オッズ 期待値 ＋ ハーフケリー計算</p>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="nb on" onclick="sw('setup')" id="nb-setup">
+      <div class="dot"></div><span class="nb-ico">⚙️</span><span>設定</span>
+    </button>
+    <button class="nb" onclick="sw('odds')" id="nb-odds">
+      <div class="dot"></div><span class="nb-ico">📊</span><span>オッズ</span>
+    </button>
+    <button class="nb" onclick="sw('result')" id="nb-result">
+      <div class="dot"></div><span class="nb-ico">🏆</span><span>結果</span>
+    </button>
+  </nav>
+
+  <!-- 設定 -->
+  <div id="p-setup" class="page on">
+    <div style="margin-bottom:20px">
+      <div class="sh">資金設定</div>
+      <div class="field"><label>総資金（円）</label>
+        <input type="number" id="fund" placeholder="例: 10000" inputmode="numeric">
+      </div>
+      <div class="field"><label>レース名（任意）</label>
+        <input type="text" id="rname" placeholder="例: 園田11R 兵庫CS">
+      </div>
+    </div>
+    <div>
+      <div class="sh">指数データ</div>
+      <p class="hint">予想サイトの1レース分テキストをそのまま貼り付け</p>
+      <div class="field">
+        <textarea id="raw" rows="10" placeholder="◎ 1 【69.1%】 サトノボヤージュ 戸崎圭太 NaN [66.2];
+○ 3 【63.6%】 スマートジュリアス 武豊 NaN [63.9];
+▲ 6 【57.5%】 エコロレーヴ 團野大成 NaN [61.2];
+△ 7 【40.6%】 エブリーポッシブル 岩田望来 NaN [53.8];
+..."></textarea>
+      </div>
+      <button class="btn btn-gold" onclick="parseData()">▶ 指数を読み込む</button>
+    </div>
+
+  </div>
+
+  <!-- オッズ -->
+  <div id="p-odds" class="page">
+    <div id="odds-race-tag"></div>
+
+    <!-- モード切替 -->
+    <div class="seg">
+      <button class="seg-btn on" id="seg-manual" onclick="setMode('manual')">手動入力</button>
+      <button class="seg-btn" id="seg-paste" onclick="setMode('paste')">テキスト貼付</button>
+    </div>
+
+    <!-- 手動入力モード -->
+    <div id="mode-manual">
+      <div class="wf-card" style="margin-bottom:14px">
+        <div class="wf-step">
+          <div class="wf-num">1</div>
+          <div class="wf-body">
+            <h3>オッズ画面を撮影・メモ</h3>
+            <p>地方競馬アプリのオッズ画面を見ながら各馬の単勝・複勝オッズを入力してください</p>
+          </div>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">2</div>
+          <div class="wf-body">
+            <h3>Claudeに読んでもらう場合</h3>
+            <p>このアプリを開いたまま、Claudeのチャットにオッズ画像を貼り付けて<code>オッズを読んで</code>と送ると、テキストで返してくれます。それを「テキスト貼付」タブに貼ってください</p>
+          </div>
+        </div>
+      </div>
+      <div class="sh">オッズ入力</div>
+      <div class="odds-hd">
+        <span></span><span>馬名</span><span>単勝</span>
+      </div>
+      <div id="manual-inputs"></div>
+      <div style="height:12px"></div>
+      <button class="btn btn-green" onclick="calcAll()">✦ 計算して結果を見る</button>
+    </div>
+
+    <!-- テキスト貼付モード -->
+    <div id="mode-paste" style="display:none">
+      <div class="wf-card" style="margin-bottom:12px">
+        <div class="wf-step">
+          <div class="wf-num">1</div>
+          <div class="wf-body">
+            <h3>オッズページを開く</h3>
+            <p>oddspark・netkeibaなどのオッズページをブラウザで開く</p>
+          </div>
+        </div>
+        <div class="wf-step" style="margin-bottom:0">
+          <div class="wf-num">2</div>
+          <div class="wf-body">
+            <h3>全選択してコピー</h3>
+            <p>SPAT4・oddspark・netkeibaのオッズ画面を長押し→全選択→コピーして貼り付け。単勝オッズを自動抽出します（複勝範囲は自動スキップ）</p>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>オッズページのテキストを貼り付け（丸ごとでOK）</label>
+        <textarea id="paste-text" rows="10" placeholder="ページ全体のテキストをそのまま貼り付けてください。
+
+例（oddspark形式）:
+1 アラタマノキセキ 3.5
+2 ワキノグラス 2.1
+...
+
+例（netkeiba形式）:
+1着 アラタマノキセキ 3.5倍
+...
+
+馬番と単勝オッズが含まれていれば自動で読み取ります"></textarea>
+      </div>
+      <button class="btn btn-gold btn-sm" onclick="parsePaste()" style="margin-bottom:8px">オッズを自動抽出</button>
+      <button class="btn btn-outline" onclick="setMode('manual')">手動入力に切り替え</button>
+      <div id="paste-status" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <!-- 結果 -->
+  <div id="p-result" class="page">
+    <div id="res-content">
+      <div class="msg">設定・オッズを入力して<br>計算ボタンを押してください</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let horses=[], mode='manual';
+
+function sw(t){
+  ['setup','odds','result'].forEach(n=>{
+    document.getElementById('p-'+n).classList.toggle('on',n===t);
+    document.getElementById('nb-'+n).classList.toggle('on',n===t);
+  });
+  window.scrollTo(0,0);
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('mode-manual').style.display=m==='manual'?'block':'none';
+  document.getElementById('mode-paste').style.display=m==='paste'?'block':'none';
+  document.getElementById('seg-manual').classList.toggle('on',m==='manual');
+  document.getElementById('seg-paste').classList.toggle('on',m==='paste');
+}
+
+function parseData(){
+  const raw=document.getElementById('raw').value.trim();
+  if(!raw){alert('データを貼り付けてください');return;}
+  // セミコロン・改行どちらでも分割、体重データ(数字(±数字))にも対応
+  const lines=raw.split(/[;\n]/).filter(l=>l.trim());
+  const parsed=[];
+  for(const line of lines){
+    // 体重あり形式: 馬名 騎手 453(+4)
+    let m=line.match(/[◎○▲△☆－]\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+(\S+)\s+\d+\([+-]?\d+\)/);
+    // NaN形式（旧）
+    if(!m) m=line.match(/[◎○▲△☆－]\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+NaN/);
+    if(m) parsed.push({num:parseInt(m[1]),pct:parseFloat(m[2]),name:m[3].trim(),tanOdds:null,fukuOdds:null});
+  }
+  if(!parsed.length){alert('データを読み取れませんでした\n形式を確認してください');return;}
+  horses=parsed;
+  const tot=horses.reduce((s,h)=>s+h.pct,0);
+  horses.forEach(h=>{h.norm=h.pct/tot});
+  horses.sort((a,b)=>b.norm-a.norm);
+
+  const rname=document.getElementById('rname').value.trim();
+  document.getElementById('odds-race-tag').innerHTML=rname
+    ?`<div class="race-tag">◎ ${rname}</div>`:'';
+
+  buildManual();
+  document.getElementById('nb-setup').classList.add('done');
+  sw('odds');
+}
+
+function buildManual(){
+  const c=document.getElementById('manual-inputs');
+  c.innerHTML='';
+  for(const h of horses){
+    const row=document.createElement('div');
+    row.className='orow';
+    row.innerHTML=`<div class="num-b">${h.num}</div>
+      <span class="hn" title="${h.name}">${h.name}</span>
+      <input class="mi" type="number" id="t-${h.num}" placeholder="−" step="0.1" min="1" inputmode="decimal" value="${h.tanOdds||''}">`;
+    c.appendChild(row);
+  }
+}
+
+function parsePaste(){
+  if(!horses.length){alert('先に設定タブで指数を読み込んでください');return;}
+  const text=document.getElementById('paste-text').value.trim();
+  if(!text){alert('テキストを貼り付けてください');return;}
+  const lines=text.split('\n').filter(l=>l.trim());
+  let found=0;
+
+  // 馬番→オッズ の候補マップを構築（SPAT4両形式・oddspark・netkeiba対応）
+  const candidates={};
+
+  for(const line of lines){
+    const trimmed=line.trim();
+    if(!trimmed) continue;
+    // 先頭の馬番を取得
+    const headM=trimmed.match(/^(\d+)[\s　]/);
+    if(!headM) continue;
+    const num=parseInt(headM[1]);
+    if(num<1||num>30) continue;
+    const h=horses.find(x=>x.num===num);
+    if(!h) continue;
+
+    // トークンに分割して数値候補を抽出
+    // ハイフン含むトークン（複勝範囲 "4.1-7.5"）は除外
+    const tokens=trimmed.split(/\s+/).slice(1);
+    const oddsNums=[];
+    for(const t of tokens){
+      if(t.includes('-')) continue; // 複勝範囲スキップ
+      const v=parseFloat(t.replace(/[^\d.]/g,''));
+      if(!isNaN(v)&&v>=1.0&&v<1000) oddsNums.push(v);
+    }
+    if(oddsNums.length&&!candidates[num]){
+      // 最初の有効数値が単勝オッズ
+      candidates[num]=oddsNums[0];
+    }
+  }
+
+  // 候補を馬に反映
+  for(const [num, odds] of Object.entries(candidates)){
+    const h=horses.find(x=>x.num===parseInt(num));
+    if(h){h.tanOdds=odds;found++;}
+  }
+
+  buildManual();
+  const st=document.getElementById('paste-status');
+  if(found>0){
+    st.innerHTML=`<div class="status st-ok">✓ ${found}頭のオッズを反映しました。手動入力タブで確認・修正できます</div>`;
+    setTimeout(()=>setMode('manual'),1200);
+  } else {
+    st.innerHTML=`<div class="status st-warn">⚠ オッズを読み取れませんでした。形式を確認してください<br><span style="font-size:11px">例: 1,3.5,1.4 または 1番 単3.5 複1.4</span></div>`;
+  }
+}
+
+function halfKelly(p,odds){
+  const b=odds-1,q=1-p,k=(b*p-q)/b;
+  return Math.max(0,k/2);
+}
+
+function calcAll(){
+  for(const h of horses){
+    const tv=document.getElementById('t-'+h.num)?.value;
+    h.tanOdds=tv?parseFloat(tv):null;
+    h.fukuOdds=null;
+    h.tanEV=h.tanOdds?h.norm*h.tanOdds*100:null;
+  }
+
+  const fund=parseInt(document.getElementById('fund').value)||0;
+  const rname=document.getElementById('rname').value.trim()||'レース分析';
+  if(!fund){alert('資金を入力してください');sw('setup');return;}
+
+  const byNorm=[...horses].sort((a,b)=>b.norm-a.norm);
+  const mainPool=byNorm.filter(h=>h.tanEV&&h.tanEV>100);
+  const top3=mainPool.slice(0,3);
+  const subPool=horses.filter(h=>h.tanEV&&h.tanEV>100&&h.tanEV<300&&!top3.includes(h))
+    .sort((a,b)=>b.tanEV-a.tanEV);
+  const sub1=subPool[0]||null;
+  const renders=[...top3.map((h,i)=>({...h,_t:'main',_r:i+1}))];
+  if(sub1) renders.push({...sub1,_t:'sub'});
+
+  let html=`<div class="race-tag" style="margin-bottom:14px">◎ ${rname}</div>`;
+  let ttl=0;
+
+  if(!renders.length){
+    html+='<div class="msg">期待値100超の馬が見つかりません<br><small style="color:var(--text3)">オッズが入力されているか確認してください</small></div>';
+  } else {
+    for(const h of renders){
+      const isM=h._t==='main';
+      let tb=0,fb=0;
+      if(h.tanOdds){tb=Math.floor(fund*halfKelly(h.norm,h.tanOdds)/100)*100;ttl+=tb;}
+      const ev=h.tanEV,evS=ev?ev.toFixed(0):'−',evC=ev>=150?'g':ev>=100?'a':'';
+      html+=`<div class="rc ${isM?'main':'sub'}">
+        <div class="rc-top">
+          <div class="num-b">${h.num}</div>
+          <span class="hn">${h.name}</span>
+          <span class="badge ${isM?'badge-g':'badge-b'}">${isM?'推奨'+h._r:'サブ'}</span>
+        </div>
+        <div class="sg">
+          <div class="sm"><div class="sl">正規化勝率</div><div class="sv">${(h.norm*100).toFixed(1)}%</div></div>
+          <div class="sm"><div class="sl">単勝期待値</div><div class="sv ${evC}">${evS}</div></div>
+        </div>
+        <div class="divider"></div>`;
+      if(h.tanOdds){
+        const ret=tb>0?'→ ¥'+Math.round(tb*h.tanOdds).toLocaleString():'';
+        html+=`<div class="brow"><span class="brow-label">単勝 ${h.tanOdds}倍</span>
+          ${tb>0?`<span class="chip chip-g">¥${tb.toLocaleString()} ${ret}</span>`:'<span class="chip chip-na">推奨なし</span>'}
+        </div>`;
+      }
+
+      html+='</div>';
+    }
+    const used=ttl,rate=fund>0?(used/fund*100).toFixed(1):0;
+    html+=`<div class="total-box"><div class="sg">
+      <div class="sm"><div class="sl">合計投資額</div><div class="sv">¥${used.toLocaleString()}</div></div>
+      <div class="sm"><div class="sl">資金使用率</div><div class="sv ${parseFloat(rate)>30?'a':'g'}">${rate}%</div></div>
+    </div></div>`;
+  }
+
+  html+=`<div class="sh" style="margin-top:4px">全馬 期待値一覧</div>`;
+  const allS=[...horses].filter(h=>h.tanOdds).sort((a,b)=>(b.tanEV||0)-(a.tanEV||0));
+  for(const h of allS){
+    const ev=h.tanEV,ec=ev>=150?'hi':ev>=100?'mid':'lo';
+    html+=`<div class="ev-row">
+      <div class="ev-num">${h.num}</div>
+      <div class="ev-name">${h.name}</div>
+      <div class="ev-pct">${(h.norm*100).toFixed(1)}%</div>
+      <div class="ev-val ${ec}">${ev?ev.toFixed(0):'−'}</div>
+    </div>`;
+  }
+
+  document.getElementById('res-content').innerHTML=html;
+  document.getElementById('nb-result').classList.add('done');
+  sw('result');
+}
+</script>
+
+
+
+<script>
+(function(){
+  const PW = 'keiba2025';
+  const KEY = 'kk_auth';
+  if(sessionStorage.getItem(KEY)==='ok'){
+    document.getElementById('pw-screen').style.display='none';
+    return;
+  }
+  window.checkPw = function(){
+    const v = document.getElementById('pw-input').value;
+    if(v === PW){
+      sessionStorage.setItem(KEY,'ok');
+      document.getElementById('pw-screen').style.display='none';
+    } else {
+      document.getElementById('pw-err').textContent='パスワードが違います';
+      document.getElementById('pw-input').value='';
+      document.getElementById('pw-input').focus();
+    }
+  };
+})();
+</script>
+</body>
+</html>
