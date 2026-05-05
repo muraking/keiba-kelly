@@ -34,7 +34,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .hdr p{font-size:11px;color:var(--text2);margin-top:1px}
 
 /* nav */
-.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:10px 12px;border-bottom:0.5px solid var(--border);background:var(--bg)}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:10px 12px;border-bottom:0.5px solid var(--border);background:var(--bg)}
 .nb{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border:none;background:transparent;color:var(--text3);border-radius:var(--r);cursor:pointer;font-size:10px;font-family:inherit;transition:.15s;position:relative}
 .nb.on{background:var(--bg3);color:var(--gold)}
 .nb .dot{width:5px;height:5px;border-radius:50%;background:var(--green);display:none;position:absolute;top:5px;right:calc(50% - 16px)}
@@ -184,6 +184,9 @@ textarea:focus{border-color:var(--gold)}
     <button class="nb" onclick="sw('result')" id="nb-result">
       <div class="dot"></div><span class="nb-ico">🏆</span><span>結果</span>
     </button>
+    <button class="nb" onclick="sw('admin')" id="nb-admin">
+      <div class="dot"></div><span class="nb-ico">☁️</span><span>共有</span>
+    </button>
   </nav>
 
   <!-- 設定 -->
@@ -289,6 +292,41 @@ textarea:focus{border-color:var(--gold)}
   </div>
 
   <!-- 結果 -->
+
+  <div id="p-admin" class="page">
+    <div style="margin-bottom:16px">
+      <div class="sh">GitHub共有設定</div>
+      <div class="field">
+        <label>Personal Access Token（初回のみ）</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxx..." autocomplete="off">
+        <p style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.6">端末のlocalStorageにのみ保存。GitHub上には公開されません。</p>
+      </div>
+      <button class="btn btn-outline" style="height:38px;font-size:13px;margin-bottom:16px" onclick="saveToken()">トークンを保存</button>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <div class="sh">指数データを共有（管理者）</div>
+      <p class="hint">予想サイトから当日全レース分のテキストを貼り付けてGitHubに保存。他のユーザーが自動で読み込めます。</p>
+      <div class="field">
+        <textarea id="admin-raw" rows="12" placeholder="全レース分の指数テキストをまとめて貼り付け&#10;&#10;2026/5/6 門別 1R ...&#10;◎ 5 【72.2%】 アークオブライフ ...&#10;&#10;2026/5/6 門別 2R ...&#10;◎ 10 【72.6%】 セイランマクフィ ..."></textarea>
+      </div>
+      <button class="btn btn-green" onclick="saveToGitHub()" id="save-btn">
+        ☁ GitHubに保存して共有
+      </button>
+      <div id="save-status" style="margin-top:10px"></div>
+    </div>
+
+    <div>
+      <div class="sh">共有データを読み込む（全ユーザー）</div>
+      <p class="hint">GitHubに保存された当日の指数データを読み込みます。</p>
+      <button class="btn btn-outline" onclick="loadFromGitHub()" style="height:40px;font-size:13px">
+        ↓ GitHubから指数を読み込む
+      </button>
+      <div id="load-status" style="margin-top:10px"></div>
+      <div id="race-list" style="margin-top:12px"></div>
+    </div>
+  </div>
+
   <div id="p-result" class="page">
     <div id="res-content">
       <div class="msg">設定・オッズを入力して<br>計算ボタンを押してください</div>
@@ -512,6 +550,168 @@ function calcAll(){
     }
   };
 })();
+
+const GH_USER = 'muraking';
+const GH_REPO = 'keiba-kelly';
+const GH_BRANCH = 'main';
+const GH_FILE = 'data/indices.json';
+const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+
+function saveToken(){
+  const t = document.getElementById('gh-token').value.trim();
+  if(!t){alert('トークンを入力してください');return;}
+  localStorage.setItem('kk_gh_token', t);
+  document.getElementById('gh-token').value = '';
+  alert('トークンを保存しました');
+}
+
+function loadToken(){
+  const t = localStorage.getItem('kk_gh_token') || '';
+  if(document.getElementById('gh-token')) document.getElementById('gh-token').value = '';
+  return t;
+}
+
+async function saveToGitHub(){
+  const token = loadToken();
+  if(!token){alert('先にトークンを保存してください');return;}
+  const raw = document.getElementById('admin-raw').value.trim();
+  if(!raw){alert('指数データを貼り付けてください');return;}
+
+  const btn = document.getElementById('save-btn');
+  const st = document.getElementById('save-status');
+  btn.disabled = true;
+  st.innerHTML = '<div class="status st-warn"><span style="font-family:monospace">...</span> GitHubに保存中...</div>';
+
+  // Parse all races from raw text
+  const allRaces = parseAllRaces(raw);
+  if(!allRaces.length){
+    st.innerHTML = '<div class="status st-err">レースデータを読み取れませんでした</div>';
+    btn.disabled = false;
+    return;
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  const payload = { date: today, races: allRaces, updated: new Date().toISOString() };
+
+  try {
+    // Get current SHA if file exists
+    let sha = null;
+    try {
+      const r = await fetch(GH_API, { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }});
+      if(r.ok){ const d = await r.json(); sha = d.sha; }
+    } catch(e){}
+
+    const body = { message: `Update indices ${today}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2)))), branch: GH_BRANCH };
+    if(sha) body.sha = sha;
+
+    const res = await fetch(GH_API, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if(res.ok){
+      st.innerHTML = `<div class="status st-ok">✓ ${allRaces.length}レースを保存しました（${today}）</div>`;
+    } else {
+      const err = await res.json();
+      st.innerHTML = `<div class="status st-err">エラー: ${err.message}</div>`;
+    }
+  } catch(e){
+    st.innerHTML = `<div class="status st-err">通信エラー: ${e.message}</div>`;
+  }
+  btn.disabled = false;
+}
+
+async function loadFromGitHub(){
+  const st = document.getElementById('load-status');
+  const rl = document.getElementById('race-list');
+  st.innerHTML = '<div class="status st-warn">読み込み中...</div>';
+  rl.innerHTML = '';
+
+  try {
+    // Use raw.githubusercontent.com for public read (no token needed)
+    const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('ファイルが見つかりません。まだ保存されていない可能性があります。');
+    const data = await res.json();
+
+    const today = new Date().toISOString().split('T')[0];
+    const dateLabel = data.date === today ? '今日' : data.date;
+    st.innerHTML = `<div class="status st-ok">✓ ${dateLabel}のデータ: ${data.races.length}レース</div>`;
+
+    // Build race selection list
+    rl.innerHTML = '<div class="sh" style="margin-top:12px">レースを選択して設定タブへ</div>';
+    for(const race of data.races){
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-outline';
+      btn.style.cssText = 'margin-bottom:8px;height:auto;padding:10px 14px;text-align:left;display:block';
+      btn.innerHTML = `<div style="font-size:13px;font-weight:500;color:var(--text)">${race.raceName}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${race.horses.length}頭</div>`;
+      btn.onclick = () => loadRaceToSetup(race);
+      rl.appendChild(btn);
+    }
+  } catch(e){
+    st.innerHTML = `<div class="status st-err">${e.message}</div>`;
+  }
+}
+
+function loadRaceToSetup(race){
+  // Set race name
+  document.getElementById('rname').value = race.raceName;
+  // Set raw text area (rebuild from parsed data)
+  const lines = race.horses.map(h => {
+    const mark = h.rank===1?'◎':h.rank===2?'○':h.rank===3?'▲':h.rank===4?'△':h.rank===5?'☆':'－';
+    return `${mark} ${h.num} 【${h.pct.toFixed(1)}%】 ${h.name} 騎手 NaN [0]`;
+  });
+  document.getElementById('raw').value = lines.join('\n');
+  // Parse and go to odds tab
+  parseData();
+  sw('odds');
+}
+
+function parseAllRaces(raw){
+  const races = [];
+  // Split into race blocks by detecting race header lines
+  const lines = raw.split(/[;\n]/).map(l=>l.trim()).filter(l=>l);
+  let currentRace = null;
+  let currentHorses = [];
+  let raceNameBuffer = '';
+
+  for(const line of lines){
+    // Detect race header: contains year/date pattern and R (race number)
+    const headerM = line.match(/(\d{4}\/\d{1,2}\/\d{1,2}\s+.+?\s+\d+R\s+.+?)(?:\s+\d+:\d+)?/);
+    if(headerM && !line.match(/[◎○▲△☆－]/)){
+      // Save previous race
+      if(currentRace && currentHorses.length){
+        races.push({ raceName: currentRace, horses: currentHorses });
+      }
+      currentRace = headerM[1].replace(/\s+/g,' ').trim();
+      currentHorses = [];
+      continue;
+    }
+
+    // Detect horse line
+    let m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+\d+\([+-]?\d+\)/);
+    if(!m) m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+NaN/);
+    if(m && currentRace){
+      const markToRank = {'◎':1,'○':2,'▲':3,'△':4,'☆':5,'－':6};
+      currentHorses.push({ rank: markToRank[m[1]]||6, num: parseInt(m[2]), pct: parseFloat(m[3]), name: m[4].trim() });
+    }
+  }
+  // Last race
+  if(currentRace && currentHorses.length){
+    races.push({ raceName: currentRace, horses: currentHorses });
+  }
+  return races;
+}
+
+// Load token into field on admin tab open
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('kk_gh_token');
+  // don't show token in field, just indicate saved
+  const field = document.getElementById('gh-token');
+  if(field && saved) field.placeholder = 'トークン保存済み（変更する場合のみ入力）';
+});
+
 </script>
 </body>
 </html>
