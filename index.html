@@ -960,10 +960,31 @@ function onRaceChange(){
   if(!race){ preview.style.display = 'none'; return; }
 
   const tot = race.horses.reduce((s,h) => s + h.pct, 0);
-  horses = race.horses.map(h => ({
-    num: h.num, pct: h.pct, name: h.name,
-    norm: h.pct / tot, tanOdds: null, fukuOdds: null
-  }));
+
+  // オッズデータを取得（place_id → race_num の形式で保存されている）
+  // race.venue から place_id を逆引き
+  const VENUE_TO_ID = {
+    '門別':'36','盛岡':'10','水沢':'11','船橋':'19','大井':'20',
+    '川崎':'21','浦和':'22','金沢':'23','名古屋':'24','笠松':'25',
+    '園田':'27','姫路':'28','高知':'30','佐賀':'31','帯広':'44'
+  };
+  const placeId = VENUE_TO_ID[race.venue] || null;
+  const raceNumInt = parseInt((race.raceNum || '').replace('R',''));
+  const oddsData = ghData[date].odds;
+  let raceOdds = null;
+  if(oddsData && placeId && raceNumInt){
+    raceOdds = oddsData[placeId]?.[raceNumInt] || null;
+  }
+
+  horses = race.horses.map(h => {
+    const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
+    return {
+      num: h.num, pct: h.pct, name: h.name,
+      norm: h.pct / tot,
+      tanOdds: o ? (o.tan || null) : null,
+      fukuOdds: o ? (o.fuku_min || null) : null
+    };
+  });
   horses.sort((a,b) => b.norm - a.norm);
   currentRaceName = race.raceName;
   currentRaceClass = race.raceClass || '';
@@ -990,6 +1011,7 @@ function onRaceChange(){
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:13px;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</div>
         <div style="font-size:10px;color:var(--text3)">指数${h.pct.toFixed(1)}%</div>
+        ${h.tanOdds ? `<div style="font-size:11px;color:var(--amber);font-family:'DM Mono',monospace;margin-top:2px">${h.tanOdds}倍</div>` : '<div style="font-size:10px;color:var(--text3);margin-top:2px">オッズ未取得</div>'}
       </div>`;
     hl.appendChild(row);
   });
