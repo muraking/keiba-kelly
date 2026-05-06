@@ -1045,18 +1045,26 @@ function onRaceChange(){
   };
   const placeId = VENUE_TO_ID[race.venue] || null;
   const raceNumInt = parseInt((race.raceNum || '').replace('R',''));
-  // オッズを全日付から検索（指数日付とオッズ保存日付がずれる場合に対応）
+  // オッズを全日付から検索（placeId・raceNumは文字列・数値両方試す）
   let raceOdds = null;
-  const allDates = Object.keys(ghData).sort().reverse();
-  for(const d of allDates){
-    const oddsData = ghData[d].odds;
-    if(!oddsData) continue;
-    const placeOdds = oddsData[placeId] || oddsData[String(placeId)] || null;
-    if(!placeOdds) continue;
-    const candidate = placeOdds[raceNumInt] || placeOdds[String(raceNumInt)] || null;
-    if(candidate && (candidate.tan || candidate.fuku_min)){
-      raceOdds = candidate;
-      break; // 最新の日付から見つかった時点で終了
+  if(placeId && raceNumInt){
+    const allDates = Object.keys(ghData).sort().reverse();
+    outer: for(const d of allDates){
+      const oddsData = ghData[d] && ghData[d].odds;
+      if(!oddsData) continue;
+      // placeIdを文字列・数値両方で検索
+      for(const pid of [placeId, String(placeId), Number(placeId)]){
+        const placeOdds = oddsData[pid];
+        if(!placeOdds) continue;
+        // raceNumも文字列・数値両方で検索
+        for(const rnum of [raceNumInt, String(raceNumInt)]){
+          const candidate = placeOdds[rnum];
+          if(candidate && (candidate.tan || (candidate.fuku_min && candidate.fuku_min > 0))){
+            raceOdds = candidate;
+            break outer;
+          }
+        }
+      }
     }
   }
 
