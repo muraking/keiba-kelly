@@ -1047,19 +1047,22 @@ function onRaceChange(){
   const raceNumInt = parseInt((race.raceNum || '').replace('R',''));
   // オッズを全日付から検索（placeId・raceNumは文字列・数値両方試す）
   let raceOdds = null;
+  console.log('[odds] start venue='+race.venue+' placeId='+placeId+' raceNum='+raceNumInt);
   if(placeId && raceNumInt){
     const allDates = Object.keys(ghData).sort().reverse();
+    console.log('[odds] allDates='+allDates.join(','));
     outer: for(const d of allDates){
       const oddsData = ghData[d] && ghData[d].odds;
-      if(!oddsData) continue;
-      // placeIdを文字列・数値両方で検索
+      if(!oddsData){ console.log('[odds] '+d+' no odds'); continue; }
+      console.log('[odds] '+d+' oddsKeys='+Object.keys(oddsData).join(','));
       for(const pid of [placeId, String(placeId), Number(placeId)]){
         const placeOdds = oddsData[pid];
         if(!placeOdds) continue;
-        // raceNumも文字列・数値両方で検索
+        console.log('[odds] found placeOdds pid='+pid+' raceKeys='+Object.keys(placeOdds).join(','));
         for(const rnum of [raceNumInt, String(raceNumInt)]){
           const candidate = placeOdds[rnum];
           if(candidate && (candidate.tan || (candidate.fuku_min && candidate.fuku_min > 0))){
+            console.log('[odds] FOUND raceOdds='+JSON.stringify(candidate));
             raceOdds = candidate;
             break outer;
           }
@@ -1067,6 +1070,7 @@ function onRaceChange(){
       }
     }
   }
+  if(!raceOdds) console.log('[odds] NOT FOUND');
 
   horses = race.horses.map(h => {
     const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
