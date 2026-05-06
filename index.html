@@ -429,7 +429,8 @@ function buildManual(){
     row.className='orow';
     row.innerHTML=`<div class="num-b">${h.num}</div>
       <span class="hn" title="${h.name}">${h.name}</span>
-      <input class="mi" type="number" id="t-${h.num}" placeholder="−" step="0.1" min="1" inputmode="decimal" value="${h.tanOdds||''}">`;
+      <input class="mi" type="number" id="t-${h.num}" placeholder="−" step="0.1" min="1" inputmode="decimal" value="${h.tanOdds||''}"
+        onkeydown="oddsEnterNext(event,'t-${h.num}')">`;
     c.appendChild(row);
   }
 }
@@ -1060,10 +1061,23 @@ function onRaceChange(){
   const hl = document.getElementById('horse-list');
   const classStr = race.raceClass || '';
   const timeStr = race.startTime || '';
+  // オッズ取得時刻を文字列に変換
+  const oddsUpdatedStr = (() => {
+    const ou = ghData[date].odds_updated;
+    if(!ou) return null;
+    const dt = new Date(ou);
+    return dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+  })();
+
   hl.innerHTML = `<div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;margin-bottom:10px">
     <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${race.raceName}</div>
     ${classStr ? `<div style="font-size:12px;color:var(--gold);margin-bottom:2px">${classStr}</div>` : ''}
-    ${timeStr ? `<div style="font-size:12px;color:var(--text2)">発走 ${timeStr}</div>` : ''}
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:2px">
+      ${timeStr ? `<div style="font-size:12px;color:var(--text2)">発走 ${timeStr}</div>` : ''}
+      ${oddsUpdatedStr
+        ? `<div style="font-size:12px;color:var(--amber)">オッズ ${oddsUpdatedStr}時点</div>`
+        : `<div style="font-size:12px;color:var(--text3)">オッズ未取得</div>`}
+    </div>
   </div>`;
   const marks = ['◎','○','▲','△','☆'];
   horses.forEach((h, i) => {
@@ -1420,6 +1434,30 @@ function sendPushNotification(title, body){
 window.addEventListener('load', () => {
   setTimeout(requestNotificationPermission, 2000);
 });
+
+
+// オッズ入力欄でEnterを押すと次の欄へ移動
+function oddsEnterNext(event, currentId){
+  if(event.key !== 'Enter') return;
+  event.preventDefault();
+
+  // 現在の馬番を取得
+  const currentNum = parseInt(currentId.replace('t-', ''));
+
+  // 馬番順でソートされた入力欄リスト
+  const sortedNums = [...horses].sort((a,b)=>a.num-b.num).map(h=>h.num);
+  const currentIdx = sortedNums.indexOf(currentNum);
+
+  // 次の馬番の入力欄へ
+  const nextNum = sortedNums[currentIdx + 1];
+  if(nextNum !== undefined){
+    const nextInput = document.getElementById(`t-${nextNum}`);
+    if(nextInput){ nextInput.focus(); nextInput.select(); }
+  } else {
+    // 最後の欄なら計算ボタンにフォーカス
+    document.querySelector('[onclick="calcAll()"]')?.focus();
+  }
+}
 
 </script>
 </body>
