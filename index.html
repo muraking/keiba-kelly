@@ -244,9 +244,14 @@ textarea:focus{border-color:var(--gold)}
 
     <div style="margin-bottom:20px">
       <div class="sh">GitHubからレースを選択</div>
-      <button class="btn btn-gold" onclick="fetchRaceList()" id="fetch-btn" style="margin-bottom:10px">
-        ↓ レース一覧を読み込む
-      </button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <button class="btn btn-gold" onclick="fetchRaceList()" id="fetch-btn">
+          ↓ 一覧を読み込む
+        </button>
+        <button class="btn btn-outline" onclick="selectNearestRace()" id="nearest-btn" style="height:48px;font-size:13px">
+          ⏱ 直近レース
+        </button>
+      </div>
       <div id="fetch-status"></div>
       <div id="date-area" style="display:none">
         <div class="field" style="margin-top:10px">
@@ -266,6 +271,10 @@ textarea:focus{border-color:var(--gold)}
 
     <div id="horse-preview" style="display:none;margin-bottom:20px">
       <div class="sh">出走馬・正規化勝率</div>
+      <div id="odds-info-bar" style="display:none;background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.2);border-radius:var(--r);padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+        <span id="odds-updated-label" style="font-size:11px;color:var(--amber)">オッズ取得時刻: −</span>
+        <button onclick="refreshOdds()" style="background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.3);color:var(--amber);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit">🔄 最新に更新</button>
+      </div>
       <div id="horse-list"></div>
       <button class="btn btn-green" onclick="goToOdds()" style="margin-top:12px">
         ▶ オッズ入力へ
@@ -961,6 +970,19 @@ function onRaceChange(){
 
   const tot = race.horses.reduce((s,h) => s + h.pct, 0);
 
+  // オッズ取得時刻を表示
+  const oddsBar = document.getElementById('odds-info-bar');
+  const oddsLabel = document.getElementById('odds-updated-label');
+  const oddsUpdated = ghData[date].odds_updated;
+  if(oddsUpdated && oddsBar){
+    const dt = new Date(oddsUpdated);
+    const timeStr = dt.toLocaleTimeString('ja-JP', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    oddsLabel.textContent = `オッズ取得時刻: ${timeStr}`;
+    oddsBar.style.display = 'flex';
+  } else if(oddsBar){
+    oddsBar.style.display = 'none';
+  }
+
   // オッズデータを取得（place_id → race_num の形式で保存されている）
   // race.venue から place_id を逆引き
   const VENUE_TO_ID = {
@@ -1073,6 +1095,110 @@ window.addEventListener('load', ()=>{
   const field = document.getElementById('gh-token');
   if(field && saved) field.placeholder = 'トークン保存済み（変更する場合のみ入力）';
 });
+
+
+// 直近レースを自動選択
+function selectNearestRace(){
+  if(!ghData){
+    alert('先に「一覧を読み込む」を押してください');
+    return;
+  }
+
+  const now = new Date();
+  // JST補正
+  const jstNow = new Date(now.getTime() + (9*60*60*1000 - now.getTimezoneOffset()*60*1000));
+  const todayStr = jstNow.toISOString().split('T')[0];
+
+  // 今日のデータを取得
+  const dateKeys = Object.keys(ghData).sort();
+  let targetDate = null;
+  for(const d of dateKeys){
+    if(d >= todayStr){ targetDate = d; break; }
+  }
+  if(!targetDate && dateKeys.length > 0) targetDate = dateKeys[dateKeys.length-1];
+  if(!targetDate){ alert('データがありません'); return; }
+
+  const races = ghData[targetDate].races || [];
+  if(!races.length){ alert('レースが見つかりません'); return; }
+
+  // 現在時刻に最も近い（過去または未来5分以内）レースを探す
+  const nowTime = jstNow.getHours() * 60 + jstNow.getMinutes();
+
+  let bestIdx = 0;
+  let bestDiff = Infinity;
+  races.forEach((race, i) => {
+    if(!race.startTime) return;
+    const [h, m] = race.startTime.split(':').map(Number);
+    const raceMin = h * 60 + m;
+    const diff = raceMin - nowTime;
+    // 発走5分前〜発走直後（10分以内）を優先
+    if(diff >= -10 && diff <= 60){
+      if(Math.abs(diff) < Math.abs(bestDiff)){
+        bestDiff = diff;
+        bestIdx = i;
+      }
+    } else if(bestDiff === Infinity){
+      // 該当なければ最も近い未来のレース
+      if(diff > 0 && diff < bestDiff){
+        bestDiff = diff;
+        bestIdx = i;
+      }
+    }
+  });
+
+  // 日付セレクトを設定
+  const dateSelect = document.getElementById('date-select');
+  dateSelect.value = targetDate;
+  onDateChange();
+
+  // レースセレクトを設定
+  setTimeout(() => {
+    const raceSelect = document.getElementById('race-select');
+    raceSelect.value = bestIdx;
+    onRaceChange();
+    const race = races[bestIdx];
+    if(race) document.getElementById('fetch-status').innerHTML =
+      `<div class="status st-ok">⏱ ${race.raceName} ${race.startTime || ''} を選択しました</div>`;
+  }, 100);
+}
+
+// オッズを最新に更新
+async function refreshOdds(){
+  const dateSelect = document.getElementById('date-select');
+  const raceSelect = document.getElementById('race-select');
+  const date = dateSelect.value;
+  const idx = raceSelect.value;
+  if(!date || idx === ''){
+    alert('レースを選択してください');
+    return;
+  }
+
+  const btn = document.querySelector('[onclick="refreshOdds()"]');
+  if(btn){ btn.textContent = '🔄 更新中...'; btn.disabled = true; }
+
+  try {
+    // GitHubから最新データを再取得
+    const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('取得失敗');
+    const data = await res.json();
+
+    // ghDataを更新
+    if(data.dates){
+      ghData = data.dates;
+    }
+
+    // 現在選択中のレースを再表示
+    onRaceChange();
+    document.getElementById('fetch-status').innerHTML =
+      '<div class="status st-ok">✓ オッズを最新に更新しました</div>';
+  } catch(e){
+    document.getElementById('fetch-status').innerHTML =
+      `<div class="status st-err">更新失敗: ${e.message}</div>`;
+  } finally {
+    if(btn){ btn.textContent = '🔄 最新に更新'; btn.disabled = false; }
+  }
+}
 
 </script>
 </body>
