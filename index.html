@@ -142,6 +142,10 @@ textarea:focus{border-color:var(--gold)}
 .pw-input:focus{border-color:#d4af6a}
 .pw-btn{width:100%;max-width:280px;height:48px;background:#d4af6a;color:#0f0f0f;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
 .pw-err{font-size:12px;color:#f87171;margin-top:8px;min-height:18px}
+
+.kelly-btn{height:44px;border:0.5px solid var(--border2);border-radius:var(--r);background:var(--bg2);color:var(--text2);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:.15s;line-height:1.4;width:100%}
+.kelly-btn:active{transform:scale(.97)}
+.kelly-on{background:var(--gold) !important;color:#0f0f0f !important;border-color:var(--gold) !important;font-weight:700 !important}
 </style>
 </head>
 <body>
@@ -219,9 +223,21 @@ textarea:focus{border-color:var(--gold)}
       <div class="field" style="margin-top:10px;margin-bottom:0">
         <label>ケリー基準</label>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px">
-          <button id="kelly-half" class="kelly-btn kelly-on" onclick="setKelly('half')">ハーフ<br><span style="font-size:10px;opacity:.7">×1/2</span></button>
-          <button id="kelly-quarter" class="kelly-btn" onclick="setKelly('quarter')">クォーター<br><span style="font-size:10px;opacity:.7">×1/4</span></button>
-          <button id="kelly-full" class="kelly-btn" onclick="setKelly('full')">フル<br><span style="font-size:10px;opacity:.7">×1/1</span></button>
+          <button id="kelly-half" class="kelly-btn kelly-on" onclick="setKelly('half')">
+            <div style="font-size:13px">ハーフ</div>
+            <div style="font-size:10px;margin-top:2px">×1/2</div>
+            <div id="ki-half" style="font-size:11px;margin-top:2px">✓</div>
+          </button>
+          <button id="kelly-quarter" class="kelly-btn" onclick="setKelly('quarter')">
+            <div style="font-size:13px">クォーター</div>
+            <div style="font-size:10px;margin-top:2px">×1/4</div>
+            <div id="ki-quarter" style="font-size:11px;margin-top:2px;visibility:hidden">✓</div>
+          </button>
+          <button id="kelly-full" class="kelly-btn" onclick="setKelly('full')">
+            <div style="font-size:13px">フル</div>
+            <div style="font-size:10px;margin-top:2px">×1/1</div>
+            <div id="ki-full" style="font-size:11px;margin-top:2px;visibility:hidden">✓</div>
+          </button>
         </div>
       </div>
     </div>
@@ -514,7 +530,9 @@ function setKelly(type){
   kellyFraction = type==='full'?1.0:type==='quarter'?0.25:0.5;
   ['half','quarter','full'].forEach(t=>{
     const btn=document.getElementById('kelly-'+t);
+    const ind=document.getElementById('ki-'+t);
     if(btn) btn.classList.toggle('kelly-on', t===type);
+    if(ind) ind.style.visibility = t===type ? 'visible' : 'hidden';
   });
 }
 
