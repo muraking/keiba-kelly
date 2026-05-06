@@ -1487,11 +1487,9 @@ function oddsEnterNext(event, currentId){
 
 
 function clearOdds(){
-  horses.forEach(h => {
-    h.tanOdds = null;
-    h.fukuOdds = null;
-    const inp = document.getElementById(`t-${h.num}`);
-    if(inp) inp.value = '';
+  // DOMの入力欄だけクリア（horsesデータは変更しない）
+  document.querySelectorAll('#manual-inputs input[type="number"]').forEach(inp => {
+    inp.value = '';
   });
 }
 
