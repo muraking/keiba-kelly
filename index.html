@@ -146,6 +146,12 @@ textarea:focus{border-color:var(--gold)}
 .kelly-btn{height:44px;border:0.5px solid var(--border2);border-radius:var(--r);background:var(--bg2);color:var(--text2);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:.15s;line-height:1.4;width:100%}
 .kelly-btn:active{transform:scale(.97)}
 .kelly-on{background:var(--gold) !important;color:#0f0f0f !important;border-color:var(--gold) !important;font-weight:700 !important}
+
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--green);color:#0f0f0f;padding:10px 20px;border-radius:99px;
+  font-size:13px;font-weight:700;opacity:0;transition:all .3s;z-index:9999;
+  white-space:nowrap;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -1029,7 +1035,11 @@ function onRaceChange(){
   const oddsData = ghData[date].odds;
   let raceOdds = null;
   if(oddsData && placeId && raceNumInt){
-    raceOdds = oddsData[placeId]?.[raceNumInt] || null;
+    // キーの形式が文字列・数値どちらでも対応
+    const placeOdds = oddsData[placeId] || oddsData[String(placeId)] || null;
+    if(placeOdds){
+      raceOdds = placeOdds[raceNumInt] || placeOdds[String(raceNumInt)] || null;
+    }
   }
 
   horses = race.horses.map(h => {
@@ -1333,18 +1343,27 @@ function startAutoRefresh(){
       if(!res.ok) return;
       const data = await res.json();
       if(data.dates) ghData = data.dates;
+      // オッズ更新時刻を比較して変化を検知
+      const prevUpdated = ghData[date]?.odds_updated;
       onRaceChange();
-      // 更新時刻を表示
+      const newUpdated = ghData[date]?.odds_updated;
+
       const label = document.getElementById('odds-updated-label');
       if(label){
         const now = new Date();
         const t = now.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-        const oddsUpdated = ghData[date]?.odds_updated;
-        if(oddsUpdated){
-          const dt = new Date(oddsUpdated);
+        if(newUpdated){
+          const dt = new Date(newUpdated);
           const oddsT = dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
           label.textContent = `オッズ取得: ${oddsT}（${t}更新）`;
         }
+      }
+
+      // オッズが新しく取得された場合に通知
+      if(newUpdated && newUpdated !== prevUpdated){
+        showToast('🏇 オッズが更新されました');
+        // ブラウザ通知も送る
+        sendPushNotification('競馬ケリー', 'オッズが更新されました');
       }
     } catch(e){}
   }, 60000); // 60秒ごと
@@ -1361,6 +1380,46 @@ function switchResultMode(mode){
   document.getElementById('mode-kelly').classList.toggle('on', mode==='kelly');
   document.getElementById('mode-tanfuku').classList.toggle('on', mode==='tanfuku');
 }
+
+
+// トースト通知
+let toastTimer = null;
+function showToast(msg, duration=3000){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ブラウザPush通知
+async function requestNotificationPermission(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'default'){
+    const perm = await Notification.requestPermission();
+    if(perm === 'granted') showToast('通知を許可しました ✓');
+  }
+}
+
+function sendPushNotification(title, body){
+  if(!('Notification' in window)) return;
+  if(Notification.permission !== 'granted') return;
+  try {
+    new Notification(title, {
+      body,
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
+      tag: 'odds-update', // 同じタグは上書き（重複しない）
+      renotify: true
+    });
+  } catch(e){}
+}
+
+// アプリ起動時に通知許可を要求
+window.addEventListener('load', () => {
+  setTimeout(requestNotificationPermission, 2000);
+});
 
 </script>
 </body>
