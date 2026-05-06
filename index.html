@@ -307,7 +307,10 @@ textarea:focus{border-color:var(--gold)}
     <!-- 手動入力モード -->
     <div id="mode-manual">
 
-      <div class="sh">オッズ入力</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sh" style="margin-bottom:0">オッズ入力</div>
+        <button onclick="clearOdds()" style="background:transparent;border:0.5px solid rgba(248,113,113,0.4);color:var(--red,#f87171);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit">✕ クリア</button>
+      </div>
       <div class="odds-hd">
         <span></span><span>馬名</span><span>単勝</span>
       </div>
@@ -1471,6 +1474,16 @@ function oddsEnterNext(event, currentId){
     // 最後の欄なら計算ボタンにフォーカス
     document.querySelector('[onclick="calcAll()"]')?.focus();
   }
+}
+
+
+function clearOdds(){
+  horses.forEach(h => {
+    h.tanOdds = null;
+    h.fukuOdds = null;
+    const inp = document.getElementById(`t-${h.num}`);
+    if(inp) inp.value = '';
+  });
 }
 
 </script>
