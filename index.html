@@ -560,6 +560,7 @@ function calcAll(){
     const tfPayout = tfBet>0?Math.round(tfBet*tf.tanOdds):0;
     // 複勝オッズがある場合
     const tfFukuOdds = tf.fukuOdds||null;
+    console.log('[tanfuku] num='+tf.num+' name='+tf.name+' tanOdds='+tf.tanOdds+' fukuOdds='+tf.fukuOdds+' tfFukuOdds='+tfFukuOdds);
     const tfFukuKf = tfFukuOdds?halfKelly(tf.norm*1.5, tfFukuOdds):0;
     const tfFukuBet = tfFukuKf>0?Math.max(100,Math.floor(fund*tfFukuKf/100)*100):0;
     const tfTotal = tfBet + tfFukuBet;
