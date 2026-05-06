@@ -387,10 +387,8 @@ function sw(t){
 
 function setMode(m){
   mode=m;
-  document.getElementById('mode-manual').style.display=m==='manual'?'block':'none';
-  document.getElementById('mode-paste').style.display=m==='paste'?'block':'none';
-  document.getElementById('seg-manual').classList.toggle('on',m==='manual');
-  document.getElementById('seg-paste').classList.toggle('on',m==='paste');
+  const manual = document.getElementById('mode-manual');
+  if(manual) manual.style.display='block'; // 常に表示
 }
 
 function parseData(){
