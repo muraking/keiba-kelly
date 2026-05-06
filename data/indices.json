@@ -10848,57 +10848,60 @@
           },
           "11": {
             "1": {
-              "tan": 16.2,
-              "fuku_min": 3.8,
-              "fuku_max": 5.5
+              "tan": 14.0,
+              "fuku_min": 3.6,
+              "fuku_max": 5.4
             },
             "2": {
-              "tan": 40.1,
-              "fuku_min": 7.4,
-              "fuku_max": 11.0
+              "tan": 38.9,
+              "fuku_min": 7.0,
+              "fuku_max": 10.0
             },
             "3": {
-              "tan": 5.5,
+              "tan": 4.9,
               "fuku_min": 1.9,
               "fuku_max": 2.7
             },
             "4": {
-              "tan": 25.4,
-              "fuku_min": 4.2,
-              "fuku_max": 6.2
+              "tan": 26.3,
+              "fuku_min": 4.1,
+              "fuku_max": 6.1
+            },
+            "5": {
+              "tan": 92.0
             },
             "6": {
-              "tan": 5.3,
-              "fuku_min": 1.4,
-              "fuku_max": 1.9
+              "tan": 6.8,
+              "fuku_min": 1.5,
+              "fuku_max": 2.0
             },
             "7": {
-              "tan": 61.3,
-              "fuku_min": 8.5,
+              "tan": 54.8,
+              "fuku_min": 8.2,
               "fuku_max": 12.0
             },
             "8": {
-              "tan": 21.6,
-              "fuku_min": 3.6,
-              "fuku_max": 5.3
+              "tan": 19.3,
+              "fuku_min": 3.5,
+              "fuku_max": 5.2
             },
             "9": {
-              "tan": 4.0,
-              "fuku_min": 1.5,
-              "fuku_max": 2.1
+              "tan": 3.7,
+              "fuku_min": 1.6,
+              "fuku_max": 2.3
             },
             "10": {
-              "tan": 47.5,
+              "tan": 42.8,
               "fuku_min": 7.5,
               "fuku_max": 11.0
             },
             "11": {
-              "tan": 2.8,
-              "fuku_min": 1.9,
-              "fuku_max": 2.6
+              "tan": 3.1,
+              "fuku_min": 1.8,
+              "fuku_max": 2.5
             },
             "12": {
-              "tan": 14.5,
+              "tan": 12.7,
               "fuku_min": 1.4,
               "fuku_max": 1.8
             }
@@ -12885,7 +12888,7 @@
           }
         }
       },
-      "odds_updated": "2026-05-06T17:20:09.814587+09:00"
+      "odds_updated": "2026-05-06T17:20:15.443928+09:00"
     }
   }
 }
