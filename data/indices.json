@@ -12226,47 +12226,49 @@
           },
           "2": {
             "1": {
-              "tan": 25.8,
-              "fuku_min": 1.6,
-              "fuku_max": 3.6
+              "tan": 19.5,
+              "fuku_min": 2.1,
+              "fuku_max": 4.7
             },
             "2": {
-              "fuku_min": 7.5,
-              "fuku_max": 19.0
+              "tan": 72.1,
+              "fuku_min": 4.5,
+              "fuku_max": 10.0
             },
             "3": {
-              "tan": 45.9,
-              "fuku_min": 3.0,
-              "fuku_max": 7.3
+              "tan": 29.8,
+              "fuku_min": 2.8,
+              "fuku_max": 6.3
             },
             "4": {
-              "fuku_min": 7.5,
-              "fuku_max": 19.0
+              "tan": 59.3,
+              "fuku_min": 4.6,
+              "fuku_max": 11.0
             },
             "5": {
-              "tan": 43.9,
+              "tan": 25.9,
               "fuku_min": 2.8,
-              "fuku_max": 6.9
+              "fuku_max": 6.5
             },
             "7": {
-              "tan": 2.3,
+              "tan": 1.7,
               "fuku_min": 1.0,
-              "fuku_max": 1.1
+              "fuku_max": 1.2
             },
             "8": {
-              "tan": 6.8,
+              "tan": 5.0,
               "fuku_min": 1.2,
-              "fuku_max": 2.5
+              "fuku_max": 2.4
             },
             "9": {
-              "tan": 42.6,
-              "fuku_min": 3.3,
-              "fuku_max": 8.2
+              "tan": 32.1,
+              "fuku_min": 3.1,
+              "fuku_max": 7.2
             },
             "10": {
-              "tan": 1.8,
-              "fuku_min": 1.1,
-              "fuku_max": 1.8
+              "tan": 3.5,
+              "fuku_min": 1.0,
+              "fuku_max": 1.6
             }
           },
           "3": {
@@ -12746,7 +12748,7 @@
           }
         }
       },
-      "odds_updated": "2026-05-06T12:35:25.519884+09:00"
+      "odds_updated": "2026-05-06T12:35:32.301357+09:00"
     }
   }
 }
