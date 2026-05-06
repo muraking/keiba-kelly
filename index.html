@@ -271,9 +271,15 @@ textarea:focus{border-color:var(--gold)}
 
     <div id="horse-preview" style="display:none;margin-bottom:20px">
       <div class="sh">出走馬・正規化勝率</div>
-      <div id="odds-info-bar" style="display:none;background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.2);border-radius:var(--r);padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
-        <span id="odds-updated-label" style="font-size:11px;color:var(--amber)">オッズ取得時刻: −</span>
-        <button onclick="refreshOdds()" style="background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.3);color:var(--amber);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit">🔄 最新に更新</button>
+      <div id="odds-info-bar" style="display:none;background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.2);border-radius:var(--r);padding:8px 12px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span id="odds-updated-label" style="font-size:11px;color:var(--amber)">オッズ取得時刻: −</span>
+          <button onclick="refreshOdds()" style="background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.3);color:var(--amber);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit">🔄 最新に更新</button>
+        </div>
+        <button id="fetch-odds-btn" onclick="triggerOddsFetch()" style="width:100%;background:var(--green);color:#0f0f0f;border:none;border-radius:8px;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">
+          📡 オッズを今すぐ取得
+        </button>
+        <div id="fetch-odds-status" style="margin-top:6px;font-size:11px"></div>
       </div>
       <div id="horse-list"></div>
       <button class="btn btn-green" onclick="goToOdds()" style="margin-top:12px">
@@ -747,6 +753,7 @@ const GH_REPO = 'keiba-kelly';
 const GH_BRANCH = 'main';
 const GH_FILE = 'data/indices.json';
 const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+const GH_DISPATCH_URL = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/fetch_odds.yml/dispatches`;
 
 // 日本時間で今日の日付を取得
 function getTodayJST(){
@@ -974,13 +981,13 @@ function onRaceChange(){
   const oddsBar = document.getElementById('odds-info-bar');
   const oddsLabel = document.getElementById('odds-updated-label');
   const oddsUpdated = ghData[date].odds_updated;
-  if(oddsUpdated && oddsBar){
+  if(oddsBar) oddsBar.style.display = 'block';
+  if(oddsUpdated && oddsLabel){
     const dt = new Date(oddsUpdated);
     const timeStr = dt.toLocaleTimeString('ja-JP', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
     oddsLabel.textContent = `オッズ取得時刻: ${timeStr}`;
-    oddsBar.style.display = 'flex';
-  } else if(oddsBar){
-    oddsBar.style.display = 'none';
+  } else if(oddsLabel){
+    oddsLabel.textContent = 'オッズ未取得';
   }
 
   // オッズデータを取得（place_id → race_num の形式で保存されている）
@@ -1104,62 +1111,68 @@ function selectNearestRace(){
     return;
   }
 
+  // JST現在時刻を取得
   const now = new Date();
-  // JST補正
-  const jstNow = new Date(now.getTime() + (9*60*60*1000 - now.getTimezoneOffset()*60*1000));
+  const jstOffset = 9 * 60; // JST = UTC+9
+  const localOffset = -now.getTimezoneOffset(); // 分単位
+  const jstNow = new Date(now.getTime() + (jstOffset - localOffset) * 60000);
   const todayStr = jstNow.toISOString().split('T')[0];
+  const nowMin = jstNow.getHours() * 60 + jstNow.getMinutes();
 
-  // 今日のデータを取得
+  // 今日のデータを選択
   const dateKeys = Object.keys(ghData).sort();
-  let targetDate = null;
-  for(const d of dateKeys){
-    if(d >= todayStr){ targetDate = d; break; }
-  }
-  if(!targetDate && dateKeys.length > 0) targetDate = dateKeys[dateKeys.length-1];
+  let targetDate = dateKeys.find(d => d >= todayStr) || dateKeys[dateKeys.length - 1];
   if(!targetDate){ alert('データがありません'); return; }
 
   const races = ghData[targetDate].races || [];
   if(!races.length){ alert('レースが見つかりません'); return; }
 
-  // 現在時刻に最も近い（過去または未来5分以内）レースを探す
-  const nowTime = jstNow.getHours() * 60 + jstNow.getMinutes();
-
-  let bestIdx = 0;
-  let bestDiff = Infinity;
-  races.forEach((race, i) => {
-    if(!race.startTime) return;
+  // 各レースに発走分数を付与してソート
+  const raceWithTime = races.map((race, originalIdx) => {
+    if(!race.startTime) return null;
     const [h, m] = race.startTime.split(':').map(Number);
     const raceMin = h * 60 + m;
-    const diff = raceMin - nowTime;
-    // 発走5分前〜発走直後（10分以内）を優先
-    if(diff >= -10 && diff <= 60){
-      if(Math.abs(diff) < Math.abs(bestDiff)){
-        bestDiff = diff;
-        bestIdx = i;
-      }
-    } else if(bestDiff === Infinity){
-      // 該当なければ最も近い未来のレース
-      if(diff > 0 && diff < bestDiff){
-        bestDiff = diff;
-        bestIdx = i;
-      }
-    }
-  });
+    const diff = raceMin - nowMin; // 正=未来、負=過去
+    return { race, originalIdx, raceMin, diff };
+  }).filter(Boolean);
 
-  // 日付セレクトを設定
+  if(!raceWithTime.length){ alert('発走時刻が設定されたレースがありません'); return; }
+
+  // 選択優先順位:
+  // 1. 発走5分前〜未発走のレースで最も近いもの
+  // 2. 該当なければ最も近い未来のレース
+  // 全レース終了後は何も選択しない
+  let best = null;
+
+  // 発走5分前以降で未発走（diff >= -5）のレース
+  const upcoming = raceWithTime.filter(r => r.diff >= -5);
+  if(upcoming.length > 0){
+    // diffが最小（最も近い次のレース）
+    best = upcoming.reduce((a, b) => a.diff < b.diff ? a : b);
+  }
+
+  // 日付セレクトを設定してレース一覧を更新
   const dateSelect = document.getElementById('date-select');
   dateSelect.value = targetDate;
   onDateChange();
 
-  // レースセレクトを設定
+  if(!best){
+    document.getElementById('fetch-status').innerHTML =
+      '<div class="status st-warn">本日のレースはすべて終了しています</div>';
+    return;
+  }
+
+  // レースセレクトをoriginalIdxで設定
   setTimeout(() => {
     const raceSelect = document.getElementById('race-select');
-    raceSelect.value = bestIdx;
+    raceSelect.value = best.originalIdx;
     onRaceChange();
-    const race = races[bestIdx];
-    if(race) document.getElementById('fetch-status').innerHTML =
-      `<div class="status st-ok">⏱ ${race.raceName} ${race.startTime || ''} を選択しました</div>`;
-  }, 100);
+    const diffStr = best.diff >= 0
+      ? `発走${best.diff}分前`
+      : `発走${Math.abs(best.diff)}分後`;
+    document.getElementById('fetch-status').innerHTML =
+      `<div class="status st-ok">⏱ ${best.race.raceName} ${best.race.startTime}（${diffStr}）を選択しました</div>`;
+  }, 150);
 }
 
 // オッズを最新に更新
@@ -1197,6 +1210,85 @@ async function refreshOdds(){
       `<div class="status st-err">更新失敗: ${e.message}</div>`;
   } finally {
     if(btn){ btn.textContent = '🔄 最新に更新'; btn.disabled = false; }
+  }
+}
+
+
+// GitHub Actionsでオッズ取得をトリガー
+async function triggerOddsFetch(){
+  const token = loadToken();
+  if(!token){
+    alert('共有タブでGitHubトークンを設定してください');
+    sw('admin');
+    return;
+  }
+
+  const date = document.getElementById('date-select').value;
+  const idx = document.getElementById('race-select').value;
+  if(!date || idx === '' || !ghData[date]){
+    alert('レースを選択してください');
+    return;
+  }
+
+  const race = ghData[date].races[parseInt(idx)];
+  if(!race){ alert('レースデータがありません'); return; }
+
+  const VENUE_TO_ID = {
+    '門別':'36','盛岡':'10','水沢':'11','船橋':'19','大井':'20',
+    '川崎':'21','浦和':'22','金沢':'23','名古屋':'24','笠松':'25',
+    '園田':'27','姫路':'28','高知':'30','佐賀':'31','帯広':'44'
+  };
+
+  const placeId = VENUE_TO_ID[race.venue];
+  const raceNum = parseInt((race.raceNum || '').replace('R',''));
+  if(!placeId || !raceNum){
+    alert(`会場「${race.venue}」のIDが見つかりません`);
+    return;
+  }
+
+  // 開催日（YYYYMMDD形式）
+  const raceDate = date.replace(/-/g, '');
+  const btn = document.getElementById('fetch-odds-btn');
+  const statusEl = document.getElementById('fetch-odds-status');
+  btn.disabled = true;
+  btn.textContent = '📡 取得中...';
+  statusEl.innerHTML = '<span style="color:var(--amber)">GitHub Actionsを起動中...</span>';
+
+  try {
+    const res = await fetch(GH_DISPATCH_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ref: GH_BRANCH,
+        inputs: {
+          place_id: placeId,
+          race_num: String(raceNum),
+          race_date: raceDate,
+          today_jst: date
+        }
+      })
+    });
+
+    if(res.status === 204){
+      statusEl.innerHTML = '<span style="color:var(--green)">✓ 取得開始！約1〜2分後に「🔄 最新に更新」を押してください</span>';
+      // 2分後に自動でオッズを更新
+      setTimeout(async () => {
+        await refreshOdds();
+        statusEl.innerHTML = '<span style="color:var(--green)">✓ オッズを自動更新しました</span>';
+      }, 90000);
+    } else {
+      const err = await res.json();
+      statusEl.innerHTML = `<span style="color:var(--red)">エラー: ${err.message || res.status}</span>`;
+    }
+  } catch(e){
+    statusEl.innerHTML = `<span style="color:var(--red)">通信エラー: ${e.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📡 オッズを今すぐ取得';
   }
 }
 
