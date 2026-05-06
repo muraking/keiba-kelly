@@ -1033,8 +1033,10 @@ function parseAllRaces(raw){
 
   for(const line of lines){
     // レースヘッダー検出: 年/月/日 競馬場 NR クラス名 時刻 ...
-    const hm = line.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\S+)\s+(\d+R)\s+(.+?)\s+(\d{1,2}:\d{2})\s+/);
-    if(hm && !line.match(/[◎○▲△☆－]/)){
+    const hm = line.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\S+)\s+(\d+R)\s+(.+?)\s+(\d{1,2}:\d{2})(?:\s|$)/);
+    // 馬データ行の判定: 記号 + 半角スペース + 馬番 + 【 のパターン（レース名に☆が含まれる場合と区別）
+    const isHorseLine = /[◎○▲△☆－]\s+\d+\s+【/.test(line);
+    if(hm && !isHorseLine){
       if(current && currentHorses.length){
         races.push({ ...current, horses: currentHorses });
       }
