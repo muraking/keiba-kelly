@@ -1076,6 +1076,7 @@ function onRaceChange(){
 
   horses = race.horses.map(h => {
     const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
+    if(h.num === 11) console.log('[debug11] o='+JSON.stringify(o)+' raceOdds keys='+Object.keys(raceOdds||{}).join(','));
     return {
       num: h.num, pct: h.pct, name: h.name,
       norm: h.pct / tot,
