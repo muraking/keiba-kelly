@@ -1061,7 +1061,8 @@ function onRaceChange(){
         console.log('[odds] found placeOdds pid='+pid+' raceKeys='+Object.keys(placeOdds).join(','));
         for(const rnum of [raceNumInt, String(raceNumInt)]){
           const candidate = placeOdds[rnum];
-          if(candidate && (candidate.tan || (candidate.fuku_min && candidate.fuku_min > 0))){
+          // candidateが存在すれば採用（tan/fuku問わず）
+          if(candidate && typeof candidate === 'object' && Object.keys(candidate).length > 0){
             console.log('[odds] FOUND raceOdds='+JSON.stringify(candidate));
             raceOdds = candidate;
             break outer;
