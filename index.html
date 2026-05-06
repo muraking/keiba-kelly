@@ -287,15 +287,7 @@ textarea:focus{border-color:var(--gold)}
       </button>
     </div>
 
-    <div>
-      <div class="sh">手動入力</div>
-      <p class="hint" style="margin-bottom:8px">GitHubにデータがない場合はこちら</p>
-      <div class="field">
-        <textarea id="raw" rows="6" placeholder="◎ 1 【69.1%】 サトノボヤージュ 戸崎圭太 NaN [66.2];
-..."></textarea>
-      </div>
-      <button class="btn btn-outline" onclick="parseData()" style="height:40px;font-size:13px">▶ 手動で読み込む</button>
-    </div>
+
 
   </div>
 
@@ -304,10 +296,7 @@ textarea:focus{border-color:var(--gold)}
     <div id="odds-race-tag"></div>
 
     <!-- モード切替 -->
-    <div class="seg">
-      <button class="seg-btn on" id="seg-manual" onclick="setMode('manual')">手動入力</button>
-      <button class="seg-btn" id="seg-paste" onclick="setMode('paste')">テキスト貼付</button>
-    </div>
+
 
     <!-- 手動入力モード -->
     <div id="mode-manual">
@@ -337,42 +326,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
     <!-- テキスト貼付モード -->
-    <div id="mode-paste" style="display:none">
-      <div class="wf-card" style="margin-bottom:12px">
-        <div class="wf-step">
-          <div class="wf-num">1</div>
-          <div class="wf-body">
-            <h3>オッズページを開く</h3>
-            <p>oddspark・netkeibaなどのオッズページをブラウザで開く</p>
-          </div>
-        </div>
-        <div class="wf-step" style="margin-bottom:0">
-          <div class="wf-num">2</div>
-          <div class="wf-body">
-            <h3>全選択してコピー</h3>
-            <p>SPAT4・oddspark・netkeibaのオッズ画面を長押し→全選択→コピーして貼り付け。単勝オッズを自動抽出します（複勝範囲は自動スキップ）</p>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label>オッズページのテキストを貼り付け（丸ごとでOK）</label>
-        <textarea id="paste-text" rows="10" placeholder="ページ全体のテキストをそのまま貼り付けてください。
 
-例（oddspark形式）:
-1 アラタマノキセキ 3.5
-2 ワキノグラス 2.1
-...
-
-例（netkeiba形式）:
-1着 アラタマノキセキ 3.5倍
-...
-
-馬番と単勝オッズが含まれていれば自動で読み取ります"></textarea>
-      </div>
-      <button class="btn btn-gold btn-sm" onclick="parsePaste()" style="margin-bottom:8px">オッズを自動抽出</button>
-      <button class="btn btn-outline" onclick="setMode('manual')">手動入力に切り替え</button>
-      <div id="paste-status" style="margin-top:10px"></div>
-    </div>
   </div>
 
   <!-- 結果 -->
@@ -477,7 +431,9 @@ function parseData(){
 function buildManual(){
   const c=document.getElementById('manual-inputs');
   c.innerHTML='';
-  for(const h of horses){
+  // 馬番順でソート
+  const sortedHorses=[...horses].sort((a,b)=>a.num-b.num);
+  for(const h of sortedHorses){
     const row=document.createElement('div');
     row.className='orow';
     row.innerHTML=`<div class="num-b">${h.num}</div>
@@ -576,37 +532,22 @@ function calcAll(){
 
   let renders = [];
   if(maxBets <= 3){
-    // 1〜3点：勝率が高く期待値100超の馬をmaxBets頭
-    renders = [...evPool]
-      .sort((a,b)=>b.norm-a.norm)
-      .slice(0, maxBets)
-      .map((h,i)=>({...h,_t:'main',_r:i+1}));
-
+    renders = [...evPool].sort((a,b)=>b.norm-a.norm).slice(0,maxBets).map((h,i)=>({...h,_t:'main',_r:i+1}));
   } else if(maxBets === 4){
-    // 4点：勝率上位3頭＋サブ1頭（期待値100超・300未満・勝率上位3頭以外で期待値最高）
-    const top3 = [...evPool]
-      .sort((a,b)=>b.norm-a.norm)
-      .slice(0, 3)
-      .map((h,i)=>({...h,_t:'main',_r:i+1}));
-    const sub = [...evPool]
-      .filter(h=>h.tanEV<300&&!top3.find(x=>x.num===h.num))
-      .sort((a,b)=>b.tanEV-a.tanEV)[0];
+    const top3 = [...evPool].sort((a,b)=>b.norm-a.norm).slice(0,3).map((h,i)=>({...h,_t:'main',_r:i+1}));
+    const sub = [...evPool].filter(h=>h.tanEV<300&&!top3.find(x=>x.num===h.num)).sort((a,b)=>b.tanEV-a.tanEV)[0];
     renders = [...top3];
     if(sub) renders.push({...sub,_t:'sub'});
-
   } else {
-    // 5点以上：期待値高い順にmaxBets頭
-    renders = [...evPool]
-      .sort((a,b)=>b.tanEV-a.tanEV)
-      .slice(0, maxBets)
-      .map((h,i)=>({...h,_t:'main',_r:i+1}));
+    renders = [...evPool].sort((a,b)=>b.tanEV-a.tanEV).slice(0,maxBets).map((h,i)=>({...h,_t:'main',_r:i+1}));
   }
 
-  const raceClassLabel = (typeof currentRaceClass !== 'undefined' && currentRaceClass) ? ` ${currentRaceClass}` : '';
-  const startTimeLabel = (typeof currentStartTime !== 'undefined' && currentStartTime) ? ` 発走${currentStartTime}` : '';
+  const raceClassLabel = (typeof currentRaceClass!=='undefined'&&currentRaceClass)?` ${currentRaceClass}`:'';
+  const startTimeLabel = (typeof currentStartTime!=='undefined'&&currentStartTime)?` 発走${currentStartTime}`:'';
   let html=`<div class="race-tag" style="margin-bottom:14px">◎ ${rname}${raceClassLabel}${startTimeLabel}</div>`;
 
-  // 各馬の賭け額を事前計算（ケリーf>0なら最低100円保証）
+  // ===== 賭け額計算（正確な順序で実行）=====
+  // Step1: ケリー基準で初期賭け額を計算
   const betMap={};
   renders.forEach(h=>{
     if(!h.tanOdds){betMap[h.num]=0;return;}
@@ -614,110 +555,135 @@ function calcAll(){
     betMap[h.num]=kf>0?Math.max(100,Math.floor(fund*kf/100)*100):0;
   });
 
-  // 最大投資額を超える場合は按分して調整
+  // Step2: 最大投資額で按分（先にここで上限を守る）
   let ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
-  if(ttl>0 && ttl>maxInvest){
+  if(isFinite(maxInvest)&&ttl>maxInvest){
     const scale=maxInvest/ttl;
     renders.forEach(h=>{
-      if(betMap[h.num]>0){
-        betMap[h.num]=Math.max(100,Math.floor(betMap[h.num]*scale/100)*100);
-      }
+      if(betMap[h.num]>0) betMap[h.num]=Math.max(100,Math.floor(betMap[h.num]*scale/100)*100);
     });
     ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
   }
 
-  // トリガミ排除：各馬の払戻額 < 合計投資額 になる馬は賭け額を調整
-  // 払戻 = 賭け額 × オッズ
-  // トリガミ条件: 賭け額 × オッズ ≤ 合計投資額
-  // → 最低必要賭け額 = ceil(合計投資額 / オッズ / 100) * 100
-  // これを超えない場合は当該馬への賭けを0にして再計算
-  let changed = true;
-  let safetyCount = 0;
-  while(changed && safetyCount < 10){
-    changed = false;
-    safetyCount++;
-    const currentTtl = Object.values(betMap).reduce((s,v)=>s+v,0);
+  // Step3: トリガミ排除（払戻 > 合計投資額 になるよう調整）
+  // ※最大投資額を超えないよう上限付きで調整
+  let changed=true,safetyCount=0;
+  while(changed&&safetyCount<10){
+    changed=false; safetyCount++;
+    const curTtl=Object.values(betMap).reduce((s,v)=>s+v,0);
     renders.forEach(h=>{
       if(!betMap[h.num]||!h.tanOdds) return;
-      const payout = betMap[h.num]*h.tanOdds;
-      if(payout <= currentTtl){
-        // トリガミ → 最低必要賭け額を計算
-        const minBet = Math.ceil(currentTtl/h.tanOdds/100)*100+100;
-        if(minBet > fund*0.8){
-          // 資金の80%超が必要なら諦めて除外
-          betMap[h.num]=0;
-          changed=true;
+      const payout=betMap[h.num]*h.tanOdds;
+      if(payout<=curTtl){
+        const minBet=Math.ceil((curTtl+100)/h.tanOdds/100)*100;
+        // 最大投資額を超えずかつ資金80%以内なら増額、それ以外は除外
+        const limit=isFinite(maxInvest)?Math.min(fund*0.8,maxInvest):fund*0.8;
+        if(minBet<=limit){
+          betMap[h.num]=minBet; changed=true;
         } else {
-          betMap[h.num]=minBet;
-          changed=true;
+          betMap[h.num]=0; changed=true;
         }
       }
     });
   }
-  ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
 
-  if(!renders.length){
-    html+='<div class="msg">期待値100超の馬が見つかりません<br><small style="color:var(--text3)">オッズが入力されているか確認してください</small></div>';
+  // Step4: トリガミ調整後に最大投資額を再チェック
+  ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
+  if(isFinite(maxInvest)&&ttl>maxInvest){
+    const scale=maxInvest/ttl;
+    renders.forEach(h=>{
+      if(betMap[h.num]>0) betMap[h.num]=Math.max(100,Math.floor(betMap[h.num]*scale/100)*100);
+    });
+    ttl=Object.values(betMap).reduce((s,v)=>s+v,0);
+  }
+  // ==========
+
+  if(!renders.length||!Object.values(betMap).some(v=>v>0)){
+    html+='<div class="msg">期待値100超の馬が見つかりません</div>';
   } else {
+    // ===== 結果テーブル =====
+    const rate=fund>0?(ttl/fund*100).toFixed(1):0;
+    html+=`<div class="total-box" style="margin-bottom:14px">
+      <div class="sg">
+        <div class="sm"><div class="sl">合計投資額</div><div class="sv">¥${ttl.toLocaleString()}</div></div>
+        <div class="sm"><div class="sl">資金使用率</div><div class="sv ${parseFloat(rate)>30?'a':'g'}">${rate}%</div></div>
+      </div>
+    </div>`;
+
+    // 買い目テーブル
+    html+=`<div class="sh">買い目</div>
+    <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="border-bottom:0.5px solid var(--border2)">
+            <th style="padding:8px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">馬番・馬名</th>
+            <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">勝率</th>
+            <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">オッズ</th>
+            <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">期待値</th>
+            <th style="padding:8px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">賭け額</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
     for(const h of renders){
-      const isM=h._t==='main';
       const tb=betMap[h.num]||0;
       const kf=h.tanOdds?halfKelly(h.norm,h.tanOdds):0;
-      const ev=h.tanEV,evS=ev?ev.toFixed(0):'−',evC=ev>=150?'g':ev>=100?'a':'';
-      html+=`<div class="rc ${isM?'main':'sub'}">
-        <div class="rc-top">
-          <div class="num-b">${h.num}</div>
-          <span class="hn">${h.name}</span>
-          <span class="badge ${isM?'badge-g':'badge-b'}">${isM?'推奨'+h._r:'サブ'}</span>
-        </div>
-        <div class="sg">
-          <div class="sm"><div class="sl">正規化勝率</div><div class="sv">${(h.norm*100).toFixed(1)}%</div></div>
-          <div class="sm"><div class="sl">単勝期待値</div><div class="sv ${evC}">${evS}</div></div>
-        </div>
-        <div class="divider"></div>`;
-      if(h.tanOdds){
-        const ret = tb>0 ? Math.round(tb*h.tanOdds) : 0;
-        const profit = tb>0 ? ret-ttl : 0; // 払戻 - 合計投資額 = 純利益
-        const kellyLabel = kellyFraction===1?'フル':kellyFraction===0.25?'クォーター':'ハーフ';
-        html+=`<div class="brow">
-          <span class="brow-label">単勝 ${h.tanOdds}倍
-            <span style="font-size:10px;color:var(--text3);margin-left:6px">${kellyLabel} ${(kf*100).toFixed(1)}%</span>
-          </span>
-          ${tb>0
-            ? `<div style="text-align:right">
-                <span class="chip chip-g">¥${tb.toLocaleString()}</span>
-                <div style="font-size:10px;color:var(--green);margin-top:2px">払戻¥${ret.toLocaleString()} 純利+¥${profit.toLocaleString()}</div>
-               </div>`
-            : '<span class="chip chip-na">推奨なし(f≦0)</span>'}
-        </div>`;
-      }
-      html+='</div>';
+      const ev=h.tanEV,evC=ev>=150?'var(--green)':ev>=100?'var(--amber)':'var(--text2)';
+      const payout=tb>0?Math.round(tb*h.tanOdds):0;
+      const profit=tb>0?payout-ttl:0;
+      const label=h._t==='main'?`推奨${h._r}`:'サブ';
+      const labelColor=h._t==='main'?'var(--green)':'var(--blue)';
+      html+=`<tr style="border-bottom:0.5px solid var(--border)">
+        <td style="padding:10px 10px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--bg3);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0">${h.num}</div>
+            <div>
+              <div style="font-size:12px;color:var(--text)">${h.name}</div>
+              <div style="font-size:10px;color:${labelColor}">${label}</div>
+            </div>
+          </div>
+        </td>
+        <td style="padding:10px 6px;text-align:right;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</td>
+        <td style="padding:10px 6px;text-align:right;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace">${h.tanOdds?h.tanOdds+'倍':'−'}</td>
+        <td style="padding:10px 6px;text-align:right;font-size:12px;font-weight:700;color:${evC};font-family:'DM Mono',monospace">${ev?ev.toFixed(0):'−'}</td>
+        <td style="padding:10px 10px;text-align:right">
+          ${tb>0?`<div style="font-size:13px;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">¥${tb.toLocaleString()}</div>
+            <div style="font-size:10px;color:var(--text3)">→¥${payout.toLocaleString()}</div>
+            <div style="font-size:10px;color:var(--text3)">純利+¥${profit.toLocaleString()}</div>`
+          :'<span style="font-size:11px;color:var(--text3)">推奨なし</span>'}
+        </td>
+      </tr>`;
     }
-    const rate=fund>0?(ttl/fund*100).toFixed(1):0;
-    html+=`<div class="total-box"><div class="sg">
-      <div class="sm"><div class="sl">合計投資額</div><div class="sv">¥${ttl.toLocaleString()}</div></div>
-      <div class="sm"><div class="sl">資金使用率</div><div class="sv ${parseFloat(rate)>30?'a':'g'}">${rate}%</div></div>
-    </div></div>`;
+    html+=`</tbody></table></div>`;
   }
 
-  html+=`<div class="sh" style="margin-top:4px">全馬 期待値一覧</div>
-  <div style="display:grid;grid-template-columns:24px 1fr 40px 44px 44px;gap:4px;padding:0 4px 6px;border-bottom:0.5px solid var(--border);margin-bottom:2px">
-    <span></span><span style="font-size:10px;color:var(--text3)">馬名</span>
-    <span style="font-size:10px;color:var(--text3);text-align:right">勝率</span>
-    <span style="font-size:10px;color:var(--text3);text-align:right">オッズ</span>
-    <span style="font-size:10px;color:var(--text3);text-align:right">期待値</span>
-  </div>`;
+  // 全馬期待値一覧
+  html+=`<div class="sh">全馬 期待値一覧</div>
+  <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="border-bottom:0.5px solid var(--border2)">
+        <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">馬番・馬名</th>
+        <th style="padding:6px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">勝率</th>
+        <th style="padding:6px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">オッズ</th>
+        <th style="padding:6px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">期待値</th>
+      </tr></thead><tbody>`;
+
   const allS=[...horses].sort((a,b)=>(b.tanEV||0)-(a.tanEV||0));
   for(const h of allS){
-    const ev=h.tanEV,ec=ev>=150?'hi':ev>=100?'mid':'lo';
-    html+=`<div style="display:grid;grid-template-columns:24px 1fr 40px 44px 44px;gap:4px;align-items:center;padding:7px 4px;border-bottom:0.5px solid var(--border)">
-      <div class="ev-num">${h.num}</div>
-      <div class="ev-name">${h.name}</div>
-      <div class="ev-pct">${(h.norm*100).toFixed(1)}%</div>
-      <div style="font-size:12px;font-weight:500;text-align:right;font-family:'DM Mono',monospace;color:var(--text2)">${h.tanOdds?h.tanOdds+'倍':'−'}</div>
-      <div class="ev-val ${ec}">${ev?ev.toFixed(0):'−'}</div>
-    </div>`;
+    const ev=h.tanEV,ec=ev>=150?'var(--green)':ev>=100?'var(--amber)':'var(--text3)';
+    html+=`<tr style="border-bottom:0.5px solid var(--border)">
+      <td style="padding:8px 10px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--bg3);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0">${h.num}</div>
+          <span style="font-size:12px;color:var(--text)">${h.name}</span>
+        </div>
+      </td>
+      <td style="padding:8px 6px;text-align:right;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</td>
+      <td style="padding:8px 6px;text-align:right;font-size:11px;color:var(--text2);font-family:'DM Mono',monospace">${h.tanOdds?h.tanOdds+'倍':'−'}</td>
+      <td style="padding:8px 10px;text-align:right;font-size:12px;font-weight:700;color:${ec};font-family:'DM Mono',monospace">${ev?ev.toFixed(0):'−'}</td>
+    </tr>`;
   }
+  html+=`</tbody></table></div>`;
 
   document.getElementById('res-content').innerHTML=html;
   document.getElementById('nb-result').classList.add('done');
@@ -1046,6 +1012,7 @@ function onRaceChange(){
   });
   preview.style.display = 'block';
   document.getElementById('nb-setup').classList.add('done');
+  startAutoRefresh(); // レース選択時に自動更新開始
 }
 
 function goToOdds(){
@@ -1290,6 +1257,43 @@ async function triggerOddsFetch(){
     btn.disabled = false;
     btn.textContent = '📡 オッズを今すぐ取得';
   }
+}
+
+
+// オッズ自動更新（60秒ごと）
+let autoRefreshTimer = null;
+
+function startAutoRefresh(){
+  stopAutoRefresh();
+  autoRefreshTimer = setInterval(async () => {
+    const date = document.getElementById('date-select')?.value;
+    const idx = document.getElementById('race-select')?.value;
+    if(!date || idx === '') return;
+    try {
+      const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
+      const res = await fetch(url);
+      if(!res.ok) return;
+      const data = await res.json();
+      if(data.dates) ghData = data.dates;
+      onRaceChange();
+      // 更新時刻を表示
+      const label = document.getElementById('odds-updated-label');
+      if(label){
+        const now = new Date();
+        const t = now.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        const oddsUpdated = ghData[date]?.odds_updated;
+        if(oddsUpdated){
+          const dt = new Date(oddsUpdated);
+          const oddsT = dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+          label.textContent = `オッズ取得: ${oddsT}（${t}更新）`;
+        }
+      }
+    } catch(e){}
+  }, 60000); // 60秒ごと
+}
+
+function stopAutoRefresh(){
+  if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer=null; }
 }
 
 </script>
