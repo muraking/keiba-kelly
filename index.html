@@ -300,22 +300,7 @@ textarea:focus{border-color:var(--gold)}
 
     <!-- 手動入力モード -->
     <div id="mode-manual">
-      <div class="wf-card" style="margin-bottom:14px">
-        <div class="wf-step">
-          <div class="wf-num">1</div>
-          <div class="wf-body">
-            <h3>オッズ画面を撮影・メモ</h3>
-            <p>地方競馬アプリのオッズ画面を見ながら各馬の単勝・複勝オッズを入力してください</p>
-          </div>
-        </div>
-        <div class="wf-step">
-          <div class="wf-num">2</div>
-          <div class="wf-body">
-            <h3>Claudeに読んでもらう場合</h3>
-            <p>このアプリを開いたまま、Claudeのチャットにオッズ画像を貼り付けて<code>オッズを読んで</code>と送ると、テキストで返してくれます。それを「テキスト貼付」タブに貼ってください</p>
-          </div>
-        </div>
-      </div>
+
       <div class="sh">オッズ入力</div>
       <div class="odds-hd">
         <span></span><span>馬名</span><span>単勝</span>
@@ -544,7 +529,58 @@ function calcAll(){
 
   const raceClassLabel = (typeof currentRaceClass!=='undefined'&&currentRaceClass)?` ${currentRaceClass}`:'';
   const startTimeLabel = (typeof currentStartTime!=='undefined'&&currentStartTime)?` 発走${currentStartTime}`:'';
-  let html=`<div class="race-tag" style="margin-bottom:14px">◎ ${rname}${raceClassLabel}${startTimeLabel}</div>`;
+
+  // 単複推奨パターンを計算（勝率上位5頭から期待値最高の1頭）
+  const top5byNorm = [...horses].filter(h=>h.tanOdds).sort((a,b)=>b.norm-a.norm).slice(0,5);
+  const tanfukuPick = top5byNorm.filter(h=>h.tanEV&&h.tanEV>100).sort((a,b)=>b.tanEV-a.tanEV)[0]||null;
+  let tanfukuHtml = '';
+  if(tanfukuPick){
+    const tf = tanfukuPick;
+    const tfKf = halfKelly(tf.norm, tf.tanOdds);
+    const tfBet = tfKf>0?Math.max(100,Math.floor(fund*tfKf/100)*100):0;
+    const tfPayout = tfBet>0?Math.round(tfBet*tf.tanOdds):0;
+    // 複勝オッズがある場合
+    const tfFukuOdds = tf.fukuOdds||null;
+    const tfFukuKf = tfFukuOdds?halfKelly(tf.norm*1.5, tfFukuOdds):0;
+    const tfFukuBet = tfFukuKf>0?Math.max(100,Math.floor(fund*tfFukuKf/100)*100):0;
+    const tfTotal = tfBet + tfFukuBet;
+    tanfukuHtml = `
+      <div style="background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r2);padding:12px;margin-bottom:12px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text3);margin-bottom:8px">単複推奨（勝率上位5頭中 期待値最高）</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--bg2);color:var(--gold);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0">${tf.num}</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:var(--text)">${tf.name}</div>
+            <div style="font-size:11px;color:var(--text2)">勝率${(tf.norm*100).toFixed(1)}% / 期待値${tf.tanEV.toFixed(0)}</div>
+          </div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <tr style="border-bottom:0.5px solid var(--border)">
+            <td style="padding:7px 4px;color:var(--text2);font-size:12px">単勝 ${tf.tanOdds}倍</td>
+            <td style="padding:7px 4px;text-align:right;font-family:'DM Mono',monospace;font-weight:700;color:var(--green)">¥${tfBet.toLocaleString()}</td>
+            <td style="padding:7px 4px;text-align:right;font-size:11px;color:var(--text3)">→¥${tfPayout.toLocaleString()}</td>
+          </tr>
+          ${tfFukuOdds&&tfFukuBet>0?`<tr>
+            <td style="padding:7px 4px;color:var(--text2);font-size:12px">複勝 ${tfFukuOdds}倍</td>
+            <td style="padding:7px 4px;text-align:right;font-family:'DM Mono',monospace;font-weight:700;color:var(--blue)">¥${tfFukuBet.toLocaleString()}</td>
+            <td style="padding:7px 4px;text-align:right;font-size:11px;color:var(--text3)">→¥${Math.round(tfFukuBet*tfFukuOdds).toLocaleString()}</td>
+          </tr>`:''}
+        </table>
+        <div style="margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;font-size:12px">
+          <span style="color:var(--text2)">合計投資</span>
+          <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--text)">¥${tfTotal.toLocaleString()}</span>
+        </div>
+      </div>`;
+  }
+
+  let html=`<div class="race-tag" style="margin-bottom:10px">◎ ${rname}${raceClassLabel}${startTimeLabel}</div>`;
+
+  // モード切替タブ
+  html+=`<div class="seg" style="margin-bottom:14px">
+    <button class="seg-btn on" id="mode-kelly" onclick="switchResultMode('kelly')">ケリー買い目</button>
+    <button class="seg-btn" id="mode-tanfuku" onclick="switchResultMode('tanfuku')">単複推奨</button>
+  </div>
+  <div id="result-kelly">`;
 
   // ===== 賭け額計算（正確な順序で実行）=====
   // Step1: ケリー基準で初期賭け額を計算
@@ -684,6 +720,16 @@ function calcAll(){
     </tr>`;
   }
   html+=`</tbody></table></div>`;
+  html+=`</div>`; // close result-kelly
+
+  // 単複推奨セクション
+  html+=`<div id="result-tanfuku" style="display:none">`;
+  if(tanfukuPick){
+    html+=tanfukuHtml;
+  } else {
+    html+=`<div class="msg">勝率上位5頭に期待値100超の馬がありません</div>`;
+  }
+  html+=`</div>`;
 
   document.getElementById('res-content').innerHTML=html;
   document.getElementById('nb-result').classList.add('done');
@@ -1106,13 +1152,12 @@ function selectNearestRace(){
   if(!raceWithTime.length){ alert('発走時刻が設定されたレースがありません'); return; }
 
   // 選択優先順位:
-  // 1. 発走5分前〜未発走のレースで最も近いもの
-  // 2. 該当なければ最も近い未来のレース
-  // 全レース終了後は何も選択しない
+  // 1. 現在時刻以降（未発走）のレースで最も近いもの
+  // 2. 全レース終了後は何も選択しない
   let best = null;
 
-  // 発走5分前以降で未発走（diff >= -5）のレース
-  const upcoming = raceWithTime.filter(r => r.diff >= -5);
+  // 発走2分前より前のレースのみ対象（締め切り-2分を過ぎたものは除外）
+  const upcoming = raceWithTime.filter(r => r.diff > 2);
   if(upcoming.length > 0){
     // diffが最小（最も近い次のレース）
     best = upcoming.reduce((a, b) => a.diff < b.diff ? a : b);
@@ -1134,9 +1179,7 @@ function selectNearestRace(){
     const raceSelect = document.getElementById('race-select');
     raceSelect.value = best.originalIdx;
     onRaceChange();
-    const diffStr = best.diff >= 0
-      ? `発走${best.diff}分前`
-      : `発走${Math.abs(best.diff)}分後`;
+    const diffStr = `発走${best.diff}分前`;
     document.getElementById('fetch-status').innerHTML =
       `<div class="status st-ok">⏱ ${best.race.raceName} ${best.race.startTime}（${diffStr}）を選択しました</div>`;
   }, 150);
@@ -1294,6 +1337,14 @@ function startAutoRefresh(){
 
 function stopAutoRefresh(){
   if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer=null; }
+}
+
+
+function switchResultMode(mode){
+  document.getElementById('result-kelly').style.display = mode==='kelly'?'block':'none';
+  document.getElementById('result-tanfuku').style.display = mode==='tanfuku'?'block':'none';
+  document.getElementById('mode-kelly').classList.toggle('on', mode==='kelly');
+  document.getElementById('mode-tanfuku').classList.toggle('on', mode==='tanfuku');
 }
 
 </script>
