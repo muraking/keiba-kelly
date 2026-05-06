@@ -388,6 +388,12 @@ function sw(t){
     document.getElementById('nb-'+n).classList.toggle('on',n===t);
   });
   window.scrollTo(0,0);
+  // 設定タブに戻る時はオッズをghDataから再読み込み
+  if(t === 'setup' && horses.length > 0){
+    const date = document.getElementById('date-select')?.value;
+    const idx = document.getElementById('race-select')?.value;
+    if(date && idx !== '') onRaceChange();
+  }
 }
 
 function setMode(m){
@@ -1496,14 +1502,17 @@ function goToOddsWithData(){
   sw('odds');
 }
 
-// オッズ入力：全欄クリアしてタブへ
+// オッズ入力：入力欄だけクリアしてタブへ（horsesのデータは保持）
 function goToOddsClear(){
-  horses.forEach(h => {
-    h.tanOdds = null;
-    h.fukuOdds = null;
-  });
-  buildManual(); // クリアした状態で入力欄を構築
+  // horsesデータは一切変更せずオッズタブへ
+  // 入力欄はbuildManualで構築後にDOMだけクリア
+  buildManual();
   sw('odds');
+  setTimeout(() => {
+    document.querySelectorAll('#manual-inputs input[type="number"]').forEach(inp => {
+      inp.value = '';
+    });
+  }, 50);
 }
 
 </script>
