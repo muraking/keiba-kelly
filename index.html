@@ -519,8 +519,9 @@ function halfKelly(p,odds){
 function calcAll(){
   for(const h of horses){
     const tv=document.getElementById('t-'+h.num)?.value;
-    h.tanOdds=tv?parseFloat(tv):null;
-    h.fukuOdds=null;
+    // 手動入力がある場合はそちらを優先、なければ取得済みオッズを維持
+    if(tv) h.tanOdds=parseFloat(tv);
+    // fukuOddsはリセットしない（取得済みの複勝オッズを保持）
     h.tanEV=h.tanOdds?h.norm*h.tanOdds*100:null;
   }
 
@@ -560,7 +561,6 @@ function calcAll(){
     const tfPayout = tfBet>0?Math.round(tfBet*tf.tanOdds):0;
     // 複勝オッズがある場合
     const tfFukuOdds = tf.fukuOdds||null;
-    console.log('[tanfuku] num='+tf.num+' name='+tf.name+' tanOdds='+tf.tanOdds+' fukuOdds='+tf.fukuOdds+' tfFukuOdds='+tfFukuOdds);
     const tfFukuKf = tfFukuOdds?halfKelly(tf.norm*1.5, tfFukuOdds):0;
     const tfFukuBet = tfFukuKf>0?Math.max(100,Math.floor(fund*tfFukuKf/100)*100):0;
     const tfTotal = tfBet + tfFukuBet;
@@ -1076,7 +1076,6 @@ function onRaceChange(){
 
   horses = race.horses.map(h => {
     const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
-    if(h.num === 11) console.log('[debug11] o='+JSON.stringify(o)+' raceOdds keys='+Object.keys(raceOdds||{}).join(','));
     return {
       num: h.num, pct: h.pct, name: h.name,
       norm: h.pct / tot,
