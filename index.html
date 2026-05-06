@@ -1033,13 +1033,18 @@ function onRaceChange(){
   };
   const placeId = VENUE_TO_ID[race.venue] || null;
   const raceNumInt = parseInt((race.raceNum || '').replace('R',''));
-  const oddsData = ghData[date].odds;
+  // オッズを全日付から検索（指数日付とオッズ保存日付がずれる場合に対応）
   let raceOdds = null;
-  if(oddsData && placeId && raceNumInt){
-    // キーの形式が文字列・数値どちらでも対応
+  const allDates = Object.keys(ghData).sort().reverse();
+  for(const d of allDates){
+    const oddsData = ghData[d].odds;
+    if(!oddsData) continue;
     const placeOdds = oddsData[placeId] || oddsData[String(placeId)] || null;
-    if(placeOdds){
-      raceOdds = placeOdds[raceNumInt] || placeOdds[String(raceNumInt)] || null;
+    if(!placeOdds) continue;
+    const candidate = placeOdds[raceNumInt] || placeOdds[String(raceNumInt)] || null;
+    if(candidate && (candidate.tan || candidate.fuku_min)){
+      raceOdds = candidate;
+      break; // 最新の日付から見つかった時点で終了
     }
   }
 
@@ -1049,7 +1054,8 @@ function onRaceChange(){
       num: h.num, pct: h.pct, name: h.name,
       norm: h.pct / tot,
       tanOdds: o ? (o.tan || null) : null,
-      fukuOdds: o ? (o.fuku_min || null) : null
+      // fuku_min が 0 または未定義の場合は null扱い
+      fukuOdds: o ? ((o.fuku_min && o.fuku_min > 0) ? o.fuku_min : null) : null
     };
   });
   horses.sort((a,b) => b.norm - a.norm);
@@ -1061,12 +1067,20 @@ function onRaceChange(){
   const hl = document.getElementById('horse-list');
   const classStr = race.raceClass || '';
   const timeStr = race.startTime || '';
-  // オッズ取得時刻を文字列に変換
+  // オッズ取得時刻を全日付から検索
   const oddsUpdatedStr = (() => {
-    const ou = ghData[date].odds_updated;
-    if(!ou) return null;
-    const dt = new Date(ou);
-    return dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    const allD = Object.keys(ghData).sort().reverse();
+    for(const d of allD){
+      const ou = ghData[d].odds_updated;
+      if(!ou) continue;
+      // この日付にplaceIdのオッズがあるか確認
+      const od = ghData[d].odds;
+      if(od && (od[placeId] || od[String(placeId)])){
+        const dt = new Date(ou);
+        return dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+      }
+    }
+    return null;
   })();
 
   hl.innerHTML = `<div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;margin-bottom:10px">
