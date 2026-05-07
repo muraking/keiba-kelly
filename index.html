@@ -143,6 +143,7 @@ textarea:focus{border-color:var(--gold)}
 .pw-btn{width:100%;max-width:280px;height:48px;background:#d4af6a;color:#0f0f0f;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
 .pw-err{font-size:12px;color:#f87171;margin-top:8px;min-height:18px}
 
+.pw-input+.pw-input{margin-top:8px}
 .kelly-btn{height:44px;border:0.5px solid var(--border2);border-radius:var(--r);background:var(--bg2);color:var(--text2);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:.15s;line-height:1.4;width:100%}
 .kelly-btn:active{transform:scale(.97)}
 .kelly-on{background:var(--gold) !important;color:#0f0f0f !important;border-color:var(--gold) !important;font-weight:700 !important}
@@ -164,10 +165,13 @@ textarea:focus{border-color:var(--gold)}
     </svg>
   </div>
   <div class="pw-title">競馬ケリーアナライザー</div>
-  <div class="pw-sub">パスワードを入力してください</div>
-  <input class="pw-input" type="password" id="pw-input" placeholder="••••••" autocomplete="off"
+  <div class="pw-sub">ユーザーIDとパスワードを入力してください</div>
+  <input class="pw-input" type="text" id="user-id-input" placeholder="ユーザーID" autocomplete="off"
+    style="margin-bottom:8px"
+    onkeydown="if(event.key==='Enter')document.getElementById('pw-input').focus()">
+  <input class="pw-input" type="password" id="pw-input" placeholder="パスワード" autocomplete="off"
     onkeydown="if(event.key==='Enter')checkPw()">
-  <button class="pw-btn" onclick="checkPw()">入力</button>
+  <button class="pw-btn" onclick="checkPw()">ログイン</button>
   <div class="pw-err" id="pw-err"></div>
 </div>
 
@@ -689,6 +693,12 @@ function calcAll(){
         <div class="sm"><div class="sl">資金使用率</div><div class="sv ${parseFloat(rate)>30?'a':'g'}">${rate}%</div></div>
       </div>
     </div>`;
+    // 管理者のみ購入ボタンを表示
+    if(isAdmin && ttl > 0){
+      html+=`<button class="btn btn-gold" style="margin-bottom:14px;font-size:14px;font-weight:700"
+        onclick="executePurchase()">🛒 SPAT4で購入する</button>
+        <div id="purchase-status" style="margin-top:-8px;margin-bottom:14px;font-size:12px"></div>`;
+    }
 
     // 買い目テーブル
     html+=`<div class="sh">買い目</div>
@@ -785,20 +795,49 @@ function calcAll(){
 
 
 <script>
+// ユーザー定義（ユーザーID: SHA256ハッシュ, isAdmin）
+// ハッシュ = SHA256(ユーザーID:パスワード)
+const USERS = {
+  'admin': { hash: 'bf92e974077909dd0b1216a1b893e226a8a397f2becb48e54e69401c87730349', isAdmin: true },
+  'user1': { hash: '33292665d2dfcbb6988a80818a859ad79f5a2a7ecfc26ba739bf42f47240df76', isAdmin: false },
+};
+
+let currentUser = null;
+let isAdmin = false;
+
+async function hashStr(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
 (function(){
-  const PW = 'keiba2025';
   const KEY = 'kk_auth';
-  if(sessionStorage.getItem(KEY)==='ok'){
-    document.getElementById('pw-screen').style.display='none';
-    return;
+  const saved = sessionStorage.getItem(KEY);
+  if(saved){
+    try {
+      const u = JSON.parse(saved);
+      currentUser = u.id;
+      isAdmin = u.isAdmin;
+      document.getElementById('pw-screen').style.display='none';
+      return;
+    } catch(e){}
   }
-  window.checkPw = function(){
-    const v = document.getElementById('pw-input').value;
-    if(v === PW){
-      sessionStorage.setItem(KEY,'ok');
+  window.checkPw = async function(){
+    const userId = document.getElementById('user-id-input').value.trim();
+    const pw = document.getElementById('pw-input').value;
+    const user = USERS[userId];
+    if(!user){ 
+      document.getElementById('pw-err').textContent='ユーザーIDまたはパスワードが違います';
+      return;
+    }
+    const h = await hashStr(`${userId}:${pw}`);
+    if(h === user.hash){
+      currentUser = userId;
+      isAdmin = user.isAdmin;
+      sessionStorage.setItem('kk_auth', JSON.stringify({id: userId, isAdmin: isAdmin}));
       document.getElementById('pw-screen').style.display='none';
     } else {
-      document.getElementById('pw-err').textContent='パスワードが違います';
+      document.getElementById('pw-err').textContent='ユーザーIDまたはパスワードが違います';
       document.getElementById('pw-input').value='';
       document.getElementById('pw-input').focus();
     }
@@ -1571,6 +1610,86 @@ function recalcTanfuku(){
   betEl.textContent  = fukuBet > 0 ? '¥' + fukuBet.toLocaleString() : '−';
   payEl.textContent  = fukuBet > 0 ? '¥' + Math.round(fukuBet * fukuOdds).toLocaleString() : '−';
   totEl.textContent  = '¥' + total.toLocaleString();
+}
+
+
+// SPAT4自動購入（GitHub Actionsトリガー）
+async function executePurchase(){
+  const token = loadToken();
+  if(!token){
+    alert('共有タブでGitHubトークンを設定してください');
+    return;
+  }
+
+  const date = document.getElementById('date-select').value;
+  const idx = document.getElementById('race-select').value;
+  if(!date || idx === '' || !ghData[date]) return;
+
+  const race = ghData[date].races[parseInt(idx)];
+  if(!race) return;
+
+  const VENUE_TO_ID = {
+    '門別':'36','盛岡':'10','水沢':'11','船橋':'19','大井':'20',
+    '川崎':'21','浦和':'22','金沢':'23','名古屋':'24','笠松':'25',
+    '園田':'27','姫路':'28','高知':'30','佐賀':'31','帯広':'44'
+  };
+
+  const placeId = VENUE_TO_ID[race.venue];
+  const raceNum = parseInt((race.raceNum||'').replace('R',''));
+  if(!placeId || !raceNum){ alert(`会場「${race.venue}」のIDが見つかりません`); return; }
+
+  // 買い目データを収集
+  const bets = [];
+  renders.forEach(h => {
+    const tb = betMap[h.num] || 0;
+    if(tb > 0 && h.tanOdds){
+      bets.push({ num: h.num, amount: tb });
+    }
+  });
+
+  if(!bets.length){ alert('購入する買い目がありません'); return; }
+
+  const confirmed = confirm(
+    `以下の内容でSPAT4に投票します:\n\n` +
+    bets.map(b => `${b.num}番 単勝 ¥${b.amount.toLocaleString()}`).join('\n') +
+    `\n\n合計: ¥${bets.reduce((s,b)=>s+b.amount,0).toLocaleString()}\n\nよろしいですか？`
+  );
+  if(!confirmed) return;
+
+  const statusEl = document.getElementById('purchase-status');
+  if(statusEl) statusEl.innerHTML = '<span style="color:var(--amber)">購入処理中...</span>';
+
+  try {
+    const dispatchUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/purchase.yml/dispatches`;
+    const raceDate = date.replace(/-/g,'');
+
+    const res = await fetch(dispatchUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ref: GH_BRANCH,
+        inputs: {
+          place_id: placeId,
+          race_num: String(raceNum),
+          race_date: raceDate,
+          bets: JSON.stringify(bets)
+        }
+      })
+    });
+
+    if(res.status === 204){
+      if(statusEl) statusEl.innerHTML = '<span style="color:var(--green)">✓ 購入処理を開始しました（約1〜2分で完了）</span>';
+    } else {
+      const err = await res.json();
+      if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">エラー: ${err.message||res.status}</span>`;
+    }
+  } catch(e){
+    if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">通信エラー: ${e.message}</span>`;
+  }
 }
 
 </script>
