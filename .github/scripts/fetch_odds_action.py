@@ -126,7 +126,8 @@ async def main():
             await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
         except Exception as e:
             print(f"goto警告: {e}")
-        await page.wait_for_timeout(5000)
+        # フレーム読み込みを十分待つ（GitHub Actionsは遅い）
+        await page.wait_for_timeout(8000)
 
         print(f"現在URL: {page.url}")
 
@@ -136,12 +137,17 @@ async def main():
             await browser.close()
             exit(1)
 
-        # P122Sフレームを探す
+        # P122Sフレームを探す（最大3回リトライ）
         target_frame = None
-        for frame in page.frames:
-            if "P122S" in frame.url:
-                target_frame = frame
+        for attempt in range(3):
+            for frame in page.frames:
+                if "P122S" in frame.url:
+                    target_frame = frame
+                    break
+            if target_frame:
                 break
+            print(f"  フレーム待機中... ({attempt+1}/3) frames={[f.url for f in page.frames]}")
+            await page.wait_for_timeout(5000)
 
         if not target_frame:
             print("P122Sフレームが見つかりません")
