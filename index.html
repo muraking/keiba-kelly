@@ -549,7 +549,7 @@ function calcAll(){
   // 期待値100超の馬を抽出
   const evPool = [...horses].filter(h=>h.tanEV&&h.tanEV>100);
 
-  let renders = [];
+  renders = [];
   if(maxBets <= 3){
     renders = [...evPool].sort((a,b)=>b.norm-a.norm).slice(0,maxBets).map((h,i)=>({...h,_t:'main',_r:i+1}));
   } else if(maxBets === 4){
@@ -642,7 +642,7 @@ function calcAll(){
 
   // ===== 賭け額計算（正確な順序で実行）=====
   // Step1: ケリー基準で初期賭け額を計算
-  const betMap={};
+  betMap={};
   renders.forEach(h=>{
     if(!h.tanOdds){betMap[h.num]=0;return;}
     const kf=halfKelly(h.norm,h.tanOdds);
@@ -708,6 +708,18 @@ function calcAll(){
       html+=`<button class="btn btn-gold" style="margin-bottom:14px;font-size:14px;font-weight:700"
         onclick="executePurchase()">🛒 SPAT4で購入する</button>
         <div id="purchase-status" style="margin-top:-8px;margin-bottom:14px;font-size:12px"></div>`;
+    }
+
+    // 1番人気警告
+    const allTanOdds = renders.map(h=>h.tanOdds).filter(Boolean);
+    const favOdds = allTanOdds.length ? Math.min(...allTanOdds) : null;
+    // horses全体からも確認
+    const allHorseTan = horses.map(h=>h.tanOdds).filter(Boolean);
+    const globalFavOdds = allHorseTan.length ? Math.min(...allHorseTan) : null;
+    if(globalFavOdds && globalFavOdds < 2.0){
+      html+=`<div style="background:rgba(251,191,36,.1);border:0.5px solid rgba(251,191,36,.4);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--amber)">
+        ⚠️ 1番人気は${globalFavOdds}倍です。購入前に確認してください。
+      </div>`;
     }
 
     // 買い目テーブル
@@ -814,6 +826,8 @@ const USERS = {
 
 let currentUser = null;
 let isAdmin = false;
+let renders = [];   // グローバル：購入ボタンから参照
+let betMap = {};    // グローバル：購入ボタンから参照
 
 async function hashStr(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
