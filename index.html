@@ -395,6 +395,7 @@ textarea:focus{border-color:var(--gold)}
 
 <script>
 let horses=[], mode='manual';
+let currentRace = null;  // グローバル：calcAllから参照
 
 function sw(t){
   ['setup','odds','result','admin'].forEach(n=>{
@@ -698,7 +699,8 @@ function calcAll(){
     </div>`;
     // 管理者のみ購入ボタンを表示（地方競馬のみ・中央競馬は非表示）
     const JRA_VENUES_BTN = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
-    if(isAdmin && ttl > 0 && !JRA_VENUES_BTN.includes(race.venue)){
+    const _race = currentRace || (ghData[document.getElementById('date-select').value]?.races[parseInt(document.getElementById('race-select').value)]);
+    if(isAdmin && ttl > 0 && _race && !JRA_VENUES_BTN.includes(_race.venue)){
       html+=`<button class="btn btn-gold" style="margin-bottom:14px;font-size:14px;font-weight:700"
         onclick="executePurchase()">🛒 SPAT4で購入する</button>
         <div id="purchase-status" style="margin-top:-8px;margin-bottom:14px;font-size:12px"></div>`;
@@ -1104,6 +1106,8 @@ function onRaceChange(){
   const idx = document.getElementById('race-select').value;
   const preview = document.getElementById('horse-preview');
   if(!date || idx === '' || !ghData[date]){ preview.style.display = 'none'; return; }
+
+  currentRace = ghData[date].races[parseInt(idx)] || null;  // グローバルに保存
 
   const race = ghData[date].races[parseInt(idx)];
   if(!race){ preview.style.display = 'none'; return; }
