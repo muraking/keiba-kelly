@@ -886,8 +886,8 @@ const GH_DISPATCH_URL = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/acti
 
 // PC購入サーバー設定（管理者のみ使用）
 // PCのIPアドレスを設定（ipconfigで確認）
-const PURCHASE_SERVER = 'http://192.168.1.12:5000';  // ← PCのIPアドレスに変更
-const PURCHASE_SECRET = 'momohinata';  // spat4_api_server.pyと同じ値
+const PURCHASE_SERVER = 'http://192.168.1.xxx:5000';  // ← PCのIPアドレスに変更
+const PURCHASE_SECRET = 'ここにAPIシークレットを入力';  // spat4_api_server.pyと同じ値
 
 // 日本時間で今日の日付を取得
 function getTodayJST(){
@@ -1817,34 +1817,48 @@ async function confirmPurchaseJRA(){
   const confirmBtn = document.getElementById('modal-confirm-btn');
   const purchaseStatusEl = document.getElementById('purchase-status');
 
+  const token = loadToken();
+  if(!token){
+    statusEl.innerHTML = '<span style="color:var(--red)">❌ 共有タブでGitHubトークンを設定してください</span>';
+    return;
+  }
+
   confirmBtn.disabled = true;
   confirmBtn.textContent = '処理中...';
-  statusEl.innerHTML = '<span style="color:var(--amber)">🔄 IPATに送信中...</span>';
+  statusEl.innerHTML = '<span style="color:var(--amber)">🔄 GitHub Actionsに送信中...</span>';
 
   try {
-    const res = await fetch(`${PURCHASE_SERVER}/purchase_jra`, {
+    const dispatchUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/purchase_ipat.yml/dispatches`;
+    const res = await fetch(dispatchUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-API-Secret': PURCHASE_SECRET
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ course_name: courseName, race_num: raceNum, bets })
+      body: JSON.stringify({
+        ref: GH_BRANCH,
+        inputs: {
+          course_name: courseName,
+          race_num: String(raceNum),
+          bets: JSON.stringify(bets)
+        }
+      })
     });
 
-    if(res.ok){
-      const data = await res.json();
-      statusEl.innerHTML = `<span style="color:var(--green)">✅ ${data.message||'IPAT購入処理を開始しました'}</span>`;
+    if(res.status === 204){
+      statusEl.innerHTML = '<span style="color:var(--green)">✅ 投票処理を開始しました（約2分で完了）</span>';
       confirmBtn.textContent = '完了';
       if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ IPAT投票処理を開始しました</span>';
       setTimeout(() => closePurchaseModal(), 3000);
     } else {
-      const err = await res.json().catch(()=>({error: res.status}));
-      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.error||res.status}</span>`;
+      const err = await res.json().catch(()=>({message: res.status}));
+      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.message||res.status}</span>`;
       confirmBtn.disabled = false;
       confirmBtn.textContent = '投票する';
     }
   } catch(e){
-    statusEl.innerHTML = `<span style="color:var(--red)">❌ PCサーバーに接続できません<br><small>${e.message}</small></span>`;
+    statusEl.innerHTML = `<span style="color:var(--red)">❌ 通信エラー: ${e.message}</span>`;
     confirmBtn.disabled = false;
     confirmBtn.textContent = '投票する';
   }
