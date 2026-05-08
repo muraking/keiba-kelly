@@ -700,9 +700,12 @@ function calcAll(){
     // 管理者のみ購入ボタンを表示（地方競馬のみ・中央競馬は非表示）
     const JRA_VENUES_BTN = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
     const _race = currentRace || (ghData[document.getElementById('date-select').value]?.races[parseInt(document.getElementById('race-select').value)]);
-    if(isAdmin && ttl > 0 && _race && !JRA_VENUES_BTN.includes(_race.venue)){
+    if(isAdmin && ttl > 0 && _race){
+      const isJRAVenue = JRA_VENUES_BTN.includes(_race.venue);
+      const btnLabel = isJRAVenue ? '🏇 IPATで購入する' : '🛒 SPAT4で購入する';
+      const btnFn = isJRAVenue ? 'executePurchaseJRA()' : 'executePurchase()';
       html+=`<button class="btn btn-gold" style="margin-bottom:14px;font-size:14px;font-weight:700"
-        onclick="executePurchase()">🛒 SPAT4で購入する</button>
+        onclick="${btnFn}">${btnLabel}</button>
         <div id="purchase-status" style="margin-top:-8px;margin-bottom:14px;font-size:12px"></div>`;
     }
 
@@ -1748,6 +1751,103 @@ function executePurchase(){
 function closePurchaseModal(){
   document.getElementById('purchase-modal').classList.remove('show');
   _purchaseData = null;
+}
+
+// IPAT自動購入（中央競馬）
+function executePurchaseJRA(){
+  const date = document.getElementById('date-select').value;
+  const idx = document.getElementById('race-select').value;
+  if(!date || idx === '' || !ghData[date]) return;
+
+  const race = ghData[date].races[parseInt(idx)];
+  if(!race) return;
+
+  // コース名を特定（jra_oddsのキーから）
+  let courseName = '';
+  const jraOdds = ghData[date]?.jra_odds || {};
+  for(const key of Object.keys(jraOdds)){
+    if(key.includes(race.venue)){ courseName = key; break; }
+  }
+  if(!courseName) courseName = race.venue + '(土)';  // フォールバック
+
+  const raceNum = parseInt((race.raceNum||'').replace('R',''));
+  if(!raceNum){ alert('レース番号が取得できません'); return; }
+
+  // 買い目データを収集
+  const bets = [];
+  if(typeof renders !== 'undefined' && typeof betMap !== 'undefined'){
+    renders.forEach(h => {
+      const tb = betMap[h.num] || 0;
+      if(tb > 0 && h.tanOdds) bets.push({ num: h.num, name: h.name, odds: h.tanOdds, amount: tb });
+    });
+  }
+  if(!bets.length){
+    alert(renders && renders.length === 0 ?
+      '先に結果タブで計算してください' :
+      '購入する買い目がありません（期待値105以上の馬がいません）');
+    return;
+  }
+
+  // モーダルに買い目を表示
+  const total = bets.reduce((s,b)=>s+b.amount,0);
+  const betsEl = document.getElementById('modal-bets');
+  const totalEl = document.getElementById('modal-total');
+  const statusEl = document.getElementById('modal-status');
+  const confirmBtn = document.getElementById('modal-confirm-btn');
+
+  betsEl.innerHTML = bets.map(b => `
+    <div class="modal-row">
+      <span style="color:var(--text)">${b.num}番 ${b.name}<span style="font-size:11px;color:var(--text3);margin-left:6px">単勝${b.odds}倍</span></span>
+      <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--green)">¥${b.amount.toLocaleString()}</span>
+    </div>`).join('');
+  totalEl.textContent = `¥${total.toLocaleString()}`;
+  statusEl.innerHTML = '<span style="color:var(--text2)">内容を確認して「投票する」を押してください</span>';
+  confirmBtn.disabled = false;
+  confirmBtn.textContent = '投票する';
+  confirmBtn.onclick = confirmPurchaseJRA;
+
+  _purchaseData = { courseName, raceNum, bets, isJRA: true };
+  document.getElementById('purchase-modal').classList.add('show');
+}
+
+async function confirmPurchaseJRA(){
+  if(!_purchaseData || !_purchaseData.isJRA) return;
+  const { courseName, raceNum, bets } = _purchaseData;
+  const statusEl = document.getElementById('modal-status');
+  const confirmBtn = document.getElementById('modal-confirm-btn');
+  const purchaseStatusEl = document.getElementById('purchase-status');
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '処理中...';
+  statusEl.innerHTML = '<span style="color:var(--amber)">🔄 IPATに送信中...</span>';
+
+  try {
+    const res = await fetch(`${PURCHASE_SERVER}/purchase_jra`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Secret': PURCHASE_SECRET
+      },
+      body: JSON.stringify({ course_name: courseName, race_num: raceNum, bets })
+    });
+
+    if(res.ok){
+      const data = await res.json();
+      statusEl.innerHTML = `<span style="color:var(--green)">✅ ${data.message||'IPAT購入処理を開始しました'}</span>`;
+      confirmBtn.textContent = '完了';
+      if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ IPAT投票処理を開始しました</span>';
+      setTimeout(() => closePurchaseModal(), 3000);
+    } else {
+      const err = await res.json().catch(()=>({error: res.status}));
+      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.error||res.status}</span>`;
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = '投票する';
+    }
+  } catch(e){
+    statusEl.innerHTML = `<span style="color:var(--red)">❌ PCサーバーに接続できません<br><small>${e.message}</small></span>`;
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = '投票する';
+  }
 }
 
 async function confirmPurchase(){
