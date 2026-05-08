@@ -1,0 +1,45 @@
+name: SPAT4 Purchase
+
+on:
+  workflow_dispatch:
+    inputs:
+      place_id:
+        description: '場所ID（例: 20=大井）'
+        required: true
+      race_num:
+        description: 'レース番号'
+        required: true
+      race_date:
+        description: '開催日 (YYYYMMDD)'
+        required: true
+      bets:
+        description: '買い目JSON（例: [{"num":3,"amount":1000}]）'
+        required: true
+
+jobs:
+  purchase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright requests
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run SPAT4 Purchase
+        env:
+          SPAT4_MEMBERNUM: ${{ secrets.SPAT4_MEMBERNUM }}
+          SPAT4_PASS: ${{ secrets.SPAT4_PASS }}
+          SPAT4_PIN: ${{ secrets.SPAT4_PIN }}
+          PLACE_ID: ${{ github.event.inputs.place_id }}
+          RACE_NUM: ${{ github.event.inputs.race_num }}
+          RACE_DATE: ${{ github.event.inputs.race_date }}
+          BETS: ${{ github.event.inputs.bets }}
+        run: python .github/scripts/spat4_purchase_actions.py
