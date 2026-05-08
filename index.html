@@ -1891,5 +1891,21 @@ async function confirmPurchase(){
 }
 
 </script>
+
+<div id="purchase-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9998;display:none;align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:20px;width:100%;max-width:360px">
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px" id="modal-title">🛒 投票確認</div>
+    <div id="modal-bets"></div>
+    <div style="display:flex;justify-content:space-between;padding:7px 0;border-top:0.5px solid var(--border);margin-top:8px">
+      <span style="color:var(--text2);font-size:13px">合計投資額</span>
+      <span style="font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:var(--green)" id="modal-total"></span>
+    </div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:var(--r);font-size:13px;text-align:center;min-height:36px" id="modal-status">確認してください</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+      <button class="btn btn-outline" onclick="closePurchaseModal()">キャンセル</button>
+      <button class="btn btn-gold" id="modal-confirm-btn" onclick="confirmPurchase()">投票する</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
