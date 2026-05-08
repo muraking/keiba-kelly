@@ -1453,9 +1453,44 @@ async function triggerOddsFetch(){
 
   const placeId = VENUE_TO_ID[race.venue];
   const raceNum = parseInt((race.raceNum || '').replace('R',''));
+
+  // 中央競馬の場合はfetch_jra_odds.ymlをトリガー
+  const JRA_VENUES_FETCH = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+  if(JRA_VENUES_FETCH.includes(race.venue)){
+    const statusEl = document.getElementById('fetch-odds-status');
+    const btn = document.getElementById('fetch-odds-btn');
+    btn.disabled = true;
+    btn.textContent = '📡 取得中...';
+    if(statusEl) statusEl.innerHTML = '<span style="color:var(--amber)">🔄 JRAオッズ取得中（約3分）...</span>';
+    try {
+      const jraDispatchUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/fetch_jra_odds.yml/dispatches`;
+      const res = await fetch(jraDispatchUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ref: GH_BRANCH, inputs: { today_jst: date } })
+      });
+      if(res.status === 204){
+        if(statusEl) statusEl.innerHTML = '<span style="color:var(--green)">✓ JRAオッズ取得開始！約3分後に「🔄 最新に更新」を押してください</span>';
+        setTimeout(async () => { await refreshOdds(); }, 180000);
+      } else {
+        const err = await res.json().catch(()=>({message: res.status}));
+        if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">エラー: ${err.message||res.status}</span>`;
+      }
+    } catch(e){
+      if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">通信エラー: ${e.message}</span>`;
+    }
+    btn.disabled = false;
+    btn.textContent = '📡 オッズを今すぐ取得';
+    return;
+  }
+
   if(!placeId || !raceNum){
     const statusEl = document.getElementById('fetch-odds-status');
-    if(statusEl) statusEl.innerHTML = '<span style="color:var(--amber)">⚠️ 中央競馬はPC上で ipat_sp_final.py を実行してください</span>';
+    if(statusEl) statusEl.innerHTML = '<span style="color:var(--amber)">⚠️ この会場のIDが見つかりません</span>';
     return;
   }
 
