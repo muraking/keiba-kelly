@@ -1127,25 +1127,44 @@ function onRaceChange(){
   };
   const placeId = VENUE_TO_ID[race.venue] || null;
   const raceNumInt = parseInt((race.raceNum || '').replace('R',''));
-  // オッズを全日付から検索（placeId・raceNumは文字列・数値両方試す）
+  // オッズを全日付から検索（地方競馬odds + 中央競馬jra_odds両対応）
   let raceOdds = null;
-  console.log('[odds] start venue='+race.venue+' placeId='+placeId+' raceNum='+raceNumInt);
-  if(placeId && raceNumInt){
-    const allDates = Object.keys(ghData).sort().reverse();
-    console.log('[odds] allDates='+allDates.join(','));
-    outer: for(const d of allDates){
-      const oddsData = ghData[d] && ghData[d].odds;
-      if(!oddsData){ console.log('[odds] '+d+' no odds'); continue; }
-      console.log('[odds] '+d+' oddsKeys='+Object.keys(oddsData).join(','));
+
+  // JRA会場名リスト
+  const JRA_VENUES = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+  const isJRA = JRA_VENUES.includes(race.venue);
+
+  const allDates = Object.keys(ghData).sort().reverse();
+  outer: for(const d of allDates){
+    const dayData = ghData[d];
+    if(!dayData) continue;
+
+    if(isJRA){
+      // 中央競馬: jra_odds["東京(土)"][1] 形式
+      const jraOdds = dayData.jra_odds;
+      if(!jraOdds) continue;
+      for(const courseKey of Object.keys(jraOdds)){
+        if(courseKey.includes(race.venue)){
+          const courseOdds = jraOdds[courseKey];
+          for(const rnum of [raceNumInt, String(raceNumInt)]){
+            const candidate = courseOdds && courseOdds[rnum];
+            if(candidate && typeof candidate === 'object' && Object.keys(candidate).length > 0){
+              raceOdds = candidate;
+              break outer;
+            }
+          }
+        }
+      }
+    } else {
+      // 地方競馬: odds[place_id][race_num] 形式
+      const oddsData = dayData.odds;
+      if(!oddsData) continue;
       for(const pid of [placeId, String(placeId), Number(placeId)]){
         const placeOdds = oddsData[pid];
         if(!placeOdds) continue;
-        console.log('[odds] found placeOdds pid='+pid+' raceKeys='+Object.keys(placeOdds).join(','));
         for(const rnum of [raceNumInt, String(raceNumInt)]){
           const candidate = placeOdds[rnum];
-          // candidateが存在すれば採用（tan/fuku問わず）
           if(candidate && typeof candidate === 'object' && Object.keys(candidate).length > 0){
-            console.log('[odds] FOUND raceOdds='+JSON.stringify(candidate));
             raceOdds = candidate;
             break outer;
           }
@@ -1153,7 +1172,6 @@ function onRaceChange(){
       }
     }
   }
-  if(!raceOdds) console.log('[odds] NOT FOUND');
 
   horses = race.horses.map(h => {
     const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
@@ -1174,18 +1192,26 @@ function onRaceChange(){
   const hl = document.getElementById('horse-list');
   const classStr = race.raceClass || '';
   const timeStr = race.startTime || '';
-  // オッズ取得時刻を全日付から検索
+  // オッズ取得時刻を全日付から検索（地方・中央両対応）
   const oddsUpdatedStr = (() => {
     const allD = Object.keys(ghData).sort().reverse();
     for(const d of allD){
-      const ou = ghData[d].odds_updated;
-      if(!ou) continue;
-      // この日付にplaceIdのオッズがあるか確認
-      const od = ghData[d].odds;
-      if(od && (od[placeId] || od[String(placeId)])){
-        const dt = new Date(ou);
-        return dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+      const dayData = ghData[d];
+      if(!dayData) continue;
+      let ou = null;
+      if(isJRA){
+        ou = dayData.jra_odds_updated;
+        const jo = dayData.jra_odds;
+        if(!ou || !jo) continue;
+        if(!Object.keys(jo).some(k => k.includes(race.venue))) continue;
+      } else {
+        ou = dayData.odds_updated;
+        const od = dayData.odds;
+        if(!ou || !od) continue;
+        if(!(od[placeId] || od[String(placeId)])) continue;
       }
+      const dt = new Date(ou);
+      return dt.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
     }
     return null;
   })();
