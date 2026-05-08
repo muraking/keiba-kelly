@@ -1778,8 +1778,9 @@ function executePurchase(){
   statusEl.innerHTML = '<span style="color:var(--text2)">内容を確認して「投票する」を押してください</span>';
   confirmBtn.disabled = false;
   confirmBtn.textContent = '投票する';
+  confirmBtn.onclick = confirmPurchase;  // SPAT4購入
 
-  _purchaseData = { placeId, raceNum, raceDate: date.replace(/-/g,''), bets };
+  _purchaseData = { placeId, raceNum, raceDate: date.replace(/-/g,''), bets, isJRA: false };
   document.getElementById('purchase-modal').classList.add('show');
 }
 
@@ -1906,34 +1907,49 @@ async function confirmPurchase(){
   const confirmBtn = document.getElementById('modal-confirm-btn');
   const purchaseStatusEl = document.getElementById('purchase-status');
 
+  const token = loadToken();
+  if(!token){
+    statusEl.innerHTML = '<span style="color:var(--red)">❌ 共有タブでGitHubトークンを設定してください</span>';
+    return;
+  }
+
   confirmBtn.disabled = true;
   confirmBtn.textContent = '処理中...';
-  statusEl.innerHTML = '<span style="color:var(--amber)">🔄 SPAT4に送信中...</span>';
+  statusEl.innerHTML = '<span style="color:var(--amber)">🔄 GitHub Actionsに送信中...</span>';
 
   try {
-    const res = await fetch(`${PURCHASE_SERVER}/purchase`, {
+    const dispatchUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/purchase_spat4.yml/dispatches`;
+    const res = await fetch(dispatchUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-API-Secret': PURCHASE_SECRET
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ place_id: placeId, race_num: raceNum, race_date: raceDate, bets })
+      body: JSON.stringify({
+        ref: GH_BRANCH,
+        inputs: {
+          place_id: String(placeId),
+          race_num: String(raceNum),
+          race_date: raceDate,
+          bets: JSON.stringify(bets)
+        }
+      })
     });
 
-    if(res.ok){
-      const data = await res.json();
-      statusEl.innerHTML = `<span style="color:var(--green)">✅ ${data.message||'投票処理を開始しました'}</span>`;
+    if(res.status === 204){
+      statusEl.innerHTML = '<span style="color:var(--green)">✅ 投票処理を開始しました（約2分で完了）</span>';
       confirmBtn.textContent = '完了';
-      if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ 投票処理を開始しました</span>';
+      if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ SPAT4投票処理を開始しました</span>';
       setTimeout(() => closePurchaseModal(), 3000);
     } else {
-      const err = await res.json().catch(()=>({error: res.status}));
-      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.error||res.status}</span>`;
+      const err = await res.json().catch(()=>({message: res.status}));
+      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.message||res.status}</span>`;
       confirmBtn.disabled = false;
       confirmBtn.textContent = '投票する';
     }
   } catch(e){
-    statusEl.innerHTML = `<span style="color:var(--red)">❌ PCサーバーに接続できません<br><small>${e.message}</small></span>`;
+    statusEl.innerHTML = `<span style="color:var(--red)">❌ 通信エラー: ${e.message}</span>`;
     confirmBtn.disabled = false;
     confirmBtn.textContent = '投票する';
   }
