@@ -1056,6 +1056,8 @@ async function fetchRaceList(){
     const ds = document.getElementById('date-select');
     ds.innerHTML = '<option value="">-- 日付を選択 --</option>';
     Object.keys(ghData).sort().reverse().forEach(d => {
+      // racesがない日付はスキップ（jra_oddsのみの日付など）
+      if(!ghData[d].races || !ghData[d].races.length) return;
       const opt = document.createElement('option');
       opt.value = d;
       opt.textContent = `${d}（${ghData[d].races.length}レース）`;
