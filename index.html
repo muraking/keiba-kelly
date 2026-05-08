@@ -1242,7 +1242,9 @@ function parseAllRaces(raw){
       if(current && currentHorses.length){
         races.push({ ...current, horses: currentHorses });
       }
-      const month = hm[2], day = hm[3], venue = hm[4], rnum = hm[5];
+      const month = hm[2], day = hm[3], rnum = hm[5];
+      // 帯広ば→帯広 など会場名を正規化
+      const venue = hm[4].replace('ば', '');
       const raceClass = hm[6].trim();
       const startTime = hm[7];
       current = {
@@ -1256,9 +1258,11 @@ function parseAllRaces(raw){
       continue;
     }
 
-    // 馬データ検出（体重あり・なし両対応）
+    // 馬データ検出（体重あり・なし両対応・帯広ば対応）
     let m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+\d+\([+-]?\d+\)/);
     if(!m) m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+NaN/);
+    // 帯広ばんえい形式（体重なし: 騎手名 [指数]）
+    if(!m) m = line.match(/([◎○▲△☆－])\s+(\d+)\s+【\s*([\d.]+)%】\s+(.+?)\s+\S+\s+\[/);
     if(m && current){
       const markToRank = {'◎':1,'○':2,'▲':3,'△':4,'☆':5,'－':6};
       currentHorses.push({ rank: markToRank[m[1]]||6, num: parseInt(m[2]), pct: parseFloat(m[3]), name: m[4].trim() });
