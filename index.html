@@ -297,7 +297,7 @@ textarea:focus{border-color:var(--gold)}
           <button onclick="refreshOdds()" style="background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.3);color:var(--amber);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit">🔄 最新に更新</button>
         </div>
         <button id="fetch-odds-btn" onclick="triggerOddsFetch()" style="width:100%;background:var(--green);color:#0f0f0f;border:none;border-radius:8px;padding:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">
-          📡 オッズを今すぐ取得
+          📡 オッズを今すぐ取得（地方競馬のみ）
         </button>
         <div id="fetch-odds-status" style="margin-top:6px;font-size:11px"></div>
       </div>
@@ -696,8 +696,9 @@ function calcAll(){
         <div class="sm"><div class="sl">資金使用率</div><div class="sv ${parseFloat(rate)>30?'a':'g'}">${rate}%</div></div>
       </div>
     </div>`;
-    // 管理者のみ購入ボタンを表示
-    if(isAdmin && ttl > 0){
+    // 管理者のみ購入ボタンを表示（地方競馬のみ・中央競馬は非表示）
+    const JRA_VENUES_BTN = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+    if(isAdmin && ttl > 0 && !JRA_VENUES_BTN.includes(race.venue)){
       html+=`<button class="btn btn-gold" style="margin-bottom:14px;font-size:14px;font-weight:700"
         onclick="executePurchase()">🛒 SPAT4で購入する</button>
         <div id="purchase-status" style="margin-top:-8px;margin-bottom:14px;font-size:12px"></div>`;
