@@ -1015,14 +1015,16 @@ async function loadDateList(){
     const { data } = await getCurrentData(token);
     const dates = Object.keys(data.dates).sort().reverse();
     if(!dates.length){ st.innerHTML = '<p style="font-size:12px;color:var(--text3)">保存済みデータなし</p>'; return; }
-    st.innerHTML = dates.map(d => `
+    st.innerHTML = dates.map(d => {
+      const raceCount = (data.dates[d].races||[]).length;
+      return `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)">
         <div>
           <div style="font-size:13px;color:var(--text)">${d}</div>
-          <div style="font-size:11px;color:var(--text2)">${data.dates[d].races.length}レース</div>
+          <div style="font-size:11px;color:var(--text2)">${raceCount}レース</div>
         </div>
         <button onclick="deleteDate('${d}')" style="background:var(--red-bg);border:0.5px solid rgba(248,113,113,0.3);color:var(--red);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit">削除</button>
-      </div>`).join('');
+      </div>`;}).join('');
   } catch(e){}
 }
 
@@ -1065,12 +1067,12 @@ async function fetchRaceList(){
       ds.appendChild(opt);
     });
 
-    // 1日分しかない場合は自動選択
-    const dates = Object.keys(ghData);
+    // races がある日付のみを対象にする
+    const dates = Object.keys(ghData).filter(d => ghData[d].races && ghData[d].races.length > 0);
     if(dates.length === 1){ ds.value = dates[0]; onDateChange(); }
 
     document.getElementById('date-area').style.display = 'block';
-    st.innerHTML = `<div class="status st-ok">✓ ${Object.keys(ghData).length}日分のデータを取得しました</div>`;
+    st.innerHTML = `<div class="status st-ok">✓ ${dates.length}日分のデータを取得しました</div>`;
   } catch(e){
     st.innerHTML = `<div class="status st-err">${e.message}</div>`;
   }
@@ -1325,10 +1327,10 @@ function selectNearestRace(){
   const todayStr = jstNow.toISOString().split('T')[0];
   const nowMin = jstNow.getHours() * 60 + jstNow.getMinutes();
 
-  // 今日のデータを選択
-  const dateKeys = Object.keys(ghData).sort();
+  // 今日のデータを選択（racesがある日付のみ対象）
+  const dateKeys = Object.keys(ghData).sort().filter(d => ghData[d].races && ghData[d].races.length > 0);
   let targetDate = dateKeys.find(d => d >= todayStr) || dateKeys[dateKeys.length - 1];
-  if(!targetDate){ alert('データがありません'); return; }
+  if(!targetDate){ alert('レースデータが見つかりません。共有タブから保存してください。'); return; }
 
   const races = ghData[targetDate].races || [];
   if(!races.length){ alert('レースが見つかりません'); return; }
