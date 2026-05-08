@@ -1445,7 +1445,8 @@ async function triggerOddsFetch(){
   const placeId = VENUE_TO_ID[race.venue];
   const raceNum = parseInt((race.raceNum || '').replace('R',''));
   if(!placeId || !raceNum){
-    alert(`会場「${race.venue}」のIDが見つかりません`);
+    const statusEl = document.getElementById('fetch-odds-status');
+    if(statusEl) statusEl.innerHTML = '<span style="color:var(--amber)">⚠️ 中央競馬はPC上で ipat_sp_final.py を実行してください</span>';
     return;
   }
 
@@ -1707,7 +1708,15 @@ function executePurchase(){
       if(tb > 0 && h.tanOdds) bets.push({ num: h.num, name: h.name, odds: h.tanOdds, amount: tb });
     });
   }
-  if(!bets.length){ alert('購入する買い目がありません'); return; }
+  if(!bets.length){
+    // calcAllを実行していない場合の案内
+    if(!renders || renders.length === 0){
+      alert('先に結果タブで「計算して結果を見る」を実行してください');
+    } else {
+      alert('購入する買い目がありません（期待値105以上の馬がいません）');
+    }
+    return;
+  }
 
   // モーダルに買い目を表示
   const total = bets.reduce((s,b)=>s+b.amount,0);
