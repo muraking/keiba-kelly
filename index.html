@@ -1047,10 +1047,14 @@ async function fetchRaceList(){
   st.innerHTML = '<div class="status st-warn">読み込み中...</div>';
 
   try {
-    const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
-    const res = await fetch(url);
+    // GitHub API経由で取得（キャッシュなし）
+    const token = loadToken();
+    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+    const fetchHeaders = token ? {'Authorization': `token ${token}`} : {};
+    const res = await fetch(apiUrl, {headers: fetchHeaders, cache: 'no-store'});
     if(!res.ok) throw new Error('データが見つかりません。共有タブから保存してください。');
-    const data = await res.json();
+    const json = await res.json();
+    const data = JSON.parse(atob(json.content.replace(/\n/g, '')));
 
     // 新旧フォーマット対応
     if(data.dates){
@@ -1404,11 +1408,14 @@ async function refreshOdds(){
 
   (async () => {
     try {
-      // GitHubから最新データを再取得
-      const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
-      const res = await fetch(url);
+      // GitHub API経由で最新データを取得（キャッシュなし）
+      const token = loadToken();
+      const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+      const headers = token ? {'Authorization': `token ${token}`} : {};
+      const res = await fetch(apiUrl, {headers, cache: 'no-store'});
       if(!res.ok) throw new Error('取得失敗');
-      const data = await res.json();
+      const json = await res.json();
+      const data = JSON.parse(atob(json.content.replace(/\n/g, '')));
 
       // ghDataを更新
       if(data.dates){
