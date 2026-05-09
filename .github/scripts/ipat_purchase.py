@@ -7,9 +7,9 @@ import os
 import json
 from playwright.async_api import async_playwright
 
-IPAT_ID   = os.environ.get("IPAT_ID", "ここに加入者番号を入力")
-IPAT_PIN  = os.environ.get("IPAT_PIN", "ここに暗証番号を入力")
-IPAT_PARS = os.environ.get("IPAT_PARS", "ここにP-ARS番号を入力")
+IPAT_ID   = os.environ.get("IPAT_ID", "63598202")
+IPAT_PIN  = os.environ.get("IPAT_PIN", "1869")
+IPAT_PARS = os.environ.get("IPAT_PARS", "9484")
 
 COURSE_NAME = os.environ.get("COURSE_NAME", "")
 RACE_NUM    = int(os.environ.get("RACE_NUM", "1"))
@@ -122,32 +122,48 @@ async def purchase(page, course_name, race_num, bets):
     await page.wait_for_selector('#kin', state='visible', timeout=10000)
     print("#kin 表示OK")
 
-    # kin_list の入力欄を確認
-    kin_text = await page.evaluate("() => document.querySelector('#kin_list')?.innerText || ''")
-    print(f"kin_list: {kin_text[:200]}")
-
-    # tel入力欄に金額を入力
+    # kin_list から馬番と入力欄の対応を取得
     print("金額入力...")
     tel_inputs = await page.query_selector_all('#kin_list input[type="tel"], #kin input[type="tel"]')
     print(f"  tel入力欄数: {len(tel_inputs)}")
 
-    if len(tel_inputs) >= len(bets):
-        for i, bet in enumerate(bets):
-            amount_100 = bet['amount'] // 100
-            await tel_inputs[i].fill(str(amount_100))
-            await tel_inputs[i].dispatch_event('change')
-            print(f"  {bet['num']}番: {amount_100}（¥{bet['amount']:,}）")
+    # kin_listのテキストから馬番を解析
+    kin_text = await page.evaluate("() => document.querySelector('#kin_list')?.innerText || ''")
+    print(f"  kin_list: {kin_text[:200]}")
+
+    # 馬番→金額のマップ
+    bet_map = {b['num']: b['amount'] for b in bets}
+
+    # kin_listのテキストから馬番順を解析
+    import re
+    horse_nums_in_list = []
+    lines = [l.strip() for l in kin_text.split("\n") if l.strip()]
+    for line in lines:
+        m = re.match(r'^(\d{2})$', line)
+        if m:
+            horse_nums_in_list.append(int(m.group(1)))
+
+    print(f"  kin_list馬番順: {horse_nums_in_list}")
+
+    if len(horse_nums_in_list) == len(tel_inputs):
+        # 馬番マッチングで入力
+        for horse_num, inp in zip(horse_nums_in_list, tel_inputs):
+            amount = bet_map.get(horse_num, 0)
+            amount_100 = amount // 100
+            await inp.fill(str(amount_100))
+            await inp.dispatch_event('change')
+            print(f"  {horse_num}番: {amount_100}（¥{amount:,}）")
             await page.wait_for_timeout(200)
     else:
-        print(f"  ⚠️ 入力欄不足 {len(tel_inputs)}/{len(bets)}")
-        # tel全体から取得
-        all_tels = await page.query_selector_all('input[type="tel"]')
-        visible_tels = [t for t in all_tels if await t.is_visible()]
-        print(f"  visible tel: {len(visible_tels)}")
-        for i, bet in enumerate(bets[:len(visible_tels)]):
+        # フォールバック: 馬番順にソートして入力
+        print(f"  フォールバック: 馬番順ソートで入力")
+        bets_sorted = sorted(bets, key=lambda b: b['num'])
+        for bet, inp in zip(bets_sorted, tel_inputs):
             amount_100 = bet['amount'] // 100
-            await visible_tels[i].fill(str(amount_100))
-            print(f"  {bet['num']}番: {amount_100}")
+            await inp.fill(str(amount_100))
+            await inp.dispatch_event('change')
+            print(f"  {bet['num']}番: {amount_100}（¥{bet['amount']:,}）")
+            await page.wait_for_timeout(200)
 
     # 「入力終了」をtap()でクリック
     print("入力終了...")
@@ -174,7 +190,7 @@ async def purchase(page, course_name, race_num, bets):
             print("  合計金額入力OK")
             break
 
-    await page.screenshot(path="/tmp/ipat_buy_confirm.png")
+    await page.screenshot(path="ipat_buy_confirm.png")
 
     # 「投票」をtap()でクリック
     print("投票...")
@@ -222,7 +238,7 @@ async def purchase(page, course_name, race_num, bets):
                 break
         await page.wait_for_timeout(3000)
 
-    await page.screenshot(path="/tmp/ipat_buy_result.png")
+    await page.screenshot(path="ipat_buy_result.png")
     text = await page.evaluate("() => document.body.innerText")
     lines = [l.strip() for l in text.split('\n') if l.strip()]
     print("結果:")
@@ -252,6 +268,7 @@ async def main():
         await login(page)
         result = await purchase(page, COURSE_NAME, RACE_NUM, BETS)
 
+        input("\nEnterで終了...")
         await browser.close()
         return result
 
