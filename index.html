@@ -1389,7 +1389,7 @@ function selectNearestRace(){
 }
 
 // オッズを最新に更新
-async async function refreshOdds(){
+async function refreshOdds(){
   const dateSelect = document.getElementById('date-select');
   const raceSelect = document.getElementById('race-select');
   const date = dateSelect.value;
@@ -1402,28 +1402,30 @@ async async function refreshOdds(){
   const btn = document.querySelector('[onclick="refreshOdds()"]');
   if(btn){ btn.textContent = '🔄 更新中...'; btn.disabled = true; }
 
-  try {
-    // GitHubから最新データを再取得
-    const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
-    const res = await fetch(url);
-    if(!res.ok) throw new Error('取得失敗');
-    const data = await res.json();
+  (async () => {
+    try {
+      // GitHubから最新データを再取得
+      const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('取得失敗');
+      const data = await res.json();
 
-    // ghDataを更新
-    if(data.dates){
-      ghData = data.dates;
+      // ghDataを更新
+      if(data.dates){
+        ghData = data.dates;
+      }
+
+      // 現在選択中のレースを再表示
+      onRaceChange();
+      document.getElementById('fetch-status').innerHTML =
+        '<div class="status st-ok">✓ オッズを最新に更新しました</div>';
+    } catch(e){
+      document.getElementById('fetch-status').innerHTML =
+        `<div class="status st-err">更新失敗: ${e.message}</div>`;
+    } finally {
+      if(btn){ btn.textContent = '🔄 最新に更新'; btn.disabled = false; }
     }
-
-    // 現在選択中のレースを再表示
-    onRaceChange();
-    document.getElementById('fetch-status').innerHTML =
-      '<div class="status st-ok">✓ オッズを最新に更新しました</div>';
-  } catch(e){
-    document.getElementById('fetch-status').innerHTML =
-      `<div class="status st-err">更新失敗: ${e.message}</div>`;
-  } finally {
-    if(btn){ btn.textContent = '🔄 最新に更新'; btn.disabled = false; }
-  }
+  })();
 }
 
 
