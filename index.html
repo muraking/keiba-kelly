@@ -1532,12 +1532,32 @@ async function triggerOddsFetch(){
     });
 
     if(res.status === 204){
-      statusEl.innerHTML = '<span style="color:var(--green)">✓ 取得開始！約1〜2分後に「🔄 最新に更新」を押してください</span>';
-      // 2分後に自動でオッズを更新
-      setTimeout(async () => {
-        await refreshOdds();
-        statusEl.innerHTML = '<span style="color:var(--green)">✓ オッズを自動更新しました</span>';
-      }, 90000);
+      statusEl.innerHTML = '<span style="color:var(--amber)">🔄 取得中... 自動反映します</span>';
+      // GitHub Actions完了をポーリング（10秒ごと・最大3分）
+      const startTime = Date.now();
+      const pollInterval = setInterval(async () => {
+        try {
+          // 最新のワークフロー実行を確認
+          const runsRes = await fetch(
+            `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/fetch_odds.yml/runs?per_page=1`,
+            { headers: { 'Authorization': `token ${token}` } }
+          );
+          const runsData = await runsRes.json();
+          const latestRun = runsData.workflow_runs?.[0];
+          if(latestRun && latestRun.status === 'completed' && latestRun.conclusion === 'success'){
+            clearInterval(pollInterval);
+            await refreshOdds();
+            statusEl.innerHTML = '<span style="color:var(--green)">✓ オッズを取得・反映しました</span>';
+          } else if(Date.now() - startTime > 180000){
+            clearInterval(pollInterval);
+            await refreshOdds();
+            statusEl.innerHTML = '<span style="color:var(--amber)">✓ タイムアウト（手動で確認してください）</span>';
+          } else {
+            const elapsed = Math.round((Date.now() - startTime) / 1000);
+            statusEl.innerHTML = `<span style="color:var(--amber)">🔄 取得中... ${elapsed}秒経過</span>`;
+          }
+        } catch(e) {}
+      }, 10000);
     } else {
       const err = await res.json();
       statusEl.innerHTML = `<span style="color:var(--red)">エラー: ${err.message || res.status}</span>`;
