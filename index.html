@@ -180,8 +180,8 @@ textarea:focus{border-color:var(--gold)}
     style="margin-bottom:8px"
     onkeydown="if(event.key==='Enter')document.getElementById('pw-input').focus()">
   <input class="pw-input" type="password" id="pw-input" placeholder="パスワード" autocomplete="off"
-    onkeydown="if(event.key==='Enter')checkPw()">
-  <button class="pw-btn" onclick="checkPw()">ログイン</button>
+    onkeydown="if(event.key==='Enter')window.checkPw()">
+  <button class="pw-btn" onclick="window.checkPw()">ログイン</button>
   <div class="pw-err" id="pw-err"></div>
 </div>
 
