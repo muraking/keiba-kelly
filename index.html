@@ -1054,7 +1054,9 @@ async function fetchRaceList(){
     const res = await fetch(apiUrl, {headers: fetchHeaders, cache: 'no-store'});
     if(!res.ok) throw new Error('データが見つかりません。共有タブから保存してください。');
     const json = await res.json();
-    const data = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    const raw = atob(json.content.replace(/\n/g, ''));
+      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+      const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
 
     // 新旧フォーマット対応
     if(data.dates){
@@ -1415,7 +1417,9 @@ async function refreshOdds(){
       const res = await fetch(apiUrl, {headers, cache: 'no-store'});
       if(!res.ok) throw new Error('取得失敗');
       const json = await res.json();
-      const data = JSON.parse(atob(json.content.replace(/\n/g, '')));
+      const raw = atob(json.content.replace(/\n/g, ''));
+      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+      const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
 
       // ghDataを更新
       if(data.dates){
