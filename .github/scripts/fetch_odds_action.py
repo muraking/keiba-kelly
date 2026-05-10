@@ -16,7 +16,7 @@ PLACE_ID  = os.environ.get("PLACE_ID", "")
 RACE_NUM  = int(os.environ.get("RACE_NUM", "1"))
 RACE_DATE = os.environ.get("RACE_DATE", "")
 TODAY_JST = os.environ.get("TODAY_JST", "")
-LOGIN_URL = "https://www.spat4.jp/keiba/pc?C_SPHONE=off"
+LOGIN_URL = "https://www2.spat4.jp/keiba/pc?HANDLERR=P001S"
 TIMEOUT   = 60000
 
 def now_jst():
@@ -64,7 +64,7 @@ async def login(page):
     return True
 
 async def get_odds(page, place_id, race_num, race_date):
-    url = f"https://www.spat4.jp/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
+    url = f"https://www2.spat4.jp/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
     await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
     await page.wait_for_timeout(8000)
 
