@@ -31,33 +31,64 @@ async def login(page):
     await page.fill('input[name="MEMBERIDR"]', SPAT4_PASS)
     print("入力完了")
 
-    # フォームをJS経由でsubmit
-    await page.evaluate(
-        "() => { const f = document.querySelector('form[action]'); if(f) f.submit(); }"
-    )
-    await page.wait_for_timeout(5000)
+    # フォームのaction確認してsubmit
+    form_info = await page.evaluate("""
+        () => {
+            const forms = document.querySelectorAll('form');
+            return Array.from(forms).map(f => ({action: f.action, method: f.method, id: f.id}));
+        }
+    """)
+    print(f"フォーム: {form_info}")
+
+    # MEMBERNUMR を含むフォームをsubmit
+    submitted = await page.evaluate("""
+        () => {
+            for(const form of document.querySelectorAll('form')){
+                if(form.querySelector('[name="MEMBERNUMR"]')){
+                    // submitイベントを発火
+                    const event = new Event('submit', {bubbles: true, cancelable: true});
+                    form.dispatchEvent(event);
+                    form.submit();
+                    return form.action;
+                }
+            }
+            return null;
+        }
+    """)
+    print(f"フォームsubmit: {submitted}")
+    await page.wait_for_timeout(8000)
     print(f"ログイン後URL: {page.url}")
+
+    # ログイン成功確認
+    if 'login' in page.url.lower() or 'C_SPHONE' in page.url:
+        # まだログイン画面→別の方法で試す
+        print("まだログイン画面→Enterキーで再試行")
+        await page.keyboard.press('Enter')
+        await page.wait_for_timeout(5000)
+        print(f"最終URL: {page.url}")
+
     return True
 
 async def get_odds(page, place_id, race_num, race_date):
     url = f"https://www.spat4.jp/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
     await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
-    await page.wait_for_timeout(3000)
+    await page.wait_for_timeout(8000)
 
     p122s_frame = None
     for attempt in range(5):
         for frame in page.frames:
-            if 'P122S' in frame.url or 'p122s' in frame.url.lower():
+            if 'P122S' in frame.url:
                 p122s_frame = frame
                 break
         if p122s_frame:
             break
-        print(f"  フレーム待機中... ({attempt+1}/5)")
-        await page.wait_for_timeout(3000)
+        print(f"  フレーム待機中... ({attempt+1}/5) frames={[f.url[:60] for f in page.frames]}")
+        await page.wait_for_timeout(5000)
 
     if not p122s_frame:
-        print(f"  P122Sフレームなし frames={[f.url[:60] for f in page.frames]}")
+        print(f"  P122Sフレームなし")
         text = await page.evaluate("() => document.body ? document.body.innerText : ''")
+        print(f"  ページ内容: {text[:200]}")
         return parse_odds(text)
 
     text = await p122s_frame.evaluate("() => document.body ? document.body.innerText : ''")
