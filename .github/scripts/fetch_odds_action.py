@@ -41,32 +41,26 @@ async def login(page):
     print(f"フォーム: {form_info}")
 
     # MEMBERNUMR を含むフォームをsubmit
-    submitted = await page.evaluate("""
-        () => {
-            for(const form of document.querySelectorAll('form')){
-                if(form.querySelector('[name="MEMBERNUMR"]')){
-                    // submitイベントを発火
-                    const event = new Event('submit', {bubbles: true, cancelable: true});
-                    form.dispatchEvent(event);
-                    form.submit();
-                    return form.action;
+    # フォームをsubmitしてナビゲーションを待つ
+    try:
+        async with page.expect_navigation(timeout=30000):
+            await page.evaluate("""
+                () => {
+                    for(const form of document.querySelectorAll('form')){
+                        if(form.querySelector('[name="MEMBERNUMR"]')){
+                            form.submit();
+                            return;
+                        }
+                    }
                 }
-            }
-            return null;
-        }
-    """)
-    print(f"フォームsubmit: {submitted}")
-    await page.wait_for_timeout(8000)
+            """)
+        print(f"ナビゲーション完了: {page.url}")
+    except Exception as e:
+        print(f"ナビゲーションエラー: {e}")
+        print(f"現在URL: {page.url}")
+
+    await page.wait_for_timeout(3000)
     print(f"ログイン後URL: {page.url}")
-
-    # ログイン成功確認
-    if 'login' in page.url.lower() or 'C_SPHONE' in page.url:
-        # まだログイン画面→別の方法で試す
-        print("まだログイン画面→Enterキーで再試行")
-        await page.keyboard.press('Enter')
-        await page.wait_for_timeout(5000)
-        print(f"最終URL: {page.url}")
-
     return True
 
 async def get_odds(page, place_id, race_num, race_date):
