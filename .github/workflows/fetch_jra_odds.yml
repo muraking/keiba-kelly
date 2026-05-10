@@ -3,6 +3,14 @@ name: Fetch JRA Odds
 on:
   workflow_dispatch:
     inputs:
+      venue:
+        description: '会場名（例: 東京）'
+        required: false
+        default: ''
+      race_num:
+        description: 'レース番号（1レースのみ取得時）'
+        required: false
+        default: ''
       today_jst:
         description: '日付 (YYYY-MM-DD)'
         required: true
@@ -24,7 +32,20 @@ jobs:
           playwright install chromium
           playwright install-deps chromium
 
-      - name: Fetch JRA Odds
+      - name: Fetch JRA Odds (1 race)
+        if: ${{ github.event.inputs.venue != '' && github.event.inputs.race_num != '' }}
+        env:
+          IPAT_ID: ${{ secrets.IPAT_ID }}
+          IPAT_PIN: ${{ secrets.IPAT_PIN }}
+          IPAT_PARS: ${{ secrets.IPAT_PARS }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          VENUE: ${{ github.event.inputs.venue }}
+          RACE_NUM: ${{ github.event.inputs.race_num }}
+          TODAY_JST: ${{ github.event.inputs.today_jst }}
+        run: python .github/scripts/ipat_fetch_one.py
+
+      - name: Fetch JRA Odds (all races)
+        if: ${{ github.event.inputs.venue == '' || github.event.inputs.race_num == '' }}
         env:
           IPAT_ID: ${{ secrets.IPAT_ID }}
           IPAT_PIN: ${{ secrets.IPAT_PIN }}
