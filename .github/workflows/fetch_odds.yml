@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       place_id:
-        description: '場所ID'
+        description: '競馬場ID'
         required: true
       race_num:
         description: 'レース番号'
@@ -13,30 +13,30 @@ on:
         description: '開催日 (YYYYMMDD)'
         required: true
       today_jst:
-        description: '今日の日付 (YYYY-MM-DD)'
+        description: '日付 (YYYY-MM-DD)'
         required: true
 
 jobs:
-  fetch_odds:
+  fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
-      - name: Install dependencies
+      - name: 依存関係インストール
         run: |
           pip install playwright requests
           playwright install chromium
           playwright install-deps chromium
 
-      - name: Fetch Odds
+      - name: オッズ取得
         env:
-          SPAT4_MEMBERNUM: ${{ secrets.SPAT4_MEMBERNUM }}
-          SPAT4_PASS: ${{ secrets.SPAT4_PASS }}
+          SPAT4_COOKIES: ${{ secrets.SPAT4_COOKIES }}
+          SPAT4_BASE_URL: ${{ secrets.SPAT4_BASE_URL }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
           PLACE_ID: ${{ github.event.inputs.place_id }}
           RACE_NUM: ${{ github.event.inputs.race_num }}
