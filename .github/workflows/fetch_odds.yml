@@ -35,8 +35,8 @@ jobs:
 
       - name: オッズ取得
         env:
-          SPAT4_COOKIES: ${{ secrets.SPAT4_COOKIES }}
-          SPAT4_BASE_URL: ${{ secrets.SPAT4_BASE_URL }}
+          SPAT4_MEMBERNUM: ${{ secrets.SPAT4_MEMBERNUM }}
+          SPAT4_PASS: ${{ secrets.SPAT4_PASS }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
           PLACE_ID: ${{ github.event.inputs.place_id }}
           RACE_NUM: ${{ github.event.inputs.race_num }}
