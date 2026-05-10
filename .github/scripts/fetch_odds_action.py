@@ -57,7 +57,11 @@ async def get_odds(page, place_id, race_num, race_date):
     if "www2" not in page.url:
         base = "https://www2.spat4.jp"
 
-    url = f"https://www2.spat4.jp/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
+    # ログイン後のドメインを使用（www2 or www3など）
+    from urllib.parse import urlparse
+    parsed = urlparse(page.url)
+    base_domain = f"{parsed.scheme}://{parsed.netloc}"
+    url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
     print(f"オッズURL: {url}")
     await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
     await page.wait_for_timeout(8000)
