@@ -75,9 +75,29 @@ async def login(page):
             print(f"パスワードエラー: {e}")
 
     if filled >= 2:
-        await page.click('input[type="submit"]')
+        # ログインボタンを探す
+        login_clicked = False
+        for selector in ['input[type="submit"]', 'button[type="submit"]', 'button', 'a']:
+            try:
+                els = await page.query_selector_all(selector)
+                for el in els:
+                    t = await el.inner_text() if hasattr(el, 'inner_text') else ''
+                    v = await el.get_attribute('value') or ''
+                    if 'ログイン' in t or 'ログイン' in v or selector == 'input[type="submit"]':
+                        if await el.is_visible():
+                            await el.click()
+                            login_clicked = True
+                            print(f"ログインボタンクリック: {selector}")
+                            break
+            except: pass
+            if login_clicked: break
+
+        if not login_clicked:
+            await page.evaluate("document.querySelector('form') && document.querySelector('form').submit()")
+            print("フォームJS submit")
+
         await page.wait_for_timeout(5000)
-        print(f"ログイン完了: {page.url}")
+        print(f"ログイン後URL: {page.url}")
         return True
 
     print(f"ログイン失敗 (filled={filled})")
