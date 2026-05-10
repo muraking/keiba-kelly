@@ -137,21 +137,33 @@ async def main():
             await browser.close()
             exit(1)
 
-        # P122Sフレームを探す（最大3回リトライ）
+        # ページのiframeを確認してP122Sフレームを探す
+        # まずiframe要素を確認
+        iframes = await page.evaluate("""
+            () => Array.from(document.querySelectorAll('iframe, frame')).map(f => ({
+                src: f.src, name: f.name, id: f.id
+            }))
+        """)
+        print(f"iframe要素: {iframes}")
+
+        # P122Sフレームを探す（最大5回リトライ）
         target_frame = None
-        for attempt in range(3):
+        for attempt in range(5):
             for frame in page.frames:
                 if "P122S" in frame.url:
                     target_frame = frame
                     break
             if target_frame:
                 break
-            print(f"  フレーム待機中... ({attempt+1}/3) frames={[f.url for f in page.frames]}")
+            print(f"  フレーム待機中... ({attempt+1}/5) frames={[f.url[:80] for f in page.frames]}")
             await page.wait_for_timeout(5000)
 
         if not target_frame:
             print("P122Sフレームが見つかりません")
             print(f"フレーム: {[f.url for f in page.frames]}")
+            # メインページのテキストからオッズを取得試行
+            text = await page.evaluate("() => document.body ? document.body.innerText : ''")
+            print(f"メインページ内容: {text[:300]}")
             await browser.close()
             exit(1)
 
