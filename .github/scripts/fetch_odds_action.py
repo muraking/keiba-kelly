@@ -38,12 +38,27 @@ async def login(page):
 
     # ログインフォームを探す
     try:
-        await page.fill('input[name="C_MEMBERNUMBER"]', SPAT4_MEMBERNUM)
-        await page.fill('input[name="C_MEMBERPASSWORD"]', SPAT4_PASS)
-        await page.click('input[type="submit"]')
-        await page.wait_for_timeout(5000)
-        print(f"ログイン完了: {page.url}")
-        return True
+        # ログインフォームの入力欄を確認
+        await page.wait_for_selector('input', timeout=10000)
+        inputs = await page.query_selector_all('input')
+        visible_inputs = []
+        for inp in inputs:
+            if await inp.is_visible():
+                type_ = await inp.get_attribute('type') or 'text'
+                if type_ not in ['hidden', 'submit', 'button']:
+                    visible_inputs.append(inp)
+        
+        print(f"visible inputs: {len(visible_inputs)}")
+        if len(visible_inputs) >= 2:
+            await visible_inputs[0].fill(SPAT4_MEMBERNUM)
+            await visible_inputs[1].fill(SPAT4_PASS)
+            await page.click('input[type="submit"]')
+            await page.wait_for_timeout(5000)
+            print(f"ログイン完了: {page.url}")
+            return True
+        else:
+            print("ログインフォームが見つかりません")
+            return False
     except Exception as e:
         print(f"ログインエラー: {e}")
         return False
