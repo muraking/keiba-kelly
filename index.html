@@ -377,6 +377,24 @@ textarea:focus{border-color:var(--gold)}
       <div id="save-status" style="margin-top:10px"></div>
     </div>
 
+    <div style="margin-bottom:14px">
+      <div class="sh">ソフトマックス設定</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">温度T（低→上位集中）</div>
+          <input id="sm-temperature" type="number" min="1" max="100" step="1" value="15"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小指数%（未満除外）</div>
+          <input id="sm-minpct" type="number" min="0" max="20" step="0.5" value="3.0"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+      </div>
+      <button onclick="saveSoftmaxSettings()" class="btn btn-outline" style="width:100%">💾 設定を保存</button>
+      <div id="sm-save-status" style="font-size:12px;text-align:center;margin-top:6px;min-height:16px"></div>
+    </div>
+
     <div>
       <div class="sh">保存済みデータ管理（管理者）</div>
       <button class="btn btn-outline" onclick="loadDateList()" style="height:38px;font-size:13px;margin-bottom:10px">
@@ -433,7 +451,11 @@ function parseData(){
   if(!parsed.length){alert('データを読み取れませんでした\n形式を確認してください');return;}
   horses=parsed;
   const tot=horses.reduce((s,h)=>s+h.pct,0);
-  horses.forEach(h=>{h.norm=h.pct/tot});
+  // ソフトマックス変換で勝率計算
+  const smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
+  const smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
+  const normMap1 = softmaxNorm(horses, smTemp, smMinPct);
+  horses.forEach(h=>{ h.norm = normMap1[h.num] || 0; });
   horses.sort((a,b)=>b.norm-a.norm);
 
   const rname=document.getElementById('rname').value.trim();
@@ -524,6 +546,76 @@ function setKelly(type){
     if(btn) btn.classList.toggle('kelly-on', t===type);
     if(ind) ind.style.visibility = t===type ? 'visible' : 'hidden';
   });
+}
+
+// ソフトマックス設定保存・読み込み
+async function saveSoftmaxSettings() {
+  const T = parseFloat(document.getElementById('sm-temperature').value) || 15;
+  const minP = parseFloat(document.getElementById('sm-minpct').value);
+  const statusEl = document.getElementById('sm-save-status');
+
+  localStorage.setItem('sm_temperature', T);
+  localStorage.setItem('sm_minpct', isNaN(minP) ? '3.0' : String(minP));
+
+  // GitHubにも保存（管理者のみ）
+  const token = loadToken();
+  if (token) {
+    try {
+      const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+      const res = await fetch(apiUrl, {
+        headers: {'Authorization': `token ${token}`}, cache: 'no-store'
+      });
+      const json = await res.json();
+      const raw = atob(json.content.replace(/\n/g,''));
+      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+      const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      if (!data._settings) data._settings = {};
+      data._settings.sm_temperature = T;
+      data._settings.sm_minpct = isNaN(minP) ? 3.0 : minP;
+      const jsonStr = JSON.stringify(data, null, 2);
+      const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+      const r2 = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+        body: JSON.stringify({message: 'update softmax settings', content: encoded, sha: json.sha, branch: GH_BRANCH})
+      });
+      if (r2.status === 200 || r2.status === 201) {
+        statusEl.innerHTML = '<span style="color:var(--green)">✓ 保存しました（T=' + T + ' min=' + (isNaN(minP)?3.0:minP) + '%）</span>';
+        if (ghData) ghData._settings = {sm_temperature: T, sm_minpct: isNaN(minP)?3.0:minP};
+      } else {
+        statusEl.innerHTML = '<span style="color:var(--amber)">⚠ ローカルのみ保存</span>';
+      }
+    } catch(e) {
+      statusEl.innerHTML = '<span style="color:var(--amber)">⚠ ローカルのみ保存</span>';
+    }
+  } else {
+    statusEl.innerHTML = '<span style="color:var(--green)">✓ ローカルに保存しました</span>';
+  }
+  onRaceChange(); // 再計算
+}
+
+function loadSoftmaxSettings() {
+  const T = localStorage.getItem('sm_temperature') || '15';
+  const minP = localStorage.getItem('sm_minpct') || '3.0';
+  const tEl = document.getElementById('sm-temperature');
+  const mEl = document.getElementById('sm-minpct');
+  if (tEl) tEl.value = T;
+  if (mEl) mEl.value = minP;
+}
+
+function softmaxNorm(horses, temperature, minPct) {
+  const T = temperature || 15;
+  const minP = (minPct !== undefined) ? minPct : 3.0;
+  const valid = horses.filter(h => h.pct >= minP);
+  const target = valid.length > 0 ? valid : horses;
+  const pcts = target.map(h => h.pct);
+  const maxP = Math.max(...pcts);
+  const exps = pcts.map(p => Math.exp((p - maxP) / T));
+  const sumE = exps.reduce((s, e) => s + e, 0);
+  const normMap = {};
+  horses.forEach(h => { normMap[h.num] = 0; });
+  target.forEach((h, i) => { normMap[h.num] = exps[i] / sumE; });
+  return normMap;
 }
 
 function halfKelly(p,odds){
@@ -1192,11 +1284,16 @@ function onRaceChange(){
     }
   }
 
+  // ソフトマックス変換
+  const smTemp2 = parseFloat(ghData?._settings?.sm_temperature || localStorage.getItem('sm_temperature') || '15');
+  const smMinPct2 = parseFloat(ghData?._settings?.sm_minpct || localStorage.getItem('sm_minpct') || '3.0');
+  const normMap2 = softmaxNorm(race.horses, smTemp2, smMinPct2);
+
   horses = race.horses.map(h => {
     const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
     return {
       num: h.num, pct: h.pct, name: h.name,
-      norm: h.pct / tot,
+      norm: normMap2[h.num] || 0,
       tanOdds: o ? (o.tan || null) : null,
       // fuku_min が 0 または未定義の場合は null扱い
       fukuOdds: o ? ((o.fuku_min && o.fuku_min > 0) ? o.fuku_min : null) : null
@@ -1430,6 +1527,7 @@ async function refreshOdds(){
       onRaceChange();
       document.getElementById('fetch-status').innerHTML =
         '<div class="status st-ok">✓ オッズを最新に更新しました</div>';
+
     } catch(e){
       document.getElementById('fetch-status').innerHTML =
         `<div class="status st-err">更新失敗: ${e.message}</div>`;
@@ -1493,7 +1591,7 @@ async function triggerOddsFetch(){
       });
       if(res.status === 204){
         if(statusEl) statusEl.innerHTML = '<span style="color:var(--amber)">🔄 JRAオッズ取得中... 自動反映します</span>';
-        const jraStartTime = Date.now();
+          const jraStartTime = Date.now();
         const jraPoll = setInterval(async () => {
           try {
             const runsRes = await fetch(
@@ -1563,7 +1661,8 @@ async function triggerOddsFetch(){
 
     if(res.status === 204){
       statusEl.innerHTML = '<span style="color:var(--amber)">🔄 取得中... 自動反映します</span>';
-      // GitHub Actions完了をポーリング（10秒ごと・最大3分）
+      startOddsAutoRefresh(); // 全ユーザー向け自動更新開始
+      // GitHub Actions完了をポーリング（管理者のみトークンで確認）
       const startTime = Date.now();
       const pollInterval = setInterval(async () => {
         try {
@@ -2014,6 +2113,9 @@ async function confirmPurchase(){
     confirmBtn.textContent = '投票する';
   }
 }
+
+// 初期化時にソフトマックス設定を読み込む
+loadSoftmaxSettings();
 
 </script>
 
