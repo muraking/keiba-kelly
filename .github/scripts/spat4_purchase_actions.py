@@ -87,20 +87,53 @@ async def purchase(page, base, bets):
         amount = bet["amount"]
         print(f"\n{horse_num}番を選択中...")
 
-        # 馬番の行を探してオッズ（単勝）をクリック
-        rows = await odds_frame.query_selector_all("tr")
+        # P122Sフレームのデバッグ: ページ内容確認
+        if not clicked if 'clicked' in dir() else True:
+            pass
         clicked = False
+
+        # まずフレームのHTMLを確認してセレクターを特定
+        frame_text = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
+        frame_html = await odds_frame.evaluate("() => document.body ? document.body.innerHTML.substring(0,500) : ''")
+        if not clicked:
+            print(f"  フレーム内容: {frame_text[:100]}")
+            print(f"  フレームHTML: {frame_html[:200]}")
+
+        # 方法1: テーブル行から馬番を探す
+        rows = await odds_frame.query_selector_all("tr")
         for row in rows:
             cells = await row.query_selector_all("td")
             texts = [(await c.inner_text()).strip() for c in cells]
-            # 馬番が含まれる行を探す
-            nums = [t for t in texts if t == str(horse_num)]
+            nums = [t for t in texts if t == str(horse_num) or t == f"{horse_num:02d}"]
             if nums:
-                # 単勝オッズのリンクをクリック（最初のaタグ）
                 links = await row.query_selector_all("a")
                 if links:
                     await links[0].click()
-                    print(f"  {horse_num}番 単勝クリック完了")
+                    print(f"  {horse_num}番 単勝クリック完了（tr/td方式）")
+                    clicked = True
+                    break
+
+        # 方法2: aタグのテキストから馬番を探す
+        if not clicked:
+            links = await odds_frame.query_selector_all("a")
+            for link in links:
+                t = (await link.inner_text()).strip()
+                if t == str(horse_num) or t == f"{horse_num:02d}" or t.startswith(f"{horse_num:02d}"):
+                    await link.click()
+                    print(f"  {horse_num}番 単勝クリック完了（aタグ方式）")
+                    clicked = True
+                    break
+
+        # 方法3: input[value]から探す
+        if not clicked:
+            inputs = await odds_frame.query_selector_all("input")
+            for inp in inputs:
+                val = await inp.get_attribute("value") or ""
+                if val == str(horse_num) or val == f"{horse_num:02d}":
+                    await inp.click()
+                    print(f"  {horse_num}番 単勝クリック完了（input方式）")
+                    clicked = True
+                    break
                     clicked = True
                     await page.wait_for_timeout(1000)
                     break
