@@ -12836,6 +12836,10 @@
   },
   "_settings": {
     "sm_temperature": 22,
-    "sm_minpct": 3
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 248,
+    "odds_min": null,
+    "odds_max": null
   }
 }
