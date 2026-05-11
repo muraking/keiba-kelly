@@ -391,6 +391,32 @@ textarea:focus{border-color:var(--gold)}
             style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
         </div>
       </div>
+      <div class="sh" style="margin-top:12px">期待値フィルター</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値 最小（デフォルト105）</div>
+          <input id="ev-min" type="number" min="100" max="200" step="1" value="105"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値 最大（空白=無制限）</div>
+          <input id="ev-max" type="number" min="100" max="9999" step="1" placeholder="無制限"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+      </div>
+      <div class="sh" style="margin-top:12px">オッズフィルター</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空白=無制限）</div>
+          <input id="odds-min" type="number" min="1" max="999" step="0.1" placeholder="無制限"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空白=無制限）</div>
+          <input id="odds-max" type="number" min="1" max="9999" step="0.1" placeholder="無制限"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+      </div>
       <button onclick="saveSoftmaxSettings()" class="btn btn-outline" style="width:100%">💾 設定を保存</button>
       <div id="sm-save-status" style="font-size:12px;text-align:center;margin-top:6px;min-height:16px"></div>
     </div>
@@ -554,8 +580,17 @@ async function saveSoftmaxSettings() {
   const minP = parseFloat(document.getElementById('sm-minpct').value);
   const statusEl = document.getElementById('sm-save-status');
 
+  const evMin = parseFloat(document.getElementById('ev-min').value) || 105;
+  const evMax = parseFloat(document.getElementById('ev-max').value) || null;
+  const oddsMin = parseFloat(document.getElementById('odds-min').value) || null;
+  const oddsMax = parseFloat(document.getElementById('odds-max').value) || null;
+
   localStorage.setItem('sm_temperature', T);
   localStorage.setItem('sm_minpct', isNaN(minP) ? '3.0' : String(minP));
+  localStorage.setItem('ev_min', String(evMin));
+  if(evMax) localStorage.setItem('ev_max', String(evMax)); else localStorage.removeItem('ev_max');
+  if(oddsMin) localStorage.setItem('odds_min', String(oddsMin)); else localStorage.removeItem('odds_min');
+  if(oddsMax) localStorage.setItem('odds_max', String(oddsMax)); else localStorage.removeItem('odds_max');
 
   // GitHubにも保存（管理者のみ）
   const token = loadToken();
@@ -572,6 +607,10 @@ async function saveSoftmaxSettings() {
       if (!data._settings) data._settings = {};
       data._settings.sm_temperature = T;
       data._settings.sm_minpct = isNaN(minP) ? 3.0 : minP;
+      data._settings.ev_min = evMin;
+      data._settings.ev_max = evMax;
+      data._settings.odds_min = oddsMin;
+      data._settings.odds_max = oddsMax;
       const jsonStr = JSON.stringify(data, null, 2);
       const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
       const r2 = await fetch(apiUrl, {
@@ -580,7 +619,7 @@ async function saveSoftmaxSettings() {
         body: JSON.stringify({message: 'update softmax settings', content: encoded, sha: json.sha, branch: GH_BRANCH})
       });
       if (r2.status === 200 || r2.status === 201) {
-        statusEl.innerHTML = '<span style="color:var(--green)">✓ 保存しました（T=' + T + ' min=' + (isNaN(minP)?3.0:minP) + '%）</span>';
+        statusEl.innerHTML = '<span style="color:var(--green)">✓ 保存しました</span>';
         if (ghData) ghData._settings = {sm_temperature: T, sm_minpct: isNaN(minP)?3.0:minP};
       } else {
         statusEl.innerHTML = '<span style="color:var(--amber)">⚠ ローカルのみ保存</span>';
@@ -597,10 +636,22 @@ async function saveSoftmaxSettings() {
 function loadSoftmaxSettings() {
   const T = localStorage.getItem('sm_temperature') || '15';
   const minP = localStorage.getItem('sm_minpct') || '3.0';
+  const evMin = localStorage.getItem('ev_min') || '105';
+  const evMax = localStorage.getItem('ev_max') || '';
+  const oddsMin = localStorage.getItem('odds_min') || '';
+  const oddsMax = localStorage.getItem('odds_max') || '';
   const tEl = document.getElementById('sm-temperature');
   const mEl = document.getElementById('sm-minpct');
-  if (tEl) tEl.value = T;
-  if (mEl) mEl.value = minP;
+  const evMinEl = document.getElementById('ev-min');
+  const evMaxEl = document.getElementById('ev-max');
+  const oddsMinEl = document.getElementById('odds-min');
+  const oddsMaxEl = document.getElementById('odds-max');
+  if(tEl) tEl.value = T;
+  if(mEl) mEl.value = minP;
+  if(evMinEl) evMinEl.value = evMin;
+  if(evMaxEl) evMaxEl.value = evMax;
+  if(oddsMinEl) oddsMinEl.value = oddsMin;
+  if(oddsMaxEl) oddsMaxEl.value = oddsMax;
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -639,9 +690,22 @@ function calcAll(){
   const maxBets = parseInt(document.getElementById('max-bets')?.value)||4;
   const maxInvest = parseInt(document.getElementById('max-invest')?.value)||Infinity;
 
-  // 期待値105以上の馬を抽出して勝率順（最大maxBets頭）
+  // フィルター設定を取得
+  const _evMin = parseFloat(localStorage.getItem('ev_min') || '105');
+  const _evMax = parseFloat(localStorage.getItem('ev_max') || '0') || Infinity;
+  const _oddsMin = parseFloat(localStorage.getItem('odds_min') || '0') || 0;
+  const _oddsMax = parseFloat(localStorage.getItem('odds_max') || '0') || Infinity;
+
+  // 期待値・オッズフィルターで馬を抽出して勝率高い順
   const evPool = [...horses]
-    .filter(h=>h.tanEV && h.tanEV >= 105)
+    .filter(h => {
+      if(!h.tanEV || !h.tanOdds) return false;
+      if(h.tanEV < _evMin) return false;
+      if(h.tanEV > _evMax) return false;
+      if(h.tanOdds < _oddsMin) return false;
+      if(h.tanOdds > _oddsMax) return false;
+      return true;
+    })
     .sort((a,b)=>b.norm-a.norm);  // 勝率高い順
 
   renders = [];
@@ -1916,7 +1980,7 @@ function executePurchase(){
     if(!renders || renders.length === 0){
       alert('先に結果タブで「計算して結果を見る」を実行してください');
     } else {
-      alert('購入する買い目がありません（期待値105以上の馬がいません）');
+      alert('購入する買い目がありません（フィルター条件を満たす馬がいません）');
     }
     return;
   }
@@ -1979,7 +2043,7 @@ function executePurchaseJRA(){
   if(!bets.length){
     alert(renders && renders.length === 0 ?
       '先に結果タブで計算してください' :
-      '購入する買い目がありません（期待値105以上の馬がいません）');
+      '購入する買い目がありません（フィルター条件を満たす馬がいません）');
     return;
   }
 
