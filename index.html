@@ -1353,6 +1353,7 @@ function onRaceChange(){
       <span style="flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.name}</span>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:13px;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</div>
+        <div style="font-size:10px;color:var(--text3)">勝率（SM）</div>
         <div style="font-size:10px;color:var(--text3)">指数${h.pct.toFixed(1)}%</div>
         ${h.tanOdds ? `<div style="font-size:11px;color:var(--amber);font-family:'DM Mono',monospace;margin-top:2px">${h.tanOdds}倍</div>` : '<div style="font-size:10px;color:var(--text3);margin-top:2px">オッズ未取得</div>'}
       </div>`;
