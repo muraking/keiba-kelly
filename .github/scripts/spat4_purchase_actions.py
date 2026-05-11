@@ -137,11 +137,11 @@ for bet in bets:
     else:
         print(f"  金額入力欄が見つかりません")
 
-# 「投票内容確認へ」ボタンをクリック
+# "投票内容確認へ"ボタンをクリック
 print("\n投票内容確認へ...")
 await page.wait_for_timeout(1000)
 
-# P122Sフレーム内の「投票内容確認へ」ボタンをクリック
+# P122Sフレーム内の"投票内容確認へ"ボタンをクリック
 confirmed = False
 # iframeのsrcからP122S URLを取得して直接操作
 iframes = await page.evaluate(
@@ -252,7 +252,7 @@ if len(amount_inputs) >= 2:
     await amount_inputs[-1].fill(str(total))
     print("合計金額入力完了")
 
-# 「投票する」ボタンをクリック
+# "投票する"ボタンをクリック
 vote_btn = None
 for frame in page.frames:
     btns = await frame.query_selector_all("input[type='submit'], button")
@@ -273,7 +273,7 @@ if vote_btn:
     print("投票完了！purchase_result.png を確認してください")
     return True
 else:
-    print("「投票する」ボタンが見つかりません")
+    print("投票するボタンが見つかりません")
     await page.screenshot(path="error_no_vote_btn.png")
     return False
 ```
