@@ -74,12 +74,31 @@ async def purchase(page, base, bets):
         print(f"  フレーム待機中... ({attempt+1}/3) frames={[f.url[-30:] for f in page.frames]}")
         await page.wait_for_timeout(3000)
 
-    if not odds_frame:
+    # iframeのsrcからP122S URLを直接取得して新ページでアクセス
+    iframes = await page.evaluate(
+        "() => Array.from(document.querySelectorAll('iframe,frame')).map(f=>f.src)"
+    )
+    p122s_url = next((s for s in iframes if 'P122S' in s), None)
+    if not p122s_url and odds_frame:
+        p122s_url = odds_frame.url
+
+    if not p122s_url:
         print("P122Sフレームが見つかりません")
-        print(f"フレーム一覧: {[f.url for f in page.frames]}")
         return False
 
-    print(f"オッズフレーム: {odds_frame.url}")
+    print(f"オッズフレーム: {p122s_url}")
+
+    # 同じコンテキストの新ページでP122Sに直接アクセス
+    odds_page = await page.context.new_page()
+    await odds_page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await odds_page.wait_for_timeout(3000)
+    content = await odds_page.evaluate("() => document.body ? document.body.innerText : ''")
+    print(f"P122S内容: {content[:80]}")
+    if 'ログイン' in content[:80] or 'エラー' in content[:80]:
+        print("P122Sセッション切れ")
+        await odds_page.close()
+        return False
+    odds_frame = odds_page
 
     # 各馬番の単勝オッズをクリックして選択
     for bet in bets:
