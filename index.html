@@ -1370,7 +1370,9 @@ function onRaceChange(){
   const JRA_VENUES = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
   const isJRA = JRA_VENUES.includes(race.venue);
 
-  const allDates = Object.keys(ghData).sort().reverse();
+  // 選択中のレースの日付のオッズのみ使用（他の日付のオッズは使わない）
+  const raceDate = document.getElementById('date-select')?.value;
+  const allDates = raceDate && ghData[raceDate] ? [raceDate] : Object.keys(ghData).sort().reverse().slice(0,1);
   outer: for(const d of allDates){
     const dayData = ghData[d];
     if(!dayData) continue;
@@ -1435,7 +1437,9 @@ function onRaceChange(){
   const timeStr = race.startTime || '';
   // オッズ取得時刻を全日付から検索（地方・中央両対応）
   const oddsUpdatedStr = (() => {
-    const allD = Object.keys(ghData).sort().reverse();
+    // 選択中の日付のオッズのみ参照
+    const _raceDate = document.getElementById('date-select')?.value;
+    const allD = _raceDate && ghData[_raceDate] ? [_raceDate] : Object.keys(ghData).sort().reverse().slice(0,1);
     for(const d of allD){
       const dayData = ghData[d];
       if(!dayData) continue;
