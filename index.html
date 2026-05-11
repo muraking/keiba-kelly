@@ -1662,7 +1662,6 @@ async function triggerOddsFetch(){
 
     if(res.status === 204){
       statusEl.innerHTML = '<span style="color:var(--amber)">🔄 取得中... 自動反映します</span>';
-      startOddsAutoRefresh(); // 全ユーザー向け自動更新開始
       // GitHub Actions完了をポーリング（管理者のみトークンで確認）
       const startTime = Date.now();
       const pollInterval = setInterval(async () => {
