@@ -115,8 +115,9 @@ async def get_odds(page, place_id, race_num, race_date):
         p122s_url = re.sub(r'https://www\d*\.spat4\.jp', base_domain, p122s_url_orig)
         print(f"P122S URL: {p122s_url}")
 
-        # page.gotoで直接アクセス
-        await page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
+        # page.gotoでP122Sに直接アクセス、networkidleまで待つ
+        captured_responses.clear()
+        await page.goto(p122s_url, wait_until="networkidle", timeout=TIMEOUT)
         await page.wait_for_timeout(3000)
         body = await page.evaluate("() => document.body ? document.body.innerText : ''")
         print(f"P122S内容: {body[:200]}")
@@ -125,6 +126,16 @@ async def get_odds(page, place_id, race_num, race_date):
             result = parse_odds(body)
             if result:
                 return result
+
+        # JS描画後のDOMをtableから取得
+        body2 = await page.evaluate(
+            "() => Array.from(document.querySelectorAll('tr, li')).map(r=>r.innerText).join('\\n')"
+        )
+        print(f"DOM取得: {body2[:200]}")
+        result2 = parse_odds(body2)
+        if result2:
+            print(f"DOM取得から{len(result2)}頭")
+            return result2
 
         # キャプチャしたP122Sレスポンスから試みる
         for r in captured_responses:
