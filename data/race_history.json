@@ -745,5 +745,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:27:30.369Z"
+  },
+  {
+    "date": "5/10 新潟 2R",
+    "venue": "新潟",
+    "raceNum": "2R",
+    "raceClass": "3歳未勝利",
+    "winner": 7,
+    "winOdds": 5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 14,
+        "name": "フェルアフリーゼ",
+        "norm": 0.1127,
+        "tanOdds": 14.7,
+        "ev": 165.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ベセル",
+        "norm": 0.0983,
+        "tanOdds": 10.9,
+        "ev": 107.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "セントリアン",
+        "norm": 0.082,
+        "tanOdds": 18.3,
+        "ev": 150,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "アイアンナックル",
+        "norm": 0.0422,
+        "tanOdds": 37.4,
+        "ev": 157.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:27:51.839Z"
   }
 ]
