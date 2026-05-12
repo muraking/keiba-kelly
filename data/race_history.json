@@ -922,5 +922,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:29:56.874Z"
+  },
+  {
+    "date": "5/10 新潟 1R",
+    "venue": "新潟",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 13,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "ロココ",
+        "norm": 0.15,
+        "tanOdds": 15.2,
+        "ev": 228,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "フローラルウェイ",
+        "norm": 0.0326,
+        "tanOdds": 79.5,
+        "ev": 258.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "アルデナイン",
+        "norm": 0.0283,
+        "tanOdds": 68.6,
+        "ev": 194.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "ボヤージュブルー",
+        "norm": 0.0267,
+        "tanOdds": 75.2,
+        "ev": 200.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:30:29.188Z"
   }
 ]
