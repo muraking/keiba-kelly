@@ -97,9 +97,23 @@ async def get_odds(page, place_id, race_num, race_date):
     print(f'P122S in HTML: {"P122S" in p120s_html}')
     print(f'P120S HTML: {p120s_html[:500]}')
 
-    # P122Sフレームを確認（JS完了後のDOMを取得）
-    # まず長めに待つ
-    await page.wait_for_timeout(5000)
+    # まずP902Sフレームにアクセスしてセッションを確立
+    for frame in page.frames:
+        if 'P902S' in frame.url:
+            print(f"P902Sフレーム: {frame.url[:80]}")
+            try:
+                await frame.wait_for_load_state("domcontentloaded", timeout=5000)
+            except: pass
+            break
+
+    # 全フレームのロードを待つ
+    await page.wait_for_timeout(8000)
+
+    # 全フレームの状態を確認
+    for frame in page.frames:
+        v_url = await frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
+        print(f"frame: {frame.url[-50:]} -> _v_url: {v_url}")
+
     for frame in page.frames:
         if 'P122S' in frame.url:
             print(f"P122Sフレーム: {frame.url[:80]}")
