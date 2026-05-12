@@ -1394,5 +1394,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:33:34.187Z"
+  },
+  {
+    "date": "5/10 新潟 10",
+    "venue": "新潟",
+    "raceNum": "10R",
+    "raceClass": "五泉特別",
+    "winner": 11,
+    "winOdds": 6.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "メイショウクーガー",
+        "norm": 0.1188,
+        "tanOdds": 11.6,
+        "ev": 137.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "モモンウールー",
+        "norm": 0.0626,
+        "tanOdds": 25.6,
+        "ev": 160.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "タカサンフェイス",
+        "norm": 0.0416,
+        "tanOdds": 38.9,
+        "ev": 161.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ユイノマチブセ",
+        "norm": 0.0395,
+        "tanOdds": 41.8,
+        "ev": 165.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:34:02.088Z"
   }
 ]
