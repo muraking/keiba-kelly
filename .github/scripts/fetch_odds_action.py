@@ -119,7 +119,21 @@ async def get_odds(page, place_id, race_num, race_date, cookies):
         print("P122S iframeなし")
         return parse_odds(text)
 
-    # まずpage.framesから試す
+    # 方法1: page.gotoでP122Sに直接アクセス（成功実績あり）
+    print(f"P122S直接アクセス: {p122s_url}")
+    await page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await page.wait_for_timeout(3000)
+    body = await page.evaluate("() => document.body ? document.body.innerText : ''")
+    print(f"P122S内容: {body[:80]}")
+    if 'ログイン' not in body[:50] and 'エラー' not in body[:50]:
+        result = parse_odds(body)
+        if result:
+            print(f"{len(result)}頭取得成功")
+            return result
+
+    # 方法2: page.framesから試す（P120Sに戻ってから）
+    await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await page.wait_for_timeout(5000)
     target_frame = None
     for attempt in range(5):
         for frame in page.frames:
@@ -138,13 +152,13 @@ async def get_odds(page, place_id, race_num, race_date, cookies):
             if result:
                 return result
 
-    # フォールバック: requestsで直接取得
+    # 方法3: requestsで直接取得
     print("requestsでP122S取得...")
     result2 = await get_odds_with_requests(p122s_url, cookies)
     if result2:
         return result2
 
-    return parse_odds(text)
+    return {}
 
 def parse_odds(text):
     result = {}
