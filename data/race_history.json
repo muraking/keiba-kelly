@@ -450,5 +450,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:20:38.910Z"
+  },
+  {
+    "date": "5/12 盛岡 9R",
+    "venue": "盛岡",
+    "raceNum": "9R",
+    "raceClass": "C1",
+    "winner": 8,
+    "winOdds": 2.9,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "コンバットスプーン",
+        "norm": 0.3974,
+        "tanOdds": 2.6,
+        "ev": 103.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "プレイフルネス",
+        "norm": 0.1197,
+        "tanOdds": 20.3,
+        "ev": 243,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ヴィオレーヌ",
+        "norm": 0.056,
+        "tanOdds": 23.5,
+        "ev": 131.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "フタイテンホイール",
+        "norm": 0.0395,
+        "tanOdds": 66.1,
+        "ev": 261,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:21:57.019Z"
   }
 ]
