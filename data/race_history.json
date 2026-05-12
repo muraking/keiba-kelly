@@ -1335,5 +1335,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:33:10.817Z"
+  },
+  {
+    "date": "5/10 新潟 9R",
+    "venue": "新潟",
+    "raceNum": "9R",
+    "raceClass": "荒川峡特別",
+    "winner": 127,
+    "winOdds": null,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "キングズトゥルー",
+        "norm": 0.243,
+        "tanOdds": 6.5,
+        "ev": 157.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "スイートオレンジ",
+        "norm": 0.0957,
+        "tanOdds": 13.1,
+        "ev": 125.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ウインリュクス",
+        "norm": 0.0578,
+        "tanOdds": 19.2,
+        "ev": 110.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "サンセットビュー",
+        "norm": 0.0467,
+        "tanOdds": 25.2,
+        "ev": 117.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:33:34.187Z"
   }
 ]
