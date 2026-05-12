@@ -332,5 +332,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:17:52.754Z"
+  },
+  {
+    "date": "5/12 盛岡 7R",
+    "venue": "盛岡",
+    "raceNum": "7R",
+    "raceClass": "C1",
+    "winner": 8,
+    "winOdds": 4.3,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ヒロスズラン",
+        "norm": 0.3006,
+        "tanOdds": 6.7,
+        "ev": 201.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "レーヌデゼトワール",
+        "norm": 0.1513,
+        "tanOdds": 12.9,
+        "ev": 195.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ヤマショウシャイン",
+        "norm": 0.1033,
+        "tanOdds": 15.2,
+        "ev": 157,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ジュレヴァー",
+        "norm": 0.0613,
+        "tanOdds": 29,
+        "ev": 177.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:19:13.264Z"
   }
 ]
