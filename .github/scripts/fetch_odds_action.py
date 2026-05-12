@@ -95,7 +95,7 @@ async def get_odds(page, place_id, race_num, race_date):
     p120s_html = await page.evaluate('() => document.documentElement.innerHTML')
     print(f'P120S HTML長: {len(p120s_html)}')
     print(f'P122S in HTML: {"P122S" in p120s_html}')
-    print(f"P122S src候補: {p122s_srcs[:3]}")
+    print(f'P120S HTML: {p120s_html[:500]}')
 
     # P122Sフレームを確認（JS完了後のDOMを取得）
     # まず長めに待つ
