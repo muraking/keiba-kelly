@@ -1,0 +1,51 @@
+[
+  {
+    "date": "5/12 盛岡 1R",
+    "venue": "盛岡",
+    "raceNum": "1R",
+    "raceClass": "C2三組",
+    "winner": 9,
+    "winOdds": 17.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "ロッサヴィール",
+        "norm": 0.2629,
+        "tanOdds": 8.7,
+        "ev": 228.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "エスカペード",
+        "norm": 0.1198,
+        "tanOdds": 16.1,
+        "ev": 192.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "バスターショット",
+        "norm": 0.0306,
+        "tanOdds": 108.2,
+        "ev": 331.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:10:20.640Z"
+  }
+]
