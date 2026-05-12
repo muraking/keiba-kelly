@@ -391,5 +391,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:19:13.264Z"
+  },
+  {
+    "date": "5/12 盛岡 8R",
+    "venue": "盛岡",
+    "raceNum": "8R",
+    "raceClass": "C1",
+    "winner": 1,
+    "winOdds": 2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "カイトリヒト",
+        "norm": 0.1285,
+        "tanOdds": 28.4,
+        "ev": 365,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ネイチャーミヤビ",
+        "norm": 0.0944,
+        "tanOdds": 12.2,
+        "ev": 115.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "エルモドーロ",
+        "norm": 0.0624,
+        "tanOdds": 66.3,
+        "ev": 413.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ヤマニンファリダ",
+        "norm": 0.0513,
+        "tanOdds": 26.4,
+        "ev": 135.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:20:38.910Z"
   }
 ]
