@@ -1,10 +1,10 @@
 """
-SPAT4 オッズ取得（GitHub Actions用・毎回ログイン方式）
-Cookieを使わず毎回ログインするため期限切れ問題なし
+SPAT4 オッズ取得（GitHub Actions用・ログイン方式）
 """
-import asyncio, os, json, re, sys, requests, base64
+import asyncio, os, json, re, sys, requests as req_lib, base64
 from datetime import datetime, timezone, timedelta
 from playwright.async_api import async_playwright
+from html.parser import HTMLParser
 
 SPAT4_MEMBERNUM = os.environ.get("SPAT4_MEMBERNUM", "")
 SPAT4_PASS      = os.environ.get("SPAT4_PASS", "")
@@ -23,15 +23,30 @@ TIMEOUT   = 60000
 def now_jst():
     return datetime.now(timezone(timedelta(hours=9)))
 
+def extract_text(html_str):
+    class Parser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.texts = []
+            self.skip = False
+        def handle_starttag(self, tag, attrs):
+            if tag in ['script','style','noscript']: self.skip = True
+        def handle_endtag(self, tag):
+            if tag in ['script','style','noscript']: self.skip = False
+        def handle_data(self, data):
+            if not self.skip and data.strip():
+                self.texts.append(data.strip())
+    p = Parser()
+    p.feed(html_str)
+    return "\n".join(p.texts)
+
 async def login(page):
-    """SPAT4にログインしてwww2セッションを確立"""
     await page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=TIMEOUT)
     await page.wait_for_timeout(5000)
     await page.fill('input[name="MEMBERNUMR"]', SPAT4_MEMBERNUM)
     await page.fill('input[name="MEMBERIDR"]', SPAT4_PASS)
     print("入力完了")
 
-    # フォームsubmit
     try:
         async with page.expect_navigation(wait_until="domcontentloaded", timeout=30000):
             await page.evaluate("""
@@ -43,21 +58,41 @@ async def login(page):
                     }
                 }
             """)
-        await page.wait_for_timeout(3000)
+        await page.wait_for_timeout(5000)
     except Exception as e:
         print(f"ナビゲーション: {e}")
 
     print(f"ログイン後URL: {page.url}")
-    return True
+    
+    # セッションCookieを取得
+    cookies = await page.context.cookies()
+    print(f"Cookie数: {len(cookies)}")
+    return cookies
 
-async def get_odds(page, place_id, race_num, race_date):
-    """ログイン済みのwww2セッションでオッズ取得"""
-    # www2.spat4.jpでオッズページにアクセス
-    base = page.url.replace("https://www.spat4.jp", "https://www2.spat4.jp")
-    if "www2" not in page.url:
-        base = "https://www2.spat4.jp"
+async def get_odds_with_requests(p122s_url, cookies):
+    """requestsライブラリでP122Sに直接アクセス"""
+    session = req_lib.Session()
+    for c in cookies:
+        session.cookies.set(c['name'], c['value'], domain=c.get('domain',''))
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "ja,en-US;q=0.7,en;q=0.3",
+        "Referer": p122s_url.replace("P122S", "P120S").split("&KINDINFOR")[0],
+    }
+    
+    try:
+        r = session.get(p122s_url, headers=headers, timeout=15)
+        r.encoding = 'shift_jis'
+        text = extract_text(r.text)
+        print(f"requests内容: {text[:150]}")
+        return parse_odds(text)
+    except Exception as e:
+        print(f"requestsエラー: {e}")
+        return {}
 
-    # ログイン後のドメインを使用（www2 or www3など）
+async def get_odds(page, place_id, race_num, race_date, cookies):
     from urllib.parse import urlparse
     parsed = urlparse(page.url)
     base_domain = f"{parsed.scheme}://{parsed.netloc}"
@@ -67,83 +102,48 @@ async def get_odds(page, place_id, race_num, race_date):
     await page.wait_for_timeout(8000)
     print(f"現在URL: {page.url}")
 
-    # セッション切れ確認
+    # セッション確認
     text = await page.evaluate("() => document.body ? document.body.innerText : ''")
-    if 'ログイン' in text[:50] or 'エラー' in text[:50]:
-        print(f"セッション切れ: {text[:100]}")
-        return None
+    if 'ログイン' in text[:80] or 'エラー' in text[:80]:
+        print(f"セッション切れ: {text[:80]}")
+        return {}
 
-    # iframeのsrcを取得してP122Sを探す
-    iframes = await page.evaluate("""
-        () => Array.from(document.querySelectorAll('iframe,frame')).map(f=>({src:f.src,name:f.name}))
-    """)
-    print(f"iframe: {iframes}")
+    # iframeのsrcからP122S URLを取得
+    iframes = await page.evaluate(
+        "() => Array.from(document.querySelectorAll('iframe,frame')).map(f=>f.src)"
+    )
+    p122s_url = next((s for s in iframes if 'P122S' in s), None)
+    print(f"P122S URL: {p122s_url}")
 
-    # P122SのURLを直接取得
-    p122s_url = None
-    for iframe in iframes:
-        if 'P122S' in iframe.get('src', ''):
-            p122s_url = iframe['src']
-            break
+    if not p122s_url:
+        print("P122S iframeなし")
+        return parse_odds(text)
 
-    # P122Sフレームをpage.framesから取得（gotoは使わない）
-    # iframeのロードを待ちながらフレームを探す
+    # まずpage.framesから試す
     target_frame = None
-    for attempt in range(8):
+    for attempt in range(5):
         for frame in page.frames:
             if 'P122S' in frame.url:
                 target_frame = frame
                 break
         if target_frame:
-            print(f"P122Sフレーム発見: attempt={attempt+1}")
             break
         await page.wait_for_timeout(3000)
-        print(f"フレーム待機... ({attempt+1}/8) frames={len(page.frames)}")
 
     if target_frame:
-        body = await target_frame.evaluate("() => document.body ? document.body.innerText : ''")
-        print(f"P122S内容: {body[:100]}")
-        result = parse_odds(body)
-        print(f"パース結果: {len(result)}頭")
-        if result:
-            return result
+        frame_text = await target_frame.evaluate("() => document.body ? document.body.innerText : ''")
+        print(f"フレーム内容: {frame_text[:80]}")
+        if 'ログイン' not in frame_text[:50] and 'エラー' not in frame_text[:50]:
+            result = parse_odds(frame_text)
+            if result:
+                return result
 
-    # 最終フォールバック: iframeのsrcに直接requestsでアクセス
-    if p122s_url:
-        print(f"requestsでP122S取得: {p122s_url}")
-        cookies = await page.context.cookies()
-        cookie_str = "; ".join([f"{c['name']}={c['value']}" for c in cookies])
-        import requests as req_lib
-        headers = {
-            "Cookie": cookie_str,
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Referer": page.url
-        }
-        r = req_lib.get(p122s_url, headers=headers, timeout=15)
-        r.encoding = 'utf-8'
-        from html.parser import HTMLParser
-        class TextExtractor(HTMLParser):
-            def __init__(self):
-                super().__init__()
-                self.text = []
-                self.skip = False
-            def handle_starttag(self, tag, attrs):
-                if tag in ['script','style']: self.skip = True
-            def handle_endtag(self, tag):
-                if tag in ['script','style']: self.skip = False
-            def handle_data(self, data):
-                if not self.skip and data.strip():
-                    self.text.append(data.strip())
-        parser = TextExtractor()
-        parser.feed(r.text)
-        body2 = chr(10).join(parser.text)
-        print(f"requests内容: {body2[:100]}")
-        result2 = parse_odds(body2)
-        print(f"requestsパース: {len(result2)}頭")
-        if result2:
-            return result2
+    # フォールバック: requestsで直接取得
+    print("requestsでP122S取得...")
+    result2 = await get_odds_with_requests(p122s_url, cookies)
+    if result2:
+        return result2
 
-    print("P122Sなし → メインページからパース")
     return parse_odds(text)
 
 def parse_odds(text):
@@ -183,7 +183,7 @@ def save_to_github(place_id, race_num, odds, today_jst):
     api_url = f"https://api.github.com/repos/{GH_USER}/{GH_REPO}/contents/{GH_FILE}"
     headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
     for attempt in range(3):
-        r = requests.get(api_url, headers=headers)
+        r = req_lib.get(api_url, headers=headers)
         if not r.ok: return False
         sha = r.json()["sha"]
         data = json.loads(base64.b64decode(r.json()["content"].replace("\n","")).decode())
@@ -200,7 +200,7 @@ def save_to_github(place_id, race_num, odds, today_jst):
             "content": base64.b64encode(json_str.encode()).decode(),
             "sha": sha, "branch": GH_BRANCH
         }
-        r2 = requests.put(api_url, headers=headers, json=body)
+        r2 = req_lib.put(api_url, headers=headers, json=body)
         if r2.status_code in [200, 201]:
             print("GitHub保存成功")
             return True
@@ -212,10 +212,13 @@ async def main():
     print(f"オッズ取得: PLACE_ID={PLACE_ID} RACE_NUM={RACE_NUM} DATE={RACE_DATE}")
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
+        )
+        page = await context.new_page()
         page.set_default_timeout(TIMEOUT)
-        await login(page)
-        odds = await get_odds(page, PLACE_ID, RACE_NUM, RACE_DATE)
+        cookies = await login(page)
+        odds = await get_odds(page, PLACE_ID, RACE_NUM, RACE_DATE, cookies)
         await browser.close()
     if not odds:
         print("オッズ取得失敗")
