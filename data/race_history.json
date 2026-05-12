@@ -1040,5 +1040,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:30:55.871Z"
+  },
+  {
+    "date": "5/10 新潟 4R",
+    "venue": "新潟",
+    "raceNum": "4R",
+    "raceClass": "4歳以上障害未勝利",
+    "winner": 5,
+    "winOdds": 7.1,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "ラパンラピッド",
+        "norm": 0.2546,
+        "tanOdds": 4.3,
+        "ev": 109.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ベールドインパクト",
+        "norm": 0.0502,
+        "tanOdds": 27.7,
+        "ev": 139.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ブランフォルテ",
+        "norm": 0.0379,
+        "tanOdds": 49.4,
+        "ev": 187.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "グラスビジョン",
+        "norm": 0.0337,
+        "tanOdds": 64.8,
+        "ev": 218.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:31:24.069Z"
   }
 ]
