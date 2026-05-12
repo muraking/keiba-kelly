@@ -509,5 +509,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:21:57.019Z"
+  },
+  {
+    "date": "5/12 盛岡 10",
+    "venue": "盛岡",
+    "raceNum": "10R",
+    "raceClass": "C1",
+    "winner": 6,
+    "winOdds": 1.7,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "ピースワンジョケル",
+        "norm": 0.1186,
+        "tanOdds": 14.2,
+        "ev": 168.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "インディーフィルム",
+        "norm": 0.0945,
+        "tanOdds": 17.4,
+        "ev": 164.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "エターナルルビー",
+        "norm": 0.06,
+        "tanOdds": 24.7,
+        "ev": 148.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "アイスボウル",
+        "norm": 0.032,
+        "tanOdds": 38.4,
+        "ev": 123,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:23:10.136Z"
   }
 ]
