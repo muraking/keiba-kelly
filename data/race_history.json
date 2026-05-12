@@ -214,5 +214,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:15:01.768Z"
+  },
+  {
+    "date": "5/12 盛岡 5R",
+    "venue": "盛岡",
+    "raceNum": "5R",
+    "raceClass": "C1",
+    "winner": 2,
+    "winOdds": 1.8,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "ネコニコタツ",
+        "norm": 0.1588,
+        "tanOdds": 18.5,
+        "ev": 293.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "キタノブルーアレツ",
+        "norm": 0.1581,
+        "tanOdds": 8.7,
+        "ev": 137.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "スリアント",
+        "norm": 0.0796,
+        "tanOdds": 17.4,
+        "ev": 138.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "エイカイソフィア",
+        "norm": 0.0466,
+        "tanOdds": 47.6,
+        "ev": 221.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:16:19.336Z"
   }
 ]
