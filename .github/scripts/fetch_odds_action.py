@@ -112,7 +112,13 @@ async def get_odds(page, place_id, race_num, race_date, cookies):
     iframes = await page.evaluate(
         "() => Array.from(document.querySelectorAll('iframe,frame')).map(f=>f.src)"
     )
-    p122s_url = next((s for s in iframes if 'P122S' in s), None)
+    p122s_url_orig = next((s for s in iframes if 'P122S' in s), None)
+    # ログイン後のドメインにP122S URLを書き換え（ロードバランサー対策）
+    if p122s_url_orig:
+        import re as _re
+        p122s_url = _re.sub(r'https://www\d*\.spat4\.jp', base_domain, p122s_url_orig)
+    else:
+        p122s_url = None
     print(f"P122S URL: {p122s_url}")
 
     if not p122s_url:
