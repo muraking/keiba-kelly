@@ -1453,5 +1453,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:34:02.088Z"
+  },
+  {
+    "date": "5/10 新潟 11",
+    "venue": "新潟",
+    "raceNum": "11R",
+    "raceClass": "谷川岳S",
+    "winner": 7,
+    "winOdds": 15,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 13,
+        "name": "シンフォーエバー",
+        "norm": 0.0411,
+        "tanOdds": 26.1,
+        "ev": 107.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ニシノエージェント",
+        "norm": 0.0377,
+        "tanOdds": 35.5,
+        "ev": 133.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "マサノカナリア",
+        "norm": 0.0344,
+        "tanOdds": 30.3,
+        "ev": 104.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ビーアストニッシド",
+        "norm": 0.0327,
+        "tanOdds": 120.1,
+        "ev": 393.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:34:25.501Z"
   }
 ]
