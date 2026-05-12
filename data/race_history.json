@@ -1512,5 +1512,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:34:25.501Z"
+  },
+  {
+    "date": "5/10 新潟 12",
+    "venue": "新潟",
+    "raceNum": "12R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 7,
+    "winOdds": 4.9,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "ベルファスト",
+        "norm": 0.329,
+        "tanOdds": 3.1,
+        "ev": 102,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "アーサーズウェイン",
+        "norm": 0.046,
+        "tanOdds": 23.5,
+        "ev": 108,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "カイトグート",
+        "norm": 0.0298,
+        "tanOdds": 60.3,
+        "ev": 180,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "パリコレジェンヌ",
+        "norm": 0.0288,
+        "tanOdds": 41.8,
+        "ev": 120.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:34:45.830Z"
   }
 ]
