@@ -47,5 +47,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:10:20.640Z"
+  },
+  {
+    "date": "5/12 盛岡 2R",
+    "venue": "盛岡",
+    "raceNum": "2R",
+    "raceClass": "C2二組",
+    "winner": 2,
+    "winOdds": 3.6,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "テーオーカバリエ",
+        "norm": 0.2114,
+        "tanOdds": 6.9,
+        "ev": 145.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "カールルイコ",
+        "norm": 0.0682,
+        "tanOdds": 26.9,
+        "ev": 183.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "シラユリ",
+        "norm": 0.0553,
+        "tanOdds": 18.4,
+        "ev": 101.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "モレッキ",
+        "norm": 0.0478,
+        "tanOdds": 21.4,
+        "ev": 102.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:12:04.454Z"
   }
 ]
