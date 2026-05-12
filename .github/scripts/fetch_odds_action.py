@@ -84,6 +84,19 @@ async def get_odds(page, place_id, race_num, race_date):
     shaid = await page.evaluate("() => document.getElementById('SHAID')?.value || ''")
     print(f"SHAID: {shaid[:20] if shaid else 'なし'}")
 
+    # P120SのJSコンテキストでグローバル変数を確認
+    js_keys = await page.evaluate(
+        "() => Object.keys(window).filter(k => ['odds','tan','race','uma','waku','horse'].some(x=>k.toLowerCase().includes(x)))"
+    )
+    print(f"JS変数キー: {js_keys[:20]}")
+
+    # P120SページのHTMLを全取得してオッズ関連を探す
+    p120s_html = await page.evaluate("() => document.documentElement.innerHTML")
+    p120s_html = await page.evaluate('() => document.documentElement.innerHTML')
+    print(f'P120S HTML長: {len(p120s_html)}')
+    print(f'P122S in HTML: {"P122S" in p120s_html}')
+    print(f"P122S src候補: {p122s_srcs[:3]}")
+
     # P122Sフレームを確認（JS完了後のDOMを取得）
     # まず長めに待つ
     await page.wait_for_timeout(5000)
