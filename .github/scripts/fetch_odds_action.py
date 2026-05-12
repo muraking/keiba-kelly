@@ -92,7 +92,9 @@ async def get_odds(page, place_id, race_num, race_date):
         await page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
         await page.wait_for_timeout(3000)
         body = await page.evaluate("() => document.body ? document.body.innerText : ''")
+        print(f"P122S内容: {body[:200]}")
         result = parse_odds(body)
+        print(f"パース結果: {len(result)}頭")
         if result:
             return result
 
