@@ -1103,15 +1103,15 @@ function calcAll(){
   // レース結果記録セクション
   html += `<div style="margin-top:20px;padding:14px;background:var(--bg2);border-radius:var(--r2);border:0.5px solid var(--border2)">
     <div class="sh" style="margin-bottom:10px">📊 レース結果を記録</div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">レース終了後に的中馬番とオッズを入力して保存</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">レース終了後に1着馬番とオッズを入力して保存（的中・外れ問わず記録推奨）</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
       <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">的中馬番（外れは空白）</div>
-        <input id="rec-horse-num" type="number" min="1" max="18" placeholder="的中馬番"
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1着馬番</div>
+        <input id="rec-horse-num" type="number" min="1" max="18" placeholder="1着の馬番"
           style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
       </div>
       <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">単勝払戻オッズ</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">単勝払戻オッズ（1着）</div>
         <input id="rec-win-odds" type="number" min="1" step="0.1" placeholder="例: 12.5"
           style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
       </div>
@@ -2361,18 +2361,22 @@ async function saveRaceResult() {
   statusEl.innerHTML = '<span style="color:var(--amber)">🔄 保存中...</span>';
 
   // 記録するデータを構築（各推奨馬の情報）
+  // 的中判定：買い目の馬番と1着馬番が一致
+  const betNums = renders.map(h => h.num);
+  const isMyHit = hitNum ? betNums.includes(hitNum) : false;
+
   const records = renders.map(h => {
     const ev = h.tanOdds ? h.norm * h.tanOdds * 100 : null;
-    const isHit = hitNum ? (h.num === hitNum) : false;
-    const payout = isHit && winOdds ? winOdds : null;
+    const isWinner = hitNum ? (h.num === hitNum) : false;
     return {
       num: h.num,
       name: h.name,
-      norm: Math.round(h.norm * 10000) / 10000,  // 4桁精度
+      norm: Math.round(h.norm * 10000) / 10000,
       tanOdds: h.tanOdds,
       ev: ev ? Math.round(ev * 10) / 10 : null,
-      hit: isHit,
-      payout: payout
+      isWinner: isWinner,   // この馬が1着か
+      isBet: true,          // 買い目に入っていた馬
+      payout: isWinner && winOdds ? winOdds : null
     };
   });
 
@@ -2381,11 +2385,16 @@ async function saveRaceResult() {
     venue: currentRace.venue || '',
     raceNum: currentRace.raceNum || '',
     raceClass: currentRace.raceClass || '',
-    hitNum: hitNum,
-    winOdds: winOdds,
+    winner: hitNum,         // 1着馬番
+    winOdds: winOdds,       // 1着単勝オッズ
+    hit: isMyHit,           // 買い目的中か
     sm_temperature: parseFloat(localStorage.getItem('sm_temperature') || '15'),
     sm_minpct: parseFloat(localStorage.getItem('sm_minpct') || '3.0'),
     ev_min: parseFloat(localStorage.getItem('ev_min') || '105'),
+    ev_max: parseFloat(localStorage.getItem('ev_max') || '0') || null,
+    odds_min: parseFloat(localStorage.getItem('odds_min') || '0') || null,
+    odds_max: parseFloat(localStorage.getItem('odds_max') || '0') || null,
+    kelly_fraction: parseFloat(localStorage.getItem('kelly_fraction') || '0.5'),
     records: records,
     savedAt: new Date().toISOString()
   };
@@ -2424,7 +2433,9 @@ async function saveRaceResult() {
     });
 
     if(r2.status === 200 || r2.status === 201) {
-      const hitMsg = hitNum ? `✅ 的中: ${hitNum}番 ${winOdds}倍` : '❌ 外れ';
+      const hitMsg = hitNum
+        ? (isMyHit ? `✅ 的中: ${hitNum}番 ${winOdds}倍` : `❌ 外れ（1着: ${hitNum}番 ${winOdds}倍）`)
+        : '📝 保存（1着不明）';
       statusEl.innerHTML = `<span style="color:var(--green)">${hitMsg} 保存完了（累計${history.length}件）</span>`;
       // 入力欄クリア
       document.getElementById('rec-horse-num').value = '';
