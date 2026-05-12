@@ -863,5 +863,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:28:13.170Z"
+  },
+  {
+    "date": "5/10 新潟 3R",
+    "venue": "新潟",
+    "raceNum": "3R",
+    "raceClass": "3歳未勝利",
+    "winner": 5,
+    "winOdds": 4.6,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ノリノドラゴン",
+        "norm": 0.1219,
+        "tanOdds": 8.7,
+        "ev": 106.1,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 4.6
+      },
+      {
+        "num": 8,
+        "name": "ウインガネーシャ",
+        "norm": 0.0436,
+        "tanOdds": 32.8,
+        "ev": 143.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ヤマタケボニータ",
+        "norm": 0.0343,
+        "tanOdds": 53.4,
+        "ev": 183.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "メイショウイッカク",
+        "norm": 0.0326,
+        "tanOdds": 43.9,
+        "ev": 143.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:29:56.874Z"
   }
 ]
