@@ -627,5 +627,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:24:37.285Z"
+  },
+  {
+    "date": "5/12 盛岡 12",
+    "venue": "盛岡",
+    "raceNum": "12R",
+    "raceClass": "スプリント特別OP",
+    "winner": 1,
+    "winOdds": 48.3,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ベストリーガード",
+        "norm": 0.1475,
+        "tanOdds": 21.4,
+        "ev": 315.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "シンヨモギネス",
+        "norm": 0.0862,
+        "tanOdds": 12.1,
+        "ev": 104.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "スターシューター",
+        "norm": 0.0581,
+        "tanOdds": 18.2,
+        "ev": 105.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ポマイカイ",
+        "norm": 0.0407,
+        "tanOdds": 99.3,
+        "ev": 404.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:26:08.408Z"
   }
 ]
