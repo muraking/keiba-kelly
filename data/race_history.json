@@ -1158,5 +1158,64 @@
       }
     ],
     "savedAt": "2026-05-12T22:31:50.217Z"
+  },
+  {
+    "date": "5/10 新潟 6R",
+    "venue": "新潟",
+    "raceNum": "6R",
+    "raceClass": "3歳未勝利",
+    "winner": 10,
+    "winOdds": 9.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 100,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "コンフィアンサ",
+        "norm": 0.2952,
+        "tanOdds": 4.5,
+        "ev": 132.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ナツノオジョウサマ",
+        "norm": 0.0865,
+        "tanOdds": 38.7,
+        "ev": 334.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ドリーマーズ",
+        "norm": 0.0831,
+        "tanOdds": 15.9,
+        "ev": 132.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "エターナルビジョン",
+        "norm": 0.0389,
+        "tanOdds": 33.6,
+        "ev": 130.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-12T22:32:16.456Z"
   }
 ]
