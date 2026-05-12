@@ -76,8 +76,26 @@ async def get_odds(page, place_id, race_num, race_date):
     url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
     print(f"オッズURL: {url}")
     await page.goto(url, wait_until="networkidle", timeout=TIMEOUT)
-    await page.wait_for_timeout(5000)
+    await page.wait_for_timeout(8000)
     print(f"現在URL: {page.url}")
+    print(f"フレーム数: {len(page.frames)}")
+
+    # P122Sフレームを先に確認（JS完了後のDOMを取得）
+    for frame in page.frames:
+        if 'P122S' in frame.url:
+            print(f"P122Sフレーム: {frame.url[:80]}")
+            try:
+                await frame.wait_for_load_state("networkidle", timeout=10000)
+            except:
+                pass
+            await page.wait_for_timeout(2000)
+            frame_text = await frame.evaluate("() => document.body ? document.body.innerText : ''")
+            print(f"フレームDOM: {frame_text[:200]}")
+            if 'ログイン' not in frame_text[:50] and frame_text.strip():
+                result = parse_odds(frame_text)
+                if result:
+                    print(f"フレームから{len(result)}頭取得成功")
+                    return result
 
     # キャプチャした通信を確認
     print(f"捕捉レスポンス数: {len(captured_responses)}")
