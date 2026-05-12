@@ -105,6 +105,24 @@ async def get_odds(page, place_id, race_num, race_date):
             except:
                 pass
 
+    # まずキャプチャしたP122Sレスポンスを優先的に処理
+    for r in captured_responses:
+        if 'P122S' in r['url']:
+            raw = r['body']
+            print(f"P122Sキャプチャbody長: {len(raw)}")
+            print(f"先頭バイト: {raw[:50]}")
+            for enc in ['shift_jis', 'utf-8', 'euc-jp', 'cp932']:
+                try:
+                    text = raw.decode(enc)
+                    print(f"デコード({enc})成功: {text[:200]}")
+                    result = parse_odds(text)
+                    if result:
+                        print(f"{len(result)}頭取得成功")
+                        return result
+                except Exception as e:
+                    print(f"デコード({enc})失敗: {e}")
+            break
+
     # P122Sフレームから取得試行
     iframes = await page.evaluate(
         "() => Array.from(document.querySelectorAll('iframe,frame')).map(f=>f.src)"
