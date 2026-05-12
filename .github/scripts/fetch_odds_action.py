@@ -86,32 +86,62 @@ async def get_odds(page, place_id, race_num, race_date):
             p122s_url = iframe['src']
             break
 
-    if p122s_url:
-        # 既存のpageでP122Sに直接アクセス（Cookieを引き継ぐ）
-        print(f"P122S直接アクセス: {p122s_url}")
-        await page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-        await page.wait_for_timeout(3000)
-        body = await page.evaluate("() => document.body ? document.body.innerText : ''")
-        print(f"P122S内容: {body[:200]}")
-        result = parse_odds(body)
-        print(f"パース結果: {len(result)}頭")
-        if result:
-            return result
-
-    # フォールバック: page.framesから探す
+    # P122Sフレームをpage.framesから取得（gotoは使わない）
+    # iframeのロードを待ちながらフレームを探す
     target_frame = None
-    for attempt in range(3):
+    for attempt in range(8):
         for frame in page.frames:
             if 'P122S' in frame.url:
                 target_frame = frame
                 break
         if target_frame:
+            print(f"P122Sフレーム発見: attempt={attempt+1}")
             break
         await page.wait_for_timeout(3000)
+        print(f"フレーム待機... ({attempt+1}/8) frames={len(page.frames)}")
 
     if target_frame:
         body = await target_frame.evaluate("() => document.body ? document.body.innerText : ''")
-        return parse_odds(body)
+        print(f"P122S内容: {body[:100]}")
+        result = parse_odds(body)
+        print(f"パース結果: {len(result)}頭")
+        if result:
+            return result
+
+    # 最終フォールバック: iframeのsrcに直接requestsでアクセス
+    if p122s_url:
+        print(f"requestsでP122S取得: {p122s_url}")
+        cookies = await page.context.cookies()
+        cookie_str = "; ".join([f"{c['name']}={c['value']}" for c in cookies])
+        import requests as req_lib
+        headers = {
+            "Cookie": cookie_str,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Referer": page.url
+        }
+        r = req_lib.get(p122s_url, headers=headers, timeout=15)
+        r.encoding = 'utf-8'
+        from html.parser import HTMLParser
+        class TextExtractor(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.text = []
+                self.skip = False
+            def handle_starttag(self, tag, attrs):
+                if tag in ['script','style']: self.skip = True
+            def handle_endtag(self, tag):
+                if tag in ['script','style']: self.skip = False
+            def handle_data(self, data):
+                if not self.skip and data.strip():
+                    self.text.append(data.strip())
+        parser = TextExtractor()
+        parser.feed(r.text)
+        body2 = chr(10).join(parser.text)
+        print(f"requests内容: {body2[:100]}")
+        result2 = parse_odds(body2)
+        print(f"requestsパース: {len(result2)}頭")
+        if result2:
+            return result2
 
     print("P122Sなし → メインページからパース")
     return parse_odds(text)
