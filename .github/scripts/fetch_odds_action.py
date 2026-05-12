@@ -87,13 +87,11 @@ async def get_odds(page, place_id, race_num, race_date):
             break
 
     if p122s_url:
-        # P122Sページに直接アクセスしてオッズ取得
+        # 既存のpageでP122Sに直接アクセス（Cookieを引き継ぐ）
         print(f"P122S直接アクセス: {p122s_url}")
-        p122s_page = await page.context.new_page()
-        await p122s_page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-        await p122s_page.wait_for_timeout(3000)
-        body = await p122s_page.evaluate("() => document.body ? document.body.innerText : ''")
-        await p122s_page.close()
+        await page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
+        await page.wait_for_timeout(3000)
+        body = await page.evaluate("() => document.body ? document.body.innerText : ''")
         result = parse_odds(body)
         if result:
             return result
