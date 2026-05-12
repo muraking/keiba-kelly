@@ -80,18 +80,24 @@ async def get_odds(page, place_id, race_num, race_date):
     print(f"現在URL: {page.url}")
     print(f"フレーム数: {len(page.frames)}")
 
-    # P122Sフレームを先に確認（JS完了後のDOMを取得）
+    # P120SページからSHAIDを取得
+    shaid = await page.evaluate("() => document.getElementById('SHAID')?.value || ''")
+    print(f"SHAID: {shaid[:20] if shaid else 'なし'}")
+
+    # P122Sフレームを確認（JS完了後のDOMを取得）
+    # まず長めに待つ
+    await page.wait_for_timeout(5000)
     for frame in page.frames:
         if 'P122S' in frame.url:
             print(f"P122Sフレーム: {frame.url[:80]}")
-            try:
-                await frame.wait_for_load_state("networkidle", timeout=10000)
-            except:
-                pass
-            await page.wait_for_timeout(2000)
+            # フレームのSHAIDも確認
+            frame_shaid = await frame.evaluate("() => document.getElementById('SHAID')?.value || ''")
+            print(f"フレームSHAID: {frame_shaid[:20] if frame_shaid else 'なし'}")
+            frame_url_val = await frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
+            print(f"フレーム_v_url: {frame_url_val}")
             frame_text = await frame.evaluate("() => document.body ? document.body.innerText : ''")
             print(f"フレームDOM: {frame_text[:200]}")
-            if 'ログイン' not in frame_text[:50] and frame_text.strip():
+            if 'ログイン' not in frame_text[:50] and 'エラー' not in frame_text[:50] and frame_text.strip():
                 result = parse_odds(frame_text)
                 if result:
                     print(f"フレームから{len(result)}頭取得成功")
