@@ -129,16 +129,11 @@ async def get_odds(page, place_id, race_num, race_date):
             raw = r['body']
             print(f"P122Sキャプチャbody長: {len(raw)}")
             print(f"先頭バイト: {raw[:50]}")
-            for enc in ['shift_jis', 'utf-8', 'euc-jp', 'cp932']:
-                try:
-                    text = raw.decode(enc)
-                    print(f"デコード({enc})成功: {text[:200]}")
-                    result = parse_odds(text)
-                    if result:
-                        print(f"{len(result)}頭取得成功")
-                        return result
-                except Exception as e:
-                    print(f"デコード({enc})失敗: {e}")
+            try:
+                text = raw.decode('utf-8', errors='replace')
+                print(f"P122S全HTML:\n{text}")
+            except Exception as e:
+                print(f"デコード失敗: {e}")
             break
 
     # P122Sフレームから取得試行
