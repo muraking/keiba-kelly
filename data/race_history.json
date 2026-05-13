@@ -2065,5 +2065,124 @@
       }
     ],
     "savedAt": "2026-05-13T15:38:00.753Z"
+  },
+  {
+    "date": "5/10 東京 12",
+    "venue": "東京",
+    "raceNum": "12R",
+    "raceClass": "立夏S",
+    "winner": 12,
+    "winOdds": 5.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "リバートゥルー",
+        "norm": 0.0852,
+        "tanOdds": 17.7,
+        "ev": 150.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ルージュスタニング",
+        "norm": 0.0837,
+        "tanOdds": 5.5,
+        "ev": 46,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 5.2
+      },
+      {
+        "num": 8,
+        "name": "レディーフランシス",
+        "norm": 0.0796,
+        "tanOdds": 16.4,
+        "ev": 130.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "パフ",
+        "norm": 0.0747,
+        "tanOdds": 20.9,
+        "ev": 156.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "オンザライン",
+        "norm": 0.0534,
+        "tanOdds": 66.7,
+        "ev": 356,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ノーブルスカイ",
+        "norm": 0.0461,
+        "tanOdds": 31.1,
+        "ev": 143.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "フラムリンガム",
+        "norm": 0.0373,
+        "tanOdds": 122.6,
+        "ev": 456.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ベルダイナフェロー",
+        "norm": 0.0343,
+        "tanOdds": 40.5,
+        "ev": 139.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "メイショウポペット",
+        "norm": 0.0315,
+        "tanOdds": 178.4,
+        "ev": 562,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "グランドセントラル",
+        "norm": 0.0302,
+        "tanOdds": 185.6,
+        "ev": 561.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:38:26.871Z"
   }
 ]
