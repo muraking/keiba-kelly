@@ -2352,5 +2352,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:39:11.394Z"
+  },
+  {
+    "date": "5/10 京都 3R",
+    "venue": "京都",
+    "raceNum": "3R",
+    "raceClass": "3歳未勝利",
+    "winner": 7,
+    "winOdds": 56.8,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "ハイドパーク",
+        "norm": 0.2115,
+        "tanOdds": 6.5,
+        "ev": 137.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "サイモンエクセラー",
+        "norm": 0.0318,
+        "tanOdds": 59.4,
+        "ev": 188.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "カイラーサ",
+        "norm": 0.0191,
+        "tanOdds": 39.7,
+        "ev": 75.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 56.8
+      },
+      {
+        "num": 5,
+        "name": "ヴェインズマン",
+        "norm": 0.0187,
+        "tanOdds": 76.9,
+        "ev": 143.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "マテンロウルクス",
+        "norm": 0.0185,
+        "tanOdds": 56.8,
+        "ev": 105.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:39:35.611Z"
   }
 ]
