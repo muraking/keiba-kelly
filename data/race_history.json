@@ -5118,5 +5118,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:53:13.082Z"
+  },
+  {
+    "date": "5/13 園田 1R",
+    "venue": "園田",
+    "raceNum": "1R",
+    "raceClass": "C3三",
+    "winner": 5,
+    "winOdds": 20.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ノブアンドホワイト",
+        "norm": 0.4331,
+        "tanOdds": 2.4,
+        "ev": 103.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ジューンクエスト",
+        "norm": 0.1113,
+        "tanOdds": 11.6,
+        "ev": 129.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "エコロアモーレ",
+        "norm": 0.029,
+        "tanOdds": 16.1,
+        "ev": 46.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 20.4
+      },
+      {
+        "num": 2,
+        "name": "エイシンセレナ",
+        "norm": 0.0153,
+        "tanOdds": 66.9,
+        "ev": 102.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:53:42.204Z"
   }
 ]
