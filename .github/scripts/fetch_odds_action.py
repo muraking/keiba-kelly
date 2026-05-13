@@ -1,6 +1,6 @@
 """
 SPAT4 オッズ取得（GitHub Actions用）
-network response監視でオッズAPIを直接取得
+expect_responseで内部APIを傍受する方式
 """
 import asyncio, os, json, re, sys, base64
 import requests as req_lib
@@ -44,226 +44,68 @@ async def login(page):
     except Exception as e:
         print(f"ログイン遷移: {e}")
     print(f"ログイン後URL: {page.url}")
-    return page.url
 
 async def get_odds(page, place_id, race_num, race_date):
     from urllib.parse import urlparse
     parsed = urlparse(page.url)
     base_domain = f"{parsed.scheme}://{parsed.netloc}"
+    p120s_url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
+    print(f"オッズURL: {p120s_url}")
 
-    # レスポンスを監視してオッズAPIを探す
-    captured_responses = []
+    # 全レスポンスを監視してAPIを探す
+    all_responses = []
 
-    async def handle_response(response):
+    async def on_response(response):
         url = response.url
-        # オッズ関連のURLを記録
-        if any(k in url for k in ['P122S', 'P125S', 'odds', 'tansho', 'tan', 'ODDS']):
+        # 怪しいURLをすべて記録
+        if any(k in url for k in ['api', 'odds', 'json', 'data', 'ajax', '.html', 'get']):
             try:
-                ct = response.headers.get('content-type', '')
                 body = await response.body()
-                captured_responses.append({
+                ct = response.headers.get('content-type', '')
+                all_responses.append({
                     'url': url,
                     'status': response.status,
-                    'content_type': ct,
+                    'ct': ct,
+                    'size': len(body),
                     'body': body
                 })
-                print(f"  捕捉: {url[:80]} ({response.status})")
             except:
                 pass
 
-    page.on("response", handle_response)
+    page.on("response", on_response)
 
-    url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
-    print(f"オッズURL: {url}")
-    await page.goto(url, wait_until="networkidle", timeout=TIMEOUT)
-    await page.wait_for_timeout(8000)
-    print(f"現在URL: {page.url}")
-    print(f"フレーム数: {len(page.frames)}")
+    try:
+        await page.goto(p120s_url, wait_until="networkidle", timeout=TIMEOUT)
+    except:
+        await page.goto(p120s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await page.wait_for_timeout(5000)
 
-    # P120SページからSHAIDを取得
-    shaid = await page.evaluate("() => document.getElementById('SHAID')?.value || ''")
-    print(f"SHAID: {shaid[:20] if shaid else 'なし'}")
-
-    # P120SのJSコンテキストでグローバル変数を確認
-    js_keys = await page.evaluate(
-        "() => Object.keys(window).filter(k => ['odds','tan','race','uma','waku','horse'].some(x=>k.toLowerCase().includes(x)))"
-    )
-    print(f"JS変数キー: {js_keys[:20]}")
-
-    # P120SページのHTMLを全取得してオッズ関連を探す
-    p120s_html = await page.evaluate("() => document.documentElement.innerHTML")
-    p120s_html = await page.evaluate('() => document.documentElement.innerHTML')
-    print(f'P120S HTML長: {len(p120s_html)}')
-    print(f'P122S in HTML: {"P122S" in p120s_html}')
-    print(f'P120S HTML: {p120s_html[:500]}')
-
-    # まずP902Sフレームにアクセスしてセッションを確立
-    for frame in page.frames:
-        if 'P902S' in frame.url:
-            print(f"P902Sフレーム: {frame.url[:80]}")
+    print(f"キャプチャ数: {len(all_responses)}")
+    for r in all_responses:
+        print(f"  [{r['status']}] {r['url'][:100]} ({r['ct'][:30]}) size={r['size']}")
+        # JSONっぽければ中身も表示
+        if 'json' in r['ct'] or r['url'].endswith('.json'):
             try:
-                await frame.wait_for_load_state("domcontentloaded", timeout=5000)
-            except: pass
-            break
-
-    # 全フレームのロードを待つ
-    await page.wait_for_timeout(8000)
-
-    # 全フレームの状態を確認
-    for frame in page.frames:
-        v_url = await frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
-        print(f"frame: {frame.url[-50:]} -> _v_url: {v_url}")
-
-    for frame in page.frames:
-        if 'P122S' in frame.url:
-            print(f"P122Sフレーム: {frame.url[:80]}")
-            # フレームのSHAIDも確認
-            frame_shaid = await frame.evaluate("() => document.getElementById('SHAID')?.value || ''")
-            print(f"フレームSHAID: {frame_shaid[:20] if frame_shaid else 'なし'}")
-            frame_url_val = await frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
-            print(f"フレーム_v_url: {frame_url_val}")
-            frame_text = await frame.evaluate("() => document.body ? document.body.innerText : ''")
-            print(f"フレームDOM: {frame_text[:200]}")
-            if 'ログイン' not in frame_text[:50] and 'エラー' not in frame_text[:50] and frame_text.strip():
-                result = parse_odds(frame_text)
-                if result:
-                    print(f"フレームから{len(result)}頭取得成功")
-                    return result
-
-    # キャプチャした通信を確認
-    print(f"捕捉レスポンス数: {len(captured_responses)}")
-    for r in captured_responses:
-        ct = r['content_type']
-        body_str = ""
-        if 'json' in ct:
-            try:
-                body_str = r['body'].decode('utf-8')
-                print(f"JSON API: {r['url'][:80]}")
-                print(f"  内容: {body_str[:200]}")
+                data = json.loads(r['body'])
+                print(f"    JSON: {str(data)[:200]}")
             except:
                 pass
-        elif 'html' in ct or 'text' in ct:
+        # HTMLでもオッズっぽい数字があれば表示
+        elif r['size'] > 100 and r['size'] < 50000:
             try:
-                for enc in ['utf-8', 'shift_jis', 'euc-jp']:
+                for enc in ['utf-8', 'shift_jis', 'cp932']:
                     try:
-                        body_str = r['body'].decode(enc)
+                        text = r['body'].decode(enc)
+                        if any(str(i) in text for i in range(1, 19)):
+                            print(f"    内容: {text[:300]}")
                         break
                     except:
                         continue
-                if body_str and 'ログイン' not in body_str[:50]:
-                    print(f"HTML: {r['url'][:80]}")
-                    print(f"  内容: {body_str[:150]}")
             except:
                 pass
 
-    # まずキャプチャしたP122Sレスポンスを優先的に処理
-    for r in captured_responses:
-        if 'P122S' in r['url']:
-            raw = r['body']
-            print(f"P122Sキャプチャbody長: {len(raw)}")
-            print(f"先頭バイト: {raw[:50]}")
-            try:
-                text = raw.decode('utf-8', errors='replace')
-                print(f"P122S全HTML:\n{text}")
-            except Exception as e:
-                print(f"デコード失敗: {e}")
-            break
-
-    # P122Sフレームから取得試行
-    iframes = await page.evaluate(
-        "() => Array.from(document.querySelectorAll('iframe,frame')).map(f=>f.src)"
-    )
-    p122s_url_orig = next((s for s in iframes if 'P122S' in s), None)
-    if p122s_url_orig:
-        # ログインドメインに統一
-        p122s_url = re.sub(r'https://www\d*\.spat4\.jp', base_domain, p122s_url_orig)
-        print(f"P122S URL: {p122s_url}")
-
-        # page.gotoでP122Sに直接アクセス、networkidleまで待つ
-        captured_responses.clear()
-        await page.goto(p122s_url, wait_until="networkidle", timeout=TIMEOUT)
-        await page.wait_for_timeout(3000)
-        body = await page.evaluate("() => document.body ? document.body.innerText : ''")
-        print(f"P122S内容: {body[:200]}")
-
-        if 'ログイン' not in body[:50] and 'エラー' not in body[:50]:
-            result = parse_odds(body)
-            if result:
-                return result
-
-        # JS描画後のDOMをtableから取得
-        body2 = await page.evaluate(
-            "() => Array.from(document.querySelectorAll('tr, li')).map(r=>r.innerText).join('\\n')"
-        )
-        print(f"DOM取得: {body2[:200]}")
-        result2 = parse_odds(body2)
-        if result2:
-            print(f"DOM取得から{len(result2)}頭")
-            return result2
-
-        # キャプチャしたP122Sレスポンスから試みる
-        for r in captured_responses:
-            if 'P122S' in r['url']:
-                for enc in ['shift_jis', 'utf-8', 'euc-jp']:
-                    try:
-                        text = r['body'].decode(enc)
-                        result = parse_odds(text)
-                        if result:
-                            print(f"キャプチャから{len(result)}頭取得")
-                            return result
-                    except:
-                        continue
-
-    # page.framesから試す
-    target_frame = None
-    for frame in page.frames:
-        if 'P122S' in frame.url:
-            target_frame = frame
-            break
-
-    if target_frame:
-        frame_text = await target_frame.evaluate("() => document.body ? document.body.innerText : ''")
-        print(f"フレーム内容: {frame_text[:100]}")
-        if 'ログイン' not in frame_text[:50]:
-            result = parse_odds(frame_text)
-            if result:
-                return result
-
-    print("オッズ取得失敗")
+    page.remove_listener("response", on_response)
     return {}
-
-def parse_odds(text):
-    result = {}
-    for line in text.split('\n'):
-        parts = re.split(r'\s{2,}|\t', line.strip())
-        parts = [p.strip().replace(',','') for p in parts if p.strip()]
-        nums, tan, fuku = [], None, None
-        for p in parts:
-            if re.match(r'^\d{1,2}$', p) and 1 <= int(p) <= 18:
-                nums.append(int(p))
-            elif re.match(r'^\d+\.\d+$', p):
-                v = float(p)
-                if 1.0 <= v < 9999.9 and tan is None: tan = v
-            elif re.match(r'^\d+\.?\d*-\d+\.?\d*$', p):
-                fuku = p
-            elif re.match(r'^\d{3,}$', p):
-                v = float(p)
-                if 1.0 <= v < 9999 and tan is None: tan = v
-        num = nums[1] if len(nums) >= 2 else (nums[0] if nums else None)
-        if not num or (tan is None and fuku is None): continue
-        if num not in result:
-            e = {}
-            if tan: e["tan"] = tan
-            if fuku:
-                fp = fuku.split("-")
-                try:
-                    fmin = float(fp[0])
-                    if fmin > 0:
-                        e["fuku_min"] = fmin
-                        if len(fp) > 1: e["fuku_max"] = float(fp[1])
-                except: pass
-            result[num] = e
-    return result
 
 def save_to_github(place_id, race_num, odds, today_jst):
     api_url = f"https://api.github.com/repos/{GH_USER}/{GH_REPO}/contents/{GH_FILE}"
@@ -282,16 +124,13 @@ def save_to_github(place_id, race_num, odds, today_jst):
         data["dates"][today_jst]["odds_updated"] = now_jst().isoformat()
         json_str = json.dumps(data, ensure_ascii=False, indent=2)
         body = {
-            "message": f"odds {place_id} {race_num}R {now_jst().strftime('%H:%M')}",
+            "message": f"odds {place_id} {race_num}R",
             "content": base64.b64encode(json_str.encode()).decode(),
             "sha": sha, "branch": GH_BRANCH
         }
         r2 = req_lib.put(api_url, headers=headers, json=body)
-        if r2.status_code in [200, 201]:
-            print("GitHub保存成功")
-            return True
-        if r2.status_code == 409:
-            continue
+        if r2.status_code in [200, 201]: return True
+        if r2.status_code == 409: continue
     return False
 
 async def main():
@@ -307,9 +146,8 @@ async def main():
         odds = await get_odds(page, PLACE_ID, RACE_NUM, RACE_DATE)
         await browser.close()
     if not odds:
+        print("API特定用デバッグ完了（オッズ未取得）")
         sys.exit(1)
-    print(f"{len(odds)}頭取得成功")
-    save_to_github(PLACE_ID, RACE_NUM, odds, TODAY_JST)
 
 if __name__ == "__main__":
     asyncio.run(main())
