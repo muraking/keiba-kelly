@@ -201,58 +201,39 @@ async def purchase(page, base, bets):
     print("\n投票内容確認へ...")
     await page.wait_for_timeout(1000)
 
-    # P122Sフレーム内の"投票内容確認へ"ボタンをクリック
+    # 全フレームから「投票内容確認へ」ボタンを探す（P121S優先）
     confirmed = False
-    # iframeのsrcからP122S URLを取得して直接操作
-    iframes = await page.evaluate(
-        "() => Array.from(document.querySelectorAll('iframe,frame')).map(f=>({src:f.src,name:f.name}))"
-    )
-    p122s_frame = None
-    for frame in page.frames:
-        if 'P122S' in frame.url:
-            p122s_frame = frame
-            break
+    await page.wait_for_timeout(2000)
 
-    if p122s_frame:
-        # フレーム内のボタンを探す
-        btns = await p122s_frame.query_selector_all("input[type='submit'], input[type='button'], button, a")
-        for btn in btns:
-            value = await btn.get_attribute("value") or ""
-            text = ""
-            try: text = await btn.inner_text()
-            except: pass
-            if "投票内容確認" in value or "投票内容確認" in text:
-                print(f"確認ボタン発見: {value or text}")
-                async with page.expect_navigation(timeout=15000):
-                    await btn.click()
-                print("確認ページへ移動中...")
-                await page.wait_for_timeout(3000)
-                confirmed = True
-                break
+    # フレーム優先順位: P121S → P122S → その他
+    search_frames = sorted(page.frames, key=lambda f: (0 if 'P121S' in f.url else 1 if 'P122S' in f.url else 2))
 
-    if not confirmed:
-        # フォールバック: 全フレームから探す
-        for frame in page.frames:
+    for frame in search_frames:
+        try:
             btns = await frame.query_selector_all("input, button, a")
             for btn in btns:
                 value = await btn.get_attribute("value") or ""
-                try:
-                    text = await btn.inner_text()
-                except:
-                    text = ""
+                text = ""
+                try: text = await btn.inner_text()
+                except: pass
                 if "投票内容確認" in value or "投票内容確認" in text:
+                    fname = frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in frame.url else 'unknown'
+                    print(f"確認ボタン発見: {value or text}（{fname}フレーム）")
                     try:
                         async with page.expect_navigation(timeout=15000):
                             await btn.click()
-                        confirmed = True
-                        break
                     except:
                         await btn.click()
                         await page.wait_for_timeout(5000)
-                        confirmed = True
-                        break
-            if confirmed:
-                break
+                    print("確認ページへ移動中...")
+                    await page.wait_for_timeout(3000)
+                    confirmed = True
+                    break
+        except Exception as e:
+            print(f"フレームエラー: {e}")
+            continue
+        if confirmed:
+            break
 
     if not confirmed:
         print("「投票内容確認へ」ボタンが見つかりません")
