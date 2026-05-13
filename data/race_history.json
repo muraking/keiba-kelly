@@ -5177,5 +5177,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:53:42.204Z"
+  },
+  {
+    "date": "5/13 園田 2R",
+    "venue": "園田",
+    "raceNum": "2R",
+    "raceClass": "C3二",
+    "winner": 3,
+    "winOdds": 1.7,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "シェナクィーン",
+        "norm": 0.3602,
+        "tanOdds": 1.5,
+        "ev": 54,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.7
+      },
+      {
+        "num": 8,
+        "name": "エピックデイ",
+        "norm": 0.1575,
+        "tanOdds": 24.9,
+        "ev": 392.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "メタルメタリカ",
+        "norm": 0.1561,
+        "tanOdds": 12,
+        "ev": 187.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "シュトレームング",
+        "norm": 0.1177,
+        "tanOdds": 14.9,
+        "ev": 175.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "シンプウコエド",
+        "norm": 0.0251,
+        "tanOdds": 40.5,
+        "ev": 101.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:54:04.936Z"
   }
 ]
