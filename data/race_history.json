@@ -2579,5 +2579,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:40:33.516Z"
+  },
+  {
+    "date": "5/10 京都 6R",
+    "venue": "京都",
+    "raceNum": "6R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 7,
+    "winOdds": 29.9,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "ロットブラータ",
+        "norm": 0.3294,
+        "tanOdds": 5.1,
+        "ev": 168,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "タマモランプ",
+        "norm": 0.2091,
+        "tanOdds": 5,
+        "ev": 104.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "トラストエムシー",
+        "norm": 0.0216,
+        "tanOdds": 48.4,
+        "ev": 104.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "アットアブラスト",
+        "norm": 0.0203,
+        "tanOdds": 23.7,
+        "ev": 48.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 29.9
+      }
+    ],
+    "savedAt": "2026-05-13T15:40:53.131Z"
   }
 ]
