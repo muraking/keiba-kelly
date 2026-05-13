@@ -5275,5 +5275,84 @@
       }
     ],
     "savedAt": "2026-05-13T15:54:26.145Z"
+  },
+  {
+    "date": "5/13 園田 4R",
+    "venue": "園田",
+    "raceNum": "4R",
+    "raceClass": "県守7ハロンC2二",
+    "winner": 9,
+    "winOdds": 2.7,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "カリスパール",
+        "norm": 0.2671,
+        "tanOdds": 5.2,
+        "ev": 138.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "クリムゾンレッド",
+        "norm": 0.2033,
+        "tanOdds": 2.7,
+        "ev": 54.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.7
+      },
+      {
+        "num": 8,
+        "name": "ニースライト",
+        "norm": 0.1141,
+        "tanOdds": 22.9,
+        "ev": 261.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "マエストロライト",
+        "norm": 0.0499,
+        "tanOdds": 20.5,
+        "ev": 102.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ムーンセット",
+        "norm": 0.049,
+        "tanOdds": 55.8,
+        "ev": 273.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "リスキーウィスキー",
+        "norm": 0.0394,
+        "tanOdds": 25.8,
+        "ev": 101.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:54:48.603Z"
   }
 ]
