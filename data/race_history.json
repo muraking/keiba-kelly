@@ -1264,5 +1264,114 @@
       }
     ],
     "savedAt": "2026-05-13T15:34:44.271Z"
+  },
+  {
+    "date": "5/10 東京 3R",
+    "venue": "東京",
+    "raceNum": "3R",
+    "raceClass": "3歳未勝利",
+    "winner": 5,
+    "winOdds": 90.1,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "アイアンパイク",
+        "norm": 0.3076,
+        "tanOdds": 3.6,
+        "ev": 110.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "セシルブリュネ",
+        "norm": 0.0615,
+        "tanOdds": 18.3,
+        "ev": 112.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ハッピースーニャ",
+        "norm": 0.023,
+        "tanOdds": 75.4,
+        "ev": 173,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "ヘルヴィッツ",
+        "norm": 0.0217,
+        "tanOdds": 205.4,
+        "ev": 446.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "サンロード",
+        "norm": 0.0205,
+        "tanOdds": 142.4,
+        "ev": 291.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "ペルシアーノ",
+        "norm": 0.0198,
+        "tanOdds": 186.2,
+        "ev": 367.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "アリアファブラ",
+        "norm": 0.0191,
+        "tanOdds": 107.7,
+        "ev": 206.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "アイアンクラッド",
+        "norm": 0.019,
+        "tanOdds": 65.8,
+        "ev": 124.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 90.1
+      },
+      {
+        "num": 11,
+        "name": "フクスケ",
+        "norm": 0.0185,
+        "tanOdds": 83.3,
+        "ev": 153.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:35:07.337Z"
   }
 ]
