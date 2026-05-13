@@ -4723,5 +4723,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:50:59.622Z"
+  },
+  {
+    "date": "5/13 川崎 8R",
+    "venue": "川崎",
+    "raceNum": "8R",
+    "raceClass": "オプレンシア賞(C1)",
+    "winner": 7,
+    "winOdds": 12.8,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "フクシマジンロッソ",
+        "norm": 0.2428,
+        "tanOdds": 4.4,
+        "ev": 106.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "アイノシャンティー",
+        "norm": 0.032,
+        "tanOdds": 11.7,
+        "ev": 37.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 12.8
+      },
+      {
+        "num": 8,
+        "name": "サマーストーリー",
+        "norm": 0.0276,
+        "tanOdds": 91.4,
+        "ev": 252.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "クレテイユ",
+        "norm": 0.0224,
+        "tanOdds": 46.1,
+        "ev": 103.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:51:29.535Z"
   }
 ]
