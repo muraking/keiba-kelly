@@ -1946,5 +1946,124 @@
       }
     ],
     "savedAt": "2026-05-13T15:37:37.196Z"
+  },
+  {
+    "date": "5/10 東京 11",
+    "venue": "東京",
+    "raceNum": "11R",
+    "raceClass": "NHKマイルC",
+    "winner": 17,
+    "winOdds": 4.6,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "カヴァレリッツォ",
+        "norm": 0.1974,
+        "tanOdds": 8.5,
+        "ev": 167.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 17,
+        "name": "ロデオドライブ",
+        "norm": 0.1288,
+        "tanOdds": 5.6,
+        "ev": 72.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 4.6
+      },
+      {
+        "num": 3,
+        "name": "オルネーロ",
+        "norm": 0.0498,
+        "tanOdds": 56.1,
+        "ev": 279.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ローベルクランツ",
+        "norm": 0.0354,
+        "tanOdds": 29.7,
+        "ev": 105.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "レザベーション",
+        "norm": 0.0326,
+        "tanOdds": 38.4,
+        "ev": 125.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 18,
+        "name": "フクチャンショウ",
+        "norm": 0.0298,
+        "tanOdds": 34.8,
+        "ev": 103.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ジーネキング",
+        "norm": 0.0294,
+        "tanOdds": 38.6,
+        "ev": 113.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ギリーズボール",
+        "norm": 0.0254,
+        "tanOdds": 41.4,
+        "ev": 105.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "リゾートアイランド",
+        "norm": 0.0253,
+        "tanOdds": 134.7,
+        "ev": 340.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ユウファラオ",
+        "norm": 0.0243,
+        "tanOdds": 115,
+        "ev": 279.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:38:00.753Z"
   }
 ]
