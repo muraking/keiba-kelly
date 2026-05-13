@@ -3260,5 +3260,94 @@
       }
     ],
     "savedAt": "2026-05-13T15:44:54.301Z"
+  },
+  {
+    "date": "5/13 門別 3R",
+    "venue": "門別",
+    "raceNum": "3R",
+    "raceClass": "3歳以上 C4ー3",
+    "winner": 12,
+    "winOdds": 23.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ミスターキック",
+        "norm": 0.447,
+        "tanOdds": 6.1,
+        "ev": 272.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ユイガネーシャ",
+        "norm": 0.078,
+        "tanOdds": 28.2,
+        "ev": 220,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "シャンアリーズ",
+        "norm": 0.0166,
+        "tanOdds": 141,
+        "ev": 233.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ベリープラウド",
+        "norm": 0.016,
+        "tanOdds": 9.8,
+        "ev": 15.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 23.5
+      },
+      {
+        "num": 11,
+        "name": "ニットウアイアン",
+        "norm": 0.0155,
+        "tanOdds": 91.9,
+        "ev": 142.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "アルマロザリオ",
+        "norm": 0.0149,
+        "tanOdds": 122,
+        "ev": 182,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "グレートシューター",
+        "norm": 0.0126,
+        "tanOdds": 105,
+        "ev": 132.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:45:13.497Z"
   }
 ]
