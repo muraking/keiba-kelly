@@ -2273,5 +2273,84 @@
       }
     ],
     "savedAt": "2026-05-13T15:38:48.603Z"
+  },
+  {
+    "date": "5/10 京都 2R",
+    "venue": "京都",
+    "raceNum": "2R",
+    "raceClass": "3歳未勝利",
+    "winner": 3,
+    "winOdds": 45.6,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "メリフルアス",
+        "norm": 0.2328,
+        "tanOdds": 5.2,
+        "ev": 121.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ビサーロ",
+        "norm": 0.0257,
+        "tanOdds": 50.8,
+        "ev": 130.5,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 45.6
+      },
+      {
+        "num": 7,
+        "name": "(競走データなし)ミキノヒストリー",
+        "norm": 0.0225,
+        "tanOdds": 73.7,
+        "ev": 165.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "トーアウィリアム",
+        "norm": 0.0171,
+        "tanOdds": 83.2,
+        "ev": 142.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ユナダイヤ",
+        "norm": 0.0165,
+        "tanOdds": 126.8,
+        "ev": 209.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ジューンスマッシュ",
+        "norm": 0.0157,
+        "tanOdds": 129.2,
+        "ev": 203.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:39:11.394Z"
   }
 ]
