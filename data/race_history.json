@@ -5639,5 +5639,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:56:42.583Z"
+  },
+  {
+    "date": "5/13 園田 10",
+    "venue": "園田",
+    "raceNum": "10R",
+    "raceClass": "A2B1",
+    "winner": 4,
+    "winOdds": 8.7,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "エナアニマル",
+        "norm": 0.365,
+        "tanOdds": 3.1,
+        "ev": 113.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "レイアンドダンス",
+        "norm": 0.1633,
+        "tanOdds": 5.9,
+        "ev": 96.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 8.7
+      },
+      {
+        "num": 5,
+        "name": "イザグリーンライト",
+        "norm": 0.0429,
+        "tanOdds": 32.3,
+        "ev": 138.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ウインドケーヴ",
+        "norm": 0.0328,
+        "tanOdds": 74.8,
+        "ev": 245.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:57:01.863Z"
   }
 ]
