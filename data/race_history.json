@@ -3408,5 +3408,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:45:39.963Z"
+  },
+  {
+    "date": "5/13 門別 5R",
+    "venue": "門別",
+    "raceNum": "5R",
+    "raceClass": "JRA認定競走アタックチャレンジ競走(2歳)",
+    "winner": 2,
+    "winOdds": 2.7,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "レインボーライフ",
+        "norm": 0.5772,
+        "tanOdds": 2.6,
+        "ev": 150.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ミヤビダイヤ",
+        "norm": 0.2095,
+        "tanOdds": 2.6,
+        "ev": 54.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.7
+      },
+      {
+        "num": 3,
+        "name": "クラフェイス",
+        "norm": 0.0203,
+        "tanOdds": 58.3,
+        "ev": 118.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "モーニングヒカル",
+        "norm": 0.0187,
+        "tanOdds": 56.2,
+        "ev": 105.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:45:58.847Z"
   }
 ]
