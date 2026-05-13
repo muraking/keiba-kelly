@@ -3675,5 +3675,104 @@
       }
     ],
     "savedAt": "2026-05-13T15:46:37.674Z"
+  },
+  {
+    "date": "5/13 門別 8R",
+    "venue": "門別",
+    "raceNum": "8R",
+    "raceClass": "3歳以上 C4ー2",
+    "winner": 10,
+    "winOdds": 3.3,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "カツノトゥウェルヴ",
+        "norm": 0.3275,
+        "tanOdds": 3.7,
+        "ev": 121.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ラグナキリア",
+        "norm": 0.2415,
+        "tanOdds": 3.1,
+        "ev": 74.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.3
+      },
+      {
+        "num": 1,
+        "name": "ジャスパーサン",
+        "norm": 0.0223,
+        "tanOdds": 53.9,
+        "ev": 120.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "カリンテラス",
+        "norm": 0.0178,
+        "tanOdds": 59.6,
+        "ev": 105.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "エイダイファルコン",
+        "norm": 0.0145,
+        "tanOdds": 74.5,
+        "ev": 107.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ボヤージュアウト",
+        "norm": 0.014,
+        "tanOdds": 151,
+        "ev": 211,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ラスターカノン",
+        "norm": 0.0133,
+        "tanOdds": 81.4,
+        "ev": 108.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "タイガーハート",
+        "norm": 0.0132,
+        "tanOdds": 77.8,
+        "ev": 102.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:46:55.064Z"
   }
 ]
