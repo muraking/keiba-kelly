@@ -88,15 +88,17 @@ async def purchase(page, base, bets):
 
     print(f"オッズフレーム: {p122s_url}")
 
-    # 既存のpageでP122Sに直接アクセス（Cookieを引き継ぐ）
-    await page.goto(p122s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-    await page.wait_for_timeout(3000)
-    content = await page.evaluate("() => document.body ? document.body.innerText : ''")
-    print(f"P122S内容: {content[:80]}")
-    if 'ログイン' in content[:80] or 'エラー' in content[:80]:
-        print("P122Sセッション切れ")
+    # P120Sページのフレームとしてアクセス（直接gotoしない）
+    # odds_frameはすでにP120Sのフレームから取得済み
+    if odds_frame:
+        content = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
+        print(f"P122S内容: {content[:80]}")
+        if 'ログイン' in content[:80]:
+            print("P122Sセッション切れ")
+            return False
+    else:
+        print("P122Sフレームなし")
         return False
-    odds_frame = page
 
     # 各馬番の単勝オッズをクリックして選択
     for bet in bets:
