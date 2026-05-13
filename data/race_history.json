@@ -2184,5 +2184,94 @@
       }
     ],
     "savedAt": "2026-05-13T15:38:26.871Z"
+  },
+  {
+    "date": "5/10 京都 1R",
+    "venue": "京都",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 7,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ミルボナー",
+        "norm": 0.4621,
+        "tanOdds": 1.6,
+        "ev": 73.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      },
+      {
+        "num": 8,
+        "name": "スマイルガーデン",
+        "norm": 0.1552,
+        "tanOdds": 6.5,
+        "ev": 100.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "メイショウマグナ",
+        "norm": 0.0348,
+        "tanOdds": 35.2,
+        "ev": 122.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ドントゥール",
+        "norm": 0.0313,
+        "tanOdds": 61.9,
+        "ev": 194,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "シーズンインザサン",
+        "norm": 0.0276,
+        "tanOdds": 75.9,
+        "ev": 209.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "カフジラクレット",
+        "norm": 0.027,
+        "tanOdds": 121.4,
+        "ev": 327.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "クリコメリー",
+        "norm": 0.0253,
+        "tanOdds": 203.5,
+        "ev": 515.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:38:48.603Z"
   }
 ]
