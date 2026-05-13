@@ -2924,5 +2924,114 @@
       }
     ],
     "savedAt": "2026-05-13T15:42:18.868Z"
+  },
+  {
+    "date": "5/10 京都 11",
+    "venue": "京都",
+    "raceNum": "11R",
+    "raceClass": "平城京S",
+    "winner": 4,
+    "winOdds": 3.9,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "テスティモーネ",
+        "norm": 0.2123,
+        "tanOdds": 4.8,
+        "ev": 101.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.9
+      },
+      {
+        "num": 7,
+        "name": "ルヴァンユニベール",
+        "norm": 0.1176,
+        "tanOdds": 20.9,
+        "ev": 245.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ヴァンヤール",
+        "norm": 0.06,
+        "tanOdds": 43.4,
+        "ev": 260.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ルージュアベリア",
+        "norm": 0.0505,
+        "tanOdds": 45.9,
+        "ev": 231.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "シュバルツクーゲル",
+        "norm": 0.0377,
+        "tanOdds": 56.5,
+        "ev": 213.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "バスタードサフラン",
+        "norm": 0.0301,
+        "tanOdds": 79.5,
+        "ev": 239,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "タイセイドレフォン",
+        "norm": 0.0262,
+        "tanOdds": 62.8,
+        "ev": 164.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "ブラックシールド",
+        "norm": 0.0244,
+        "tanOdds": 127.9,
+        "ev": 312,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "マリオロード",
+        "norm": 0.023,
+        "tanOdds": 106.1,
+        "ev": 244,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:42:37.411Z"
   }
 ]
