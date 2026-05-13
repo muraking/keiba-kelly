@@ -244,15 +244,31 @@ async def purchase(page, base, bets):
     await page.screenshot(path="purchase_confirm.png")
     print(f"確認ページ: {page.url}")
 
-    # 暗証番号入力
+    # 確認ページのフレーム状態を確認してから暗証番号入力
     print("暗証番号を入力中...")
+    await page.wait_for_timeout(3000)
+    
+    # 全フレームの内容を確認
+    for frame in page.frames:
+        fname = frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in frame.url else frame.url[-20:]
+        try:
+            ftxt = await frame.evaluate("() => document.body ? document.body.innerText.substring(0,100) : ''")
+            finputs = await frame.query_selector_all("input")
+            input_types = []
+            for inp in finputs:
+                t = await inp.get_attribute("type") or "text"
+                n = await inp.get_attribute("name") or ""
+                input_types.append(f"{t}:{n}")
+            print(f"  フレーム{fname}: {ftxt[:50]} inputs={input_types[:5]}")
+        except: pass
+
     pin_input = None
     for frame in page.frames:
         inputs = await frame.query_selector_all("input[type='password'], input[type='text']")
         for inp in inputs:
             name = await inp.get_attribute("name") or ""
             placeholder = await inp.get_attribute("placeholder") or ""
-            if "暗証" in name or "PIN" in name.upper() or "暗証" in placeholder:
+            if "暗証" in name or "PIN" in name.upper() or "暗証" in placeholder or "MEMBERID" in name.upper() or "PASS" in name.upper():
                 pin_input = inp
                 break
         if pin_input:
