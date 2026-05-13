@@ -75,21 +75,22 @@ async def get_odds(page, place_id, race_num, race_date):
         await page.goto(p120s_url, wait_until="networkidle", timeout=TIMEOUT)
     except:
         await page.goto(p120s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-    # WPScript.jsを取得して内部API URLを解析
+    # WPScript.jsを解析してAPIのURLを探す
     for r in all_responses:
-        if 'WPScript.js' in r['url'] and r['size'] > 0:
+        if 'WPScript.js' in r['url'] and r['size'] > 10000:
             try:
                 js = r['body'].decode('utf-8', errors='replace')
-                # api関連のURLパターンを探す
+                print(f'WPScript.js size: {len(js)}')
                 import re as _re
-                import re as _re
-                api_urls = [w for w in js.split('"') if ('api' in w.lower() or 'odds' in w.lower()) and ('.' in w) and len(w) < 100]
-                print(f'WPScript.js API候補: {api_urls[:15]}')
-                print(f"WPScript.js AJAX URL: {ajax_urls[:10]}")
+                paths = _re.findall(r'["\'](\/keiba\/[^"\'<>\s]{3,80})["\']', js)
+                paths = list(set(p for p in paths if not any(p.endswith(x) for x in ['.js','.css','.png','.gif'])))
+                print(f'パス候補({len(paths)}件):')
+                for p in sorted(paths)[:30]: print(f"  {p}")
+                ajax = _re.findall(r'url\s*:\s*["\']([^"\']{3,100})["\']', js)
+                print(f'Ajax URL: {ajax[:10]}')
             except Exception as e:
-                print(f"WPScript.js解析エラー: {e}")
+                print(f"解析エラー: {e}")
             break
-
     # もっと長く待つ
     await page.wait_for_timeout(15000)
     print(f"追加待機後キャプチャ数: {len(all_responses)}")
