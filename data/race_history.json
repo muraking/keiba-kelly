@@ -4940,5 +4940,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:52:17.199Z"
+  },
+  {
+    "date": "5/13 川崎 11",
+    "venue": "川崎",
+    "raceNum": "11R",
+    "raceClass": "エンプレス杯Jpn2",
+    "winner": 1,
+    "winOdds": 3.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "メモリアカフェ",
+        "norm": 0.1928,
+        "tanOdds": 3.1,
+        "ev": 59.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.2
+      },
+      {
+        "num": 8,
+        "name": "レイナデアルシーラ",
+        "norm": 0.1107,
+        "tanOdds": 24.6,
+        "ev": 272.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "マーブルマウンテン",
+        "norm": 0.0966,
+        "tanOdds": 31.8,
+        "ev": 307.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "マテリアルガール",
+        "norm": 0.0244,
+        "tanOdds": 126,
+        "ev": 307.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "レクランスリール",
+        "norm": 0.0199,
+        "tanOdds": 269,
+        "ev": 534.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:52:45.411Z"
   }
 ]
