@@ -1,1 +1,101 @@
-[]
+[
+  {
+    "date": "5/10 新潟 1R",
+    "venue": "新潟",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 13,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 13,
+        "name": "ヴァイヴァーイ",
+        "norm": 0.2353,
+        "tanOdds": 2,
+        "ev": 47.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.9
+      },
+      {
+        "num": 1,
+        "name": "ロココ",
+        "norm": 0.15,
+        "tanOdds": 15.2,
+        "ev": 228,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "フローラルウェイ",
+        "norm": 0.0326,
+        "tanOdds": 79.5,
+        "ev": 258.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "アルデナイン",
+        "norm": 0.0283,
+        "tanOdds": 68.6,
+        "ev": 194.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "ボヤージュブルー",
+        "norm": 0.0267,
+        "tanOdds": 75.2,
+        "ev": 200.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "キタノトゥシャイン",
+        "norm": 0.0261,
+        "tanOdds": 142.9,
+        "ev": 372.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "プラトニックガール",
+        "norm": 0.0257,
+        "tanOdds": 132.9,
+        "ev": 341.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "サツキジュエル",
+        "norm": 0.0254,
+        "tanOdds": 154,
+        "ev": 390.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:10:59.083Z"
+  }
+]
