@@ -592,5 +592,94 @@
       }
     ],
     "savedAt": "2026-05-13T15:13:47.376Z"
+  },
+  {
+    "date": "5/10 新潟 7R",
+    "venue": "新潟",
+    "raceNum": "7R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 10,
+    "winOdds": 24.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "ワイドデコラシオン",
+        "norm": 0.0894,
+        "tanOdds": 11.9,
+        "ev": 106.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ディーエストッキー",
+        "norm": 0.082,
+        "tanOdds": 27.7,
+        "ev": 227.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "カフジキアッキエレ",
+        "norm": 0.0421,
+        "tanOdds": 49.4,
+        "ev": 207.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "フォンメイリー",
+        "norm": 0.0419,
+        "tanOdds": 24.3,
+        "ev": 101.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 24.5
+      },
+      {
+        "num": 6,
+        "name": "リードプリンシパル",
+        "norm": 0.0328,
+        "tanOdds": 64.7,
+        "ev": 211.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ウインレアリゼ",
+        "norm": 0.0279,
+        "tanOdds": 36.9,
+        "ev": 103.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "クリナッチ",
+        "norm": 0.0277,
+        "tanOdds": 128.9,
+        "ev": 356.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:14:12.687Z"
   }
 ]
