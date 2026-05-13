@@ -1620,5 +1620,114 @@
       }
     ],
     "savedAt": "2026-05-13T15:36:14.090Z"
+  },
+  {
+    "date": "5/10 東京 7R",
+    "venue": "東京",
+    "raceNum": "7R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 13,
+    "winOdds": 2.8,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "トニケンサンバ",
+        "norm": 0.2324,
+        "tanOdds": 5.4,
+        "ev": 125.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "キミハスコール",
+        "norm": 0.1287,
+        "tanOdds": 3.8,
+        "ev": 48.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.8
+      },
+      {
+        "num": 8,
+        "name": "プルシャプラ",
+        "norm": 0.0514,
+        "tanOdds": 22.7,
+        "ev": 116.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ビアフォーナウ",
+        "norm": 0.0388,
+        "tanOdds": 29,
+        "ev": 112.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ガンバレベアー",
+        "norm": 0.0384,
+        "tanOdds": 36,
+        "ev": 138.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ボナーテソーロ",
+        "norm": 0.0364,
+        "tanOdds": 37.4,
+        "ev": 136,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 16,
+        "name": "レインボーラッキー",
+        "norm": 0.0362,
+        "tanOdds": 30.9,
+        "ev": 111.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "スマートフランキー",
+        "norm": 0.0359,
+        "tanOdds": 84.3,
+        "ev": 302.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "トキメキジニア",
+        "norm": 0.0356,
+        "tanOdds": 89.4,
+        "ev": 317.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:36:33.119Z"
   }
 ]
