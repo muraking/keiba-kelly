@@ -3467,5 +3467,144 @@
       }
     ],
     "savedAt": "2026-05-13T15:45:58.847Z"
+  },
+  {
+    "date": "5/13 門別 6R",
+    "venue": "門別",
+    "raceNum": "6R",
+    "raceClass": "JRA認定競走フレッシュチャレンジ競走(2歳)",
+    "winner": 2,
+    "winOdds": 1.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "(競走データなし)フロアガリノビール",
+        "norm": 0.0845,
+        "tanOdds": 133,
+        "ev": 1123.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "(競走データなし)プレアウィン",
+        "norm": 0.0845,
+        "tanOdds": 156,
+        "ev": 1317.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "(競走データなし)ユイファイア",
+        "norm": 0.0845,
+        "tanOdds": 116,
+        "ev": 979.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "(競走データなし)ピタゴラ",
+        "norm": 0.0845,
+        "tanOdds": 20.4,
+        "ev": 172.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "(競走データなし)マッドシークレット",
+        "norm": 0.0845,
+        "tanOdds": 52.3,
+        "ev": 441.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "(競走データなし)ディアスプリンター",
+        "norm": 0.0845,
+        "tanOdds": 23.3,
+        "ev": 196.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "(競走データなし)コスモバラス",
+        "norm": 0.0837,
+        "tanOdds": 39.4,
+        "ev": 329.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "(競走データなし)ヤングゼネラル",
+        "norm": 0.0833,
+        "tanOdds": 138,
+        "ev": 1149.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "(競走データなし)ティーズブロンシュ",
+        "norm": 0.0822,
+        "tanOdds": 110,
+        "ev": 904.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "(競走データなし)オギフシノネガイ",
+        "norm": 0.0822,
+        "tanOdds": 100,
+        "ev": 821.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "(競走データなし)ドッカンキャベツ",
+        "norm": 0.0811,
+        "tanOdds": 1,
+        "ev": 8.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.4
+      },
+      {
+        "num": 1,
+        "name": "(競走データなし)スルーザレイン",
+        "norm": 0.0807,
+        "tanOdds": 139,
+        "ev": 1121.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:46:19.826Z"
   }
 ]
