@@ -1442,5 +1442,124 @@
       }
     ],
     "savedAt": "2026-05-13T15:35:29.281Z"
+  },
+  {
+    "date": "5/10 東京 5R",
+    "venue": "東京",
+    "raceNum": "5R",
+    "raceClass": "3歳1勝クラス",
+    "winner": 16,
+    "winOdds": 2.6,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ミスターキャンベラ",
+        "norm": 0.1773,
+        "tanOdds": 5.9,
+        "ev": 104.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 16,
+        "name": "ビービーアジャイル",
+        "norm": 0.1757,
+        "tanOdds": 2.7,
+        "ev": 47.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.6
+      },
+      {
+        "num": 7,
+        "name": "シューティングガイ",
+        "norm": 0.0596,
+        "tanOdds": 28.4,
+        "ev": 169.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "マッドゲイル",
+        "norm": 0.0464,
+        "tanOdds": 28.6,
+        "ev": 132.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "スカイレックス",
+        "norm": 0.0407,
+        "tanOdds": 94.5,
+        "ev": 384.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "キタノエピックアン",
+        "norm": 0.0353,
+        "tanOdds": 77.2,
+        "ev": 272.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "イルカンダ",
+        "norm": 0.0345,
+        "tanOdds": 60.8,
+        "ev": 209.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ランブリングマン",
+        "norm": 0.031,
+        "tanOdds": 62,
+        "ev": 191.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "オトシダマ",
+        "norm": 0.0288,
+        "tanOdds": 90.2,
+        "ev": 259.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "エクセルクラウン",
+        "norm": 0.028,
+        "tanOdds": 48,
+        "ev": 134.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:35:47.917Z"
   }
 ]
