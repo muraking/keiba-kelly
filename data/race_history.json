@@ -206,5 +206,114 @@
       }
     ],
     "savedAt": "2026-05-13T15:12:02.943Z"
+  },
+  {
+    "date": "5/10 新潟 3R",
+    "venue": "新潟",
+    "raceNum": "3R",
+    "raceClass": "3歳未勝利",
+    "winner": 5,
+    "winOdds": 4.6,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ノリノドラゴン",
+        "norm": 0.1219,
+        "tanOdds": 8.7,
+        "ev": 106.1,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 4.6
+      },
+      {
+        "num": 8,
+        "name": "ウインガネーシャ",
+        "norm": 0.0436,
+        "tanOdds": 32.8,
+        "ev": 143.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ヤマタケボニータ",
+        "norm": 0.0343,
+        "tanOdds": 53.4,
+        "ev": 183.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "メイショウイッカク",
+        "norm": 0.0326,
+        "tanOdds": 43.9,
+        "ev": 143.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "ユイバイハウス",
+        "norm": 0.0287,
+        "tanOdds": 58.5,
+        "ev": 168.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "メイケイシャイン",
+        "norm": 0.0278,
+        "tanOdds": 78.4,
+        "ev": 218.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ピグマリオン",
+        "norm": 0.0275,
+        "tanOdds": 182,
+        "ev": 499.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "(競走データなし)スナークシャラク",
+        "norm": 0.0271,
+        "tanOdds": 103.8,
+        "ev": 281.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ハイテイラオユエ",
+        "norm": 0.0258,
+        "tanOdds": 48.6,
+        "ev": 125.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:12:27.347Z"
   }
 ]
