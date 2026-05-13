@@ -1175,5 +1175,94 @@
       }
     ],
     "savedAt": "2026-05-13T15:17:16.541Z"
+  },
+  {
+    "date": "5/10 東京 2R",
+    "venue": "東京",
+    "raceNum": "2R",
+    "raceClass": "3歳未勝利",
+    "winner": 7,
+    "winOdds": 5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "サクラドール",
+        "norm": 0.1939,
+        "tanOdds": 9.3,
+        "ev": 180.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "フルールサシェ",
+        "norm": 0.0959,
+        "tanOdds": 5.9,
+        "ev": 56.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 5
+      },
+      {
+        "num": 1,
+        "name": "ヴェントベローチェ",
+        "norm": 0.0349,
+        "tanOdds": 43.5,
+        "ev": 152,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "グラスフェザー",
+        "norm": 0.0319,
+        "tanOdds": 68.8,
+        "ev": 219.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "チェストー",
+        "norm": 0.0259,
+        "tanOdds": 52.5,
+        "ev": 135.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ソパデアホ",
+        "norm": 0.0255,
+        "tanOdds": 89.8,
+        "ev": 229.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "フジテンクウ",
+        "norm": 0.0199,
+        "tanOdds": 129.9,
+        "ev": 258.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:34:44.271Z"
   }
 ]
