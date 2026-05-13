@@ -3606,5 +3606,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:46:19.826Z"
+  },
+  {
+    "date": "5/13 門別 7R",
+    "venue": "門別",
+    "raceNum": "7R",
+    "raceClass": "3歳以上 C4ー3",
+    "winner": 7,
+    "winOdds": 2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ハレタヒニ",
+        "norm": 0.2643,
+        "tanOdds": 7.2,
+        "ev": 190.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ライトニングジャブ",
+        "norm": 0.1618,
+        "tanOdds": 2,
+        "ev": 32.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2
+      },
+      {
+        "num": 6,
+        "name": "ヨキカナ",
+        "norm": 0.0541,
+        "tanOdds": 32.9,
+        "ev": 178,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "フィールザクラウン",
+        "norm": 0.0209,
+        "tanOdds": 114,
+        "ev": 238.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "エウテューモス",
+        "norm": 0.0173,
+        "tanOdds": 150,
+        "ev": 259.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:46:37.674Z"
   }
 ]
