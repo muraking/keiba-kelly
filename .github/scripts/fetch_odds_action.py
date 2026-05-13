@@ -92,6 +92,62 @@ async def get_odds(page, place_id, race_num, race_date):
     if captured_odds:
         return captured_odds
 
+    # C900JをrequestsでCookieを引き継いで直接呼び出す
+    print("C900J直接呼び出し...")
+    from urllib.parse import urlparse
+    parsed2 = urlparse(page.url)
+    base2 = f"{parsed2.scheme}://{parsed2.netloc}"
+
+    cookies = await page.context.cookies()
+    session = req_lib.Session()
+    for c in cookies:
+        session.cookies.set(c['name'], c['value'], domain=c.get('domain',''))
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
+        "Referer": f"{base2}/keiba/pc?HANDLERR=P122S&BEFOREHANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1",
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "*/*",
+    }
+
+    # C900J: 単勝複勝オッズ取得API
+    c900j_url = f"{base2}/keiba/pc?HANDLERR=C900J&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1"
+    print(f"C900J: {c900j_url}")
+    try:
+        r = session.get(c900j_url, headers=headers, timeout=15)
+        print(f"C900J status: {r.status_code}")
+        for enc in ['utf-8', 'shift_jis', 'cp932']:
+            try:
+                text = r.content.decode(enc)
+                print(f"C900J内容({enc}): {text[:300]}")
+                odds = parse_api_response(text)
+                if odds:
+                    print(f"C900Jから{len(odds)}頭取得")
+                    return odds
+                break
+            except: continue
+    except Exception as e:
+        print(f"C900Jエラー: {e}")
+
+    # C901J: 更新データ取得API
+    c901j_url = f"{base2}/keiba/pc?HANDLERR=C901J&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1"
+    print(f"C901J: {c901j_url}")
+    try:
+        r = session.get(c901j_url, headers=headers, timeout=15)
+        print(f"C901J status: {r.status_code}")
+        for enc in ['utf-8', 'shift_jis', 'cp932']:
+            try:
+                text = r.content.decode(enc)
+                print(f"C901J内容({enc}): {text[:300]}")
+                odds = parse_api_response(text)
+                if odds:
+                    print(f"C901Jから{len(odds)}頭取得")
+                    return odds
+                break
+            except: continue
+    except Exception as e:
+        print(f"C901Jエラー: {e}")
+
     # フォールバック: P122Sフレームから取得
     print("フォールバック: P122Sフレームから取得...")
     for frame in page.frames:
@@ -216,4 +272,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    
