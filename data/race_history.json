@@ -4357,5 +4357,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:49:38.268Z"
+  },
+  {
+    "date": "5/13 川崎 4R",
+    "venue": "川崎",
+    "raceNum": "4R",
+    "raceClass": "C2七",
+    "winner": 4,
+    "winOdds": 5.5,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "ザムト",
+        "norm": 0.3036,
+        "tanOdds": 7,
+        "ev": 212.5,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 5.5
+      },
+      {
+        "num": 9,
+        "name": "ルクスリーベン",
+        "norm": 0.0957,
+        "tanOdds": 42.6,
+        "ev": 407.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "マイカグラ",
+        "norm": 0.0409,
+        "tanOdds": 51.2,
+        "ev": 209.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ワンラヴ",
+        "norm": 0.0274,
+        "tanOdds": 55.7,
+        "ev": 152.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "キアラボヌール",
+        "norm": 0.0205,
+        "tanOdds": 104,
+        "ev": 213.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:50:01.245Z"
   }
 ]
