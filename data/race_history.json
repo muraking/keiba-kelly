@@ -5423,5 +5423,44 @@
       }
     ],
     "savedAt": "2026-05-13T15:55:06.142Z"
+  },
+  {
+    "date": "5/13 園田 6R",
+    "venue": "園田",
+    "raceNum": "6R",
+    "raceClass": "C2二",
+    "winner": 6,
+    "winOdds": 1.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "メイショウオニテ",
+        "norm": 0.6379,
+        "tanOdds": 1.6,
+        "ev": 102.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.4
+      },
+      {
+        "num": 1,
+        "name": "バイカル",
+        "norm": 0.0359,
+        "tanOdds": 38.4,
+        "ev": 137.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:55:28.286Z"
   }
 ]
