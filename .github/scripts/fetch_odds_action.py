@@ -52,11 +52,17 @@ async def get_odds(page, place_id, race_num, race_date):
     p120s_url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
     print(f"オッズURL: {p120s_url}")
 
-    # C900J/C901Jのレスポンスをキャプチャしてオッズを取得
+    # 全レスポンスを保存してWPScript.jsを詳細解析
     captured_odds = {}
+    wpscript_body = None
 
     async def on_response(response):
+        nonlocal wpscript_body
         url = response.url
+        if 'WPScript.js' in url and wpscript_body is None:
+            try:
+                wpscript_body = await response.body()
+            except: pass
         if 'C900J' in url or 'C901J' in url:
             try:
                 body = await response.body()
@@ -88,6 +94,26 @@ async def get_odds(page, place_id, race_num, race_date):
 
     print(f"現在URL: {page.url}")
     print(f"捕捉オッズ: {len(captured_odds)}頭")
+
+    # WPScript.jsの詳細解析
+    if wpscript_body:
+        try:
+            js = wpscript_body.decode('utf-8', errors='replace')
+            print(f"WPScript.js size: {len(js)}")
+            # P122S関連のコードを探す
+            import re as _re
+            # P122S周辺のコードを抽出
+            p122s_matches = [m.start() for m in _re.finditer(r'P122S|C900|C901|tanOdds|getOdds|ODDS|tansho|fukusho', js, _re.IGNORECASE)]
+            print(f"オッズ関連キーワード位置: {p122s_matches[:10]}")
+            for pos in p122s_matches[:5]:
+                print(f"  [{pos}]: {repr(js[max(0,pos-50):pos+100])}")
+            # HANDLERR= パターンを全て抽出
+            handlers = _re.findall(r'HANDLERR=([A-Z0-9]+)', js)
+            print(f"HANDLERR一覧: {list(set(handlers))}")
+        except Exception as e:
+            print(f"WPScript解析エラー: {e}")
+    else:
+        print("WPScript.js未取得")
 
     if captured_odds:
         return captured_odds
