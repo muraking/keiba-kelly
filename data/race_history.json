@@ -4218,5 +4218,144 @@
       }
     ],
     "savedAt": "2026-05-13T15:49:18.114Z"
+  },
+  {
+    "date": "5/13 川崎 3R",
+    "venue": "川崎",
+    "raceNum": "3R",
+    "raceClass": "アウラー賞(3歳)",
+    "winner": 5,
+    "winOdds": 3.9,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "カナールゲイル",
+        "norm": 0.3163,
+        "tanOdds": 6.1,
+        "ev": 192.9,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 3.9
+      },
+      {
+        "num": 9,
+        "name": "タツノスペシャル",
+        "norm": 0.1112,
+        "tanOdds": 11.7,
+        "ev": 130.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ラスールフルール",
+        "norm": 0.0809,
+        "tanOdds": 36.6,
+        "ev": 296,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "シナノフラッシュ",
+        "norm": 0.0567,
+        "tanOdds": 34.7,
+        "ev": 196.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ピーエムボギー",
+        "norm": 0.0396,
+        "tanOdds": 26.4,
+        "ev": 104.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ジーカンピオーネ",
+        "norm": 0.0277,
+        "tanOdds": 53.2,
+        "ev": 147.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "デュオメーデス",
+        "norm": 0.0268,
+        "tanOdds": 40.8,
+        "ev": 109.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "キチョウ",
+        "norm": 0.0264,
+        "tanOdds": 95.2,
+        "ev": 251.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ヴァルヴァラ",
+        "norm": 0.0246,
+        "tanOdds": 117,
+        "ev": 287.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "オーバーユー",
+        "norm": 0.0231,
+        "tanOdds": 157,
+        "ev": 362.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "バルカロール",
+        "norm": 0.0207,
+        "tanOdds": 60,
+        "ev": 124.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ボンセレンシス",
+        "norm": 0.0202,
+        "tanOdds": 73.8,
+        "ev": 149.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:49:38.268Z"
   }
 ]
