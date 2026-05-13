@@ -18,7 +18,7 @@ PLACE_ID  = os.environ.get("PLACE_ID", "")
 RACE_NUM  = int(os.environ.get("RACE_NUM", "1"))
 RACE_DATE = os.environ.get("RACE_DATE", "")
 TODAY_JST = os.environ.get("TODAY_JST", "")
-LOGIN_URL = "https://www.spat4.jp/keiba/pc?C_SPHONE=off"
+LOGIN_URL = "https://www.spat4.jp/keiba/sp"
 TIMEOUT   = 60000
 
 def now_jst():
@@ -283,7 +283,9 @@ async def main():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
+            user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+            viewport={"width": 390, "height": 844},
+            is_mobile=True,
         )
         page = await context.new_page()
         page.set_default_timeout(TIMEOUT)
