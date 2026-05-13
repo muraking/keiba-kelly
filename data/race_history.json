@@ -3941,5 +3941,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:48:04.372Z"
+  },
+  {
+    "date": "5/13 門別 12",
+    "venue": "門別",
+    "raceNum": "12R",
+    "raceClass": "キタサンブラック・プレミアム(B2)",
+    "winner": 5,
+    "winOdds": 23.6,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "サイモンソーラン",
+        "norm": 0.2404,
+        "tanOdds": 7.9,
+        "ev": 189.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "アステロイドメア",
+        "norm": 0.1561,
+        "tanOdds": 6.5,
+        "ev": 101.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "イケメンパリピ",
+        "norm": 0.1032,
+        "tanOdds": 62.4,
+        "ev": 644,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ジャスパードリーム",
+        "norm": 0.0392,
+        "tanOdds": 20.8,
+        "ev": 81.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 23.6
+      },
+      {
+        "num": 6,
+        "name": "ルクスシュナイダー",
+        "norm": 0.0269,
+        "tanOdds": 63.2,
+        "ev": 169.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:48:29.979Z"
   }
 ]
