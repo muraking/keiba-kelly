@@ -27,23 +27,51 @@ def now_jst():
 async def login(page):
     await page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=TIMEOUT)
     await page.wait_for_timeout(5000)
-    await page.fill('input[name="MEMBERNUMR"]', SPAT4_MEMBERNUM)
-    await page.fill('input[name="MEMBERIDR"]', SPAT4_PASS)
+    print(f"ログインページURL: {page.url}")
+
+    # フォームのinputを全て確認
+    inputs = await page.evaluate(
+        "() => Array.from(document.querySelectorAll('input')).map(i=>({name:i.name,type:i.type,id:i.id}))"
+    )
+    print(f"フォームinput: {inputs[:10]}")
+
+    # 加入者番号フィールドを探す
+    member_sel = None
+    pass_sel = None
+    for sel in ['input[name="MEMBERNUMR"]', 'input[name="memberNum"]', 'input[name="loginId"]',
+                'input[name="userId"]', 'input[id="membernumr"]']:
+        el = await page.query_selector(sel)
+        if el:
+            member_sel = sel
+            break
+
+    for sel in ['input[name="MEMBERIDR"]', 'input[name="password"]', 'input[name="pass"]',
+                'input[type="password"]', 'input[name="loginPass"]']:
+        el = await page.query_selector(sel)
+        if el:
+            pass_sel = sel
+            break
+
+    print(f"加入者番号フィールド: {member_sel}")
+    print(f"パスワードフィールド: {pass_sel}")
+
+    if not member_sel or not pass_sel:
+        print("ログインフォームが見つかりません")
+        return
+
+    await page.fill(member_sel, SPAT4_MEMBERNUM)
+    await page.fill(pass_sel, SPAT4_PASS)
     try:
         async with page.expect_navigation(wait_until="domcontentloaded", timeout=30000):
-            await page.evaluate("""
-                () => {
-                    for(const form of document.querySelectorAll('form')){
-                        if(form.querySelector('[name="MEMBERNUMR"]')){
-                            form.submit(); return;
-                        }
-                    }
-                }
-            """)
+            await page.evaluate(
+                "() => { const b=document.querySelector('input[type=submit],button[type=submit],button'); if(b){b.click();}else{document.querySelector('form').submit();} }"
+            )
         await page.wait_for_timeout(3000)
     except Exception as e:
         print(f"ログイン遷移: {e}")
     print(f"ログイン後URL: {page.url}")
+
+
 
 async def get_odds(page, place_id, race_num, race_date):
     from urllib.parse import urlparse
