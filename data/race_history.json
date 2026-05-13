@@ -2855,5 +2855,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:41:55.635Z"
+  },
+  {
+    "date": "5/10 京都 10",
+    "venue": "京都",
+    "raceNum": "10R",
+    "raceClass": "橘S",
+    "winner": 4,
+    "winOdds": 1.8,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "タガノアラリア",
+        "norm": 0.4064,
+        "tanOdds": 2,
+        "ev": 81.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.8
+      },
+      {
+        "num": 8,
+        "name": "ハンデンドレイク",
+        "norm": 0.0426,
+        "tanOdds": 65,
+        "ev": 277.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ヨサリ",
+        "norm": 0.0329,
+        "tanOdds": 86.2,
+        "ev": 283.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "アルスマグナ",
+        "norm": 0.0222,
+        "tanOdds": 54.4,
+        "ev": 120.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ギガントマキア",
+        "norm": 0.0185,
+        "tanOdds": 180.3,
+        "ev": 333.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:42:18.868Z"
   }
 ]
