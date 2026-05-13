@@ -681,5 +681,104 @@
       }
     ],
     "savedAt": "2026-05-13T15:14:12.687Z"
+  },
+  {
+    "date": "5/10 新潟 8R",
+    "venue": "新潟",
+    "raceNum": "8R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 14,
+    "winOdds": 11.3,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "ミヤジマナ",
+        "norm": 0.3555,
+        "tanOdds": 3.6,
+        "ev": 128,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ティピティーナ",
+        "norm": 0.1115,
+        "tanOdds": 17.1,
+        "ev": 190.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "プルミエールパス",
+        "norm": 0.0641,
+        "tanOdds": 18.7,
+        "ev": 119.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ハッピーウィズユー",
+        "norm": 0.0615,
+        "tanOdds": 9.7,
+        "ev": 59.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 11.3
+      },
+      {
+        "num": 4,
+        "name": "アイアンソリッド",
+        "norm": 0.0325,
+        "tanOdds": 58.1,
+        "ev": 189.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ミサビスケッツ",
+        "norm": 0.0324,
+        "tanOdds": 41.3,
+        "ev": 133.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "デルマエアロール",
+        "norm": 0.0314,
+        "tanOdds": 41.7,
+        "ev": 130.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "ガーデンプランナー",
+        "norm": 0.0247,
+        "tanOdds": 53.1,
+        "ev": 130.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:15:10.643Z"
   }
 ]
