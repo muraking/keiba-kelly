@@ -3033,5 +3033,104 @@
       }
     ],
     "savedAt": "2026-05-13T15:42:37.411Z"
+  },
+  {
+    "date": "5/10 京都 12",
+    "venue": "京都",
+    "raceNum": "12R",
+    "raceClass": "4歳以上2勝クラス",
+    "winner": 14,
+    "winOdds": 3,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "ユウトザレン",
+        "norm": 0.2006,
+        "tanOdds": 5.2,
+        "ev": 104.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ロードオルデン",
+        "norm": 0.1014,
+        "tanOdds": 27,
+        "ev": 273.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ヴィリアリート",
+        "norm": 0.0741,
+        "tanOdds": 4.4,
+        "ev": 32.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3
+      },
+      {
+        "num": 5,
+        "name": "ハリウッドブルース",
+        "norm": 0.0446,
+        "tanOdds": 54.2,
+        "ev": 241.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "フィリップ",
+        "norm": 0.0444,
+        "tanOdds": 34.5,
+        "ev": 153,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "グリプトグラフィ",
+        "norm": 0.0363,
+        "tanOdds": 33.6,
+        "ev": 122,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ヤマメキング",
+        "norm": 0.0323,
+        "tanOdds": 60.7,
+        "ev": 195.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ホウオウフロイト",
+        "norm": 0.0291,
+        "tanOdds": 43.3,
+        "ev": 125.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:42:57.797Z"
   }
 ]
