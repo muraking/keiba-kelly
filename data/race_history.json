@@ -1561,5 +1561,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:35:47.917Z"
+  },
+  {
+    "date": "5/10 東京 6R",
+    "venue": "東京",
+    "raceNum": "6R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 5,
+    "winOdds": 12.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ゴールドシーン",
+        "norm": 0.3003,
+        "tanOdds": 3.9,
+        "ev": 117.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ディオデルマーレ",
+        "norm": 0.2857,
+        "tanOdds": 3.7,
+        "ev": 105.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "グレゴリオ",
+        "norm": 0.0942,
+        "tanOdds": 15.2,
+        "ev": 143.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ウインイザナミ",
+        "norm": 0.0387,
+        "tanOdds": 10.5,
+        "ev": 40.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 12.5
+      }
+    ],
+    "savedAt": "2026-05-13T15:36:14.090Z"
   }
 ]
