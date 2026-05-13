@@ -56,21 +56,18 @@ async def get_odds(page, place_id, race_num, race_date):
     all_responses = []
 
     async def on_response(response):
-        url = response.url
-        # 怪しいURLをすべて記録
-        if any(k in url for k in ['api', 'odds', 'json', 'data', 'ajax', '.html', 'get']):
-            try:
-                body = await response.body()
-                ct = response.headers.get('content-type', '')
-                all_responses.append({
-                    'url': url,
-                    'status': response.status,
-                    'ct': ct,
-                    'size': len(body),
-                    'body': body
-                })
-            except:
-                pass
+        try:
+            body = await response.body()
+            ct = response.headers.get('content-type', '')
+            all_responses.append({
+                'url': response.url,
+                'status': response.status,
+                'ct': ct,
+                'size': len(body),
+                'body': body
+            })
+        except:
+            all_responses.append({'url': response.url, 'status': response.status, 'ct': '', 'size': 0, 'body': b''})
 
     page.on("response", on_response)
 
@@ -78,7 +75,7 @@ async def get_odds(page, place_id, race_num, race_date):
         await page.goto(p120s_url, wait_until="networkidle", timeout=TIMEOUT)
     except:
         await page.goto(p120s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-    await page.wait_for_timeout(5000)
+    await page.wait_for_timeout(8000)
 
     print(f"キャプチャ数: {len(all_responses)}")
     for r in all_responses:
