@@ -3132,5 +3132,54 @@
       }
     ],
     "savedAt": "2026-05-13T15:42:57.797Z"
+  },
+  {
+    "date": "5/13 門別 1R",
+    "venue": "門別",
+    "raceNum": "1R",
+    "raceClass": "2歳 未勝利",
+    "winner": 5,
+    "winOdds": 1,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "フォールドイン",
+        "norm": 0.4725,
+        "tanOdds": 1.1,
+        "ev": 52,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1
+      },
+      {
+        "num": 8,
+        "name": "ニュースタンダード",
+        "norm": 0.3564,
+        "tanOdds": 4.9,
+        "ev": 174.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ルナベレッツァ",
+        "norm": 0.0294,
+        "tanOdds": 51.7,
+        "ev": 152,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:44:34.445Z"
   }
 ]
