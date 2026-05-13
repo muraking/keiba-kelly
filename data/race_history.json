@@ -5462,5 +5462,94 @@
       }
     ],
     "savedAt": "2026-05-13T15:55:28.286Z"
+  },
+  {
+    "date": "5/13 園田 7R",
+    "venue": "園田",
+    "raceNum": "7R",
+    "raceClass": "C2一",
+    "winner": 9,
+    "winOdds": 1.7,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "フィオリーノ",
+        "norm": 0.5389,
+        "tanOdds": 3.7,
+        "ev": 199.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "エナドライブ",
+        "norm": 0.166,
+        "tanOdds": 1.6,
+        "ev": 26.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.7
+      },
+      {
+        "num": 6,
+        "name": "ヤングブラッド",
+        "norm": 0.0962,
+        "tanOdds": 11.7,
+        "ev": 112.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "アサカラヴラヴ",
+        "norm": 0.0543,
+        "tanOdds": 38.3,
+        "ev": 207.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "マッチョサスポ",
+        "norm": 0.0408,
+        "tanOdds": 35.2,
+        "ev": 143.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ハンバーグハマー",
+        "norm": 0.0232,
+        "tanOdds": 97.2,
+        "ev": 225.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "タイキエルキーオ",
+        "norm": 0.0177,
+        "tanOdds": 57.7,
+        "ev": 102.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:55:56.022Z"
   }
 ]
