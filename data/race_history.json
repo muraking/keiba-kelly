@@ -4782,5 +4782,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:51:29.535Z"
+  },
+  {
+    "date": "5/13 川崎 9R",
+    "venue": "川崎",
+    "raceNum": "9R",
+    "raceClass": "明鏡止水賞(B3)",
+    "winner": 6,
+    "winOdds": 10.8,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "アイルプロテクト",
+        "norm": 0.1299,
+        "tanOdds": 11.3,
+        "ev": 146.8,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 10.8
+      },
+      {
+        "num": 1,
+        "name": "レイヴオン",
+        "norm": 0.0523,
+        "tanOdds": 20,
+        "ev": 104.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "テイクノート",
+        "norm": 0.0459,
+        "tanOdds": 39.6,
+        "ev": 181.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "トリプルアクセル",
+        "norm": 0.0286,
+        "tanOdds": 57.3,
+        "ev": 163.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:51:53.132Z"
   }
 ]
