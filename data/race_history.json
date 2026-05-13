@@ -3181,5 +3181,84 @@
       }
     ],
     "savedAt": "2026-05-13T15:44:34.445Z"
+  },
+  {
+    "date": "5/13 門別 2R",
+    "venue": "門別",
+    "raceNum": "2R",
+    "raceClass": "3歳条件 未勝利",
+    "winner": 8,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "オギフシノチカイ",
+        "norm": 0.4043,
+        "tanOdds": 2,
+        "ev": 80.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 3,
+        "name": "リコージュピター",
+        "norm": 0.0542,
+        "tanOdds": 22.8,
+        "ev": 123.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "スターオブスカイ",
+        "norm": 0.0398,
+        "tanOdds": 97.6,
+        "ev": 388.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "オハマチャン",
+        "norm": 0.0162,
+        "tanOdds": 95.2,
+        "ev": 154.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ネクストトゥーユー",
+        "norm": 0.016,
+        "tanOdds": 84.9,
+        "ev": 135.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ハッピーモカ",
+        "norm": 0.0124,
+        "tanOdds": 88.8,
+        "ev": 110.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:44:54.301Z"
   }
 ]
