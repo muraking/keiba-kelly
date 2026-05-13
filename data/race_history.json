@@ -4535,5 +4535,114 @@
       }
     ],
     "savedAt": "2026-05-13T15:50:19.718Z"
+  },
+  {
+    "date": "5/13 川崎 6R",
+    "venue": "川崎",
+    "raceNum": "6R",
+    "raceClass": "ワルキューレ賞(C2)",
+    "winner": 9,
+    "winOdds": 41.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "クロウソング",
+        "norm": 0.3934,
+        "tanOdds": 4.5,
+        "ev": 177,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "ヘウレシス",
+        "norm": 0.1092,
+        "tanOdds": 10.2,
+        "ev": 111.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ダイゴホマレリュウ",
+        "norm": 0.0304,
+        "tanOdds": 31.5,
+        "ev": 95.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 41.2
+      },
+      {
+        "num": 3,
+        "name": "シェナクラウン",
+        "norm": 0.0291,
+        "tanOdds": 38.2,
+        "ev": 111.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ヴァッツマン",
+        "norm": 0.0274,
+        "tanOdds": 75.2,
+        "ev": 206.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ケイツーブル",
+        "norm": 0.0266,
+        "tanOdds": 57.4,
+        "ev": 152.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "パーティーモード",
+        "norm": 0.0238,
+        "tanOdds": 58.1,
+        "ev": 138.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ネオシャングリラ",
+        "norm": 0.0236,
+        "tanOdds": 61,
+        "ev": 143.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "シュヴァルツナーガ",
+        "norm": 0.023,
+        "tanOdds": 94.8,
+        "ev": 217.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:50:39.361Z"
   }
 ]
