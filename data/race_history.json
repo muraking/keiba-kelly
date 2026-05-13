@@ -2520,5 +2520,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:40:01.855Z"
+  },
+  {
+    "date": "5/10 京都 5R",
+    "venue": "京都",
+    "raceNum": "5R",
+    "raceClass": "3歳未勝利",
+    "winner": 9,
+    "winOdds": 6,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "マーチャンシップ",
+        "norm": 0.1527,
+        "tanOdds": 19.2,
+        "ev": 293.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "アトレッタ",
+        "norm": 0.0477,
+        "tanOdds": 6.4,
+        "ev": 30.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6
+      },
+      {
+        "num": 2,
+        "name": "レディトゥアタック",
+        "norm": 0.0313,
+        "tanOdds": 34.7,
+        "ev": 108.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ファビュラスベガス",
+        "norm": 0.0279,
+        "tanOdds": 51.9,
+        "ev": 144.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:40:33.516Z"
   }
 ]
