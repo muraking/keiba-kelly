@@ -391,6 +391,19 @@ textarea:focus{border-color:var(--gold)}
             style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
         </div>
       </div>
+      <div class="sh" style="margin-top:12px">勝率計算方式</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div style="background:var(--bg3);border-radius:var(--r);padding:8px;cursor:pointer" id="norm-btn-softmax" onclick="setNormMethod('softmax')">
+          <div style="font-size:12px;font-weight:700;color:var(--green)">ソフトマックス</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px">上位集中・下位カット</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:8px;cursor:pointer" id="norm-btn-simple" onclick="setNormMethod('simple')">
+          <div style="font-size:12px;font-weight:700;color:var(--text2)">単純正規化</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px">指数÷合計</div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:8px" id="norm-method-desc">現在: ソフトマックス変換</div>
+
       <div class="sh" style="margin-top:12px">期待値フィルター</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
         <div>
@@ -513,10 +526,18 @@ function parseData(){
   if(!parsed.length){alert('データを読み取れませんでした\n形式を確認してください');return;}
   horses=parsed;
   const tot=horses.reduce((s,h)=>s+h.pct,0);
-  // ソフトマックス変換で勝率計算
-  const smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
-  const smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
-  const normMap1 = softmaxNorm(horses, smTemp, smMinPct);
+  // 勝率計算方式に応じて変換
+  const _normMethod = localStorage.getItem('norm_method') || 'softmax';
+  let normMap1;
+  if(_normMethod === 'softmax') {
+    const smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
+    const smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
+    normMap1 = softmaxNorm(horses, smTemp, smMinPct);
+  } else {
+    const tot1 = horses.reduce((s,h) => s+h.pct, 0);
+    normMap1 = {};
+    horses.forEach(h => { normMap1[h.num] = tot1 > 0 ? h.pct/tot1 : 0; });
+  }
   horses.forEach(h=>{ h.norm = normMap1[h.num] || 0; });
   horses.sort((a,b)=>b.norm-a.norm);
 
@@ -611,6 +632,32 @@ function setKelly(type){
 }
 
 // ソフトマックス設定保存・読み込み
+function setNormMethod(method) {
+  localStorage.setItem('norm_method', method);
+  updateNormMethodUI(method);
+  onRaceChange();
+}
+
+function updateNormMethodUI(method) {
+  const smBtn = document.getElementById('norm-btn-softmax');
+  const siBtn = document.getElementById('norm-btn-simple');
+  const desc = document.getElementById('norm-method-desc');
+  if(!smBtn) return;
+  if(method === 'softmax') {
+    smBtn.style.border = '1.5px solid var(--green)';
+    siBtn.style.border = '0.5px solid var(--border2)';
+    document.querySelector('#norm-btn-softmax div').style.color = 'var(--green)';
+    document.querySelector('#norm-btn-simple div').style.color = 'var(--text2)';
+    if(desc) desc.textContent = '現在: ソフトマックス変換（温度T・最小指数%が適用されます）';
+  } else {
+    smBtn.style.border = '0.5px solid var(--border2)';
+    siBtn.style.border = '1.5px solid var(--amber)';
+    document.querySelector('#norm-btn-softmax div').style.color = 'var(--text2)';
+    document.querySelector('#norm-btn-simple div').style.color = 'var(--amber)';
+    if(desc) desc.textContent = '現在: 単純正規化（指数÷合計）';
+  }
+}
+
 async function saveSoftmaxSettings() {
   const T = parseFloat(document.getElementById('sm-temperature').value) || 15;
   const minP = parseFloat(document.getElementById('sm-minpct').value);
@@ -621,8 +668,10 @@ async function saveSoftmaxSettings() {
   const oddsMin = parseFloat(document.getElementById('odds-min').value) || null;
   const oddsMax = parseFloat(document.getElementById('odds-max').value) || null;
 
+  const normMethod = localStorage.getItem('norm_method') || 'softmax';
   localStorage.setItem('sm_temperature', T);
   localStorage.setItem('sm_minpct', isNaN(minP) ? '3.0' : String(minP));
+  localStorage.setItem('norm_method', normMethod);
   localStorage.setItem('ev_min', String(evMin));
   if(evMax) localStorage.setItem('ev_max', String(evMax)); else localStorage.removeItem('ev_max');
   if(oddsMin) localStorage.setItem('odds_min', String(oddsMin)); else localStorage.removeItem('odds_min');
@@ -652,6 +701,7 @@ async function saveSoftmaxSettings() {
       if (!data._settings) data._settings = {};
       data._settings.sm_temperature = T;
       data._settings.sm_minpct = isNaN(minP) ? 3.0 : minP;
+      data._settings.norm_method = normMethod;
       data._settings.ev_min = evMin;
       data._settings.ev_max = evMax;
       data._settings.odds_min = oddsMin;
@@ -727,6 +777,9 @@ async function loadSoftmaxFromGithub() {
     const autoBuyLocal = s.auto_buy_local || false;
     const autoBuyJra = s.auto_buy_jra || false;
     const autoBuyMax = s.auto_buy_max || 0;
+    const normMethodGh = s.norm_method || 'softmax';
+    localStorage.setItem('norm_method', normMethodGh);
+    updateNormMethodUI(normMethodGh);
     const autoBuySkipFav = s.auto_buy_skip_fav || false;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
@@ -745,6 +798,7 @@ async function loadSoftmaxFromGithub() {
       `温度T: ${T}　最小指数: ${minP}%`,
       `期待値: ${evMin}以上${evMax ? '～'+evMax+'以下' : '（上限なし）'}`,
       `オッズ: ${oddsMin || '無制限'}〜${oddsMax || '無制限'}倍`,
+      `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''} 1番人気1倍台=${autoBuySkipFav?'スキップ':'購入'}`,
     ];
     if(currentEl){
@@ -777,6 +831,8 @@ function loadSoftmaxSettings() {
   if(evMaxEl) evMaxEl.value = evMax;
   if(oddsMinEl) oddsMinEl.value = oddsMin;
   if(oddsMaxEl) oddsMaxEl.value = oddsMax;
+  const normMethod = localStorage.getItem('norm_method') || 'softmax';
+  updateNormMethodUI(normMethod);
   const autoBuyLocalVal = localStorage.getItem('auto_buy_local') === '1';
   const autoBuyJraVal = localStorage.getItem('auto_buy_jra') === '1';
   const autoBuyMaxVal = localStorage.getItem('auto_buy_max') || '0';
@@ -1506,10 +1562,18 @@ function onRaceChange(){
     }
   }
 
-  // ソフトマックス変換
-  const smTemp2 = parseFloat(ghData?._settings?.sm_temperature || localStorage.getItem('sm_temperature') || '15');
-  const smMinPct2 = parseFloat(ghData?._settings?.sm_minpct || localStorage.getItem('sm_minpct') || '3.0');
-  const normMap2 = softmaxNorm(race.horses, smTemp2, smMinPct2);
+  // 勝率計算方式に応じて変換
+  const _normMethod2 = ghData?._settings?.norm_method || localStorage.getItem('norm_method') || 'softmax';
+  let normMap2;
+  if(_normMethod2 === 'softmax') {
+    const smTemp2 = parseFloat(ghData?._settings?.sm_temperature || localStorage.getItem('sm_temperature') || '15');
+    const smMinPct2 = parseFloat(ghData?._settings?.sm_minpct || localStorage.getItem('sm_minpct') || '3.0');
+    normMap2 = softmaxNorm(race.horses, smTemp2, smMinPct2);
+  } else {
+    const tot2 = race.horses.reduce((s,h) => s+h.pct, 0);
+    normMap2 = {};
+    race.horses.forEach(h => { normMap2[h.num] = tot2 > 0 ? h.pct/tot2 : 0; });
+  }
 
   horses = race.horses.map(h => {
     const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
@@ -2360,25 +2424,34 @@ async function saveRaceResult() {
 
   statusEl.innerHTML = '<span style="color:var(--amber)">🔄 保存中...</span>';
 
-  // 記録するデータを構築（各推奨馬の情報）
   // 的中判定：買い目の馬番と1着馬番が一致
   const betNums = renders.map(h => h.num);
   const isMyHit = hitNum ? betNums.includes(hitNum) : false;
 
-  const records = renders.map(h => {
-    const ev = h.tanOdds ? h.norm * h.tanOdds * 100 : null;
-    const isWinner = hitNum ? (h.num === hitNum) : false;
-    return {
-      num: h.num,
-      name: h.name,
-      norm: Math.round(h.norm * 10000) / 10000,
-      tanOdds: h.tanOdds,
-      ev: ev ? Math.round(ev * 10) / 10 : null,
-      isWinner: isWinner,   // この馬が1着か
-      isBet: true,          // 買い目に入っていた馬
-      payout: isWinner && winOdds ? winOdds : null
-    };
-  });
+  // 全馬データを保存（EV > 100の馬全て + 1着馬）
+  // horsesは全馬リスト（フィルター前）
+  const allHorsesForRec = horses || [];
+  const records = allHorsesForRec
+    .filter(h => {
+      if(!h.tanOdds) return false;
+      const ev = h.norm * h.tanOdds * 100;
+      return ev >= 100 || (hitNum && h.num === hitNum);
+    })
+    .map(h => {
+      const ev = h.tanOdds ? h.norm * h.tanOdds * 100 : null;
+      const isWinner = hitNum ? (h.num === hitNum) : false;
+      const isBet = betNums.includes(h.num);
+      return {
+        num: h.num,
+        name: h.name,
+        norm: Math.round(h.norm * 10000) / 10000,
+        tanOdds: h.tanOdds,
+        ev: ev ? Math.round(ev * 10) / 10 : null,
+        isWinner: isWinner,
+        isBet: isBet,
+        payout: isWinner && winOdds ? winOdds : null
+      };
+    });
 
   const entry = {
     date: currentRace.raceName?.substring(0, 10) || '',
