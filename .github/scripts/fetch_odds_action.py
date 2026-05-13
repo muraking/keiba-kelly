@@ -75,7 +75,24 @@ async def get_odds(page, place_id, race_num, race_date):
         await page.goto(p120s_url, wait_until="networkidle", timeout=TIMEOUT)
     except:
         await page.goto(p120s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-    await page.wait_for_timeout(8000)
+    # WPScript.jsを取得して内部API URLを解析
+    for r in all_responses:
+        if 'WPScript.js' in r['url'] and r['size'] > 0:
+            try:
+                js = r['body'].decode('utf-8', errors='replace')
+                # api関連のURLパターンを探す
+                import re as _re
+                import re as _re
+                api_urls = [w for w in js.split('"') if ('api' in w.lower() or 'odds' in w.lower()) and ('.' in w) and len(w) < 100]
+                print(f'WPScript.js API候補: {api_urls[:15]}')
+                print(f"WPScript.js AJAX URL: {ajax_urls[:10]}")
+            except Exception as e:
+                print(f"WPScript.js解析エラー: {e}")
+            break
+
+    # もっと長く待つ
+    await page.wait_for_timeout(15000)
+    print(f"追加待機後キャプチャ数: {len(all_responses)}")
 
     print(f"キャプチャ数: {len(all_responses)}")
     for r in all_responses:
