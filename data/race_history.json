@@ -5246,5 +5246,34 @@
       }
     ],
     "savedAt": "2026-05-13T15:54:04.936Z"
+  },
+  {
+    "date": "5/13 園田 3R",
+    "venue": "園田",
+    "raceNum": "3R",
+    "raceClass": "C3一",
+    "winner": 1,
+    "winOdds": 2.2,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "スマートイザナミ",
+        "norm": 0.5007,
+        "tanOdds": 3,
+        "ev": 150.2,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 2.2
+      }
+    ],
+    "savedAt": "2026-05-13T15:54:26.145Z"
   }
 ]
