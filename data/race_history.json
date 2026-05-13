@@ -2766,5 +2766,94 @@
       }
     ],
     "savedAt": "2026-05-13T15:41:33.052Z"
+  },
+  {
+    "date": "5/10 京都 9R",
+    "venue": "京都",
+    "raceNum": "9R",
+    "raceClass": "烏丸S",
+    "winner": 6,
+    "winOdds": 2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 13,
+        "name": "ベトルス",
+        "norm": 0.4061,
+        "tanOdds": 3.4,
+        "ev": 138.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "レクスノヴァス",
+        "norm": 0.2722,
+        "tanOdds": 2.1,
+        "ev": 57.2,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2
+      },
+      {
+        "num": 5,
+        "name": "シュバルツマサムネ",
+        "norm": 0.0452,
+        "tanOdds": 23.8,
+        "ev": 107.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "サークルオブジョイ",
+        "norm": 0.0411,
+        "tanOdds": 24.8,
+        "ev": 101.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ナムラフッカー",
+        "norm": 0.0221,
+        "tanOdds": 48.2,
+        "ev": 106.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ウィズユアドリーム",
+        "norm": 0.02,
+        "tanOdds": 72.1,
+        "ev": 144.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "サトノクローク",
+        "norm": 0.0159,
+        "tanOdds": 89.9,
+        "ev": 142.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:41:55.635Z"
   }
 ]
