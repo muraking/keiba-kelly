@@ -1373,5 +1373,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:35:07.337Z"
+  },
+  {
+    "date": "5/10 東京 4R",
+    "venue": "東京",
+    "raceNum": "4R",
+    "raceClass": "3歳未勝利",
+    "winner": 4,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ゴンファロニエーレ",
+        "norm": 0.4441,
+        "tanOdds": 3.9,
+        "ev": 173.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ランブルスコ",
+        "norm": 0.2426,
+        "tanOdds": 1.6,
+        "ev": 38.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.9
+      },
+      {
+        "num": 6,
+        "name": "ベルウッドバイオ",
+        "norm": 0.0462,
+        "tanOdds": 25.5,
+        "ev": 117.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ポイズンオーク",
+        "norm": 0.0352,
+        "tanOdds": 44.3,
+        "ev": 155.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "パルミエ",
+        "norm": 0.0203,
+        "tanOdds": 77.3,
+        "ev": 156.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:35:29.281Z"
   }
 ]
