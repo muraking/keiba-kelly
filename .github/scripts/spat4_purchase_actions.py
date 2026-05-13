@@ -170,8 +170,21 @@ async def purchase(page, base, bets):
             print("  投票フレームが見つかりません")
             continue
 
+        # フレームが有効かチェック（detached対策）
+        try:
+            await vote_frame.evaluate("() => true")
+        except Exception:
+            print("  P121Sフレームがdetached → page.framesから再取得")
+            vote_frame = None
+            for frame in page.frames:
+                if "P121S" in frame.url:
+                    vote_frame = frame
+                    break
+            if not vote_frame:
+                print("  再取得失敗")
+                continue
+
         # 金額入力欄を探して入力
-        # 最後の行の金額欄（新しく追加された行）
         inputs = await vote_frame.query_selector_all("input[type='text'], input[type='number']")
         if inputs:
             last_input = inputs[-1]
