@@ -170,28 +170,30 @@ async def purchase(page, base, bets):
             print("  投票フレームが見つかりません")
             continue
 
-        # フレームが有効かチェック（detached対策）
-        try:
-            await vote_frame.evaluate("() => true")
-        except Exception:
-            print("  P121Sフレームがdetached → page.framesから再取得")
-            vote_frame = None
-            for frame in page.frames:
-                if "P121S" in frame.url:
-                    vote_frame = frame
-                    break
-            if not vote_frame:
-                print("  再取得失敗")
-                continue
+        # 金額入力欄をP122S・P121S両方から探す
+        await page.wait_for_timeout(2000)
+        input_found = False
 
-        # 金額入力欄を探して入力
-        inputs = await vote_frame.query_selector_all("input[type='text'], input[type='number']")
-        if inputs:
-            last_input = inputs[-1]
-            await last_input.fill(str(amount // 100))  # 100円単位なので割る
-            print(f"  金額入力: {amount}円（{amount//100}）")
-        else:
-            print(f"  金額入力欄が見つかりません")
+        # まず全フレームを確認
+        all_frames_info = [(f.url[-40:], ) for f in page.frames]
+        print(f"  現在フレーム: {[f.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in f.url else f.url[-20:] for f in page.frames]}")
+
+        for try_frame in page.frames:
+            if 'P121S' in try_frame.url or 'P122S' in try_frame.url:
+                try:
+                    inputs = await try_frame.query_selector_all("input[type='text'], input[type='number']")
+                    if inputs:
+                        last_input = inputs[-1]
+                        await last_input.fill(str(amount // 100))
+                        print(f"  金額入力: {amount}円（{try_frame.url.split('HANDLERR=')[1].split('&')[0]}フレーム）")
+                        input_found = True
+                        break
+                except Exception as e:
+                    print(f"  フレームエラー: {e}")
+                    continue
+
+        if not input_found:
+            print(f"  ⚠️ 金額入力欄が見つかりません")
 
     # "投票内容確認へ"ボタンをクリック
     print("\n投票内容確認へ...")
