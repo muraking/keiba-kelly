@@ -5580,5 +5580,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:56:17.577Z"
+  },
+  {
+    "date": "5/13 園田 9R",
+    "venue": "園田",
+    "raceNum": "9R",
+    "raceClass": "B2",
+    "winner": 3,
+    "winOdds": 2.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "エイシンアニーモ",
+        "norm": 0.3757,
+        "tanOdds": 2,
+        "ev": 75.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.2
+      },
+      {
+        "num": 7,
+        "name": "ショートストップ",
+        "norm": 0.137,
+        "tanOdds": 7.7,
+        "ev": 105.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ボンヌーヴェル",
+        "norm": 0.0961,
+        "tanOdds": 20,
+        "ev": 192.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ゼンダンスバシリ",
+        "norm": 0.0398,
+        "tanOdds": 34.5,
+        "ev": 137.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:56:42.583Z"
   }
 ]
