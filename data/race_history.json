@@ -2707,5 +2707,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:41:12.629Z"
+  },
+  {
+    "date": "5/10 京都 8R",
+    "venue": "京都",
+    "raceNum": "8R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 12,
+    "winOdds": 3.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "ジーティーエスピ",
+        "norm": 0.4453,
+        "tanOdds": 3.6,
+        "ev": 160.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "タマモブラウンタイ",
+        "norm": 0.2581,
+        "tanOdds": 3.4,
+        "ev": 87.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.5
+      },
+      {
+        "num": 6,
+        "name": "ラブカムーン",
+        "norm": 0.0161,
+        "tanOdds": 92.3,
+        "ev": 148.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ハッピーサプライズ",
+        "norm": 0.0158,
+        "tanOdds": 64.4,
+        "ev": 102,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:41:33.052Z"
   }
 ]
