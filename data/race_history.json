@@ -5354,5 +5354,74 @@
       }
     ],
     "savedAt": "2026-05-13T15:54:48.603Z"
+  },
+  {
+    "date": "5/13 園田 5R",
+    "venue": "園田",
+    "raceNum": "5R",
+    "raceClass": "上筱見7ハロンC2一",
+    "winner": 8,
+    "winOdds": 3.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "ビカムキング",
+        "norm": 0.279,
+        "tanOdds": 5.2,
+        "ev": 145.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "エイユーマックス",
+        "norm": 0.2727,
+        "tanOdds": 3.1,
+        "ev": 84.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.4
+      },
+      {
+        "num": 1,
+        "name": "アドーネ",
+        "norm": 0.0451,
+        "tanOdds": 83,
+        "ev": 374.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ビッグリヴァーサル",
+        "norm": 0.0207,
+        "tanOdds": 48.6,
+        "ev": 100.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "エコロアテナ",
+        "norm": 0.0207,
+        "tanOdds": 90.3,
+        "ev": 187.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:55:06.142Z"
   }
 ]
