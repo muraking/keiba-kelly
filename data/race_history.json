@@ -4010,5 +4010,114 @@
       }
     ],
     "savedAt": "2026-05-13T15:48:29.979Z"
+  },
+  {
+    "date": "5/13 川崎 1R",
+    "venue": "川崎",
+    "raceNum": "1R",
+    "raceClass": "C3三四",
+    "winner": 4,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "アップタウンガール",
+        "norm": 0.4856,
+        "tanOdds": 1.8,
+        "ev": 87.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 6,
+        "name": "シャコンヌ",
+        "norm": 0.0785,
+        "tanOdds": 13.5,
+        "ev": 105.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ヒナボンボン",
+        "norm": 0.0545,
+        "tanOdds": 25.2,
+        "ev": 137.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "プロンプトノア",
+        "norm": 0.0337,
+        "tanOdds": 53.9,
+        "ev": 181.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "グレル",
+        "norm": 0.0277,
+        "tanOdds": 110,
+        "ev": 304.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "スプリングネージュ",
+        "norm": 0.0261,
+        "tanOdds": 94.4,
+        "ev": 246.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "アマゴ",
+        "norm": 0.0255,
+        "tanOdds": 82.8,
+        "ev": 211.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ミカエンブレイス",
+        "norm": 0.0243,
+        "tanOdds": 91.5,
+        "ev": 222.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ナリタアンビション",
+        "norm": 0.0232,
+        "tanOdds": 151,
+        "ev": 350.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-13T15:48:58.985Z"
   }
 ]
