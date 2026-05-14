@@ -107,17 +107,17 @@ async def get_odds(page, place_id, race_num, race_date):
 
     print(f"オッズフレームsrc: {odds_src}")
 
-    # page.framesから対応するフレームを探す
+    # page.framesから対応するフレームを探す（P122S含むURLのフレームのみ）
     target_frame = None
     for attempt in range(8):
         for frame in page.frames:
-            # URLが一致するフレームを探す（パラメータ部分で比較）
-            if 'P122S' in frame.url or (odds_src and frame.url.split('?')[0] == odds_src.split('?')[0]):
+            if 'P122S' in frame.url:
                 target_frame = frame
                 break
         if target_frame:
             print(f"フレーム発見: attempt={attempt+1} url={target_frame.url[-60:]}")
             break
+        print(f"フレーム待機({attempt+1}/8) 全フレーム: {[f.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in f.url else '?' for f in page.frames]}")
         await page.wait_for_timeout(2000)
 
     if target_frame:
