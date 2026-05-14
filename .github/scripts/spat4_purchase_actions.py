@@ -276,36 +276,20 @@ async def purchase(page, base, bets):
                 if "投票内容確認" in value or "投票内容確認" in text:
                     fname = frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in frame.url else 'unknown'
                     print(f"確認ボタン発見: {value or text}（{fname}フレーム）")
-                    try:
-                        async with page.expect_navigation(timeout=15000):
-                            await btn.click()
-                    except:
-                        await btn.click()
-                        await page.wait_for_timeout(5000)
-                    print("確認ページへ移動中...")
-                    # P121Sのフレームが暗証番号入力画面に変わるまで待つ
-                    for wait_i in range(10):
-                        await page.wait_for_timeout(2000)
-                        # 全フレームのv_urlを確認
-                        for chk_frame in page.frames:
+                    # P121SフォームをJS送信
+                    for p121f in page.frames:
+                        if 'P121S' in p121f.url:
                             try:
-                                chk_v = await chk_frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
-                                if chk_v and '/pc/err' not in chk_v and '/pc/od' not in chk_v:
-                                    print(f"  新フレーム検知: {chk_v} ({chk_frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in chk_frame.url else '?'})")
-                            except: pass
-                        # P121Sの内容確認
-                        for chk_frame in page.frames:
-                            if 'P121S' in chk_frame.url:
-                                try:
-                                    p121_txt = await chk_frame.evaluate("() => document.body ? document.body.innerText.substring(0,50) : ''")
-                                    print(f"  P121S内容({wait_i+1}): {p121_txt}")
-                                    if '暗証' in p121_txt or 'PIN' in p121_txt or '確認' in p121_txt:
-                                        print("  暗証番号画面に遷移確認")
-                                        break
-                                except: pass
-                        else:
-                            continue
-                        break
+                                await p121f.evaluate("() => { const s=document.querySelector('input[type=SUBMIT],input[type=submit]'); if(s){s.click();}else{const f=document.querySelector('form');if(f)f.submit();} }")
+                                print("P121SフォームJS送信")
+                            except Exception as je:
+                                print(f"JS送信エラー: {je}")
+                                await btn.click()
+                            break
+                    else:
+                        await btn.click()
+                    await page.wait_for_timeout(5000)
+                    print("確認ページへ移動中...")
                     confirmed = True
                     break
         except Exception as e:
