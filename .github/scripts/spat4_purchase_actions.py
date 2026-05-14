@@ -142,53 +142,25 @@ async def purchase(page, base, bets):
         if not clicked:
             print(f"  フレーム内容: {frame_text[:100]}")
 
-        # 方法1: テーブル行から馬番を探す
-        rows = await odds_frame.query_selector_all("tr")
-        # デバッグ: 最初の数行のテキストを確認
-        if not clicked and len(rows) > 0:
-            sample = []
-            for row in rows[:5]:
-                cells = await row.query_selector_all("td")
-                texts = [(await c.inner_text()).strip() for c in cells]
-                if any(t for t in texts):
-                    sample.append(str(texts[:4]))
-            print(f"  tr sample: {sample}")
-        for row in rows:
-            cells = await row.query_selector_all("td")
-            texts = [(await c.inner_text()).strip() for c in cells]
-            nums = [t for t in texts if t == str(horse_num) or t == f"{horse_num:02d}"]
-            if nums:
-                links = await row.query_selector_all("a")
-                if links:
-                    await links[0].click()
-                    print(f"  {horse_num}番 単勝クリック完了（tr/td方式）")
-                    clicked = True
+        # UMANUM方式: URLに馬番を指定してP122Sに遷移（オッズにaタグがないため）
+        from urllib.parse import urlparse as _urlparse
+        _parsed = _urlparse(page.url)
+        _base = f"{_parsed.scheme}://{_parsed.netloc}"
+        umanum_url = f"{_base}/keiba/pc?HANDLERR=P122S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1&UMANUM={horse_num}"
+        print(f"  UMANUM URL: {umanum_url}")
+        try:
+            await odds_frame.goto(umanum_url, wait_until="domcontentloaded", timeout=15000)
+            await page.wait_for_timeout(2000)
+            # P121Sに馬番が追加されたか確認
+            for chk in page.frames:
+                if 'P121S' in chk.url:
+                    txt = await chk.evaluate("() => document.body ? document.body.innerText.substring(0,100) : ''")
+                    print(f"  P121S後: {txt[:60]}")
                     break
-
-        # 方法2: aタグのテキストから馬番を探す
-        if not clicked:
-            links = await odds_frame.query_selector_all("a")
-            for link in links:
-                t = (await link.inner_text()).strip()
-                if t == str(horse_num) or t == f"{horse_num:02d}" or t.startswith(f"{horse_num:02d}"):
-                    await link.click()
-                    print(f"  {horse_num}番 単勝クリック完了（aタグ方式）")
-                    clicked = True
-                    break
-
-        # 方法3: input[value]から探す
-        if not clicked:
-            inputs = await odds_frame.query_selector_all("input")
-            for inp in inputs:
-                val = await inp.get_attribute("value") or ""
-                if val == str(horse_num) or val == f"{horse_num:02d}":
-                    await inp.click()
-                    print(f"  {horse_num}番 単勝クリック完了（input方式）")
-                    clicked = True
-                    break
-                    clicked = True
-                    await page.wait_for_timeout(1000)
-                    break
+            clicked = True
+            print(f"  {horse_num}番 UMANUM選択完了")
+        except Exception as e:
+            print(f"  UMANUM遷移エラー: {e}")
 
         if not clicked:
             print(f"  {horse_num}番が見つかりません")
