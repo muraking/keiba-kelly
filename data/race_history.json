@@ -7039,5 +7039,64 @@
       }
     ],
     "savedAt": "2026-05-14T09:23:11.155Z"
+  },
+  {
+    "date": "5/14 川崎 8R",
+    "venue": "川崎",
+    "raceNum": "8R",
+    "raceClass": "カサブランカオープン【牝馬限定】(3歳)",
+    "winner": 1,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "アップタウン",
+        "norm": 0.3965,
+        "tanOdds": 1.6,
+        "ev": 63.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 3,
+        "name": "イルフロッタント",
+        "norm": 0.261,
+        "tanOdds": 3.9,
+        "ev": 101.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ベアアスムイ",
+        "norm": 0.2137,
+        "tanOdds": 6.7,
+        "ev": 143.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "アマビリティ",
+        "norm": 0.0494,
+        "tanOdds": 43.7,
+        "ev": 216.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T09:35:46.737Z"
   }
 ]
