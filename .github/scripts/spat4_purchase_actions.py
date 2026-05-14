@@ -91,22 +91,24 @@ async def purchase(page, base, bets):
     # P120Sページのフレームとしてアクセス（直接gotoしない）
     # odds_frameはすでにP120Sのフレームから取得済み
     if odds_frame:
-        # オッズテーブルが動的ロードされるまで待機（最大10秒）
+        # オッズテーブルが動的ロードされるまで待機
         print("オッズテーブル待機中...")
-        for wait_i in range(10):
-            content = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
-            # 馬番っぽい数字が含まれるか確認（オッズ行が出現したか）
-            lines = [l.strip() for l in content.split('\n') if l.strip()]
-            has_odds = any(
-                l.isdigit() and 1 <= int(l) <= 18
-                for l in lines
-            )
-            if has_odds:
-                print(f"オッズテーブル検出（{wait_i+1}回目）")
-                break
-            await odds_frame.evaluate("() => new Promise(r => setTimeout(r, 1000))")
-        else:
-            print("オッズテーブル未検出 - タイムアウト")
+        try:
+            # 単勝オッズの数字セル（class=r または数値リンク）が出現するまで待つ
+            await odds_frame.wait_for_selector("table.tbl_01 td a", timeout=15000)
+            print("オッズテーブル検出（selector）")
+        except:
+            print("selector待機失敗 - innerText方式で再試行")
+            for wait_i in range(15):
+                await page.wait_for_timeout(1000)
+                content_tmp = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
+                lines_tmp = [l.strip() for l in content_tmp.split('\n') if l.strip()]
+                has_odds_tmp = any(l.isdigit() and 1 <= int(l) <= 18 for l in lines_tmp)
+                if has_odds_tmp:
+                    print(f"オッズテーブル検出（{wait_i+1}回目）")
+                    break
+            else:
+                print("オッズテーブル未検出 - タイムアウト")
 
         full_html = await odds_frame.evaluate("() => document.body ? document.body.innerHTML : ''")
         print(f"P122S内容: {content[:80]}")
