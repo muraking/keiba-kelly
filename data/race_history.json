@@ -5836,5 +5836,64 @@
       }
     ],
     "savedAt": "2026-05-13T15:57:45.126Z"
+  },
+  {
+    "date": "5/14 園田 1R",
+    "venue": "園田",
+    "raceNum": "1R",
+    "raceClass": "C3三",
+    "winner": 4,
+    "winOdds": 4.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "クレスコウェイ",
+        "norm": 0.4282,
+        "tanOdds": 2.9,
+        "ev": 124.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ヒャクモノガタリ",
+        "norm": 0.2318,
+        "tanOdds": 4.4,
+        "ev": 102,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 4.4
+      },
+      {
+        "num": 1,
+        "name": "ヒマリン",
+        "norm": 0.121,
+        "tanOdds": 8.5,
+        "ev": 102.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ビップピュアエース",
+        "norm": 0.0112,
+        "tanOdds": 94.6,
+        "ev": 105.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T01:46:07.521Z"
   }
 ]
