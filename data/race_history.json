@@ -6466,5 +6466,64 @@
       }
     ],
     "savedAt": "2026-05-14T06:13:22.735Z"
+  },
+  {
+    "date": "5/14 川崎 1R",
+    "venue": "川崎",
+    "raceNum": "1R",
+    "raceClass": "3歳8",
+    "winner": 3,
+    "winOdds": 17.8,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "シェナマーブル",
+        "norm": 0.1362,
+        "tanOdds": 23.2,
+        "ev": 315.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ダイリュウラッキー",
+        "norm": 0.1046,
+        "tanOdds": 16.2,
+        "ev": 169.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ハーバーショー",
+        "norm": 0.0503,
+        "tanOdds": 9,
+        "ev": 45.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 17.8
+      },
+      {
+        "num": 4,
+        "name": "タイトノット",
+        "norm": 0.0312,
+        "tanOdds": 46.5,
+        "ev": 145.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T06:37:44.367Z"
   }
 ]
