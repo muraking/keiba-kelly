@@ -91,7 +91,23 @@ async def purchase(page, base, bets):
     # P120Sページのフレームとしてアクセス（直接gotoしない）
     # odds_frameはすでにP120Sのフレームから取得済み
     if odds_frame:
-        content = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
+        # オッズテーブルが動的ロードされるまで待機（最大10秒）
+        print("オッズテーブル待機中...")
+        for wait_i in range(10):
+            content = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
+            # 馬番っぽい数字が含まれるか確認（オッズ行が出現したか）
+            lines = [l.strip() for l in content.split('\n') if l.strip()]
+            has_odds = any(
+                l.isdigit() and 1 <= int(l) <= 18
+                for l in lines
+            )
+            if has_odds:
+                print(f"オッズテーブル検出（{wait_i+1}回目）")
+                break
+            await odds_frame.evaluate("() => new Promise(r => setTimeout(r, 1000))")
+        else:
+            print("オッズテーブル未検出 - タイムアウト")
+
         full_html = await odds_frame.evaluate("() => document.body ? document.body.innerHTML : ''")
         print(f"P122S内容: {content[:80]}")
         print(f"P122S HTML(3000): {full_html[:3000]}")
