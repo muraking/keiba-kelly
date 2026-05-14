@@ -178,35 +178,31 @@ async def purchase(page, base, bets):
             continue
 
 
-        # 金額入力欄をP121Sから探す（詳細デバッグ）
-        await page.wait_for_timeout(2000)
+
+        # 金額入力欄をP121Sから探す（TEXTMONEY_N形式）
+        await page.wait_for_timeout(1000)
         input_found = False
 
         for try_frame in page.frames:
             if "P121S" in try_frame.url:
                 try:
-                    all_inp = await try_frame.query_selector_all("input")
-                    print(f"  P121S全input:")
-                    for inp in all_inp:
-                        itype = await inp.get_attribute("type") or "text"
-                        iname = await inp.get_attribute("name") or ""
-                        imax = await inp.get_attribute("maxlength") or ""
-                        print(f"    type={itype} name={iname} maxlen={imax}")
-                    inputs = await try_frame.query_selector_all("input[type='text'], input[type='number']")
-                    if inputs:
-                        last_input = inputs[-1]
-                        await last_input.triple_click()
-                        await last_input.fill(str(amount // 100))
-                        val = await last_input.evaluate("el => el.value")
-                        print(f"  金額入力: {amount}円 確認値={val}")
+                    # TEXTMONEY_N の入力欄を探す（馬番ごとに1つずつ追加される）
+                    money_inputs = await try_frame.query_selector_all("input[name^='TEXTMONEY']")
+                    if money_inputs:
+                        # 最後のTEXTMONEY入力欄に金額入力
+                        last = money_inputs[-1]
+                        await last.click()
+                        await last.fill(str(amount // 100))
+                        val = await last.get_attribute("value") or ""
+                        print(f"  金額入力: {amount}円 → name={await last.get_attribute('name')} val={val}")
                         input_found = True
-                        break
                 except Exception as e:
                     print(f"  エラー: {e}")
                 break
 
         if not input_found:
             print(f"  ⚠️ 金額入力欄が見つかりません")
+
 
     # "投票内容確認へ"ボタンをクリック
     print("\n投票内容確認へ...")
@@ -402,14 +398,25 @@ async def purchase(page, base, bets):
 
     if vote_btn:
         print("「投票する」をクリック...")
-        await vote_btn.click()
-        await page.wait_for_timeout(5000)
-        await page.screenshot(path="purchase_result.png")
-        print("投票完了！purchase_result.png を確認してください")
+        try:
+            async with page.expect_navigation(timeout=15000):
+                await vote_btn.click()
+        except:
+            await vote_btn.click()
+            await page.wait_for_timeout(5000)
+        print(f"投票後URL: {page.url}")
+        # 受付番号を確認
+        for frame in page.frames:
+            try:
+                txt = await frame.evaluate("() => document.body ? document.body.innerText : ''")
+                if '受付' in txt or '完了' in txt or '番号' in txt:
+                    print(f"✅ 投票完了: {txt[:100]}")
+                    return True
+            except: pass
+        print("投票完了（受付確認できず）")
         return True
     else:
         print("投票するボタンが見つかりません")
-        await page.screenshot(path="error_no_vote_btn.png")
         return False
 
 async def main():
