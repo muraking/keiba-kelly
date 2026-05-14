@@ -7147,5 +7147,74 @@
       }
     ],
     "savedAt": "2026-05-14T09:53:20.621Z"
+  },
+  {
+    "date": "5/14 川崎 9R",
+    "venue": "川崎",
+    "raceNum": "9R",
+    "raceClass": "レイノ賞(C1)",
+    "winner": 1,
+    "winOdds": 7.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "スティールウィル",
+        "norm": 0.0546,
+        "tanOdds": 8.5,
+        "ev": 46.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 7.4
+      },
+      {
+        "num": 3,
+        "name": "シエルラビクトア",
+        "norm": 0.0525,
+        "tanOdds": 35.8,
+        "ev": 187.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "シトロンヴェール",
+        "norm": 0.025,
+        "tanOdds": 59.1,
+        "ev": 147.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "タイムトゥキル",
+        "norm": 0.0204,
+        "tanOdds": 88.2,
+        "ev": 179.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "イデアノキセキ",
+        "norm": 0.0202,
+        "tanOdds": 85.3,
+        "ev": 172.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T10:09:41.507Z"
   }
 ]
