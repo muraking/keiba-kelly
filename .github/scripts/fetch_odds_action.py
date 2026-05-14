@@ -49,17 +49,16 @@ async def login(page):
 
 
 async def get_odds(page, place_id, race_num, race_date):
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse, urljoin
     parsed = urlparse(page.url)
     base_domain = f"{parsed.scheme}://{parsed.netloc}"
-    # www.spat4.jpのままの場合はwww2にフォールバック
     if parsed.netloc == 'www.spat4.jp':
-        print(f"サブドメインなし → www2にフォールバック")
         base_domain = "https://www2.spat4.jp"
-    p120s_url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
-    print(f"オッズURL: {p120s_url}")
 
-    # 全レスポンスを保存してWPScript.jsを詳細解析
+    p120s_url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
+    print(f"P120S: {p120s_url}")
+
+    # レスポンス監視
     captured_odds = {}
     wpscript_body = None
 
@@ -67,164 +66,112 @@ async def get_odds(page, place_id, race_num, race_date):
         nonlocal wpscript_body
         url = response.url
         if 'WPScript.js' in url and wpscript_body is None:
-            try:
-                wpscript_body = await response.body()
+            try: wpscript_body = await response.body()
             except: pass
-        if 'C900J' in url or 'C901J' in url:
-            try:
-                body = await response.body()
-                ct = response.headers.get('content-type', '')
-                print(f"内部API捕捉: {url[:100]} ({ct}) size={len(body)}")
-                # デコード試行
-                for enc in ['utf-8', 'shift_jis', 'cp932']:
-                    try:
-                        text = body.decode(enc)
-                        print(f"  内容({enc}): {text[:300]}")
-                        # オッズデータを解析
-                        odds = parse_api_response(text)
-                        if odds:
-                            captured_odds.update(odds)
-                        break
-                    except:
-                        continue
-            except Exception as e:
-                print(f"  キャプチャエラー: {e}")
 
     page.on("response", on_response)
 
-    # P120Sページを開く（C900J/C901JのAjaxが発火する）
+    # P120Sを読み込む（networkidleまで待つ）
     try:
         await page.goto(p120s_url, wait_until="networkidle", timeout=TIMEOUT)
     except:
         await page.goto(p120s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-    await page.wait_for_timeout(8000)
-
+    await page.wait_for_timeout(5000)
     print(f"現在URL: {page.url}")
-    print(f"捕捉オッズ: {len(captured_odds)}頭")
 
-    # WPScript.jsの詳細解析
-    if wpscript_body:
+    # ★ P120SのHTMLからiframe srcを動的取得
+    iframe_srcs = await page.evaluate("""
+        () => Array.from(document.querySelectorAll('iframe,frame')).map(f => ({
+            src: f.src,
+            name: f.name || '',
+            id: f.id || ''
+        }))
+    """)
+    print(f"iframes: {[(f['name'], f['src'][-60:]) for f in iframe_srcs]}")
+
+    # P122S相当のフレームsrcを特定（LEFT nameまたはP122S含む）
+    odds_src = None
+    for f in iframe_srcs:
+        if 'P122S' in f['src'] or f['name'] == 'LEFT':
+            odds_src = f['src']
+            break
+
+    if not odds_src:
+        print("オッズiframeが見つかりません")
+        page.remove_listener("response", on_response)
+        return {}
+
+    # srcが相対URLの場合は絶対URLに変換
+    if odds_src.startswith('/'):
+        odds_src = base_domain + odds_src
+
+    print(f"オッズフレームsrc: {odds_src}")
+
+    # page.framesから対応するフレームを探す
+    target_frame = None
+    for attempt in range(8):
+        for frame in page.frames:
+            # URLが一致するフレームを探す（パラメータ部分で比較）
+            if 'P122S' in frame.url or (odds_src and frame.url.split('?')[0] == odds_src.split('?')[0]):
+                target_frame = frame
+                break
+        if target_frame:
+            print(f"フレーム発見: attempt={attempt+1} url={target_frame.url[-60:]}")
+            break
+        await page.wait_for_timeout(2000)
+
+    if target_frame:
         try:
-            js = wpscript_body.decode('utf-8', errors='replace')
-            print(f"WPScript.js size: {len(js)}")
-            # P122S関連のコードを探す
-            import re as _re
-            # P122S周辺のコードを抽出
-            p122s_matches = [m.start() for m in _re.finditer(r'P122S|C900|C901|tanOdds|getOdds|ODDS|tansho|fukusho', js, _re.IGNORECASE)]
-            print(f"オッズ関連キーワード位置: {p122s_matches[:10]}")
-            for pos in p122s_matches[:5]:
-                print(f"  [{pos}]: {repr(js[max(0,pos-50):pos+100])}")
-            # HANDLERR= パターンを全て抽出
-            handlers = _re.findall(r'HANDLERR=([A-Z0-9]+)', js)
-            print(f"HANDLERR一覧: {list(set(handlers))}")
-        except Exception as e:
-            print(f"WPScript解析エラー: {e}")
-    else:
-        print("WPScript.js未取得")
+            await target_frame.wait_for_load_state("domcontentloaded", timeout=10000)
+        except: pass
+        await page.wait_for_timeout(2000)
 
-    if captured_odds:
-        return captured_odds
+        text = await target_frame.evaluate("() => document.body ? document.body.innerText : ''")
+        v_url = await target_frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
+        print(f"フレーム_v_url: {v_url}")
+        print(f"フレーム内容: {text[:100]}")
 
-    # C900JをrequestsでCookieを引き継いで直接呼び出す
-    print("C900J直接呼び出し...")
-    from urllib.parse import urlparse
-    parsed2 = urlparse(page.url)
-    base2 = f"{parsed2.scheme}://{parsed2.netloc}"
+        if v_url != '/pc/err' and 'ログイン' not in text[:50]:
+            odds = parse_odds_text(text)
+            if odds:
+                print(f"フレームから{len(odds)}頭取得成功")
+                page.remove_listener("response", on_response)
+                return odds
 
+    # フォールバック: requestsでCookieを引き継いでodds_srcに直接アクセス
+    print("requestsでodds_src直接アクセス...")
     cookies = await page.context.cookies()
-    session = req_lib.Session()
+    import requests as req_lib2
+    session = req_lib2.Session()
     for c in cookies:
-        session.cookies.set(c['name'], c['value'], domain=c.get('domain',''))
-
+        session.cookies.set(c['name'], c['value'], domain=c.get('domain', ''))
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
-        "Referer": f"{base2}/keiba/pc?HANDLERR=P122S&BEFOREHANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1",
-        "X-Requested-With": "XMLHttpRequest",
-        "Accept": "*/*",
+        "Referer": p120s_url,
+        "Accept": "text/html,application/xhtml+xml,*/*",
     }
-
-    # C900J: 単勝複勝オッズ取得API
-    c900j_url = f"{base2}/keiba/pc?HANDLERR=C900J&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1"
-    print(f"C900J: {c900j_url}")
     try:
-        r = session.get(c900j_url, headers=headers, timeout=15)
-        print(f"C900J status: {r.status_code}")
-        for enc in ['utf-8', 'shift_jis', 'cp932']:
+        r = session.get(odds_src, headers=headers, timeout=15)
+        for enc in ['shift_jis', 'cp932', 'utf-8']:
             try:
-                text = r.content.decode(enc)
-                print(f"C900J内容({enc}): {text[:300]}")
-                odds = parse_api_response(text)
-                if odds:
-                    print(f"C900Jから{len(odds)}頭取得")
-                    return odds
+                text2 = r.content.decode(enc)
+                print(f"requests内容({enc}): {text2[:100]}")
+                if 'ログイン' not in text2[:50] and 'エラー' not in text2[:50]:
+                    odds2 = parse_odds_text(text2)
+                    if odds2:
+                        print(f"requestsから{len(odds2)}頭取得成功")
+                        page.remove_listener("response", on_response)
+                        return odds2
                 break
             except: continue
     except Exception as e:
-        print(f"C900Jエラー: {e}")
+        print(f"requestsエラー: {e}")
 
-    # C901J: 更新データ取得API
-    c901j_url = f"{base2}/keiba/pc?HANDLERR=C901J&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1"
-    print(f"C901J: {c901j_url}")
-    try:
-        r = session.get(c901j_url, headers=headers, timeout=15)
-        print(f"C901J status: {r.status_code}")
-        for enc in ['utf-8', 'shift_jis', 'cp932']:
-            try:
-                text = r.content.decode(enc)
-                print(f"C901J内容({enc}): {text[:300]}")
-                odds = parse_api_response(text)
-                if odds:
-                    print(f"C901Jから{len(odds)}頭取得")
-                    return odds
-                break
-            except: continue
-    except Exception as e:
-        print(f"C901Jエラー: {e}")
-
-    # フォールバック: P122Sフレームから取得
-    print("フォールバック: P122Sフレームから取得...")
-    for frame in page.frames:
-        if 'P122S' in frame.url:
-            try:
-                text = await frame.evaluate("() => document.body ? document.body.innerText : ''")
-                if 'ログイン' not in text[:50] and text.strip():
-                    odds = parse_odds_text(text)
-                    if odds:
-                        print(f"P122Sフレームから{len(odds)}頭取得")
-                        return odds
-            except:
-                pass
-
+    page.remove_listener("response", on_response)
     return {}
 
-def parse_api_response(text):
-    """C900J/C901JのAPIレスポンスからオッズを解析"""
-    odds = {}
-    # JSON形式の場合
-    try:
-        data = json.loads(text)
-        print(f"  JSONデータ: {str(data)[:200]}")
-        # オッズデータを探す
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if isinstance(v, list) and len(v) >= 2:
-                    # [オッズ, 時刻, 人気, 馬番] 形式の可能性
-                    try:
-                        if len(v) >= 4:
-                            horse_str = str(v[3])
-                            nums = [int(horse_str[i:i+2]) for i in range(0, len(horse_str), 2)]
-                            if nums and 1 <= nums[0] <= 18:
-                                tan = float(v[0]) if v[0] else None
-                                if tan and tan > 1.0:
-                                    odds[nums[0]] = {"tan": tan}
-                    except:
-                        pass
-        return odds
-    except:
-        pass
 
-    # テキスト形式の場合はparse_odds_textを使用
-    return parse_odds_text(text)
+
 
 def parse_odds_text(text):
     """テキスト形式のオッズを解析"""
