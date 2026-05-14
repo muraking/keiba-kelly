@@ -5913,5 +5913,44 @@
     "kelly_fraction": 0.5,
     "records": [],
     "savedAt": "2026-05-14T02:02:55.025Z"
+  },
+  {
+    "date": "5/14 園田 2R",
+    "venue": "園田",
+    "raceNum": "2R",
+    "raceClass": "C3二",
+    "winner": 8,
+    "winOdds": 1.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ハッピーモンスター",
+        "norm": 0.4158,
+        "tanOdds": 1.7,
+        "ev": 70.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.4
+      },
+      {
+        "num": 7,
+        "name": "フッカツラヴ",
+        "norm": 0.3832,
+        "tanOdds": 4.3,
+        "ev": 164.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T02:13:37.794Z"
   }
 ]
