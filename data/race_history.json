@@ -6624,5 +6624,74 @@
       }
     ],
     "savedAt": "2026-05-14T07:22:06.817Z"
+  },
+  {
+    "date": "5/14 川崎 4R",
+    "venue": "川崎",
+    "raceNum": "4R",
+    "raceClass": "C2五六",
+    "winner": 5,
+    "winOdds": 11,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "マロンルピナス",
+        "norm": 0.1016,
+        "tanOdds": 14.2,
+        "ev": 144.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ウインプリームス",
+        "norm": 0.0628,
+        "tanOdds": 14.4,
+        "ev": 90.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 11
+      },
+      {
+        "num": 6,
+        "name": "リケアヴィオレ",
+        "norm": 0.0173,
+        "tanOdds": 102,
+        "ev": 176.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "エスパノーラ",
+        "norm": 0.017,
+        "tanOdds": 65.4,
+        "ev": 111.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "フォガラ",
+        "norm": 0.0166,
+        "tanOdds": 74.2,
+        "ev": 123,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T07:39:32.084Z"
   }
 ]
