@@ -226,7 +226,29 @@ async def purchase(page, base, bets):
                         await btn.click()
                         await page.wait_for_timeout(5000)
                     print("確認ページへ移動中...")
-                    await page.wait_for_timeout(3000)
+                    # P121Sのフレームが暗証番号入力画面に変わるまで待つ
+                    for wait_i in range(10):
+                        await page.wait_for_timeout(2000)
+                        # 全フレームのv_urlを確認
+                        for chk_frame in page.frames:
+                            try:
+                                chk_v = await chk_frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
+                                if chk_v and '/pc/err' not in chk_v and '/pc/od' not in chk_v:
+                                    print(f"  新フレーム検知: {chk_v} ({chk_frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in chk_frame.url else '?'})")
+                            except: pass
+                        # P121Sの内容確認
+                        for chk_frame in page.frames:
+                            if 'P121S' in chk_frame.url:
+                                try:
+                                    p121_txt = await chk_frame.evaluate("() => document.body ? document.body.innerText.substring(0,50) : ''")
+                                    print(f"  P121S内容({wait_i+1}): {p121_txt}")
+                                    if '暗証' in p121_txt or 'PIN' in p121_txt or '確認' in p121_txt:
+                                        print("  暗証番号画面に遷移確認")
+                                        break
+                                except: pass
+                        else:
+                            continue
+                        break
                     confirmed = True
                     break
         except Exception as e:
@@ -262,17 +284,48 @@ async def purchase(page, base, bets):
             print(f"  フレーム{fname}: {ftxt[:50]} inputs={input_types[:5]}")
         except: pass
 
-    pin_input = None
+    # 全フレームのinput状況を再確認
+    print("確認後フレーム状況:")
     for frame in page.frames:
-        inputs = await frame.query_selector_all("input[type='password'], input[type='text']")
+        fname = frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in frame.url else '?'
+        try:
+            v = await frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
+            txt = await frame.evaluate("() => document.body ? document.body.innerText.substring(0,60) : ''")
+            inps = await frame.query_selector_all("input")
+            ilist = []
+            for inp in inps:
+                t = await inp.get_attribute("type") or "text"
+                n = await inp.get_attribute("name") or ""
+                ilist.append(f"{t}:{n}")
+            print(f"  {fname} v_url={v} inputs={ilist[:6]}")
+            if txt.strip():
+                print(f"    内容: {txt[:60]}")
+        except: pass
+
+    pin_input = None
+    pin_frame = None
+    for frame in page.frames:
+        inputs = await frame.query_selector_all("input[type='password'], input[type='text'], input[type='number']")
         for inp in inputs:
-            name = await inp.get_attribute("name") or ""
+            name = (await inp.get_attribute("name") or "").upper()
             placeholder = await inp.get_attribute("placeholder") or ""
-            if "暗証" in name or "PIN" in name.upper() or "暗証" in placeholder or "MEMBERID" in name.upper() or "PASS" in name.upper():
+            id_attr = (await inp.get_attribute("id") or "").upper()
+            if any(k in name for k in ["暗証","PIN","ANSHO","PASS","ANSHOU"]) or                any(k in id_attr for k in ["暗証","PIN","ANSHO","PASS"]) or                "暗証" in placeholder:
                 pin_input = inp
+                pin_frame = frame
                 break
         if pin_input:
             break
+
+    # 見つからない場合: 数字4桁入力欄を探す
+    if not pin_input:
+        for frame in page.frames:
+            inputs = await frame.query_selector_all("input[maxlength='4'], input[size='4']")
+            if inputs:
+                pin_input = inputs[0]
+                pin_frame = frame
+                print(f"  maxlength=4のinputをPINとして使用")
+                break
 
     # 暗証番号欄が見つからない場合は最初のテキスト入力を試す
     if not pin_input:
