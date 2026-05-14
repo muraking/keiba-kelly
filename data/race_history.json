@@ -7098,5 +7098,54 @@
       }
     ],
     "savedAt": "2026-05-14T09:35:46.737Z"
+  },
+  {
+    "date": "5/14 門別 9R",
+    "venue": "門別",
+    "raceNum": "9R",
+    "raceClass": "オオデマリ特別(C3)",
+    "winner": 9,
+    "winOdds": 10.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "クアトロソバージュ",
+        "norm": 0.4494,
+        "tanOdds": 3.6,
+        "ev": 161.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "トーケンマコット",
+        "norm": 0.0361,
+        "tanOdds": 8.5,
+        "ev": 30.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 10.2
+      },
+      {
+        "num": 7,
+        "name": "マリノシュライエン",
+        "norm": 0.0193,
+        "tanOdds": 89.6,
+        "ev": 172.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T09:53:20.621Z"
   }
 ]
