@@ -7413,5 +7413,54 @@
       }
     ],
     "savedAt": "2026-05-14T11:03:38.671Z"
+  },
+  {
+    "date": "5/14 川崎 11",
+    "venue": "川崎",
+    "raceNum": "11R",
+    "raceClass": "神奈川・横浜DC記念 カナウネ ハマルネ(A2B1)",
+    "winner": 2,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "マイケルマキシマス",
+        "norm": 0.4931,
+        "tanOdds": 1.7,
+        "ev": 83.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 3,
+        "name": "ノーブルゲイル",
+        "norm": 0.2206,
+        "tanOdds": 5.6,
+        "ev": 123.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "バナマンテソーロ",
+        "norm": 0.0222,
+        "tanOdds": 63.1,
+        "ev": 140.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T11:19:56.198Z"
   }
 ]
