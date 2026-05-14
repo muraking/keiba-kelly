@@ -7462,5 +7462,124 @@
       }
     ],
     "savedAt": "2026-05-14T11:19:56.198Z"
+  },
+  {
+    "date": "5/14 門別 12",
+    "venue": "門別",
+    "raceNum": "12R",
+    "raceClass": "フロイラインスプリント〔H3〕(ファイン重賞",
+    "winner": 7,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "トリップス",
+        "norm": 0.3587,
+        "tanOdds": 2.2,
+        "ev": 78.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 5,
+        "name": "タケノルル",
+        "norm": 0.2806,
+        "tanOdds": 6.5,
+        "ev": 182.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "アヤサンジョリーン",
+        "norm": 0.0881,
+        "tanOdds": 12.6,
+        "ev": 111,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "フォーチュンベル",
+        "norm": 0.0257,
+        "tanOdds": 42.3,
+        "ev": 108.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ハシレオザキサン",
+        "norm": 0.0226,
+        "tanOdds": 47.1,
+        "ev": 106.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "トモノタツミ",
+        "norm": 0.0207,
+        "tanOdds": 75.5,
+        "ev": 155.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "カイシンパジェント",
+        "norm": 0.0172,
+        "tanOdds": 65,
+        "ev": 111.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "アクアノート",
+        "norm": 0.014,
+        "tanOdds": 87.9,
+        "ev": 122.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "メチカブーラ",
+        "norm": 0.0134,
+        "tanOdds": 140,
+        "ev": 186.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "パリコトパナナ",
+        "norm": 0.013,
+        "tanOdds": 143,
+        "ev": 185.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T11:38:48.085Z"
   }
 ]
