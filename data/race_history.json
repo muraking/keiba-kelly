@@ -6153,5 +6153,64 @@
       }
     ],
     "savedAt": "2026-05-14T03:48:38.662Z"
+  },
+  {
+    "date": "5/14 園田 6R",
+    "venue": "園田",
+    "raceNum": "6R",
+    "raceClass": "C2二",
+    "winner": 4,
+    "winOdds": 2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "テイケイリノ",
+        "norm": 0.295,
+        "tanOdds": 1.6,
+        "ev": 47.2,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2
+      },
+      {
+        "num": 5,
+        "name": "ハイグッドシャイン",
+        "norm": 0.2089,
+        "tanOdds": 22.2,
+        "ev": 463.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ナチュラル",
+        "norm": 0.1244,
+        "tanOdds": 8.6,
+        "ev": 107,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "センドネージュ",
+        "norm": 0.0333,
+        "tanOdds": 68.3,
+        "ev": 227.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T04:22:40.485Z"
   }
 ]
