@@ -125,6 +125,15 @@ async def purchase(page, base, bets):
 
         # 方法1: テーブル行から馬番を探す
         rows = await odds_frame.query_selector_all("tr")
+        # デバッグ: 最初の数行のテキストを確認
+        if not clicked and len(rows) > 0:
+            sample = []
+            for row in rows[:5]:
+                cells = await row.query_selector_all("td")
+                texts = [(await c.inner_text()).strip() for c in cells]
+                if any(t for t in texts):
+                    sample.append(str(texts[:4]))
+            print(f"  tr sample: {sample}")
         for row in rows:
             cells = await row.query_selector_all("td")
             texts = [(await c.inner_text()).strip() for c in cells]
