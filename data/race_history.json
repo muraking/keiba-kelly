@@ -7354,5 +7354,64 @@
       }
     ],
     "savedAt": "2026-05-14T10:49:46.743Z"
+  },
+  {
+    "date": "5/14 門別 11",
+    "venue": "門別",
+    "raceNum": "11R",
+    "raceClass": "ノーザンホースパーク特別(B3)",
+    "winner": 13,
+    "winOdds": 3.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 13,
+        "name": "トレヴェナ",
+        "norm": 0.4081,
+        "tanOdds": 2.4,
+        "ev": 97.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.2
+      },
+      {
+        "num": 3,
+        "name": "ラストボーン",
+        "norm": 0.0966,
+        "tanOdds": 15.2,
+        "ev": 146.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ズンガリプテルス",
+        "norm": 0.0355,
+        "tanOdds": 37.8,
+        "ev": 134.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "パルヴェニュー",
+        "norm": 0.0153,
+        "tanOdds": 73.3,
+        "ev": 111.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T11:03:38.671Z"
   }
 ]
