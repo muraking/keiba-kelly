@@ -6802,5 +6802,104 @@
       }
     ],
     "savedAt": "2026-05-14T07:54:22.612Z"
+  },
+  {
+    "date": "5/14 川崎 6R",
+    "venue": "川崎",
+    "raceNum": "6R",
+    "raceClass": "パティオ賞(C2)",
+    "winner": 4,
+    "winOdds": 73.8,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ガウラサンダー",
+        "norm": 0.2059,
+        "tanOdds": 6,
+        "ev": 123.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ユウキヒャクバイ",
+        "norm": 0.1065,
+        "tanOdds": 10.4,
+        "ev": 110.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "テマリ",
+        "norm": 0.0466,
+        "tanOdds": 24.7,
+        "ev": 115,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "サンタモニカビーチ",
+        "norm": 0.0459,
+        "tanOdds": 130,
+        "ev": 597.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "リッキーマキアート",
+        "norm": 0.0412,
+        "tanOdds": 60.3,
+        "ev": 248.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "エクセルブラック",
+        "norm": 0.0356,
+        "tanOdds": 67.7,
+        "ev": 241.2,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 73.8
+      },
+      {
+        "num": 10,
+        "name": "シュヴァイゲン",
+        "norm": 0.0353,
+        "tanOdds": 91.3,
+        "ev": 322.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ウイングラドナス",
+        "norm": 0.0336,
+        "tanOdds": 62.8,
+        "ev": 210.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T08:34:47.712Z"
   }
 ]
