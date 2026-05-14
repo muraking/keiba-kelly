@@ -114,9 +114,12 @@ async def purchase(page, base, bets):
         # まずフレームのHTMLを確認してセレクターを特定
         frame_text = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
         frame_html = await odds_frame.evaluate("() => document.body ? document.body.innerHTML.substring(0,500) : ''")
+        # 常にHTML構造を出力して確認
+        print(f"  フレームHTML先頭: {frame_html[:300]}")
+        v_url_val = await odds_frame.evaluate("() => document.getElementById('_v_url')?.value || 'none'")
+        print(f"  フレーム_v_url: {v_url_val}")
         if not clicked:
             print(f"  フレーム内容: {frame_text[:100]}")
-            print(f"  フレームHTML: {frame_html[:200]}")
 
         # 方法1: テーブル行から馬番を探す
         rows = await odds_frame.query_selector_all("tr")
