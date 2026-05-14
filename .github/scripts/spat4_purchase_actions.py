@@ -175,27 +175,33 @@ async def purchase(page, base, bets):
             print("  投票フレームが見つかりません")
             continue
 
-        # 金額入力欄をP122S・P121S両方から探す
+
+        # 金額入力欄をP121Sから探す（詳細デバッグ）
         await page.wait_for_timeout(2000)
         input_found = False
 
-        # まず全フレームを確認
-        all_frames_info = [(f.url[-40:], ) for f in page.frames]
-        print(f"  現在フレーム: {[f.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in f.url else f.url[-20:] for f in page.frames]}")
-
         for try_frame in page.frames:
-            if 'P121S' in try_frame.url or 'P122S' in try_frame.url:
+            if "P121S" in try_frame.url:
                 try:
+                    all_inp = await try_frame.query_selector_all("input")
+                    print(f"  P121S全input:")
+                    for inp in all_inp:
+                        itype = await inp.get_attribute("type") or "text"
+                        iname = await inp.get_attribute("name") or ""
+                        imax = await inp.get_attribute("maxlength") or ""
+                        print(f"    type={itype} name={iname} maxlen={imax}")
                     inputs = await try_frame.query_selector_all("input[type='text'], input[type='number']")
                     if inputs:
                         last_input = inputs[-1]
+                        await last_input.triple_click()
                         await last_input.fill(str(amount // 100))
-                        print(f"  金額入力: {amount}円（{try_frame.url.split('HANDLERR=')[1].split('&')[0]}フレーム）")
+                        val = await last_input.evaluate("el => el.value")
+                        print(f"  金額入力: {amount}円 確認値={val}")
                         input_found = True
                         break
                 except Exception as e:
-                    print(f"  フレームエラー: {e}")
-                    continue
+                    print(f"  エラー: {e}")
+                break
 
         if not input_found:
             print(f"  ⚠️ 金額入力欄が見つかりません")
