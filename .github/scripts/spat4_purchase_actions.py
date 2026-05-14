@@ -110,6 +110,7 @@ async def purchase(page, base, bets):
             else:
                 print("オッズテーブル未検出 - タイムアウト")
 
+        content = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
         full_html = await odds_frame.evaluate("() => document.body ? document.body.innerHTML : ''")
         print(f"P122S内容: {content[:80]}")
         print(f"P122S HTML(3000): {full_html[:3000]}")
