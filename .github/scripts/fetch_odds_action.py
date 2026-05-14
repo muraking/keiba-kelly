@@ -107,17 +107,34 @@ async def get_odds(page, place_id, race_num, race_date):
 
     print(f"オッズフレームsrc: {odds_src}")
 
-    # page.framesから対応するフレームを探す（P122S含むURLのフレームのみ）
+    # page.framesからオッズフレームを探す
+    # P120SのiframeはP122Sを指しているが、frame.urlはP120Sになる場合がある
+    # → name="LEFT" のフレームを使う（または2番目以降のフレーム）
     target_frame = None
-    for attempt in range(8):
-        for frame in page.frames:
-            if 'P122S' in frame.url:
+    for attempt in range(5):
+        frames = page.frames
+        print(f"フレーム数({attempt+1}): {len(frames)}")
+        for i, frame in enumerate(frames):
+            print(f"  [{i}] name={getattr(frame, 'name', '?')} url={frame.url[-60:]}")
+
+        # name="LEFT"のフレームを探す
+        for frame in frames:
+            if getattr(frame, 'name', '') == 'LEFT':
                 target_frame = frame
+                print(f"LEFTフレーム発見")
                 break
+
+        # なければP120S以外の最初のframesetフレームを使う
+        if not target_frame and len(frames) >= 3:
+            # メインフレーム(0)以外で最初に見つかるフレーム
+            for frame in frames[1:]:
+                if 'P902S' not in frame.url and 'P121S' not in frame.url and 'P901' not in frame.url:
+                    target_frame = frame
+                    print(f"フォールバックフレーム: {frame.url[-60:]}")
+                    break
+
         if target_frame:
-            print(f"フレーム発見: attempt={attempt+1} url={target_frame.url[-60:]}")
             break
-        print(f"フレーム待機({attempt+1}/8) 全フレーム: {[f.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in f.url else '?' for f in page.frames]}")
         await page.wait_for_timeout(2000)
 
     if target_frame:
