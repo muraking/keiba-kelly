@@ -6980,5 +6980,64 @@
       }
     ],
     "savedAt": "2026-05-14T09:16:34.264Z"
+  },
+  {
+    "date": "5/14 門別 8R",
+    "venue": "門別",
+    "raceNum": "8R",
+    "raceClass": "キタコブシ特別(B4)",
+    "winner": 9,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "クラウンアールシー",
+        "norm": 0.4217,
+        "tanOdds": 1.8,
+        "ev": 75.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      },
+      {
+        "num": 3,
+        "name": "エイイチ",
+        "norm": 0.2764,
+        "tanOdds": 4,
+        "ev": 110.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "アンジュパラディ",
+        "norm": 0.0489,
+        "tanOdds": 29.1,
+        "ev": 142.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "アルマブレイド",
+        "norm": 0.0216,
+        "tanOdds": 66.8,
+        "ev": 144.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T09:23:11.155Z"
   }
 ]
