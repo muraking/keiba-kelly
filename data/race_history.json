@@ -7275,5 +7275,84 @@
       }
     ],
     "savedAt": "2026-05-14T10:32:28.201Z"
+  },
+  {
+    "date": "5/14 川崎 10",
+    "venue": "川崎",
+    "raceNum": "10R",
+    "raceClass": "紫電一閃賞(B2)",
+    "winner": 2,
+    "winOdds": 7,
+    "hit": true,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "ピンクタオルチャン",
+        "norm": 0.2371,
+        "tanOdds": 5.9,
+        "ev": 139.9,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 7
+      },
+      {
+        "num": 8,
+        "name": "ラヴォミ",
+        "norm": 0.0279,
+        "tanOdds": 53.3,
+        "ev": 148.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "サンダビューク",
+        "norm": 0.0204,
+        "tanOdds": 71.6,
+        "ev": 145.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ルールメイプル",
+        "norm": 0.0195,
+        "tanOdds": 99.1,
+        "ev": 193.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ポッドレオ",
+        "norm": 0.0192,
+        "tanOdds": 97.1,
+        "ev": 186.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ランラン",
+        "norm": 0.0162,
+        "tanOdds": 121,
+        "ev": 195.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T10:49:46.743Z"
   }
 ]
