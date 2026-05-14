@@ -5970,5 +5970,74 @@
     "kelly_fraction": 0.5,
     "records": [],
     "savedAt": "2026-05-14T02:30:40.094Z"
+  },
+  {
+    "date": "5/14 園田 3R",
+    "venue": "園田",
+    "raceNum": "3R",
+    "raceClass": "3歳C2",
+    "winner": 8,
+    "winOdds": 1.4,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "エイシンリール",
+        "norm": 0.2787,
+        "tanOdds": 1.7,
+        "ev": 47.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.4
+      },
+      {
+        "num": 7,
+        "name": "スカイライズ",
+        "norm": 0.1537,
+        "tanOdds": 14,
+        "ev": 215.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ナムラマフィン",
+        "norm": 0.056,
+        "tanOdds": 68.6,
+        "ev": 384.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "カルムスイート",
+        "norm": 0.0352,
+        "tanOdds": 37.8,
+        "ev": 133.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "マイティスカイ",
+        "norm": 0.0325,
+        "tanOdds": 54,
+        "ev": 175.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T02:46:53.560Z"
   }
 ]
