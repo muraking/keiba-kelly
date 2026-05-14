@@ -365,16 +365,30 @@ async def purchase(page, base, bets):
         await amount_inputs[-1].fill(str(total))
         print("合計金額入力完了")
 
+
     # "投票する"ボタンをクリック
     vote_btn = None
+    print("投票ボタン検索:")
     for frame in page.frames:
-        btns = await frame.query_selector_all("input[type='submit'], button")
-        for btn in btns:
-            text = (await btn.inner_text()).strip() if await btn.inner_text() else ""
-            value = await btn.get_attribute("value") or ""
-            if "投票する" in text or "投票する" in value:
-                vote_btn = btn
-                break
+        fname = frame.url.split("HANDLERR=")[1].split("&")[0] if "HANDLERR=" in frame.url else "?"
+        try:
+            btns = await frame.query_selector_all("input, button, a")
+            btn_list = []
+            for btn in btns:
+                text = ""
+                try: text = (await btn.inner_text()).strip()
+                except: pass
+                value = await btn.get_attribute("value") or ""
+                btype = await btn.get_attribute("type") or ""
+                if text or value:
+                    btn_list.append(f"{btype}:{value}:{text[:10]}")
+                if any(k in text or k in value for k in ["投票する","投　票","投票実行","VOTE"]):
+                    vote_btn = btn
+                    print(f"  投票ボタン発見({fname}): {value or text}")
+                    break
+            print(f"  {fname} buttons: {btn_list[:8]}")
+        except Exception as e:
+            print(f"  {fname}: error {e}")
         if vote_btn:
             break
 
