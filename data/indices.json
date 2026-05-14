@@ -10426,7 +10426,7 @@
     "ev_max": null,
     "odds_min": null,
     "odds_max": 150,
-    "auto_buy_local": true,
+    "auto_buy_local": false,
     "auto_buy_jra": false,
     "auto_buy_max": 500,
     "auto_buy_skip_fav": true,
