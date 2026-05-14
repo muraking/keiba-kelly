@@ -191,10 +191,16 @@ async def purchase(page, base, bets):
                     if money_inputs:
                         # 最後のTEXTMONEY入力欄に金額入力
                         last = money_inputs[-1]
+                        iname = await last.get_attribute('name')
+                        val_str = str(amount // 100)
+                        # JavaScriptで直接値をセット（fillが効かない場合の対策）
+                        await try_frame.evaluate(
+                            f"() => {{ const el = document.querySelector('input[name={iname}]'); if(el){{ el.value='{val_str}'; el.dispatchEvent(new Event('change')); el.dispatchEvent(new Event('input')); }} }}"
+                        )
                         await last.click()
-                        await last.fill(str(amount // 100))
-                        val = await last.get_attribute("value") or ""
-                        print(f"  金額入力: {amount}円 → name={await last.get_attribute('name')} val={val}")
+                        await last.type(val_str)
+                        val = await last.evaluate("el => el.value")
+                        print(f"  金額入力: {amount}円 → name={iname} val={val}")
                         input_found = True
                 except Exception as e:
                     print(f"  エラー: {e}")
