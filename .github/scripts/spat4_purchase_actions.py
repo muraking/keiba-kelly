@@ -92,7 +92,9 @@ async def purchase(page, base, bets):
     # odds_frameはすでにP120Sのフレームから取得済み
     if odds_frame:
         content = await odds_frame.evaluate("() => document.body ? document.body.innerText : ''")
+        full_html = await odds_frame.evaluate("() => document.body ? document.body.innerHTML : ''")
         print(f"P122S内容: {content[:80]}")
+        print(f"P122S HTML(1000): {full_html[:1000]}")
         if 'ログイン' in content[:80]:
             print("P122Sセッション切れ")
             return False
