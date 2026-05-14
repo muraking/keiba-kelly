@@ -7581,5 +7581,84 @@
       }
     ],
     "savedAt": "2026-05-14T11:38:48.085Z"
+  },
+  {
+    "date": "5/14 川崎 12",
+    "venue": "川崎",
+    "raceNum": "12R",
+    "raceClass": "早苗月特別(B3二)",
+    "winner": 1,
+    "winOdds": 6.2,
+    "hit": false,
+    "sm_temperature": 22,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 150,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "ラムテリオス",
+        "norm": 0.2222,
+        "tanOdds": 5.4,
+        "ev": 120,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "エムティワイザー",
+        "norm": 0.1155,
+        "tanOdds": 16.4,
+        "ev": 189.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "エレファントラン",
+        "norm": 0.1017,
+        "tanOdds": 6.4,
+        "ev": 65.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6.2
+      },
+      {
+        "num": 5,
+        "name": "モンド",
+        "norm": 0.0637,
+        "tanOdds": 18.4,
+        "ev": 117.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "トウマ",
+        "norm": 0.0614,
+        "tanOdds": 25.1,
+        "ev": 154.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ブレイヴルーラー",
+        "norm": 0.0474,
+        "tanOdds": 81.5,
+        "ev": 386.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-14T11:53:24.018Z"
   }
 ]
