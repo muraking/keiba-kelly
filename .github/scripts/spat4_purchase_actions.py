@@ -193,12 +193,11 @@ async def purchase(page, base, bets):
                         last = money_inputs[-1]
                         iname = await last.get_attribute('name')
                         val_str = str(amount // 100)
-                        # JavaScriptで直接値をセット（fillが効かない場合の対策）
+                        # JavaScriptで直接値をセット
                         await try_frame.evaluate(
                             f"() => {{ const el = document.querySelector('input[name={iname}]'); if(el){{ el.value='{val_str}'; el.dispatchEvent(new Event('change')); el.dispatchEvent(new Event('input')); }} }}"
                         )
-                        await last.click()
-                        await last.type(val_str)
+                        await page.wait_for_timeout(300)
                         val = await last.evaluate("el => el.value")
                         print(f"  金額入力: {amount}円 → name={iname} val={val}")
                         input_found = True
