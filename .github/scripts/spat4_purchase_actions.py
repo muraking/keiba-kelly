@@ -218,6 +218,26 @@ async def purchase(page, base, bets):
             print(f"  ⚠️ 金額入力欄が見つかりません")
 
 
+    # 確認ボタン前にP121SのTEXTMONEY値を確認・再セット
+    print("\n確認前P121S金額チェック...")
+    for frame in page.frames:
+        if 'P121S' in frame.url:
+            try:
+                money_inputs = await frame.query_selector_all("input[name^='TEXTMONEY']")
+                for inp in money_inputs:
+                    iname = await inp.get_attribute('name')
+                    val = await inp.evaluate("el => el.value")
+                    print(f"  {iname} = '{val}'")
+                    if not val or val == '':
+                        print(f"  ⚠️ {iname}が空 → 再セット")
+                        # 直接クリックしてfocus後にtype
+                        await inp.click()
+                        await inp.evaluate(f"el => {{ el.value = ''; }}")
+                        await inp.type('1')  # デフォルト100円
+            except Exception as e:
+                print(f"  チェックエラー: {e}")
+            break
+
     # "投票内容確認へ"ボタンをクリック
     print("\n投票内容確認へ...")
     await page.wait_for_timeout(1000)
