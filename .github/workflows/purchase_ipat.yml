@@ -20,6 +20,10 @@ on:
         description: '自動購入モード（1=残高ベースケリー計算、0=PWA金額固定）'
         required: false
         default: '0'
+      dry_run:
+        description: 'テストモード（1=投票直前で停止、0=実際に投票）'
+        required: false
+        default: '0'
 
 jobs:
   purchase:
@@ -48,6 +52,7 @@ jobs:
           BETS: ${{ github.event.inputs.bets }}
           AUTO_BUY_MAX: ${{ github.event.inputs.auto_buy_max }}
           AUTO_BUY_MODE: ${{ github.event.inputs.auto_buy_mode }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
           GH_USER: muraking
           GH_REPO: keiba-kelly
