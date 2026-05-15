@@ -1538,17 +1538,13 @@ function onRaceChange(){
           for(const rnum of [raceNumInt, String(raceNumInt)]){
             const candidate = courseOdds && courseOdds[rnum];
             if(candidate && typeof candidate === 'object' && Object.keys(candidate).length > 0){
-              // キーが数値か文字列かを正規化
-              const firstKey = Object.keys(candidate)[0];
-              if(firstKey && typeof candidate[firstKey] === 'object' && ('tan' in candidate[firstKey] || 'fuku_min' in candidate[firstKey])){
-                // 正常: {馬番: {tan:...}} 形式
-                raceOdds = candidate;
-              } else {
-                // キーが文字列の場合: {"1": {tan:...}} → 数値キーに変換
-                raceOdds = {};
-                for(const k of Object.keys(candidate)){
-                  raceOdds[parseInt(k)] = candidate[k];
-                  raceOdds[k] = candidate[k];
+              // 馬番キーを数値・文字列両方でアクセスできるよう正規化
+              raceOdds = {};
+              for(const k of Object.keys(candidate)){
+                const val = candidate[k];
+                if(val && typeof val === 'object'){
+                  raceOdds[parseInt(k)] = val;
+                  raceOdds[String(k)] = val;
                 }
               }
               break outer;
@@ -1588,7 +1584,7 @@ function onRaceChange(){
   }
 
   horses = race.horses.map(h => {
-    const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
+    const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || raceOdds[parseInt(h.num)] || null) : null;
     return {
       num: h.num, pct: h.pct, name: h.name,
       norm: normMap2[h.num] || 0,
