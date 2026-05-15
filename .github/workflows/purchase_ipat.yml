@@ -12,6 +12,10 @@ on:
       bets:
         description: '買い目JSON（例: [{"num":3,"amount":1000}]）'
         required: true
+      auto_buy_max:
+        description: '1レース最大投資額（0=無制限）'
+        required: false
+        default: '0'
 
 jobs:
   purchase:
@@ -38,6 +42,7 @@ jobs:
           COURSE_NAME: ${{ github.event.inputs.course_name }}
           RACE_NUM: ${{ github.event.inputs.race_num }}
           BETS: ${{ github.event.inputs.bets }}
+          AUTO_BUY_MAX: ${{ github.event.inputs.auto_buy_max }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
           GH_USER: muraking
           GH_REPO: keiba-kelly
