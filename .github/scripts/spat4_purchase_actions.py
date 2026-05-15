@@ -142,25 +142,34 @@ async def purchase(page, base, bets):
         if not clicked:
             print(f"  フレーム内容: {frame_text[:100]}")
 
-        # UMANUM方式: URLに馬番を指定してP122Sに遷移（オッズにaタグがないため）
-        from urllib.parse import urlparse as _urlparse
-        _parsed = _urlparse(page.url)
-        _base = f"{_parsed.scheme}://{_parsed.netloc}"
-        umanum_url = f"{_base}/keiba/pc?HANDLERR=P122S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}&KINDINFOR=1&UMANUM={horse_num}"
-        print(f"  UMANUM URL: {umanum_url}")
-        try:
-            await odds_frame.goto(umanum_url, wait_until="domcontentloaded", timeout=15000)
-            await page.wait_for_timeout(2000)
-            # P121Sに馬番が追加されたか確認
-            for chk in page.frames:
-                if 'P121S' in chk.url:
-                    txt = await chk.evaluate("() => document.body ? document.body.innerText.substring(0,100) : ''")
-                    print(f"  P121S後: {txt[:60]}")
+        # aタグのclickOddsBetをクリック（単勝=式別1）
+        # onclick="clickOddsBet(..., "1", "0", "00000002000")" の形式
+        horse_hex = format(horse_num, '02X')  # 2→"02", 10→"0A"
+        bet_code = f"0000000{horse_hex}0000"
+        js_click = f"clickOddsBet"
+        print(f"  馬番{horse_num} betcode={bet_code}")
+
+        # 方法1: onclickにhorse_numが含まれるaタグを探してクリック
+        links = await odds_frame.query_selector_all("a[onclick*='clickOddsBet']")
+        for link in links:
+            onclick = await link.get_attribute("onclick") or ""
+            # 単勝（式別"1"）かつ対象馬番のbetcodeを含む
+            if f'"{bet_code}"' in onclick and ', "1",' in onclick:
+                await link.click()
+                print(f"  {horse_num}番 単勝クリック完了（clickOddsBet）")
+                clicked = True
+                break
+
+        if not clicked:
+            # 方法2: horse_hex大文字小文字両方試す
+            bet_code_lower = bet_code.lower()
+            for link in links:
+                onclick = await link.get_attribute("onclick") or ""
+                if (f'"{bet_code_lower}"' in onclick or f'"{bet_code}"' in onclick) and '"1"' in onclick:
+                    await link.click()
+                    print(f"  {horse_num}番 単勝クリック完了（clickOddsBet lower）")
+                    clicked = True
                     break
-            clicked = True
-            print(f"  {horse_num}番 UMANUM選択完了")
-        except Exception as e:
-            print(f"  UMANUM遷移エラー: {e}")
 
         if not clicked:
             print(f"  {horse_num}番が見つかりません")
