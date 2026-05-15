@@ -193,11 +193,25 @@ async def purchase(page, base, bets):
                         pass
 
                 if found_frame:
+                    # P121Sフレームから実行するのが最も確実
+                    p121s_exec_frame = None
+                    for _f2 in page.frames:
+                        if 'P121S' in _f2.url:
+                            p121s_exec_frame = _f2
+                            break
+                    exec_frame = p121s_exec_frame or found_frame
+                    print(f"  実行フレーム: {exec_frame.url[:60]}")
                     try:
-                        await found_frame.evaluate(f"() => {{ {js_call} }}")
+                        await exec_frame.evaluate(f"() => {{ {js_call} }}")
                         print(f"  {horse_num}番 単勝クリック完了（clickOddsBet定義フレーム）")
                         clicked = True
                         await page.wait_for_timeout(2000)
+                        # P121S確認
+                        for _f3 in page.frames:
+                            if 'P121S' in _f3.url:
+                                _txt = await _f3.evaluate("() => document.body ? document.body.innerText.substring(0,200) : ''")
+                                print(f"  P121S状態: {_txt[:100]}")
+                                break
                     except Exception as e:
                         print(f"  JSクリックエラー: {e}")
                 else:
