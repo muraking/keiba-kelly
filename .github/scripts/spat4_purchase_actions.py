@@ -145,31 +145,39 @@ async def purchase(page, base, bets):
         # aタグのclickOddsBetをクリック（単勝=式別1）
         # onclick="clickOddsBet(..., "1", "0", "00000002000")" の形式
         horse_hex = format(horse_num, '02X')  # 2→"02", 10→"0A"
-        bet_code = f"0000000{horse_hex}0000"
+        bet_code = f"000000{horse_hex}0000"
         js_click = f"clickOddsBet"
         print(f"  馬番{horse_num} betcode={bet_code}")
 
-        # 方法1: onclickにhorse_numが含まれるaタグを探してクリック
+        # aタグのonclickを直接JS評価で実行（クロスフレーム関数対応）
         links = await odds_frame.query_selector_all("a[onclick*='clickOddsBet']")
+        target_onclick = None
         for link in links:
             onclick = await link.get_attribute("onclick") or ""
-            # 単勝（式別"1"）かつ対象馬番のbetcodeを含む
             if f'"{bet_code}"' in onclick and ', "1",' in onclick:
-                await link.click()
-                print(f"  {horse_num}番 単勝クリック完了（clickOddsBet）")
-                clicked = True
+                target_onclick = onclick
+                break
+            # 小文字も試す
+            if f'"{bet_code.lower()}"' in onclick and '"1"' in onclick:
+                target_onclick = onclick
                 break
 
-        if not clicked:
-            # 方法2: horse_hex大文字小文字両方試す
-            bet_code_lower = bet_code.lower()
-            for link in links:
-                onclick = await link.get_attribute("onclick") or ""
-                if (f'"{bet_code_lower}"' in onclick or f'"{bet_code}"' in onclick) and '"1"' in onclick:
-                    await link.click()
-                    print(f"  {horse_num}番 単勝クリック完了（clickOddsBet lower）")
+        if target_onclick:
+            # JS経由でclickOddsBetを親フレームから呼び出す
+            # clickOddsBetはP121Sフレーム（frames[0]）で定義
+            try:
+                # まずaタグをクリック
+                await link.click()
+                print(f"  {horse_num}番 単勝クリック完了（aタグ直接）")
+                clicked = True
+            except Exception as e:
+                # 失敗したらJS評価でonclickを実行
+                try:
+                    await page.evaluate(f"() => {{ {target_onclick.replace('return false;', '')} }}")
+                    print(f"  {horse_num}番 単勝クリック完了（JS評価）")
                     clicked = True
-                    break
+                except Exception as e2:
+                    print(f"  JSクリックエラー: {e2}")
 
         if not clicked:
             print(f"  {horse_num}番が見つかりません")
