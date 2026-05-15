@@ -163,21 +163,44 @@ async def purchase(page, base, bets):
                 break
 
         if target_onclick:
-            # JS経由でclickOddsBetを親フレームから呼び出す
-            # clickOddsBetはP121Sフレーム（frames[0]）で定義
+            # clickOddsBetはP121Sフレーム（frames[0]）で定義されているため
+            # P121Sフレームのコンテキストで実行する必要がある
+            p121s_frame = None
+            for f in page.frames:
+                txt = await f.evaluate("() => document.body ? document.body.innerText.substring(0,30) : ''")
+                if '投票金額' in txt or 'TEXTMONEY' in (await f.content()):
+                    p121s_frame = f
+                    break
+
+            # P121SフレームのJS環境でclickOddsBetを実行
             try:
-                # まずaタグをクリック
-                await link.click()
-                print(f"  {horse_num}番 単勝クリック完了（aタグ直接）")
-                clicked = True
-            except Exception as e:
-                # 失敗したらJS評価でonclickを実行
-                try:
-                    await page.evaluate(f"() => {{ {target_onclick.replace('return false;', '')} }}")
-                    print(f"  {horse_num}番 単勝クリック完了（JS評価）")
+                # target_onclickからclickOddsBetの引数を抽出してP121Sから呼び出す
+                # onclick例: clickOddsBet("2026051527", "園田", 1, "1", "0", "000000020000")
+                import re
+                m = re.search(r'clickOddsBet\((.+?)\)', target_onclick)
+                if m:
+                    args_str = m.group(1).replace('&quot;', '"')
+                    js_call = f"clickOddsBet({args_str})"
+                    print(f"  JS呼び出し: {js_call}")
+                    if p121s_frame:
+                        await p121s_frame.evaluate(f"() => {{ {js_call} }}")
+                        print(f"  {horse_num}番 単勝クリック完了（P121Sフレーム経由）")
+                    else:
+                        # pageのメインフレームで試す
+                        await page.evaluate(f"() => {{ {js_call} }}")
+                        print(f"  {horse_num}番 単勝クリック完了（mainフレーム）")
                     clicked = True
+                    await page.wait_for_timeout(1500)
+            except Exception as e:
+                print(f"  JSクリックエラー: {e}")
+                # フォールバック: aタグ直接クリック
+                try:
+                    await link.click()
+                    print(f"  {horse_num}番 単勝クリック完了（aタグ直接フォールバック）")
+                    clicked = True
+                    await page.wait_for_timeout(1500)
                 except Exception as e2:
-                    print(f"  JSクリックエラー: {e2}")
+                    print(f"  aタグクリックエラー: {e2}")
 
         if not clicked:
             print(f"  {horse_num}番が見つかりません")
