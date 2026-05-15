@@ -23,47 +23,24 @@ TIMEOUT   = 30000
 
 
 async def get_balance(page):
-    """IPATログイン後に残高照会ページから残高を取得"""
+    """IPATログイン後に購入限度額を取得"""
     import re
     try:
-        # 現在のページテキストを確認
         text = await page.evaluate("() => document.body.innerText")
-        print(f"残高照会ページ（先頭200文字）: {text[:200]}")
+        print(f"残高照会ページ（先頭300文字）: {text[:300]}")
 
-        def extract_balance(t):
-            for pattern in [
-                r'残高[：:　\s]*([\d,]+)',
-                r'利用可能額[：:　\s]*([\d,]+)',
-                r'口座残高[：:　\s]*([\d,]+)',
-                r'([\d,]{4,})円',  # 4桁以上+円
-            ]:
-                m = re.search(pattern, t)
-                if m:
-                    v = int(m.group(1).replace(',', ''))
-                    if 100 <= v <= 10000000:
-                        return v
-            return None
-
-        b = extract_balance(text)
-        if b:
-            print(f"残高取得: ¥{b:,}")
-            return b
-
-        # 照会リンクを探してクリック
-        links = await page.query_selector_all('a')
-        for link in links:
-            t = (await link.inner_text()).strip()
-            if '照会' in t or '残高' in t or '口座' in t:
-                print(f"残高照会リンク: {t}")
-                await link.tap()
-                await page.wait_for_timeout(2000)
-                text2 = await page.evaluate("() => document.body.innerText")
-                print(f"照会後（先頭200文字）: {text2[:200]}")
-                b2 = extract_balance(text2)
-                if b2:
-                    print(f"残高取得（照会後）: ¥{b2:,}")
-                    return b2
-                break
+        # 「購入限度額」のパターンを優先
+        for pattern in [
+            r'購入限度額[\s\n]*([\d,]+)',
+            r'残高[：:　\s]*([\d,]+)',
+            r'利用可能額[：:　\s]*([\d,]+)',
+        ]:
+            m = re.search(pattern, text)
+            if m:
+                v = int(m.group(1).replace(',', ''))
+                if 100 <= v <= 10000000:
+                    print(f"残高取得（購入限度額）: ¥{v:,}")
+                    return v
 
         print("残高取得失敗 → デフォルト10000円で計算")
         return 10000
@@ -381,6 +358,10 @@ async def main():
             print("\n自動購入モード: 残高取得→ハーフケリー計算")
             bankroll = await get_balance(page)
             BETS = calc_kelly_amounts(BETS, bankroll)
+            # 残高取得後にトップページに戻る
+            top_url = "https://www.ipat.jra.go.jp/sp/pw_010_i.cgi"
+            await page.goto(top_url, wait_until="domcontentloaded", timeout=30000)
+            await page.wait_for_timeout(1000)
         else:
             print("購入ボタンモード: PWAの金額をそのまま使用")
 
