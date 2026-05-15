@@ -358,10 +358,10 @@ async def main():
             print("\n自動購入モード: 残高取得→ハーフケリー計算")
             bankroll = await get_balance(page)
             BETS = calc_kelly_amounts(BETS, bankroll)
-            # 残高取得後にトップページに戻る
-            top_url = "https://www.ipat.jra.go.jp/sp/pw_010_i.cgi"
-            await page.goto(top_url, wait_until="domcontentloaded", timeout=30000)
-            await page.wait_for_timeout(1000)
+            # 残高取得後に再ログイン
+            print("再ログイン中...")
+            await login(page)
+            print("再ログイン完了")
         else:
             print("購入ボタンモード: PWAの金額をそのまま使用")
 
