@@ -16,6 +16,10 @@ on:
         description: '1レース最大投資額（0=無制限）'
         required: false
         default: '0'
+      auto_buy_mode:
+        description: '自動購入モード（1=残高ベースケリー計算、0=PWA金額固定）'
+        required: false
+        default: '0'
 
 jobs:
   purchase:
@@ -43,6 +47,7 @@ jobs:
           RACE_NUM: ${{ github.event.inputs.race_num }}
           BETS: ${{ github.event.inputs.bets }}
           AUTO_BUY_MAX: ${{ github.event.inputs.auto_buy_max }}
+          AUTO_BUY_MODE: ${{ github.event.inputs.auto_buy_mode }}
           GH_TOKEN: ${{ secrets.GH_PAT }}
           GH_USER: muraking
           GH_REPO: keiba-kelly
