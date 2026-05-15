@@ -313,18 +313,18 @@ async def purchase(page, base, bets):
                 if "投票内容確認" in value or "投票内容確認" in text:
                     fname = frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in frame.url else 'unknown'
                     print(f"確認ボタン発見: {value or text}（{fname}フレーム）")
-                    # P121SフォームをJS送信
-                    for p121f in page.frames:
-                        if 'P121S' in p121f.url:
-                            try:
-                                await p121f.evaluate("() => { const s=document.querySelector('input[type=SUBMIT],input[type=submit]'); if(s){s.click();}else{const f=document.querySelector('form');if(f)f.submit();} }")
-                                print("P121SフォームJS送信")
-                            except Exception as je:
-                                print(f"JS送信エラー: {je}")
-                                await btn.click()
-                            break
-                    else:
+                    # 直接ボタンをクリック（f.submit()ではなくボタンclick）
+                    try:
                         await btn.click()
+                        print("確認ボタン直接クリック")
+                    except Exception as ce:
+                        print(f"ボタンクリックエラー: {ce}")
+                        # フォールバック: JS submit
+                        for p121f in page.frames:
+                            if 'P121S' in p121f.url:
+                                await p121f.evaluate("() => { const s=document.querySelector('input[type=SUBMIT],input[type=submit],button[type=submit]'); if(s){s.click();}else{document.querySelector('form').submit();} }")
+                                print("P121SフォームJS送信")
+                                break
                     await page.wait_for_timeout(5000)
                     print("確認ページへ移動中...")
                     confirmed = True
