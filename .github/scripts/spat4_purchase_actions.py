@@ -255,10 +255,10 @@ async def purchase(page, base, bets):
                         last = money_inputs[-1]
                         iname = await last.get_attribute('name')
                         val_str = str(amount // 100)
-                        # JavaScriptで直接値をセット
-                        await try_frame.evaluate(
-                            f"() => {{ const el = document.querySelector('input[name={iname}]'); if(el){{ el.value='{val_str}'; el.dispatchEvent(new Event('change')); el.dispatchEvent(new Event('input')); }} }}"
-                        )
+                        # 実際にクリック→クリア→タイプで入力（フォーム送信時に値が送られるよう）
+                        await last.click()
+                        await last.evaluate("el => { el.value = ''; }")
+                        await last.type(val_str)
                         await page.wait_for_timeout(300)
                         val = await last.evaluate("el => el.value")
                         print(f"  金額入力: {amount}円 → name={iname} val={val}")
