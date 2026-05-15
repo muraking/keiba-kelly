@@ -1538,7 +1538,19 @@ function onRaceChange(){
           for(const rnum of [raceNumInt, String(raceNumInt)]){
             const candidate = courseOdds && courseOdds[rnum];
             if(candidate && typeof candidate === 'object' && Object.keys(candidate).length > 0){
-              raceOdds = candidate;
+              // キーが数値か文字列かを正規化
+              const firstKey = Object.keys(candidate)[0];
+              if(firstKey && typeof candidate[firstKey] === 'object' && ('tan' in candidate[firstKey] || 'fuku_min' in candidate[firstKey])){
+                // 正常: {馬番: {tan:...}} 形式
+                raceOdds = candidate;
+              } else {
+                // キーが文字列の場合: {"1": {tan:...}} → 数値キーに変換
+                raceOdds = {};
+                for(const k of Object.keys(candidate)){
+                  raceOdds[parseInt(k)] = candidate[k];
+                  raceOdds[k] = candidate[k];
+                }
+              }
               break outer;
             }
           }
