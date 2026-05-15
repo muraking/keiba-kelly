@@ -7,15 +7,16 @@ import os
 import json
 from playwright.async_api import async_playwright
 
-IPAT_ID   = os.environ.get("IPAT_ID", "63598202")
-IPAT_PIN  = os.environ.get("IPAT_PIN", "1869")
-IPAT_PARS = os.environ.get("IPAT_PARS", "9484")
+IPAT_ID   = os.environ.get("IPAT_ID", "ここに加入者番号を入力")
+IPAT_PIN  = os.environ.get("IPAT_PIN", "ここに暗証番号を入力")
+IPAT_PARS = os.environ.get("IPAT_PARS", "ここにP-ARS番号を入力")
 
 COURSE_NAME = os.environ.get("COURSE_NAME", "")
 RACE_NUM    = int(os.environ.get("RACE_NUM", "1"))
 BETS        = json.loads(os.environ.get("BETS", "[]"))
 AUTO_BUY_MAX = int(os.environ.get("AUTO_BUY_MAX", "0") or "0")
 AUTO_BUY_MODE = os.environ.get("AUTO_BUY_MODE", "0") == "1"  # 自動購入モード（残高ベース）
+DRY_RUN     = os.environ.get("DRY_RUN", "0") == "1"        # テストモード（投票直前で停止）
 
 LOGIN_URL = "https://www.ipat.jra.go.jp/sp/"
 TIMEOUT   = 30000
@@ -274,6 +275,17 @@ async def purchase(page, course_name, race_num, bets):
             break
 
     await page.screenshot(path="ipat_buy_confirm.png")
+
+    # DRY_RUNモード: 投票直前で停止
+    if DRY_RUN:
+        print("\n========== DRY RUN MODE ==========")
+        print(f"[テスト] 以下の内容で投票する直前です（実際には投票しません）")
+        for b in bets:
+            print(f"  {b['num']}番 {b['name']} 単勝 ¥{b['amount']:,}")
+        print(f"  合計: ¥{sum(b['amount'] for b in bets):,}")
+        print("===================================")
+        print("✅ DRY RUN完了（投票は行いませんでした）")
+        return True
 
     # 「投票」をtap()でクリック
     print("投票...")
