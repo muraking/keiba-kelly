@@ -312,7 +312,19 @@ async def purchase(page, base, bets):
                 except: pass
                 if "投票内容確認" in value or "投票内容確認" in text:
                     fname = frame.url.split('HANDLERR=')[1].split('&')[0] if 'HANDLERR=' in frame.url else 'unknown'
-                    print(f"確認ボタン発見: {value or text}（{fname}フレーム）")
+                    btn_onclick = await btn.get_attribute("onclick") or ""
+                    btn_type = await btn.get_attribute("type") or ""
+                    print(f"確認ボタン発見: {value or text}（{fname}フレーム） type={btn_type} onclick={btn_onclick[:100]}")
+                    # P121Sのフォーム全体も確認
+                    for _pf in page.frames:
+                        if 'P121S' in _pf.url:
+                            _inputs = await _pf.evaluate("""
+                                () => Array.from(document.querySelectorAll('input')).map(i => ({
+                                    name: i.name, type: i.type, value: i.value, maxlength: i.maxLength
+                                }))
+                            """)
+                            print(f"  P121S全inputs: {_inputs[:10]}")
+                            break
                     # 直接ボタンをクリック（f.submit()ではなくボタンclick）
                     try:
                         await btn.click()
