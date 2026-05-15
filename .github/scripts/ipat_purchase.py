@@ -15,6 +15,7 @@ COURSE_NAME = os.environ.get("COURSE_NAME", "")
 RACE_NUM    = int(os.environ.get("RACE_NUM", "1"))
 BETS        = json.loads(os.environ.get("BETS", "[]"))
 AUTO_BUY_MAX = int(os.environ.get("AUTO_BUY_MAX", "0") or "0")
+AUTO_BUY_MODE = os.environ.get("AUTO_BUY_MODE", "0") == "1"  # 自動購入モード（残高ベース）
 
 LOGIN_URL = "https://www.ipat.jra.go.jp/sp/"
 TIMEOUT   = 30000
@@ -333,15 +334,13 @@ async def main():
 
         await login(page)
 
-        # 残高取得
-        bankroll = await get_balance(page)
-
-        # ハーフケリーで金額計算（normとoddsが含まれている場合）
-        if BETS and 'norm' in BETS[0]:
-            print("\nハーフケリー計算中...")
+        # 自動購入モードの場合のみ残高取得→ケリー計算
+        if AUTO_BUY_MODE and BETS and 'norm' in BETS[0]:
+            print("\n自動購入モード: 残高取得→ハーフケリー計算")
+            bankroll = await get_balance(page)
             BETS = calc_kelly_amounts(BETS, bankroll)
         else:
-            print("normなし → amount固定で使用")
+            print("購入ボタンモード: PWAの金額をそのまま使用")
 
         # 最大投資額キャップ
         if AUTO_BUY_MAX > 0:
