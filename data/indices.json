@@ -7755,7 +7755,7 @@
     "auto_buy_local": false,
     "auto_buy_jra": true,
     "auto_buy_max": 0,
-    "auto_buy_skip_fav": true,
+    "auto_buy_skip_fav": false,
     "norm_method": "softmax"
   }
 }
