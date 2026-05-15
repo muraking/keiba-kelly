@@ -7,9 +7,9 @@ import os
 import json
 from playwright.async_api import async_playwright
 
-IPAT_ID   = os.environ.get("IPAT_ID", "ここに加入者番号を入力")
-IPAT_PIN  = os.environ.get("IPAT_PIN", "ここに暗証番号を入力")
-IPAT_PARS = os.environ.get("IPAT_PARS", "ここにP-ARS番号を入力")
+IPAT_ID   = os.environ.get("IPAT_ID", "63598202")
+IPAT_PIN  = os.environ.get("IPAT_PIN", "1869")
+IPAT_PARS = os.environ.get("IPAT_PARS", "9484")
 
 COURSE_NAME = os.environ.get("COURSE_NAME", "")
 RACE_NUM    = int(os.environ.get("RACE_NUM", "1"))
@@ -104,7 +104,23 @@ async def purchase(page, course_name, race_num, bets):
     # オッズ投票 → 会場 → レース → 式別から選択 → 単勝
     await page.click('text=オッズ投票')
     await page.wait_for_timeout(2000)
-    await page.click(f'text={course_name}')
+
+    # ページ内容を確認してコース名を特定
+    page_text = await page.evaluate("() => document.body.innerText")
+    print(f"会場ページ内容（先頭300文字）: {page_text[:300]}")
+
+    # コース名の表記ゆれに対応（例: 新潟(日) → 新潟）
+    course_base = course_name.split('(')[0].strip()
+    # ページに完全一致があればそのまま、なければ基本名で試行
+    if course_name in page_text:
+        click_name = course_name
+    elif course_base in page_text:
+        click_name = course_base
+        print(f"コース名変換: {course_name} → {click_name}")
+    else:
+        click_name = course_name
+        print(f"⚠️ コース名が見つからない: {course_name}")
+    await page.click(f'text={click_name}')
     await page.wait_for_timeout(2000)
     await page.click(f'text={race_num}R')
     await page.wait_for_timeout(2000)
