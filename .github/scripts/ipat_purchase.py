@@ -7,16 +7,82 @@ import os
 import json
 from playwright.async_api import async_playwright
 
-IPAT_ID   = os.environ.get("IPAT_ID", "63598202")
-IPAT_PIN  = os.environ.get("IPAT_PIN", "1869")
-IPAT_PARS = os.environ.get("IPAT_PARS", "9484")
+IPAT_ID   = os.environ.get("IPAT_ID", "ここに加入者番号を入力")
+IPAT_PIN  = os.environ.get("IPAT_PIN", "ここに暗証番号を入力")
+IPAT_PARS = os.environ.get("IPAT_PARS", "ここにP-ARS番号を入力")
 
 COURSE_NAME = os.environ.get("COURSE_NAME", "")
 RACE_NUM    = int(os.environ.get("RACE_NUM", "1"))
 BETS        = json.loads(os.environ.get("BETS", "[]"))
+AUTO_BUY_MAX = int(os.environ.get("AUTO_BUY_MAX", "0") or "0")
 
 LOGIN_URL = "https://www.ipat.jra.go.jp/sp/"
 TIMEOUT   = 30000
+
+
+async def get_balance(page):
+    """IPATログイン後に残高を取得"""
+    try:
+        # トップページのテキストから残高を探す
+        text = await page.evaluate("() => document.body.innerText")
+        import re
+        # 「残高」「利用可能額」などのパターン
+        for pattern in [
+            r'残高[：:]\s*([\d,]+)円',
+            r'利用可能額[：:]\s*([\d,]+)円',
+            r'([\d,]+)円',
+        ]:
+            m = re.search(pattern, text)
+            if m:
+                balance = int(m.group(1).replace(',', ''))
+                if balance > 0:
+                    print(f"残高取得: ¥{balance:,}")
+                    return balance
+        # 残高要素を直接探す
+        for sel in ['#balance', '#zandaka', '.balance', '[id*="balance"]', '[id*="zandaka"]']:
+            el = await page.query_selector(sel)
+            if el:
+                t = (await el.inner_text()).strip()
+                m = re.search(r'([\d,]+)', t)
+                if m:
+                    balance = int(m.group(1).replace(',', ''))
+                    print(f"残高取得({sel}): ¥{balance:,}")
+                    return balance
+        print("残高取得失敗 → デフォルト1000円で計算")
+        return 1000
+    except Exception as e:
+        print(f"残高取得エラー: {e} → デフォルト1000円")
+        return 1000
+
+
+def calc_kelly_amounts(bets, bankroll, kelly_fraction=0.5, min_amount=100, unit=100):
+    """ハーフケリーで各馬の賭け額を計算
+    bets: [{"num": 1, "norm": 0.3, "odds": 5.0, ...}, ...]
+    bankroll: 残高（円）
+    kelly_fraction: ケリー比率（デフォルト0.5=ハーフケリー）
+    """
+    import math
+    result = []
+    for bet in bets:
+        p = bet.get('norm', 0)      # 勝率
+        odds = bet.get('odds', 1.0) # オッズ
+        b = odds - 1.0              # 純利益倍率
+
+        if p <= 0 or b <= 0:
+            amount = min_amount
+        else:
+            kelly = (b * p - (1 - p)) / b
+            kelly = max(0, kelly)
+            half_kelly = kelly * kelly_fraction
+            amount = int(bankroll * half_kelly / unit) * unit
+            amount = max(amount, min_amount)
+
+        result.append({**bet, 'amount': amount})
+        print(f"  {bet['num']}番: p={p:.3f} odds={odds} kelly={kelly_fraction*((b*p-(1-p))/b if b>0 and p>0 else 0):.3f} → ¥{amount:,}")
+
+    total = sum(b['amount'] for b in result)
+    print(f"  合計: ¥{total:,} / 残高: ¥{bankroll:,} ({total/bankroll*100:.1f}%)")
+    return result
 
 async def login(page):
     await page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=TIMEOUT)
@@ -266,6 +332,27 @@ async def main():
         page.set_default_timeout(TIMEOUT)
 
         await login(page)
+
+        # 残高取得
+        bankroll = await get_balance(page)
+
+        # ハーフケリーで金額計算（normとoddsが含まれている場合）
+        if BETS and 'norm' in BETS[0]:
+            print("\nハーフケリー計算中...")
+            BETS = calc_kelly_amounts(BETS, bankroll)
+        else:
+            print("normなし → amount固定で使用")
+
+        # 最大投資額キャップ
+        if AUTO_BUY_MAX > 0:
+            total = sum(b['amount'] for b in BETS)
+            if total > AUTO_BUY_MAX:
+                ratio = AUTO_BUY_MAX / total
+                for b in BETS:
+                    b['amount'] = max(int(b['amount'] * ratio / 100) * 100, 100)
+                new_total = sum(b['amount'] for b in BETS)
+                print(f"最大投資額キャップ: ¥{total:,} → ¥{new_total:,} (上限¥{AUTO_BUY_MAX:,})")
+
         result = await purchase(page, COURSE_NAME, RACE_NUM, BETS)
 
         input("\nEnterで終了...")
