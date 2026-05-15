@@ -2271,6 +2271,17 @@ function executePurchaseJRA(){
     return;
   }
 
+  // 1番人気1倍台スキップチェック（自動購入時）
+  const skipFav = localStorage.getItem('auto_buy_skip_fav') === '1';
+  if(skipFav){
+    const allOdds = (renders || []).map(h => h.tanOdds).filter(o => o > 0);
+    const favOdds = allOdds.length ? Math.min(...allOdds) : null;
+    if(favOdds && favOdds < 2.0){
+      alert(`⚠️ 1番人気が${favOdds}倍のため自動購入をスキップします（設定: 1番人気1倍台スキップON）`);
+      return;
+    }
+  }
+
   // モーダルに買い目を表示
   const total = bets.reduce((s,b)=>s+b.amount,0);
   const betsEl = document.getElementById('modal-bets');
@@ -2306,6 +2317,20 @@ async function confirmPurchaseJRA(){
     return;
   }
 
+  // PWAの金額をそのまま使用（残高取得なし）
+  // auto_buy_max上限キャップのみ適用
+  const autoBuyMax = parseInt(localStorage.getItem('auto_buy_max') || '0') || 0;
+  let finalBets = bets.map(b => ({...b}));
+  if(autoBuyMax > 0){
+    const total = finalBets.reduce((s,b)=>s+b.amount,0);
+    if(total > autoBuyMax){
+      const ratio = autoBuyMax / total;
+      finalBets = finalBets.map(b => ({...b, amount: Math.max(Math.floor(b.amount * ratio / 100) * 100, 100)}));
+    }
+  }
+  // normはスクリプトに不要なので除去（購入ボタン時はPWA金額固定）
+  const sendBets = finalBets.map(({num, name, odds, amount}) => ({num, name, odds, amount}));
+
   confirmBtn.disabled = true;
   confirmBtn.textContent = '処理中...';
   statusEl.innerHTML = '<span style="color:var(--amber)">🔄 GitHub Actionsに送信中...</span>';
@@ -2324,8 +2349,8 @@ async function confirmPurchaseJRA(){
         inputs: {
           course_name: courseName,
           race_num: String(raceNum),
-          bets: JSON.stringify(bets),
-          auto_buy_max: String(localStorage.getItem('auto_buy_max') || '0')
+          bets: JSON.stringify(sendBets),
+          auto_buy_max: '0'  // PWA側でキャップ済みなので0
         }
       })
     });
@@ -2336,8 +2361,10 @@ async function confirmPurchaseJRA(){
       if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ IPAT投票処理を開始しました</span>';
       setTimeout(() => closePurchaseModal(), 3000);
     } else {
-      const err = await res.json().catch(()=>({message: res.status}));
-      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.message||res.status}</span>`;
+      const errText = await res.text().catch(()=>'');
+      let errMsg = res.status;
+      try { errMsg = JSON.parse(errText).message || res.status; } catch(e){}
+      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー(${res.status}): ${errMsg}</span>`;
       confirmBtn.disabled = false;
       confirmBtn.textContent = '投票する';
     }
