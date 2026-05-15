@@ -7746,7 +7746,7 @@
     }
   },
   "_settings": {
-    "sm_temperature": 25,
+    "sm_temperature": 15,
     "sm_minpct": 3,
     "ev_min": 105,
     "ev_max": null,
@@ -7756,6 +7756,6 @@
     "auto_buy_jra": true,
     "auto_buy_max": 0,
     "auto_buy_skip_fav": true,
-    "norm_method": "simple"
+    "norm_method": "softmax"
   }
 }
