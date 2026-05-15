@@ -23,39 +23,53 @@ TIMEOUT   = 30000
 
 
 async def get_balance(page):
-    """IPATログイン後に残高を取得"""
+    """IPATログイン後に残高照会ページから残高を取得"""
+    import re
     try:
-        # トップページのテキストから残高を探す
+        # 現在のページテキストを確認
         text = await page.evaluate("() => document.body.innerText")
-        import re
-        # 「残高」「利用可能額」などのパターン
-        for pattern in [
-            r'残高[：:]\s*([\d,]+)円',
-            r'利用可能額[：:]\s*([\d,]+)円',
-            r'([\d,]+)円',
-        ]:
-            m = re.search(pattern, text)
-            if m:
-                balance = int(m.group(1).replace(',', ''))
-                if balance > 0:
-                    print(f"残高取得: ¥{balance:,}")
-                    return balance
-        # 残高要素を直接探す
-        for sel in ['#balance', '#zandaka', '.balance', '[id*="balance"]', '[id*="zandaka"]']:
-            el = await page.query_selector(sel)
-            if el:
-                t = (await el.inner_text()).strip()
-                m = re.search(r'([\d,]+)', t)
-                if m:
-                    balance = int(m.group(1).replace(',', ''))
-                    print(f"残高取得({sel}): ¥{balance:,}")
-                    return balance
-        print("残高取得失敗 → デフォルト1000円で計算")
-        return 1000
-    except Exception as e:
-        print(f"残高取得エラー: {e} → デフォルト1000円")
-        return 1000
+        print(f"残高照会ページ（先頭200文字）: {text[:200]}")
 
+        def extract_balance(t):
+            for pattern in [
+                r'残高[：:　\s]*([\d,]+)',
+                r'利用可能額[：:　\s]*([\d,]+)',
+                r'口座残高[：:　\s]*([\d,]+)',
+                r'([\d,]{4,})円',  # 4桁以上+円
+            ]:
+                m = re.search(pattern, t)
+                if m:
+                    v = int(m.group(1).replace(',', ''))
+                    if 100 <= v <= 10000000:
+                        return v
+            return None
+
+        b = extract_balance(text)
+        if b:
+            print(f"残高取得: ¥{b:,}")
+            return b
+
+        # 照会リンクを探してクリック
+        links = await page.query_selector_all('a')
+        for link in links:
+            t = (await link.inner_text()).strip()
+            if '照会' in t or '残高' in t or '口座' in t:
+                print(f"残高照会リンク: {t}")
+                await link.tap()
+                await page.wait_for_timeout(2000)
+                text2 = await page.evaluate("() => document.body.innerText")
+                print(f"照会後（先頭200文字）: {text2[:200]}")
+                b2 = extract_balance(text2)
+                if b2:
+                    print(f"残高取得（照会後）: ¥{b2:,}")
+                    return b2
+                break
+
+        print("残高取得失敗 → デフォルト10000円で計算")
+        return 10000
+    except Exception as e:
+        print(f"残高取得エラー: {e} → デフォルト10000円")
+        return 10000
 
 def calc_kelly_amounts(bets, bankroll, kelly_fraction=0.5, min_amount=100, unit=100):
     """ハーフケリーで各馬の賭け額を計算
@@ -382,7 +396,7 @@ async def main():
 
         result = await purchase(page, COURSE_NAME, RACE_NUM, BETS)
 
-        input("\nEnterで終了...")
+        # input("\nEnterで終了...")  # GitHub Actions非対応のため無効化
         await browser.close()
         return result
 
