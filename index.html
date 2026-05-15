@@ -2196,7 +2196,7 @@ function executePurchase(){
   if(typeof renders !== 'undefined' && typeof betMap !== 'undefined'){
     renders.forEach(h => {
       const tb = betMap[h.num] || 0;
-      if(tb > 0 && h.tanOdds) bets.push({ num: h.num, name: h.name, odds: h.tanOdds, amount: tb });
+      if(tb > 0 && h.tanOdds) bets.push({ num: h.num, name: h.name, odds: h.tanOdds, amount: tb, norm: h.norm || 0 });
     });
   }
   if(!bets.length){
@@ -2261,7 +2261,7 @@ function executePurchaseJRA(){
   if(typeof renders !== 'undefined' && typeof betMap !== 'undefined'){
     renders.forEach(h => {
       const tb = betMap[h.num] || 0;
-      if(tb > 0 && h.tanOdds) bets.push({ num: h.num, name: h.name, odds: h.tanOdds, amount: tb });
+      if(tb > 0 && h.tanOdds) bets.push({ num: h.num, name: h.name, odds: h.tanOdds, amount: tb, norm: h.norm || 0 });
     });
   }
   if(!bets.length){
@@ -2324,7 +2324,8 @@ async function confirmPurchaseJRA(){
         inputs: {
           course_name: courseName,
           race_num: String(raceNum),
-          bets: JSON.stringify(bets)
+          bets: JSON.stringify(bets),
+          auto_buy_max: String(localStorage.getItem('auto_buy_max') || '0')
         }
       })
     });
@@ -2483,9 +2484,15 @@ async function saveRaceResult() {
     if(res.ok) {
       const json = await res.json();
       sha = json.sha;
-      const raw = atob(json.content.replace(/\n/g,''));
-      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-      history = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      try {
+        const raw = atob(json.content.replace(/\n/g,''));
+        const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+        const decoded = new TextDecoder('utf-8').decode(bytes).trim();
+        history = decoded ? JSON.parse(decoded) : [];
+      } catch(e) {
+        console.warn('race_history.json parse error, starting fresh:', e);
+        history = [];
+      }
     }
 
     history.push(entry);
