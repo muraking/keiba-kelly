@@ -172,35 +172,43 @@ async def purchase(page, base, bets):
                     p121s_frame = f
                     break
 
-            # P121SフレームのJS環境でclickOddsBetを実行
-            try:
-                # target_onclickからclickOddsBetの引数を抽出してP121Sから呼び出す
-                # onclick例: clickOddsBet("2026051527", "園田", 1, "1", "0", "000000020000")
-                import re
-                m = re.search(r'clickOddsBet\((.+?)\)', target_onclick)
-                if m:
-                    args_str = m.group(1).replace('&quot;', '"')
-                    js_call = f"clickOddsBet({args_str})"
-                    print(f"  JS呼び出し: {js_call}")
-                    if p121s_frame:
-                        await p121s_frame.evaluate(f"() => {{ {js_call} }}")
-                        print(f"  {horse_num}番 単勝クリック完了（P121Sフレーム経由）")
-                    else:
-                        # pageのメインフレームで試す
-                        await page.evaluate(f"() => {{ {js_call} }}")
-                        print(f"  {horse_num}番 単勝クリック完了（mainフレーム）")
-                    clicked = True
-                    await page.wait_for_timeout(1500)
-            except Exception as e:
-                print(f"  JSクリックエラー: {e}")
-                # フォールバック: aタグ直接クリック
-                try:
-                    await link.click()
-                    print(f"  {horse_num}番 単勝クリック完了（aタグ直接フォールバック）")
-                    clicked = True
-                    await page.wait_for_timeout(1500)
-                except Exception as e2:
-                    print(f"  aタグクリックエラー: {e2}")
+            # clickOddsBetが定義されているフレームを探して実行
+            import re as _re
+            _m = _re.search(r'clickOddsBet\((.+?)\)', target_onclick)
+            if _m:
+                args_str = _m.group(1).replace('&quot;', '"')
+                js_call = f"clickOddsBet({args_str})"
+                print(f"  JS呼び出し: {js_call}")
+
+                # 全フレームでclickOddsBetを探す
+                found_frame = None
+                for _f in page.frames:
+                    try:
+                        has_fn = await _f.evaluate("() => typeof clickOddsBet === 'function'")
+                        _furl = _f.url
+                        print(f"    フレーム {_furl[:50]}: clickOddsBet={has_fn}")
+                        if has_fn:
+                            found_frame = _f
+                    except:
+                        pass
+
+                if found_frame:
+                    try:
+                        await found_frame.evaluate(f"() => {{ {js_call} }}")
+                        print(f"  {horse_num}番 単勝クリック完了（clickOddsBet定義フレーム）")
+                        clicked = True
+                        await page.wait_for_timeout(2000)
+                    except Exception as e:
+                        print(f"  JSクリックエラー: {e}")
+                else:
+                    print("  clickOddsBetが見つからない → aタグ直接クリック")
+                    try:
+                        await link.click()
+                        print(f"  {horse_num}番 単勝クリック完了（aタグ直接）")
+                        clicked = True
+                        await page.wait_for_timeout(2000)
+                    except Exception as e2:
+                        print(f"  aタグクリックエラー: {e2}")
 
         if not clicked:
             print(f"  {horse_num}番が見つかりません")
