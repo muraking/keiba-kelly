@@ -1937,36 +1937,37 @@ async function triggerOddsFetch(){
   const statusEl = document.getElementById('fetch-odds-status');
   btn.disabled = true;
   btn.textContent = '📡 取得中...';
-  statusEl.innerHTML = '<span style="color:var(--amber)">GitHub Actionsを起動中...</span>';
+
+  // 楽天競馬対応会場（地方競馬）
+  const RAKUTEN_VENUES = ['帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
+  const isRakuten = RAKUTEN_VENUES.includes(race.venue);
+  const workflowFile = isRakuten ? 'fetch_rakuten_odds.yml' : 'fetch_odds.yml';
+  const dispatchUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/${workflowFile}/dispatches`;
+
+  statusEl.innerHTML = `<span style="color:var(--amber)">${isRakuten ? '🔄 楽天競馬' : '🔄 SPAT4'}オッズ取得中...</span>`;
 
   try {
-    const res = await fetch(GH_DISPATCH_URL, {
+    const inputs = isRakuten
+      ? { venue: race.venue, race_num: String(raceNum), today_jst: date }
+      : { place_id: placeId, race_num: String(raceNum), race_date: raceDate, today_jst: date };
+
+    const res = await fetch(dispatchUrl, {
       method: 'POST',
       headers: {
         'Authorization': `token ${token}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        ref: GH_BRANCH,
-        inputs: {
-          place_id: placeId,
-          race_num: String(raceNum),
-          race_date: raceDate,
-          today_jst: date
-        }
-      })
+      body: JSON.stringify({ ref: GH_BRANCH, inputs })
     });
 
     if(res.status === 204){
       statusEl.innerHTML = '<span style="color:var(--amber)">🔄 取得中... 自動反映します</span>';
-      // GitHub Actions完了をポーリング（管理者のみトークンで確認）
       const startTime = Date.now();
       const pollInterval = setInterval(async () => {
         try {
-          // 最新のワークフロー実行を確認
           const runsRes = await fetch(
-            `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/fetch_odds.yml/runs?per_page=1`,
+            `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/${workflowFile}/runs?per_page=1`,
             { headers: { 'Authorization': `token ${token}` } }
           );
           const runsData = await runsRes.json();
