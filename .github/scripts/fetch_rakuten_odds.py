@@ -94,14 +94,22 @@ async def fetch_odds(page, venue, race_num, today):
     await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
     await page.wait_for_timeout(3000)
 
+    # ページ確認
+    text = await page.evaluate("() => document.body.innerText")
+    print(f"ページ内容（先頭200文字）: {text[:200]}")
+    await page.screenshot(path="rakuten_odds_debug.png")
+
     # 会場タブクリック
     try:
         tab = await page.query_selector(f'a:has-text("{venue}")')
         if tab:
             await tab.click()
             await page.wait_for_timeout(2000)
-    except:
-        pass
+            print(f"会場タブクリック: {venue}")
+        else:
+            print(f"会場タブが見つかりません: {venue}")
+    except Exception as e:
+        print(f"会場タブエラー: {e}")
 
     # テーブルからオッズ取得
     # 構造: 列0=馬番, 列1=馬名, 列2=騎手, 列3=単勝オッズ, 列4=複勝オッズ
