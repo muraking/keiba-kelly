@@ -47,3 +47,11 @@ jobs:
           RACE_NUM:     ${{ github.event.inputs.race_num }}
           TODAY_JST:    ${{ github.event.inputs.today_jst }}
         run: python .github/scripts/fetch_rakuten_odds.py
+
+      - name: スクリーンショットをアップロード
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rakuten-odds-screenshots
+          path: rakuten_*.png
+          if-no-files-found: ignore
