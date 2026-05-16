@@ -1,0 +1,49 @@
+name: 楽天競馬 オッズ取得
+
+on:
+  workflow_dispatch:
+    inputs:
+      venue:
+        description: '会場名（例: 高知）'
+        required: true
+      race_num:
+        description: 'レース番号'
+        required: true
+      today_jst:
+        description: '日付 YYYY-MM-DD（空欄=自動）'
+        required: false
+        default: ''
+
+jobs:
+  fetch-odds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 依存パッケージインストール
+        run: |
+          pip install playwright requests
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: 楽天競馬 オッズ取得
+        env:
+          RAKUTEN_USER: ${{ secrets.RAKUTEN_USER }}
+          RAKUTEN_PASS: ${{ secrets.RAKUTEN_PASS }}
+          GH_TOKEN:     ${{ secrets.GH_TOKEN }}
+          GH_USER:      muraking
+          GH_REPO:      keiba-kelly
+          GH_BRANCH:    main
+          GH_FILE:      data/indices.json
+          VENUE:        ${{ github.event.inputs.venue }}
+          RACE_NUM:     ${{ github.event.inputs.race_num }}
+          TODAY_JST:    ${{ github.event.inputs.today_jst }}
+        run: python .github/scripts/fetch_rakuten_odds.py
