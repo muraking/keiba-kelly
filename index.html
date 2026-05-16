@@ -1508,7 +1508,7 @@ function onRaceChange(){
   // オッズデータを取得（place_id → race_num の形式で保存されている）
   // race.venue から place_id を逆引き
   const VENUE_TO_ID = {
-    '帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
+    '帯広':'03','帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
     '浦和':'08','船橋':'09','大井':'10','川崎':'11',
     '金沢':'12','笠松':'13','名古屋':'14','園田':'17',
     '姫路':'18','高知':'31','佐賀':'32',
@@ -1856,7 +1856,7 @@ async function triggerOddsFetch(){
   if(!race){ alert('レースデータがありません'); return; }
 
   const VENUE_TO_ID = {
-    '帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
+    '帯広':'03','帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
     '浦和':'08','船橋':'09','大井':'10','川崎':'11',
     '金沢':'12','笠松':'13','名古屋':'14','園田':'17',
     '姫路':'18','高知':'31','佐賀':'32',
@@ -1926,7 +1926,7 @@ async function triggerOddsFetch(){
   }
 
   // 楽天競馬対応会場はplaceIdなしでもOK
-  const RAKUTEN_VENUES_CHECK = ['帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
+  const RAKUTEN_VENUES_CHECK = ['帯広','帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
   const isRakutenVenue = RAKUTEN_VENUES_CHECK.includes(race.venue);
   if(!isRakutenVenue && (!placeId || !raceNum)){
     const statusEl = document.getElementById('fetch-odds-status');
@@ -1942,7 +1942,7 @@ async function triggerOddsFetch(){
   btn.textContent = '📡 取得中...';
 
   // 楽天競馬対応会場（地方競馬）か判定
-  const RAKUTEN_VENUES = ['帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
+  const RAKUTEN_VENUES = ['帯広','帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
   const isRakuten = RAKUTEN_VENUES.includes(race.venue);
   const workflowFile = isRakuten ? 'fetch_rakuten_odds.yml' : 'fetch_odds.yml';
   const dispatchUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/${workflowFile}/dispatches`;
@@ -2196,7 +2196,7 @@ function executePurchase(){
   if(!race) return;
 
   const VENUE_TO_ID = {
-    '帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
+    '帯広':'03','帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
     '浦和':'08','船橋':'09','大井':'10','川崎':'11',
     '金沢':'12','笠松':'13','名古屋':'14','園田':'17',
     '姫路':'18','高知':'31','佐賀':'32',
