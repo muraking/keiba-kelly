@@ -1,0 +1,57 @@
+name: 楽天競馬 自動購入
+
+on:
+  workflow_dispatch:
+    inputs:
+      course_name:
+        description: '会場名（例: 高知）'
+        required: true
+      race_num:
+        description: 'レース番号'
+        required: true
+      bets:
+        description: '買い目JSON'
+        required: true
+      today:
+        description: '日付 YYYYMMDD（空欄=自動）'
+        required: false
+        default: ''
+
+jobs:
+  purchase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 依存パッケージインストール
+        run: |
+          pip install playwright requests
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: 楽天競馬 自動購入
+        env:
+          RAKUTEN_USER: ${{ secrets.RAKUTEN_USER }}
+          RAKUTEN_PASS: ${{ secrets.RAKUTEN_PASS }}
+          COURSE_NAME:  ${{ github.event.inputs.course_name }}
+          RACE_NUM:     ${{ github.event.inputs.race_num }}
+          BETS:         ${{ github.event.inputs.bets }}
+          TODAY:        ${{ github.event.inputs.today }}
+          DRY_RUN:      "0"
+        run: python .github/scripts/rakuten_purchase.py
+
+      - name: スクリーンショットをアップロード
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rakuten-screenshots
+          path: rakuten_*.png
+          if-no-files-found: ignore
