@@ -128,6 +128,27 @@ async def fetch_odds(page, venue, race_num, today):
     except:
         print(f"レース番号クリック失敗: {race_num}R")
 
+    # テーブル全体をデバッグダンプ
+    debug_info = await page.evaluate("""
+        () => {
+            const tables = document.querySelectorAll('table');
+            return Array.from(tables).slice(0, 3).map((t, ti) => {
+                const rows = t.querySelectorAll('tr');
+                return {
+                    ti,
+                    rows: Array.from(rows).slice(0, 15).map((r, ri) => {
+                        const cs = r.querySelectorAll('td');
+                        return {ri, cells: Array.from(cs).map(c => c.innerText.trim().substring(0, 10))};
+                    }).filter(r => r.cells.length > 0)
+                };
+            });
+        }
+    """)
+    for t in debug_info:
+        print(f"  [テーブル{t['ti']}]")
+        for r in t['rows']:
+            print(f"    行{r['ri']}: {r['cells']}")
+
     # テーブルからオッズ取得
     # 構造: 列0=馬番, 列1=馬名, 列2=騎手, 列3=単勝オッズ, 列4=複勝オッズ
     result = await page.evaluate("""
