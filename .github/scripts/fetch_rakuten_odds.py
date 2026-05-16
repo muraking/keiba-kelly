@@ -99,17 +99,34 @@ async def fetch_odds(page, venue, race_num, today):
     print(f"ページ内容（先頭200文字）: {text[:200]}")
     await page.screenshot(path="rakuten_odds_debug.png")
 
-    # 会場タブクリック
+    # 会場タブクリック（text=セレクターで直接クリック）
     try:
-        tab = await page.query_selector(f'a:has-text("{venue}")')
-        if tab:
-            await tab.click()
-            await page.wait_for_timeout(2000)
-            print(f"会場タブクリック: {venue}")
-        else:
-            print(f"会場タブが見つかりません: {venue}")
-    except Exception as e:
-        print(f"会場タブエラー: {e}")
+        await page.click(f'text={venue}', timeout=3000)
+        await page.wait_for_timeout(2000)
+        print(f"会場タブクリック: {venue}")
+    except:
+        # フォールバック: JSで全要素を検索
+        clicked = await page.evaluate(f"""
+            () => {{
+                for (const el of document.querySelectorAll('*')) {{
+                    if (el.children.length === 0 && el.innerText && el.innerText.trim() === '{venue}') {{
+                        el.click();
+                        return el.tagName;
+                    }}
+                }}
+                return false;
+            }}
+        """)
+        print(f"JS会場クリック: {clicked}" if clicked else f"会場タブ見つからず: {venue}")
+        await page.wait_for_timeout(2000)
+
+    # レース番号クリック
+    try:
+        await page.click(f'text={race_num}R', timeout=3000)
+        await page.wait_for_timeout(2000)
+        print(f"レース番号クリック: {race_num}R")
+    except:
+        print(f"レース番号クリック失敗: {race_num}R")
 
     # テーブルからオッズ取得
     # 構造: 列0=馬番, 列1=馬名, 列2=騎手, 列3=単勝オッズ, 列4=複勝オッズ
