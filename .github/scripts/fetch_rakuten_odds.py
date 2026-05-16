@@ -150,7 +150,7 @@ async def fetch_odds(page, venue, race_num, today):
             print(f"    行{r['ri']}: {r['cells']}")
 
     # テーブルからオッズ取得
-    # 構造: 列0=馬番, 列1=馬名, 列2=騎手, 列3=単勝オッズ, 列4=複勝オッズ
+    # 楽天競馬テーブル構造: 列0=枠番, 列1=馬番, 列2=馬名, 列3=騎手, 列4=単勝, 列5=複勝
     result = await page.evaluate("""
         () => {
             const tables = document.querySelectorAll('table');
@@ -161,14 +161,16 @@ async def fetch_odds(page, venue, race_num, today):
                 for (const row of rows) {
                     const cells = row.querySelectorAll('td');
                     if (cells.length < 4) continue;
-                    const numText = cells[0]?.innerText?.trim();
+                    // 楽天競馬テーブル: 列0=枠番, 列1=馬番, 列2=馬名, 列3=騎手, 列4=単勝, 列5=複勝
+                    const numText = cells[1]?.innerText?.trim();
                     if (!/^[0-9]{1,2}$/.test(numText)) continue;
+                    if (cells.length < 5) continue;
                     const num = parseInt(numText);
-                    const tan = parseFloat(cells[3]?.innerText?.trim());
+                    const tan = parseFloat(cells[4]?.innerText?.trim());
                     if (isNaN(tan) || tan < 1.0) continue;
                     found = true;
                     const entry = { tan: tan };
-                    const fukuText = cells[4]?.innerText?.trim() || '';
+                    const fukuText = cells[fukuIdx]?.innerText?.trim() || '';
                     if (fukuText.includes('-')) {
                         const parts = fukuText.split('-');
                         const fmin = parseFloat(parts[0]);

@@ -275,15 +275,15 @@ async def add_to_cart(page, bets):
                         for (const row of rows) {{
                             const cells = row.querySelectorAll('td');
                             if (cells.length < 4) continue;
-                            const numText = cells[0]?.innerText?.trim();
+                            const numText = cells[1]?.innerText?.trim();
                             if (numText === '{num}') {{
-                                // 単勝オッズセル（index 3）のaタグをクリック
-                                const a = cells[3]?.querySelector('a');
+                                // 単勝オッズセル（index 4）のaタグをクリック
+                                const a = cells[4]?.querySelector('a');
                                 if (a) {{
                                     a.click();
-                                    return 'a_click:' + cells[3].innerText.trim();
+                                    return 'a_click:' + cells[4].innerText.trim();
                                 }}
-                                cells[3]?.click();
+                                cells[4]?.click();
                                 return 'cell_click';
                             }}
                         }}
