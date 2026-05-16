@@ -1048,10 +1048,12 @@ function calcAll(){
     </div>`;
     // 管理者のみ購入ボタンを表示（地方競馬のみ・中央競馬は非表示）
     const JRA_VENUES_BTN = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+    const RAKUTEN_VENUES_BTN = ['帯広','帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
     const _race = currentRace || (ghData[document.getElementById('date-select').value]?.races[parseInt(document.getElementById('race-select').value)]);
     if(isAdmin && ttl > 0 && _race){
       const isJRAVenue = JRA_VENUES_BTN.includes(_race.venue);
-      const btnLabel = isJRAVenue ? '🏇 IPATで購入する' : '🛒 SPAT4で購入する';
+      const isRakutenVenue = RAKUTEN_VENUES_BTN.includes(_race.venue);
+      const btnLabel = isJRAVenue ? '🏇 IPATで購入する' : isRakutenVenue ? '🎫 楽天競馬で購入する' : '🛒 SPAT4で購入する';
       const btnFn = isJRAVenue ? 'executePurchaseJRA()' : 'executePurchase()';
       html+=`<button class="btn btn-gold" style="margin-bottom:14px;font-size:14px;font-weight:700"
         onclick="${btnFn}">${btnLabel}</button>
@@ -1508,10 +1510,9 @@ function onRaceChange(){
   // オッズデータを取得（place_id → race_num の形式で保存されている）
   // race.venue から place_id を逆引き
   const VENUE_TO_ID = {
-    '帯広':'03','帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
-    '浦和':'08','船橋':'09','大井':'10','川崎':'11',
-    '金沢':'12','笠松':'13','名古屋':'14','園田':'17',
-    '姫路':'18','高知':'31','佐賀':'32',
+    '門別':'36','盛岡':'10','水沢':'11','船橋':'19','大井':'20',
+    '川崎':'21','浦和':'22','金沢':'23','名古屋':'24','笠松':'25',
+    '園田':'27','姫路':'28','高知':'30','佐賀':'31','帯広':'44'
   };
   const placeId = VENUE_TO_ID[race.venue] || null;
   const raceNumInt = parseInt((race.raceNum || '').replace('R',''));
@@ -1856,10 +1857,9 @@ async function triggerOddsFetch(){
   if(!race){ alert('レースデータがありません'); return; }
 
   const VENUE_TO_ID = {
-    '帯広':'03','帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
-    '浦和':'08','船橋':'09','大井':'10','川崎':'11',
-    '金沢':'12','笠松':'13','名古屋':'14','園田':'17',
-    '姫路':'18','高知':'31','佐賀':'32',
+    '門別':'36','盛岡':'10','水沢':'11','船橋':'19','大井':'20',
+    '川崎':'21','浦和':'22','金沢':'23','名古屋':'24','笠松':'25',
+    '園田':'27','姫路':'28','高知':'30','佐賀':'31','帯広':'44'
   };
 
   const placeId = VENUE_TO_ID[race.venue];
@@ -2180,7 +2180,7 @@ function recalcTanfuku(){
 }
 
 
-// 地方競馬購入モーダル表示（楽天/SPAT4自動判定）
+// SPAT4自動購入モーダル表示
 let _purchaseData = null;
 
 function executePurchase(){
@@ -2191,23 +2191,13 @@ function executePurchase(){
   const race = ghData[date].races[parseInt(idx)];
   if(!race) return;
 
-  const RAKUTEN_VENUES = ['帯広','帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
-  const VENUE_TO_RAKUTEN_CODE = {
-    '帯広':'03','帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
-    '浦和':'08','船橋':'09','大井':'10','川崎':'11',
-    '金沢':'12','笠松':'13','名古屋':'14','園田':'17',
-    '姫路':'18','高知':'31','佐賀':'32',
-  };
-  const VENUE_TO_SPAT4_ID = {
+  const VENUE_TO_ID = {
     '門別':'36','盛岡':'10','水沢':'11','船橋':'19','大井':'20',
     '川崎':'21','浦和':'22','金沢':'23','名古屋':'24','笠松':'25',
     '園田':'27','姫路':'28','高知':'30','佐賀':'31','帯広':'44'
   };
 
-  const isRakuten = RAKUTEN_VENUES.includes(race.venue);
-  const placeId = isRakuten
-    ? VENUE_TO_RAKUTEN_CODE[race.venue]
-    : VENUE_TO_SPAT4_ID[race.venue];
+  const placeId = VENUE_TO_ID[race.venue];
   const raceNum = parseInt((race.raceNum||'').replace('R',''));
   if(!placeId || !raceNum){ alert(`会場「${race.venue}」のIDが見つかりません`); return; }
 
@@ -2245,9 +2235,9 @@ function executePurchase(){
   statusEl.innerHTML = '<span style="color:var(--text2)">内容を確認して「投票する」を押してください</span>';
   confirmBtn.disabled = false;
   confirmBtn.textContent = '投票する';
-  confirmBtn.onclick = isRakuten ? confirmPurchaseRakuten : confirmPurchase;
+  confirmBtn.onclick = confirmPurchase;  // SPAT4購入
 
-  _purchaseData = { placeId, raceNum, raceDate: date.replace(/-/g,''), bets, isJRA: false, isRakuten };
+  _purchaseData = { placeId, raceNum, raceDate: date.replace(/-/g,''), bets, isJRA: false };
   document.getElementById('purchase-modal').classList.add('show');
 }
 
@@ -2385,65 +2375,6 @@ async function confirmPurchaseJRA(){
       let errMsg = res.status;
       try { errMsg = JSON.parse(errText).message || res.status; } catch(e){}
       statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー(${res.status}): ${errMsg}</span>`;
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = '投票する';
-    }
-  } catch(e){
-    statusEl.innerHTML = `<span style="color:var(--red)">❌ 通信エラー: ${e.message}</span>`;
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = '投票する';
-  }
-}
-
-async function confirmPurchaseRakuten(){
-  if(!_purchaseData) return;
-  const { placeId, raceNum, bets } = _purchaseData;
-  const date = document.getElementById('date-select').value;
-  const today = date.replace(/-/g,'');
-  const idx = document.getElementById('race-select').value;
-  const race = ghData[date]?.races[parseInt(idx)];
-  const statusEl = document.getElementById('modal-status');
-  const confirmBtn = document.getElementById('modal-confirm-btn');
-  const purchaseStatusEl = document.getElementById('purchase-status');
-
-  const token = loadToken();
-  if(!token){
-    statusEl.innerHTML = '<span style="color:var(--red)">❌ 共有タブでGitHubトークンを設定してください</span>';
-    return;
-  }
-
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = '処理中...';
-  statusEl.innerHTML = '<span style="color:var(--amber)">🔄 楽天競馬 投票処理中...</span>';
-
-  try {
-    const dispatchUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/actions/workflows/purchase_rakuten.yml/dispatches`;
-    const res = await fetch(dispatchUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `token ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ref: GH_BRANCH,
-        inputs: {
-          course_name: race?.venue || '',
-          race_num: String(raceNum),
-          bets: JSON.stringify(bets),
-          today: today
-        }
-      })
-    });
-
-    if(res.status === 204){
-      statusEl.innerHTML = '<span style="color:var(--green)">✅ 楽天競馬 投票処理を開始しました（約2分で完了）</span>';
-      confirmBtn.textContent = '完了';
-      if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ 楽天競馬 投票処理を開始しました</span>';
-      setTimeout(() => closePurchaseModal(), 3000);
-    } else {
-      const err = await res.json().catch(()=>({message: res.status}));
-      statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.message||res.status}</span>`;
       confirmBtn.disabled = false;
       confirmBtn.textContent = '投票する';
     }
