@@ -710,6 +710,7 @@ async function saveSoftmaxSettings() {
       data._settings.auto_buy_jra = autoBuyJra;
       data._settings.auto_buy_max = autoBuyMax;
       data._settings.auto_buy_skip_fav = autoBuySkipFav;
+      data._settings.max_bets = parseInt(document.getElementById('max-bets')?.value || '4') || 4;
       const jsonStr = JSON.stringify(data, null, 2);
       const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
       const r2 = await fetch(apiUrl, {
@@ -1818,26 +1819,6 @@ async function refreshOdds(){
       // ghDataを更新
       if(data.dates){
         ghData = data.dates;
-      }
-
-      // _settings を localStorage に反映（スマホの設定変更をPCに同期）
-      if(data._settings) {
-        const s = data._settings;
-        localStorage.setItem('auto_buy_jra',      s.auto_buy_jra      ? '1' : '0');
-        localStorage.setItem('auto_buy_local',    s.auto_buy_local    ? '1' : '0');
-        localStorage.setItem('auto_buy_max',      String(s.auto_buy_max || 0));
-        localStorage.setItem('auto_buy_skip_fav', s.auto_buy_skip_fav ? '1' : '0');
-        localStorage.setItem('sm_temperature',    String(s.sm_temperature || 15));
-        localStorage.setItem('sm_minpct',         String(s.sm_minpct || 3.0));
-        localStorage.setItem('ev_min',            String(s.ev_min || 105));
-        if(s.ev_max)    localStorage.setItem('ev_max',    String(s.ev_max));
-        else            localStorage.removeItem('ev_max');
-        if(s.odds_min)  localStorage.setItem('odds_min',  String(s.odds_min));
-        else            localStorage.removeItem('odds_min');
-        if(s.odds_max)  localStorage.setItem('odds_max',  String(s.odds_max));
-        else            localStorage.removeItem('odds_max');
-        if(s.norm_method) localStorage.setItem('norm_method', s.norm_method);
-        loadSoftmaxSettings(); // フォームUIにも反映
       }
 
       // 現在選択中のレースを再表示
