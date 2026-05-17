@@ -9987,5 +9987,94 @@
       }
     ],
     "savedAt": "2026-05-17T23:30:01.798Z"
+  },
+  {
+    "date": "5/17 京都 11",
+    "venue": "京都",
+    "raceNum": "11R",
+    "raceClass": "栗東S",
+    "winner": 4,
+    "winOdds": 16.6,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "ベルジュロネット",
+        "norm": 0.2219,
+        "tanOdds": 4.6,
+        "ev": 102.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "タガノミスト",
+        "norm": 0.0624,
+        "tanOdds": 16.1,
+        "ev": 100.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 16.6
+      },
+      {
+        "num": 14,
+        "name": "クロジシジョー",
+        "norm": 0.0394,
+        "tanOdds": 30.7,
+        "ev": 121,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "アドバンスファラオ",
+        "norm": 0.0348,
+        "tanOdds": 45.5,
+        "ev": 158.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "エートラックス",
+        "norm": 0.0345,
+        "tanOdds": 43.6,
+        "ev": 150.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "トリリオンボーイ",
+        "norm": 0.0343,
+        "tanOdds": 80,
+        "ev": 274.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ゲッティヴィラ",
+        "norm": 0.0336,
+        "tanOdds": 39.4,
+        "ev": 132.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:30:28.922Z"
   }
 ]
