@@ -9573,5 +9573,64 @@
       }
     ],
     "savedAt": "2026-05-17T23:26:33.536Z"
+  },
+  {
+    "date": "5/17 京都 4R",
+    "venue": "京都",
+    "raceNum": "4R",
+    "raceClass": "3歳未勝利",
+    "winner": 4,
+    "winOdds": 5.5,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 17,
+        "name": "フレッチャアズーラ",
+        "norm": 0.2703,
+        "tanOdds": 5.5,
+        "ev": 148.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "セコンドトゥベスト",
+        "norm": 0.2426,
+        "tanOdds": 4.2,
+        "ev": 101.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ペプチドブッドレア",
+        "norm": 0.0563,
+        "tanOdds": 5.8,
+        "ev": 32.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 5.5
+      },
+      {
+        "num": 1,
+        "name": "ダンツアラーム",
+        "norm": 0.0253,
+        "tanOdds": 57.7,
+        "ev": 146.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:27:30.194Z"
   }
 ]
