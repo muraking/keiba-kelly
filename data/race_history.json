@@ -9741,5 +9741,54 @@
       }
     ],
     "savedAt": "2026-05-17T23:28:24.977Z"
+  },
+  {
+    "date": "5/17 京都 7R",
+    "venue": "京都",
+    "raceNum": "7R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 12,
+    "winOdds": 4.2,
+    "hit": true,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "デリュージョン",
+        "norm": 0.3317,
+        "tanOdds": 3.5,
+        "ev": 116.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "サミダレナイツ",
+        "norm": 0.3277,
+        "tanOdds": 4.2,
+        "ev": 137.6,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 4.2
+      },
+      {
+        "num": 10,
+        "name": "ビヨンドザドリーム",
+        "norm": 0.0269,
+        "tanOdds": 38.1,
+        "ev": 102.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:28:48.517Z"
   }
 ]
