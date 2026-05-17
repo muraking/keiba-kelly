@@ -8804,5 +8804,84 @@
       }
     ],
     "savedAt": "2026-05-17T23:21:36.883Z"
+  },
+  {
+    "date": "5/17 東京 5R",
+    "venue": "東京",
+    "raceNum": "5R",
+    "raceClass": "3歳未勝利",
+    "winner": 5,
+    "winOdds": 3.1,
+    "hit": true,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ウルフマン",
+        "norm": 0.3297,
+        "tanOdds": 4.1,
+        "ev": 135.2,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 3.1
+      },
+      {
+        "num": 10,
+        "name": "レッドブライトン",
+        "norm": 0.2309,
+        "tanOdds": 6.4,
+        "ev": 147.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ゴールデンダガー",
+        "norm": 0.1089,
+        "tanOdds": 21.5,
+        "ev": 234.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "レッドリアライズ",
+        "norm": 0.0332,
+        "tanOdds": 35.6,
+        "ev": 118.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "コスモアマデウス",
+        "norm": 0.0242,
+        "tanOdds": 99.3,
+        "ev": 240.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ウインスターリング",
+        "norm": 0.022,
+        "tanOdds": 48.7,
+        "ev": 107,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:21:56.579Z"
   }
 ]
