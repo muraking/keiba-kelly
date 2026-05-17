@@ -179,9 +179,30 @@ async def navigate_to_race(page, venue, race_num, today):
     except Exception as e:
         print(f"  会場タブスキップ: {e}")
 
+    # レース番号クリック（会場タブクリック後に馬テーブルが表示される）
+    race_clicked = False
+    for selector in [f'a:has-text("{race_num}R")', f'text={race_num}R']:
+        try:
+            await page.click(selector, timeout=3000)
+            await page.wait_for_timeout(2000)
+            print(f"  レース番号クリック: {race_num}R")
+            race_clicked = True
+            break
+        except:
+            continue
+
+    if not race_clicked:
+        js = f"() => {{ const els = document.querySelectorAll('a, td, li, span'); for (const el of els) {{ if (el.innerText?.trim() === '{race_num}R') {{ el.click(); return true; }} }} return false; }}"
+        clicked = await page.evaluate(js)
+        if clicked:
+            await page.wait_for_timeout(2000)
+            print(f"  レース番号JSクリック: {race_num}R")
+        else:
+            print(f"  レース番号クリック失敗: {race_num}R")
+
     text = await page.evaluate("() => document.body.innerText")
 
-    if "単勝" in text:
+    if "単勝" in text or "複勝" in text:
         print(f"✅ レースページ表示OK: {venue} {race_num}R")
         return True
     else:
@@ -265,25 +286,41 @@ async def add_to_cart(page, bets):
         num = bet['num']
         print(f"  {num}番を選択...")
         try:
-            # テーブル1（馬テーブル）の構造:
-            # 列0=馬番, 列1=馬名(link), 列2=騎手, 列3=単勝オッズ(link), 列4=複勝(link), 列5=人気
+            # 列構造自動判定:
+            # 枠番+馬番: 列0=枠番, 列1=馬番, 列4=単勝, 列5=複勝 (高知・佐賀・帯広)
+            # 枠番のみ: 行番号を馬番として使用, 列3=単勝 (盛岡・金沢)
             clicked = await page.evaluate(f"""
                 () => {{
                     const tables = document.querySelectorAll('table');
+                    let horseCount = 0;
                     for (const table of tables) {{
                         const rows = table.querySelectorAll('tr');
+                        horseCount = 0;
                         for (const row of rows) {{
                             const cells = row.querySelectorAll('td');
                             if (cells.length < 4) continue;
-                            const numText = cells[1]?.innerText?.trim();
+                            const col0 = cells[0]?.innerText?.trim();
+                            const col1 = cells[1]?.innerText?.trim();
+                            const col0IsNum = /^[0-9]{{1,2}}$/.test(col0);
+                            const col1IsNum = /^[0-9]{{1,2}}$/.test(col1);
+                            if (!col0IsNum) continue;
+                            let tanIdx, numText;
+                            if (col1IsNum) {{
+                                // 枠番+馬番構造
+                                numText = col1; tanIdx = 4;
+                            }} else {{
+                                // 枠番のみ構造 → 行番号を馬番に
+                                horseCount++;
+                                numText = String(horseCount); tanIdx = 3;
+                            }}
                             if (numText === '{num}') {{
-                                // 単勝オッズセル（index 4）のaタグをクリック
-                                const a = cells[4]?.querySelector('a');
+                                // 単勝オッズセル（tanIdx）のaタグをクリック
+                                const a = cells[tanIdx]?.querySelector('a');
                                 if (a) {{
                                     a.click();
-                                    return 'a_click:' + cells[4].innerText.trim();
+                                    return 'a_click:' + cells[tanIdx].innerText.trim();
                                 }}
-                                cells[4]?.click();
+                                cells[tanIdx]?.click();
                                 return 'cell_click';
                             }}
                         }}
