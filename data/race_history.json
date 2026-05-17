@@ -7985,5 +7985,64 @@
       }
     ],
     "savedAt": "2026-05-17T23:16:15.831Z"
+  },
+  {
+    "date": "5/17 新潟 6R",
+    "venue": "新潟",
+    "raceNum": "6R",
+    "raceClass": "3歳未勝利",
+    "winner": 3,
+    "winOdds": 6,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "エコロラヴァー",
+        "norm": 0.3428,
+        "tanOdds": 4.7,
+        "ev": 161.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "オーケーリアン",
+        "norm": 0.1241,
+        "tanOdds": 6.7,
+        "ev": 83.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6
+      },
+      {
+        "num": 4,
+        "name": "ブエノスオプティマ",
+        "norm": 0.0916,
+        "tanOdds": 13.9,
+        "ev": 127.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "トランセンコ",
+        "norm": 0.0876,
+        "tanOdds": 17.2,
+        "ev": 150.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:16:43.814Z"
   }
 ]
