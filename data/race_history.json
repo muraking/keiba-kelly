@@ -9426,5 +9426,54 @@
       }
     ],
     "savedAt": "2026-05-17T23:24:56.924Z"
+  },
+  {
+    "date": "5/17 京都 1R",
+    "venue": "京都",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 10,
+    "winOdds": 3.9,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ルージュエピック",
+        "norm": 0.3158,
+        "tanOdds": 5.3,
+        "ev": 167.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "シエーナカラー",
+        "norm": 0.2358,
+        "tanOdds": 3.9,
+        "ev": 92,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.9
+      },
+      {
+        "num": 1,
+        "name": "ミリオンアップ",
+        "norm": 0.1047,
+        "tanOdds": 12.5,
+        "ev": 130.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:25:42.556Z"
   }
 ]
