@@ -471,11 +471,47 @@ async def purchase(page, venue, race_num, bets, today):
         await dialog.accept()
     page.on('dialog', handle_dialog)
 
-    # 「投票する」ボタン（2段階: 確認画面→実際の投票）
+    # 「投票する」ボタン（確認画面の赤ボタンをクリック）
     for step in range(2):
         print(f"投票する... (ステップ{step+1})")
         try:
-            await page.click('text=投票する')
+            # 複数のセレクターで試す（確認画面の赤ボタン優先）
+            clicked = False
+            for selector in [
+                'input[value="投票する"]',
+                'button:has-text("投票する")',
+                '.vote-btn',
+                'input[type="submit"]',
+                'text=投票する',
+            ]:
+                try:
+                    await page.click(selector, timeout=2000)
+                    print(f"  ボタンクリック: {selector}")
+                    clicked = True
+                    break
+                except:
+                    continue
+            if not clicked:
+                # JSで直接クリック
+                js_clicked = await page.evaluate("""
+                    () => {
+                        // input[value=投票する] または button内テキスト
+                        const inputs = document.querySelectorAll('input[type=submit], input[type=button], button');
+                        for (const el of inputs) {
+                            const v = el.value || el.innerText || '';
+                            if (v.includes('投票する')) {
+                                el.click();
+                                return v;
+                            }
+                        }
+                        return null;
+                    }
+                """)
+                if js_clicked:
+                    print(f"  JSクリック: {js_clicked}")
+                else:
+                    print("  ⚠️ 投票ボタンが見つかりません")
+                    break
             await page.wait_for_timeout(3000)
         except Exception as e:
             print(f"  ⚠️ 投票ボタンエラー: {e}")
