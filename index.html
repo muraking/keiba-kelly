@@ -542,9 +542,7 @@ function parseData(){
     const smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
     const smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
     const smWinrateFilter = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
-    const filteredHorses = smWinrateFilter > 0
-      ? horses.filter(h => (h.pct || 0) >= smWinrateFilter)
-      : horses;
+    const filteredHorses = smWinrateFilter > 0 ? horses.filter(h => (h.pct || 0) >= smWinrateFilter) : horses;
     normMap1 = softmaxNorm(filteredHorses.length > 0 ? filteredHorses : horses, smTemp, smMinPct);
   } else {
     const tot1 = horses.reduce((s,h) => s+h.pct, 0);
@@ -693,6 +691,7 @@ async function saveSoftmaxSettings() {
   const autoBuyLocal = document.getElementById('auto-buy-local')?.checked || false;
   const autoBuyJra = document.getElementById('auto-buy-jra')?.checked || false;
   const autoBuyMax = parseInt(document.getElementById('auto-buy-max')?.value || '0') || 0;
+  const maxBetsSave = parseInt(document.getElementById('max-bets')?.value || '4') || 4;
   const autoBuySkipFav = document.getElementById('auto-buy-skip-fav')?.checked || false;
   const autoBuySkipFavOdds = parseFloat(document.getElementById('auto-buy-skip-fav-odds')?.value || '2.0') || 2.0;
   const winrateFilter = parseFloat(document.getElementById('sm-winrate-filter')?.value || '0') || 0;
@@ -700,6 +699,7 @@ async function saveSoftmaxSettings() {
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
   localStorage.setItem('auto_buy_skip_fav', autoBuySkipFav ? '1' : '0');
+  localStorage.setItem('max_bets', String(maxBetsSave));
   localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
   localStorage.setItem('sm_winrate_filter', String(winrateFilter));
 
@@ -727,6 +727,7 @@ async function saveSoftmaxSettings() {
       data._settings.auto_buy_jra = autoBuyJra;
       data._settings.auto_buy_max = autoBuyMax;
       data._settings.auto_buy_skip_fav = autoBuySkipFav;
+      data._settings.max_bets = maxBetsSave;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
       const jsonStr = JSON.stringify(data, null, 2);
@@ -806,8 +807,6 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
     localStorage.setItem('auto_buy_skip_fav', autoBuySkipFav ? '1' : '0');
-    localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
-    localStorage.setItem('sm_winrate_filter', String(winrateFilter));
     const ablEl2 = document.getElementById('auto-buy-local');
     const abjEl2 = document.getElementById('auto-buy-jra');
     const abmEl2 = document.getElementById('auto-buy-max');
@@ -821,12 +820,11 @@ async function loadSoftmaxFromGithub() {
     const wfEl2 = document.getElementById('sm-winrate-filter');
     if(wfEl2) wfEl2.value = winrateFilter;
 
-    const maxBets = s.max_bets ?? 4;
     const lines = [
       `温度T: ${T}　最小指数: ${minP}%　勝率フィルター: ${winrateFilter > 0 ? winrateFilter+'%以上' : 'なし'}`,
       `期待値: ${evMin}以上${evMax ? '～'+evMax+'以下' : '（上限なし）'}`,
       `オッズ: ${oddsMin || '無制限'}〜${oddsMax || '無制限'}倍`,
-      `最大点数: ${maxBets}点`,
+      `最大点数: ${s.max_bets ?? 4}点`,
       `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
@@ -835,6 +833,12 @@ async function loadSoftmaxFromGithub() {
       currentEl.style.display = 'block';
       currentEl.innerHTML = '📋 現在の設定<br>' + lines.join('<br>');
     }
+    const maxBets = s.max_bets ?? 4;
+    localStorage.setItem('max_bets', String(maxBets));
+    localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
+    localStorage.setItem('sm_winrate_filter', String(winrateFilter));
+    const maxBetsEl = document.getElementById('max-bets');
+    if(maxBetsEl) maxBetsEl.value = String(maxBets);
     statusEl.innerHTML = '<span style="color:var(--green)">✓ GitHubから読み込みました</span>';
     onRaceChange();
   } catch(e) {
@@ -910,7 +914,9 @@ function calcAll(){
   const rname=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
   if(!fund){alert('資金を入力してください');sw('setup');return;}
 
-  const maxBets = parseInt(document.getElementById('max-bets')?.value)||4;
+  const maxBets = parseInt(localStorage.getItem('max_bets') || document.getElementById('max-bets')?.value || '4') || 4;
+  const maxBetsEl = document.getElementById('max-bets');
+  if(maxBetsEl && maxBetsEl.value != String(maxBets)) maxBetsEl.value = String(maxBets);
   const maxInvest = parseInt(document.getElementById('max-invest')?.value)||Infinity;
 
   // フィルター設定を取得
@@ -2321,7 +2327,7 @@ function executePurchaseJRA(){
     return;
   }
 
-  // 1番人気スキップチェック（自動購入時）
+  // 1番人気1倍台スキップチェック（自動購入時）
   const skipFav = localStorage.getItem('auto_buy_skip_fav') === '1';
   if(skipFav){
     const skipFavOdds = parseFloat(localStorage.getItem('auto_buy_skip_fav_odds') || '2.0') || 2.0;
