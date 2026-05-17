@@ -7788,5 +7788,54 @@
       }
     ],
     "savedAt": "2026-05-17T23:14:41.761Z"
+  },
+  {
+    "date": "5/17 新潟 3R",
+    "venue": "新潟",
+    "raceNum": "3R",
+    "raceClass": "3歳未勝利",
+    "winner": 10,
+    "winOdds": 10.5,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "マジンタクシー",
+        "norm": 0.067,
+        "tanOdds": 12.3,
+        "ev": 82.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 10.5
+      },
+      {
+        "num": 9,
+        "name": "プティシラー",
+        "norm": 0.0651,
+        "tanOdds": 27.8,
+        "ev": 181.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "スカット",
+        "norm": 0.0644,
+        "tanOdds": 20.5,
+        "ev": 132,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:15:22.670Z"
   }
 ]
