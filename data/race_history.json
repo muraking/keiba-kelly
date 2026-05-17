@@ -7906,5 +7906,84 @@
       }
     ],
     "savedAt": "2026-05-17T23:15:51.974Z"
+  },
+  {
+    "date": "5/17 新潟 5R",
+    "venue": "新潟",
+    "raceNum": "5R",
+    "raceClass": "3歳未勝利",
+    "winner": 13,
+    "winOdds": 2.4,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "ウインポーシャ",
+        "norm": 0.2948,
+        "tanOdds": 4.3,
+        "ev": 126.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "レゼルフォート",
+        "norm": 0.2689,
+        "tanOdds": 3.4,
+        "ev": 91.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.4
+      },
+      {
+        "num": 7,
+        "name": "セーヌデローヴ",
+        "norm": 0.0472,
+        "tanOdds": 22.9,
+        "ev": 108.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 16,
+        "name": "ナムラシンジロー",
+        "norm": 0.0348,
+        "tanOdds": 52.8,
+        "ev": 183.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "サンタカタリナ",
+        "norm": 0.0313,
+        "tanOdds": 37.3,
+        "ev": 116.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ゴールドフリーダム",
+        "norm": 0.0299,
+        "tanOdds": 79.2,
+        "ev": 236.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:16:15.831Z"
   }
 ]
