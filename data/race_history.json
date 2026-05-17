@@ -8152,5 +8152,74 @@
       }
     ],
     "savedAt": "2026-05-17T23:17:31.603Z"
+  },
+  {
+    "date": "5/17 新潟 9R",
+    "venue": "新潟",
+    "raceNum": "9R",
+    "raceClass": "飛竜特別",
+    "winner": 7,
+    "winOdds": 59.8,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 16,
+        "name": "ミエノブラボー",
+        "norm": 0.1882,
+        "tanOdds": 6.9,
+        "ev": 129.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "パレスドフィーヌ",
+        "norm": 0.0826,
+        "tanOdds": 45.6,
+        "ev": 376.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "オオゾラヒバリ",
+        "norm": 0.0676,
+        "tanOdds": 28.2,
+        "ev": 190.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ラブカムーン",
+        "norm": 0.0455,
+        "tanOdds": 53.5,
+        "ev": 243.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ラヴェンデル",
+        "norm": 0,
+        "tanOdds": 36.9,
+        "ev": null,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 59.8
+      }
+    ],
+    "savedAt": "2026-05-17T23:18:01.482Z"
   }
 ]
