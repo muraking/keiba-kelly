@@ -8715,5 +8715,94 @@
       }
     ],
     "savedAt": "2026-05-17T23:20:40.684Z"
+  },
+  {
+    "date": "5/17 東京 4R",
+    "venue": "東京",
+    "raceNum": "4R",
+    "raceClass": "3歳未勝利",
+    "winner": 16,
+    "winOdds": 1.8,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 16,
+        "name": "クカイリモク",
+        "norm": 0.6306,
+        "tanOdds": 1.8,
+        "ev": 113.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.8
+      },
+      {
+        "num": 5,
+        "name": "ペカリーナ",
+        "norm": 0.0982,
+        "tanOdds": 14.3,
+        "ev": 140.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ルシアージュ",
+        "norm": 0.0757,
+        "tanOdds": 21.5,
+        "ev": 162.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ニシノマルガリート",
+        "norm": 0.0468,
+        "tanOdds": 29.6,
+        "ev": 138.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ウインシャリーフ",
+        "norm": 0.0374,
+        "tanOdds": 61.8,
+        "ev": 231.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ラウターユーベル",
+        "norm": 0.0273,
+        "tanOdds": 202.5,
+        "ev": 552.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 17,
+        "name": "グランフルス",
+        "norm": 0.0259,
+        "tanOdds": 121.8,
+        "ev": 315.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:21:36.883Z"
   }
 ]
