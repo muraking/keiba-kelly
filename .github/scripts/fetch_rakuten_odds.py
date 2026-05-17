@@ -183,32 +183,35 @@ async def fetch_odds(page, venue, race_num, today):
                 const rows = table.querySelectorAll('tr');
                 const tableResult = {};
                 let found = false;
+                let horseCount = 0;
                 for (const row of rows) {
                     const cells = row.querySelectorAll('td');
                     if (cells.length < 4) continue;
-                    // 列構造自動判定:
-                    // 枠番なし: 列0=馬番, 列3=単勝, 列4=複勝 (盛岡・金沢等)
-                    // 枠番あり: 列0=枠番, 列1=馬番, 列4=単勝, 列5=複勝 (高知・佐賀・帯広等)
+                    // 列構造判定:
+                    // 列0=数字, 列1=数字 → 枠番+馬番あり構造 (高知・佐賀・帯広等)
+                    //   列4=単勝, 列5=複勝
+                    // 列0=数字, 列1=文字 → 枠番のみ構造 (盛岡・金沢等)
+                    //   この場合行番号を馬番として使う
+                    //   列3=単勝, 列4=複勝
                     const col0 = cells[0]?.innerText?.trim();
                     const col1 = cells[1]?.innerText?.trim();
                     const col0IsNum = /^[0-9]{1,2}$/.test(col0);
                     const col1IsNum = /^[0-9]{1,2}$/.test(col1);
-                    let numIdx, tanIdx, fukuIdx2;
-                    if (col0IsNum && col1IsNum && parseInt(col0) <= 8) {
-                        // 枠番+馬番構造
-                        numIdx = 1; tanIdx = 4; fukuIdx2 = 5;
-                    } else if (col0IsNum) {
-                        // 馬番のみ構造
-                        numIdx = 0; tanIdx = 3; fukuIdx2 = 4;
+                    if (!col0IsNum) continue;
+                    let tanIdx, fukuIdx2, useRowNum;
+                    if (col1IsNum) {
+                        // 枠番+馬番構造 → 列1が馬番
+                        tanIdx = 4; fukuIdx2 = 5; useRowNum = false;
                     } else {
-                        continue;
+                        // 枠番のみ構造 → 行番号を馬番として使う
+                        tanIdx = 3; fukuIdx2 = 4; useRowNum = true;
                     }
-                    const numText = cells[numIdx]?.innerText?.trim();
-                    if (!/^[0-9]{1,2}$/.test(numText)) continue;
                     if (cells.length < tanIdx + 1) continue;
-                    const num = parseInt(numText);
+                    const num = useRowNum ? (horseCount + 1) : parseInt(col1);
+                    if (num < 1 || num > 20) continue;
                     const tan = parseFloat(cells[tanIdx]?.innerText?.trim());
                     if (isNaN(tan) || tan < 1.0) continue;
+                    horseCount++;
                     found = true;
                     const entry = { tan: tan };
                     const fukuText = cells[fukuIdx2]?.innerText?.trim() || '';
