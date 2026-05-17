@@ -1615,7 +1615,9 @@ function onRaceChange(){
   if(_normMethod2 === 'softmax') {
     const smTemp2 = parseFloat(ghData?._settings?.sm_temperature || localStorage.getItem('sm_temperature') || '15');
     const smMinPct2 = parseFloat(ghData?._settings?.sm_minpct || localStorage.getItem('sm_minpct') || '3.0');
-    normMap2 = softmaxNorm(race.horses, smTemp2, smMinPct2);
+    const smWinrateFilter2 = parseFloat(ghData?._settings?.sm_winrate_filter ?? localStorage.getItem('sm_winrate_filter') ?? '0') || 0;
+    const filteredHorses2 = smWinrateFilter2 > 0 ? race.horses.filter(h => (h.pct || 0) >= smWinrateFilter2) : race.horses;
+    normMap2 = softmaxNorm(filteredHorses2.length > 0 ? filteredHorses2 : race.horses, smTemp2, smMinPct2);
   } else {
     const tot2 = race.horses.reduce((s,h) => s+h.pct, 0);
     normMap2 = {};
