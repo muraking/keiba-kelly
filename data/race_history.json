@@ -9268,5 +9268,94 @@
       }
     ],
     "savedAt": "2026-05-17T23:24:09.605Z"
+  },
+  {
+    "date": "5/17 東京 11",
+    "venue": "東京",
+    "raceNum": "11R",
+    "raceClass": "ヴィクトリアマイル",
+    "winner": 12,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "エンブロイダリー",
+        "norm": 0.2678,
+        "tanOdds": 1.9,
+        "ev": 50.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.9
+      },
+      {
+        "num": 7,
+        "name": "クイーンズウォーク",
+        "norm": 0.147,
+        "tanOdds": 8.6,
+        "ev": 126.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ココナッツブラウン",
+        "norm": 0.1017,
+        "tanOdds": 23.6,
+        "ev": 240,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ジョスラン",
+        "norm": 0.0803,
+        "tanOdds": 25.2,
+        "ev": 202.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 18,
+        "name": "チェルヴィニア",
+        "norm": 0.0671,
+        "tanOdds": 19,
+        "ev": 127.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 17,
+        "name": "パラディレーヌ",
+        "norm": 0.0446,
+        "tanOdds": 40.6,
+        "ev": 181.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "カナテープ",
+        "norm": 0.0299,
+        "tanOdds": 34.4,
+        "ev": 102.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:24:34.911Z"
   }
 ]
