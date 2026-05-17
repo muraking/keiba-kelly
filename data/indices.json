@@ -12451,6 +12451,6 @@
     "norm_method": "softmax",
     "max_bets": 4,
     "auto_buy_skip_fav_odds": 1.6,
-    "sm_winrate_filter": 0
+    "sm_winrate_filter": 8
   }
 }
