@@ -9475,5 +9475,44 @@
       }
     ],
     "savedAt": "2026-05-17T23:25:42.556Z"
+  },
+  {
+    "date": "5/17 京都 2R",
+    "venue": "京都",
+    "raceNum": "2R",
+    "raceClass": "3歳未勝利",
+    "winner": 2,
+    "winOdds": 7.2,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "サトノフレイ",
+        "norm": 0.3182,
+        "tanOdds": 3.9,
+        "ev": 124.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ジャカルタバオ",
+        "norm": 0.1233,
+        "tanOdds": 6.4,
+        "ev": 78.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 7.2
+      }
+    ],
+    "savedAt": "2026-05-17T23:26:04.835Z"
   }
 ]
