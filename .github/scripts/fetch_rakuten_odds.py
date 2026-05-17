@@ -120,13 +120,38 @@ async def fetch_odds(page, venue, race_num, today):
         print(f"JS会場クリック: {clicked}" if clicked else f"会場タブ見つからず: {venue}")
         await page.wait_for_timeout(2000)
 
-    # レース番号クリック
-    try:
-        await page.click(f'text={race_num}R', timeout=3000)
-        await page.wait_for_timeout(2000)
-        print(f"レース番号クリック: {race_num}R")
-    except:
-        print(f"レース番号クリック失敗: {race_num}R")
+    # レース番号クリック（複数のセレクターを試す）
+    race_clicked = False
+    for selector in [f'text={race_num}R', f'a:has-text("{race_num}R")', f'td:has-text("{race_num}R")']:
+        try:
+            await page.click(selector, timeout=3000)
+            await page.wait_for_timeout(2000)
+            print(f"レース番号クリック: {race_num}R ({selector})")
+            race_clicked = True
+            break
+        except:
+            continue
+
+    if not race_clicked:
+        # JSで直接クリック
+        clicked = await page.evaluate(f"""
+            () => {{
+                const links = document.querySelectorAll('a, td, li, span');
+                for (const el of links) {{
+                    const t = el.innerText?.trim();
+                    if (t === '{race_num}R' || t === '{race_num}') {{
+                        el.click();
+                        return true;
+                    }}
+                }}
+                return false;
+            }}
+        """)
+        if clicked:
+            await page.wait_for_timeout(2000)
+            print(f"レース番号JSクリック: {race_num}R")
+        else:
+            print(f"レース番号クリック失敗: {race_num}R（それでもオッズ取得を試みます）")
 
     # テーブル全体をデバッグダンプ
     debug_info = await page.evaluate("""
