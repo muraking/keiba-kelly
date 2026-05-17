@@ -329,7 +329,7 @@ async def add_to_cart(page, bets):
                 }}
             """)
             print(f"    {num}番: {clicked}")
-            await page.wait_for_timeout(800)
+            await page.wait_for_timeout(1500)
 
         except Exception as e:
             print(f"    {num}番 エラー: {e}")
@@ -471,27 +471,44 @@ async def purchase(page, venue, race_num, bets, today):
         await dialog.accept()
     page.on('dialog', handle_dialog)
 
-    # 「投票する」ボタン
-    print("投票する...")
-    try:
-        await page.click('text=投票する')
-        await page.wait_for_timeout(3000)
-    except Exception as e:
-        print(f"  ⚠️ 投票ボタンエラー: {e}")
-        return False
+    # 「投票する」ボタン（2段階: 確認画面→実際の投票）
+    for step in range(2):
+        print(f"投票する... (ステップ{step+1})")
+        try:
+            await page.click('text=投票する')
+            await page.wait_for_timeout(3000)
+        except Exception as e:
+            print(f"  ⚠️ 投票ボタンエラー: {e}")
+            break
+
+        text = await page.evaluate("() => document.body.innerText")
+
+        # 投票完了判定（「投票内容確認」はまだ確認画面なので除外）
+        if '投票完了' in text or ('受付' in text and '投票内容確認' not in text):
+            await page.screenshot(path="rakuten_06_result.png")
+            result_text = text
+            lines = [l.strip() for l in result_text.split('\n') if l.strip()]
+            print("結果:")
+            for line in lines[:20]:
+                print(f"  {line}")
+            print("\n✅ 投票完了！")
+            return True
+
+        if '投票内容確認' in text:
+            print("  → 投票内容確認画面。もう一度「投票する」を押します...")
+            continue
+
+        # それ以外
+        break
 
     await page.screenshot(path="rakuten_06_result.png")
-
-    # 結果確認
     result_text = await page.evaluate("() => document.body.innerText")
     lines = [l.strip() for l in result_text.split('\n') if l.strip()]
     print("結果:")
     for line in lines[:20]:
         print(f"  {line}")
-
-    success = '投票完了' in result_text or '受付' in result_text or '完了' in result_text
-    print(f"\n{'✅ 投票完了！' if success else '⚠️ 投票結果不明（スクリーンショット確認）'}")
-    return success
+    print("\n⚠️ 投票結果不明（スクリーンショット確認）")
+    return False
 
 
 async def main():
