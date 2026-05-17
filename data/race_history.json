@@ -9918,5 +9918,74 @@
       }
     ],
     "savedAt": "2026-05-17T23:29:49.919Z"
+  },
+  {
+    "date": "5/17 京都 10",
+    "venue": "京都",
+    "raceNum": "10R",
+    "raceClass": "錦S",
+    "winner": 12,
+    "winOdds": 10,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "バレルターン",
+        "norm": 0.219,
+        "tanOdds": 12.7,
+        "ev": 278.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "セブンマジシャン",
+        "norm": 0.1597,
+        "tanOdds": 7.2,
+        "ev": 115,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "カズミクラーシュ",
+        "norm": 0.0399,
+        "tanOdds": 10.3,
+        "ev": 41,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 10
+      },
+      {
+        "num": 11,
+        "name": "プッシュオン",
+        "norm": 0.034,
+        "tanOdds": 29.9,
+        "ev": 101.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ボーモンド",
+        "norm": 0.0338,
+        "tanOdds": 31.2,
+        "ev": 105.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:30:01.798Z"
   }
 ]
