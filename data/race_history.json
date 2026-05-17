@@ -9357,5 +9357,74 @@
       }
     ],
     "savedAt": "2026-05-17T23:24:34.911Z"
+  },
+  {
+    "date": "5/17 東京 12",
+    "venue": "東京",
+    "raceNum": "12R",
+    "raceClass": "BSイレブン賞",
+    "winner": 8,
+    "winOdds": 3.9,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 13,
+        "name": "メイケイレイン",
+        "norm": 0.4166,
+        "tanOdds": 6.2,
+        "ev": 258.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "スニーカースキル",
+        "norm": 0.0922,
+        "tanOdds": 13.1,
+        "ev": 120.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ラファル",
+        "norm": 0.0731,
+        "tanOdds": 3.6,
+        "ev": 26.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.9
+      },
+      {
+        "num": 2,
+        "name": "トゥロン",
+        "norm": 0.0626,
+        "tanOdds": 20,
+        "ev": 125.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ワークソング",
+        "norm": 0.0375,
+        "tanOdds": 50.9,
+        "ev": 190.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:24:56.924Z"
   }
 ]
