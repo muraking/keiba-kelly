@@ -7660,5 +7660,84 @@
       }
     ],
     "savedAt": "2026-05-14T11:53:24.018Z"
+  },
+  {
+    "date": "5/17 新潟 1R",
+    "venue": "新潟",
+    "raceNum": "1R",
+    "raceClass": "4歳以上障害未勝利",
+    "winner": 6,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "ライツフォル",
+        "norm": 0.2398,
+        "tanOdds": 2.2,
+        "ev": 52.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.9
+      },
+      {
+        "num": 13,
+        "name": "フォルガイル",
+        "norm": 0.1812,
+        "tanOdds": 7.2,
+        "ev": 130.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "アニージョ",
+        "norm": 0.1532,
+        "tanOdds": 9.4,
+        "ev": 144,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ナヴァラトゥナ",
+        "norm": 0.0782,
+        "tanOdds": 18.8,
+        "ev": 147.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "アンノウンウォリア",
+        "norm": 0.068,
+        "tanOdds": 33.5,
+        "ev": 227.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "イモータルバード",
+        "norm": 0.0615,
+        "tanOdds": 36.9,
+        "ev": 227.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:14:20.117Z"
   }
 ]
