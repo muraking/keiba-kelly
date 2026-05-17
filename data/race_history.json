@@ -8883,5 +8883,84 @@
       }
     ],
     "savedAt": "2026-05-17T23:21:56.579Z"
+  },
+  {
+    "date": "5/17 東京 6R",
+    "venue": "東京",
+    "raceNum": "6R",
+    "raceClass": "3歳1勝クラス",
+    "winner": 6,
+    "winOdds": 3.3,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "バルボアパーク",
+        "norm": 0.4656,
+        "tanOdds": 2.5,
+        "ev": 116.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ワイズギャング",
+        "norm": 0.1465,
+        "tanOdds": 8.4,
+        "ev": 123.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ルージュカルデア",
+        "norm": 0.0785,
+        "tanOdds": 15.1,
+        "ev": 118.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ジュワネング",
+        "norm": 0.0672,
+        "tanOdds": 4.3,
+        "ev": 28.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.3
+      },
+      {
+        "num": 2,
+        "name": "フィアーブル",
+        "norm": 0.0618,
+        "tanOdds": 20.1,
+        "ev": 124.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ファンシーズ",
+        "norm": 0.0403,
+        "tanOdds": 39.3,
+        "ev": 158.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:22:23.891Z"
   }
 ]
