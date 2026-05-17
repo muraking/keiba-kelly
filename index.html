@@ -390,6 +390,12 @@ textarea:focus{border-color:var(--gold)}
           <input id="sm-minpct" type="number" min="0" max="20" step="0.5" value="3.0"
             style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
         </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター（%以上の馬のみ対象）</div>
+          <input id="sm-winrate-filter" type="number" min="0" max="50" step="1" value="0"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          <div style="font-size:10px;color:var(--text3);margin-top:2px">0=フィルターなし（全馬対象）</div>
+        </div>
       </div>
       <div class="sh" style="margin-top:12px">勝率計算方式</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
@@ -454,13 +460,16 @@ textarea:focus{border-color:var(--gold)}
         <div style="font-size:10px;color:var(--text3);margin-top:2px">0または空白=無制限（ケリー計算額をそのまま使用）</div>
       </div>
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">1番人気が1倍台の時の自動購入</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">1番人気スキップ設定</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
           <input type="checkbox" id="auto-buy-skip-fav" style="width:18px;height:18px;cursor:pointer"
-            onchange="document.getElementById('auto-buy-skip-fav-label').textContent=this.checked?'スキップ（購入しない）':'購入する'">
-          <span style="font-size:13px;color:var(--text)" id="auto-buy-skip-fav-label">購入する</span>
+            onchange="document.getElementById('auto-buy-skip-fav-label').textContent=this.checked?'スキップON':'スキップOFF'">
+          <span style="font-size:13px;color:var(--text)" id="auto-buy-skip-fav-label">スキップOFF</span>
         </label>
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると1番人気が1倍台のレースは自動購入をスキップ</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1番人気が何倍以下の時スキップするか</div>
+        <input id="auto-buy-skip-fav-odds" type="number" min="1.0" max="5.0" step="0.1" value="2.0"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 2.0 → 1番人気が2.0倍以下のレースをスキップ</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
@@ -532,7 +541,11 @@ function parseData(){
   if(_normMethod === 'softmax') {
     const smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
     const smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
-    normMap1 = softmaxNorm(horses, smTemp, smMinPct);
+    const smWinrateFilter = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
+    const filteredHorses = smWinrateFilter > 0
+      ? horses.filter(h => (h.pct || 0) >= smWinrateFilter)
+      : horses;
+    normMap1 = softmaxNorm(filteredHorses.length > 0 ? filteredHorses : horses, smTemp, smMinPct);
   } else {
     const tot1 = horses.reduce((s,h) => s+h.pct, 0);
     normMap1 = {};
@@ -681,10 +694,14 @@ async function saveSoftmaxSettings() {
   const autoBuyJra = document.getElementById('auto-buy-jra')?.checked || false;
   const autoBuyMax = parseInt(document.getElementById('auto-buy-max')?.value || '0') || 0;
   const autoBuySkipFav = document.getElementById('auto-buy-skip-fav')?.checked || false;
+  const autoBuySkipFavOdds = parseFloat(document.getElementById('auto-buy-skip-fav-odds')?.value || '2.0') || 2.0;
+  const winrateFilter = parseFloat(document.getElementById('sm-winrate-filter')?.value || '0') || 0;
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
   localStorage.setItem('auto_buy_skip_fav', autoBuySkipFav ? '1' : '0');
+  localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
+  localStorage.setItem('sm_winrate_filter', String(winrateFilter));
 
   // GitHubにも保存（管理者のみ）
   const token = loadToken();
@@ -710,6 +727,8 @@ async function saveSoftmaxSettings() {
       data._settings.auto_buy_jra = autoBuyJra;
       data._settings.auto_buy_max = autoBuyMax;
       data._settings.auto_buy_skip_fav = autoBuySkipFav;
+      data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
+      data._settings.sm_winrate_filter = winrateFilter;
       const jsonStr = JSON.stringify(data, null, 2);
       const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
       const r2 = await fetch(apiUrl, {
@@ -781,10 +800,14 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('norm_method', normMethodGh);
     updateNormMethodUI(normMethodGh);
     const autoBuySkipFav = s.auto_buy_skip_fav || false;
+    const autoBuySkipFavOdds = s.auto_buy_skip_fav_odds ?? 2.0;
+    const winrateFilter = s.sm_winrate_filter ?? 0;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
     localStorage.setItem('auto_buy_skip_fav', autoBuySkipFav ? '1' : '0');
+    localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
+    localStorage.setItem('sm_winrate_filter', String(winrateFilter));
     const ablEl2 = document.getElementById('auto-buy-local');
     const abjEl2 = document.getElementById('auto-buy-jra');
     const abmEl2 = document.getElementById('auto-buy-max');
@@ -792,14 +815,21 @@ async function loadSoftmaxFromGithub() {
     if(ablEl2){ ablEl2.checked = autoBuyLocal; document.getElementById('auto-buy-local-label').textContent = autoBuyLocal ? 'ON' : 'OFF'; }
     if(abjEl2){ abjEl2.checked = autoBuyJra; document.getElementById('auto-buy-jra-label').textContent = autoBuyJra ? 'ON' : 'OFF'; }
     if(abmEl2) abmEl2.value = autoBuyMax;
-    if(absfEl2){ absfEl2.checked = autoBuySkipFav; document.getElementById('auto-buy-skip-fav-label').textContent = autoBuySkipFav ? 'スキップ（購入しない）' : '購入する'; }
+    if(absfEl2){ absfEl2.checked = autoBuySkipFav; document.getElementById('auto-buy-skip-fav-label').textContent = autoBuySkipFav ? 'スキップON' : 'スキップOFF'; }
+    const absfOddsEl2 = document.getElementById('auto-buy-skip-fav-odds');
+    if(absfOddsEl2) absfOddsEl2.value = autoBuySkipFavOdds;
+    const wfEl2 = document.getElementById('sm-winrate-filter');
+    if(wfEl2) wfEl2.value = winrateFilter;
 
+    const maxBets = s.max_bets ?? 4;
     const lines = [
-      `温度T: ${T}　最小指数: ${minP}%`,
+      `温度T: ${T}　最小指数: ${minP}%　勝率フィルター: ${winrateFilter > 0 ? winrateFilter+'%以上' : 'なし'}`,
       `期待値: ${evMin}以上${evMax ? '～'+evMax+'以下' : '（上限なし）'}`,
       `オッズ: ${oddsMin || '無制限'}〜${oddsMax || '無制限'}倍`,
+      `最大点数: ${maxBets}点`,
       `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
-      `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''} 1番人気1倍台=${autoBuySkipFav?'スキップ':'購入'}`,
+      `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
+      `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
     ];
     if(currentEl){
       currentEl.style.display = 'block';
@@ -2291,13 +2321,14 @@ function executePurchaseJRA(){
     return;
   }
 
-  // 1番人気1倍台スキップチェック（自動購入時）
+  // 1番人気スキップチェック（自動購入時）
   const skipFav = localStorage.getItem('auto_buy_skip_fav') === '1';
   if(skipFav){
+    const skipFavOdds = parseFloat(localStorage.getItem('auto_buy_skip_fav_odds') || '2.0') || 2.0;
     const allOdds = (renders || []).map(h => h.tanOdds).filter(o => o > 0);
     const favOdds = allOdds.length ? Math.min(...allOdds) : null;
-    if(favOdds && favOdds < 2.0){
-      alert(`⚠️ 1番人気が${favOdds}倍のため自動購入をスキップします（設定: 1番人気1倍台スキップON）`);
+    if(favOdds && favOdds <= skipFavOdds){
+      alert(`⚠️ 1番人気が${favOdds}倍のため自動購入をスキップします（設定: ${skipFavOdds}倍以下スキップ）`);
       return;
     }
   }
