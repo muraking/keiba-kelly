@@ -8221,5 +8221,84 @@
       }
     ],
     "savedAt": "2026-05-17T23:18:01.482Z"
+  },
+  {
+    "date": "5/17 新潟 10",
+    "venue": "新潟",
+    "raceNum": "10R",
+    "raceClass": "信濃川特別",
+    "winner": 14,
+    "winOdds": 2.5,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 14,
+        "name": "マリアイリダータ",
+        "norm": 0.2804,
+        "tanOdds": 2.4,
+        "ev": 67.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.5
+      },
+      {
+        "num": 9,
+        "name": "クロシェットノエル",
+        "norm": 0.238,
+        "tanOdds": 8.9,
+        "ev": 211.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "フルレゾン",
+        "norm": 0.0731,
+        "tanOdds": 20.5,
+        "ev": 149.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ジェットブレード",
+        "norm": 0.0386,
+        "tanOdds": 41,
+        "ev": 158.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ホウオウレイヴン",
+        "norm": 0.0366,
+        "tanOdds": 33.4,
+        "ev": 122.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "バードウォッチャー",
+        "norm": 0.0362,
+        "tanOdds": 35.7,
+        "ev": 129.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:18:23.964Z"
   }
 ]
