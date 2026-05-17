@@ -8557,5 +8557,94 @@
       }
     ],
     "savedAt": "2026-05-17T23:20:08.323Z"
+  },
+  {
+    "date": "5/17 東京 1R",
+    "venue": "東京",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 2,
+    "winOdds": 6.3,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "コーリンクレア",
+        "norm": 0.3181,
+        "tanOdds": 3.6,
+        "ev": 114.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ミライヘノティアラ",
+        "norm": 0.1677,
+        "tanOdds": 6.5,
+        "ev": 109,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6.3
+      },
+      {
+        "num": 4,
+        "name": "イデアクリスタル",
+        "norm": 0.139,
+        "tanOdds": 7.2,
+        "ev": 100.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "キミガハマ",
+        "norm": 0.0867,
+        "tanOdds": 17.7,
+        "ev": 153.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ロット",
+        "norm": 0.065,
+        "tanOdds": 19.4,
+        "ev": 126.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ソフィアプルーマ",
+        "norm": 0.0485,
+        "tanOdds": 36.1,
+        "ev": 175.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "オーケーグレイス",
+        "norm": 0.047,
+        "tanOdds": 23.3,
+        "ev": 109.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:20:16.711Z"
   }
 ]
