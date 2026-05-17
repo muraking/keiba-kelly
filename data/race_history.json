@@ -8103,5 +8103,54 @@
       }
     ],
     "savedAt": "2026-05-17T23:17:05.659Z"
+  },
+  {
+    "date": "5/17 新潟 8R",
+    "venue": "新潟",
+    "raceNum": "8R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 10,
+    "winOdds": 3.5,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "ココデイック",
+        "norm": 0.5487,
+        "tanOdds": 2.7,
+        "ev": 148.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ゴルデールスカー",
+        "norm": 0.1483,
+        "tanOdds": 3.6,
+        "ev": 53.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.5
+      },
+      {
+        "num": 5,
+        "name": "ラテライト",
+        "norm": 0.0438,
+        "tanOdds": 23.1,
+        "ev": 101.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:17:31.603Z"
   }
 ]
