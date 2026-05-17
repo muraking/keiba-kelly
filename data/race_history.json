@@ -8646,5 +8646,74 @@
       }
     ],
     "savedAt": "2026-05-17T23:20:16.711Z"
+  },
+  {
+    "date": "5/17 東京 2R",
+    "venue": "東京",
+    "raceNum": "2R",
+    "raceClass": "3歳未勝利",
+    "winner": 14,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 14,
+        "name": "デスサイズ",
+        "norm": 0.3978,
+        "tanOdds": 1.5,
+        "ev": 59.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      },
+      {
+        "num": 5,
+        "name": "マナイアカラニ",
+        "norm": 0.2983,
+        "tanOdds": 5.5,
+        "ev": 164.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "エルアン",
+        "norm": 0.0863,
+        "tanOdds": 55.4,
+        "ev": 478.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ライクアストリーク",
+        "norm": 0.0399,
+        "tanOdds": 149.1,
+        "ev": 594.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "イデアジュアンイハ",
+        "norm": 0.0386,
+        "tanOdds": 81.7,
+        "ev": 315.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:20:40.684Z"
   }
 ]
