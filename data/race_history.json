@@ -7739,5 +7739,54 @@
       }
     ],
     "savedAt": "2026-05-17T23:14:20.117Z"
+  },
+  {
+    "date": "5/17 新潟 2R",
+    "venue": "新潟",
+    "raceNum": "2R",
+    "raceClass": "3歳未勝利",
+    "winner": 6,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "エタンセル",
+        "norm": 0.3988,
+        "tanOdds": 1.5,
+        "ev": 59.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.9
+      },
+      {
+        "num": 7,
+        "name": "アデルフィー",
+        "norm": 0.3304,
+        "tanOdds": 4.4,
+        "ev": 145.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "パイザナンバー",
+        "norm": 0.0346,
+        "tanOdds": 32.7,
+        "ev": 113.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:14:41.761Z"
   }
 ]
