@@ -7837,5 +7837,74 @@
       }
     ],
     "savedAt": "2026-05-17T23:15:22.670Z"
+  },
+  {
+    "date": "5/17 新潟 4R",
+    "venue": "新潟",
+    "raceNum": "4R",
+    "raceClass": "4歳以上障害未勝利",
+    "winner": 8,
+    "winOdds": 3.9,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "スティルシャイニン",
+        "norm": 0.1332,
+        "tanOdds": 14.8,
+        "ev": 197.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "コルデアニル",
+        "norm": 0.1255,
+        "tanOdds": 9.5,
+        "ev": 119.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ヴェールランス",
+        "norm": 0.1044,
+        "tanOdds": 4.5,
+        "ev": 47,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.9
+      },
+      {
+        "num": 7,
+        "name": "ガストン",
+        "norm": 0.0573,
+        "tanOdds": 44,
+        "ev": 252.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "トモジャシャトー",
+        "norm": 0.0512,
+        "tanOdds": 66.2,
+        "ev": 339.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:15:51.974Z"
   }
 ]
