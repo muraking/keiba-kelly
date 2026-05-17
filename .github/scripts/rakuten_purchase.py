@@ -465,6 +465,33 @@ async def purchase(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_05_total.png")
 
+    # 投票ボタンのHTML構造をデバッグ出力
+    btn_debug = await page.evaluate("""
+        () => {
+            const results = [];
+            const els = document.querySelectorAll('input, button, a');
+            for (const el of els) {
+                const v = (el.value || el.innerText || '').trim();
+                if (v.includes('投票')) {
+                    results.push({
+                        tag: el.tagName,
+                        type: el.type || '',
+                        value: el.value || '',
+                        text: el.innerText?.trim().substring(0, 20) || '',
+                        id: el.id || '',
+                        cls: el.className || '',
+                        name: el.name || '',
+                        disabled: el.disabled
+                    });
+                }
+            }
+            return results;
+        }
+    """)
+    print("投票ボタン候補:")
+    for b in btn_debug:
+        print(f"  {b}")
+
     # ダイアログハンドラ
     async def handle_dialog(dialog):
         print(f"  💬 ダイアログ: {dialog.message[:80]}")
@@ -477,41 +504,27 @@ async def purchase(page, venue, race_num, bets, today):
         try:
             # 複数のセレクターで試す（確認画面の赤ボタン優先）
             clicked = False
-            for selector in [
-                'input[value="投票する"]',
-                'button:has-text("投票する")',
-                '.vote-btn',
-                'input[type="submit"]',
-                'text=投票する',
-            ]:
-                try:
-                    await page.click(selector, timeout=2000)
-                    print(f"  ボタンクリック: {selector}")
-                    clicked = True
-                    break
-                except:
-                    continue
-            if not clicked:
-                # JSで直接クリック
-                js_clicked = await page.evaluate("""
-                    () => {
-                        // input[value=投票する] または button内テキスト
-                        const inputs = document.querySelectorAll('input[type=submit], input[type=button], button');
-                        for (const el of inputs) {
-                            const v = el.value || el.innerText || '';
-                            if (v.includes('投票する')) {
-                                el.click();
-                                return v;
-                            }
+            # スクロールしてボタンを表示してからクリック
+            js_clicked = await page.evaluate("""
+                () => {
+                    const inputs = document.querySelectorAll('input[type=submit], input[type=button], button, a');
+                    for (const el of inputs) {
+                        const v = (el.value || el.innerText || '').trim();
+                        if (v === '投票する') {
+                            el.scrollIntoView({behavior: 'instant', block: 'center'});
+                            el.click();
+                            return v + ':' + el.tagName + ':' + el.type;
                         }
-                        return null;
                     }
-                """)
-                if js_clicked:
-                    print(f"  JSクリック: {js_clicked}")
-                else:
-                    print("  ⚠️ 投票ボタンが見つかりません")
-                    break
+                    return null;
+                }
+            """)
+            if js_clicked:
+                print(f"  JSクリック成功: {js_clicked}")
+                clicked = True
+            else:
+                print("  ⚠️ 投票ボタンが見つかりません")
+                break
             await page.wait_for_timeout(3000)
         except Exception as e:
             print(f"  ⚠️ 投票ボタンエラー: {e}")
