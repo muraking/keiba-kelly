@@ -9090,5 +9090,94 @@
       }
     ],
     "savedAt": "2026-05-17T23:23:20.424Z"
+  },
+  {
+    "date": "5/17 東京 9R",
+    "venue": "東京",
+    "raceNum": "9R",
+    "raceClass": "テレ玉杯",
+    "winner": 12,
+    "winOdds": 2.4,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "エルマーゴ",
+        "norm": 0.2069,
+        "tanOdds": 2.3,
+        "ev": 47.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.4
+      },
+      {
+        "num": 1,
+        "name": "オリバナム",
+        "norm": 0.1933,
+        "tanOdds": 8.8,
+        "ev": 170.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ミッキースターダム",
+        "norm": 0.1061,
+        "tanOdds": 12,
+        "ev": 127.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "マンウォル",
+        "norm": 0.0418,
+        "tanOdds": 29.7,
+        "ev": 124.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "クールベイビー",
+        "norm": 0.0372,
+        "tanOdds": 36.2,
+        "ev": 134.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ケイケイ",
+        "norm": 0.03,
+        "tanOdds": 38.8,
+        "ev": 116.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "リュウノタブーク",
+        "norm": 0.0288,
+        "tanOdds": 49.8,
+        "ev": 143.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:23:43.117Z"
   }
 ]
