@@ -179,26 +179,23 @@ async def navigate_to_race(page, venue, race_num, today):
     except Exception as e:
         print(f"  会場タブスキップ: {e}")
 
-    # レース番号クリック（会場タブクリック後に馬テーブルが表示される）
-    race_clicked = False
-    for selector in [f'a:has-text("{race_num}R")', f'text={race_num}R']:
-        try:
-            await page.click(selector, timeout=3000)
-            await page.wait_for_timeout(2000)
-            print(f"  レース番号クリック: {race_num}R")
-            race_clicked = True
-            break
-        except:
-            continue
-
-    if not race_clicked:
-        js = f"() => {{ const els = document.querySelectorAll('a, td, li, span'); for (const el of els) {{ if (el.innerText?.trim() === '{race_num}R') {{ el.click(); return true; }} }} return false; }}"
-        clicked = await page.evaluate(js)
-        if clicked:
-            await page.wait_for_timeout(2000)
-            print(f"  レース番号JSクリック: {race_num}R")
-        else:
-            print(f"  レース番号クリック失敗: {race_num}R")
+    # レース番号クリック（完全一致でJSクリック）
+    js = f"""() => {{
+        const els = document.querySelectorAll('a, td, li, span');
+        for (const el of els) {{
+            if (el.innerText?.trim() === '{race_num}R') {{
+                el.click();
+                return true;
+            }}
+        }}
+        return false;
+    }}"""
+    clicked = await page.evaluate(js)
+    if clicked:
+        await page.wait_for_timeout(2000)
+        print(f"  レース番号クリック: {race_num}R")
+    else:
+        print(f"  レース番号クリック失敗: {race_num}R")
 
     text = await page.evaluate("() => document.body.innerText")
 
@@ -465,33 +462,6 @@ async def purchase(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_05_total.png")
 
-    # 投票ボタンのHTML構造をデバッグ出力
-    btn_debug = await page.evaluate("""
-        () => {
-            const results = [];
-            const els = document.querySelectorAll('input, button, a');
-            for (const el of els) {
-                const v = (el.value || el.innerText || '').trim();
-                if (v.includes('投票')) {
-                    results.push({
-                        tag: el.tagName,
-                        type: el.type || '',
-                        value: el.value || '',
-                        text: el.innerText?.trim().substring(0, 20) || '',
-                        id: el.id || '',
-                        cls: el.className || '',
-                        name: el.name || '',
-                        disabled: el.disabled
-                    });
-                }
-            }
-            return results;
-        }
-    """)
-    print("投票ボタン候補:")
-    for b in btn_debug:
-        print(f"  {b}")
-
     # ダイアログハンドラ
     async def handle_dialog(dialog):
         print(f"  💬 ダイアログ: {dialog.message[:80]}")
@@ -504,16 +474,24 @@ async def purchase(page, venue, race_num, bets, today):
         try:
             # 複数のセレクターで試す（確認画面の赤ボタン優先）
             clicked = False
-            # スクロールしてボタンを表示してからクリック
+            # voteBtn クラスのAタグをスクロール+クリック
             js_clicked = await page.evaluate("""
                 () => {
-                    const inputs = document.querySelectorAll('input[type=submit], input[type=button], button, a');
-                    for (const el of inputs) {
+                    // class=voteBtnを優先
+                    const voteBtn = document.querySelector('a.voteBtn, input.voteBtn, button.voteBtn');
+                    if (voteBtn) {
+                        voteBtn.scrollIntoView({behavior: 'instant', block: 'center'});
+                        voteBtn.click();
+                        return 'voteBtn:' + voteBtn.tagName;
+                    }
+                    // フォールバック: テキストで探す
+                    const all = document.querySelectorAll('input[type=submit], input[type=button], button, a');
+                    for (const el of all) {
                         const v = (el.value || el.innerText || '').trim();
                         if (v === '投票する') {
                             el.scrollIntoView({behavior: 'instant', block: 'center'});
                             el.click();
-                            return v + ':' + el.tagName + ':' + el.type;
+                            return v + ':' + el.tagName;
                         }
                     }
                     return null;
