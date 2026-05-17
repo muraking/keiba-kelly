@@ -9179,5 +9179,94 @@
       }
     ],
     "savedAt": "2026-05-17T23:23:43.117Z"
+  },
+  {
+    "date": "5/17 東京 10",
+    "venue": "東京",
+    "raceNum": "10R",
+    "raceClass": "青梅特別",
+    "winner": 7,
+    "winOdds": 15.5,
+    "hit": true,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "グレイスザクラウン",
+        "norm": 0.1422,
+        "tanOdds": 12.1,
+        "ev": 172,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "メイショウタイピン",
+        "norm": 0.0732,
+        "tanOdds": 18.6,
+        "ev": 136.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "トルショー",
+        "norm": 0.0573,
+        "tanOdds": 21,
+        "ev": 120.4,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 15.5
+      },
+      {
+        "num": 8,
+        "name": "キングツェッペリン",
+        "norm": 0.0569,
+        "tanOdds": 47.8,
+        "ev": 271.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "トラヴェリンバンド",
+        "norm": 0.0525,
+        "tanOdds": 24.4,
+        "ev": 128.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "レイワサンサン",
+        "norm": 0.0511,
+        "tanOdds": 26.4,
+        "ev": 134.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "サンダーロード",
+        "norm": 0.041,
+        "tanOdds": 64.3,
+        "ev": 263.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:24:09.605Z"
   }
 ]
