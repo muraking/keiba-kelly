@@ -9514,5 +9514,64 @@
       }
     ],
     "savedAt": "2026-05-17T23:26:04.835Z"
+  },
+  {
+    "date": "5/17 京都 3R",
+    "venue": "京都",
+    "raceNum": "3R",
+    "raceClass": "3歳未勝利",
+    "winner": 3,
+    "winOdds": 9.1,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "アスクハッピーマン",
+        "norm": 0.3951,
+        "tanOdds": 3.9,
+        "ev": 154.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ヒラボクソライア",
+        "norm": 0.1176,
+        "tanOdds": 9.6,
+        "ev": 112.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 9.1
+      },
+      {
+        "num": 6,
+        "name": "サマーナジュム",
+        "norm": 0.0807,
+        "tanOdds": 37.6,
+        "ev": 303.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "クリコバロー",
+        "norm": 0.0516,
+        "tanOdds": 22.4,
+        "ev": 115.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:26:33.536Z"
   }
 ]
