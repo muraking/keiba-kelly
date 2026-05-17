@@ -8399,5 +8399,74 @@
       }
     ],
     "savedAt": "2026-05-17T23:18:48.882Z"
+  },
+  {
+    "date": "5/17 新潟 12",
+    "venue": "新潟",
+    "raceNum": "12R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 10,
+    "winOdds": 4.8,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "エルムラント",
+        "norm": 0.1842,
+        "tanOdds": 6.3,
+        "ev": 116,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "スーパーバイザー",
+        "norm": 0.152,
+        "tanOdds": 5.1,
+        "ev": 77.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 4.8
+      },
+      {
+        "num": 9,
+        "name": "ティピティーナ",
+        "norm": 0.0656,
+        "tanOdds": 17.9,
+        "ev": 117.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ビアフォーナウ",
+        "norm": 0.0548,
+        "tanOdds": 36.7,
+        "ev": 201.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ユーウェイン",
+        "norm": 0.04,
+        "tanOdds": 51.6,
+        "ev": 206.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:19:44.482Z"
   }
 ]
