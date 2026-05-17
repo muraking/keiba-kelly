@@ -9001,5 +9001,94 @@
       }
     ],
     "savedAt": "2026-05-17T23:22:45.047Z"
+  },
+  {
+    "date": "5/17 東京 8R",
+    "venue": "東京",
+    "raceNum": "8R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 5,
+    "winOdds": 71.6,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "バズアップビート",
+        "norm": 0.2491,
+        "tanOdds": 5.1,
+        "ev": 127.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ドルビナ",
+        "norm": 0.0629,
+        "tanOdds": 27.3,
+        "ev": 171.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ペプロス",
+        "norm": 0.0513,
+        "tanOdds": 23.3,
+        "ev": 119.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "クモヒトツナイ",
+        "norm": 0.0499,
+        "tanOdds": 22.2,
+        "ev": 110.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ゴガツノアマノガワ",
+        "norm": 0.0393,
+        "tanOdds": 56.1,
+        "ev": 220.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ディープキング",
+        "norm": 0.0377,
+        "tanOdds": 51.8,
+        "ev": 195.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 71.6
+      },
+      {
+        "num": 15,
+        "name": "リケアキャンディ",
+        "norm": 0.0315,
+        "tanOdds": 207.2,
+        "ev": 652.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:23:20.424Z"
   }
 ]
