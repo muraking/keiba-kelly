@@ -483,22 +483,32 @@ async def purchase(page, venue, race_num, bets, today):
 
         text = await page.evaluate("() => document.body.innerText")
 
-        # 投票完了判定（「投票内容確認」はまだ確認画面なので除外）
-        if '投票完了' in text or ('受付' in text and '投票内容確認' not in text):
+        # 投票内容確認画面の場合はもう一度「投票する」を押す
+        if '投票内容確認' in text:
+            print("  → 投票内容確認画面。ステップ2へ...")
+            continue
+
+        # 投票完了判定（確認画面を抜けた後）
+        # 「受付番号」「投票が完了」「ありがとうございました」などで判定
+        if '受付番号' in text or '投票が完了' in text or 'ありがとうございました' in text:
             await page.screenshot(path="rakuten_06_result.png")
-            result_text = text
-            lines = [l.strip() for l in result_text.split('\n') if l.strip()]
+            lines = [l.strip() for l in text.split('\n') if l.strip()]
             print("結果:")
             for line in lines[:20]:
                 print(f"  {line}")
             print("\n✅ 投票完了！")
             return True
 
-        if '投票内容確認' in text:
-            print("  → 投票内容確認画面。もう一度「投票する」を押します...")
-            continue
+        # 3,000件などの正常完了パターン
+        if '投票可能件数' in text and '投票内容確認' not in text:
+            await page.screenshot(path="rakuten_06_result.png")
+            lines = [l.strip() for l in text.split('\n') if l.strip()]
+            print("結果:")
+            for line in lines[:20]:
+                print(f"  {line}")
+            print("\n✅ 投票完了！")
+            return True
 
-        # それ以外
         break
 
     await page.screenshot(path="rakuten_06_result.png")
