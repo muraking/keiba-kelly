@@ -8044,5 +8044,64 @@
       }
     ],
     "savedAt": "2026-05-17T23:16:43.814Z"
+  },
+  {
+    "date": "5/17 新潟 7R",
+    "venue": "新潟",
+    "raceNum": "7R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 8,
+    "winOdds": 2.6,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "マイネルアウルム",
+        "norm": 0.2618,
+        "tanOdds": 7.5,
+        "ev": 196.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ディーンズリスター",
+        "norm": 0.2303,
+        "tanOdds": 7,
+        "ev": 161.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ベネスピラ",
+        "norm": 0.1963,
+        "tanOdds": 4.2,
+        "ev": 82.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.6
+      },
+      {
+        "num": 7,
+        "name": "デビューフライト",
+        "norm": 0.0282,
+        "tanOdds": 74,
+        "ev": 208.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-17T23:17:05.659Z"
   }
 ]
