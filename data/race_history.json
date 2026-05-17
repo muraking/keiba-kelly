@@ -8962,5 +8962,44 @@
       }
     ],
     "savedAt": "2026-05-17T23:22:23.891Z"
+  },
+  {
+    "date": "5/17 東京 7R",
+    "venue": "東京",
+    "raceNum": "7R",
+    "raceClass": "3歳1勝クラス",
+    "winner": 2,
+    "winOdds": 3.9,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "ブルースカイブルー",
+        "norm": 0.3157,
+        "tanOdds": 4.3,
+        "ev": 135.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "トミーバローズ",
+        "norm": 0.0958,
+        "tanOdds": 4.6,
+        "ev": 44.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.9
+      }
+    ],
+    "savedAt": "2026-05-17T23:22:45.047Z"
   }
 ]
