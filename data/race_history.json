@@ -10076,5 +10076,84 @@
       }
     ],
     "savedAt": "2026-05-17T23:30:28.922Z"
+  },
+  {
+    "date": "5/17 京都 12",
+    "venue": "京都",
+    "raceNum": "12R",
+    "raceClass": "4歳以上2勝クラス",
+    "winner": 2,
+    "winOdds": 18.2,
+    "hit": false,
+    "sm_temperature": 25,
+    "sm_minpct": 3,
+    "ev_min": 120,
+    "ev_max": null,
+    "odds_min": null,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "インブロリオ",
+        "norm": 0.1494,
+        "tanOdds": 8.4,
+        "ev": 125.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "リアライズ",
+        "norm": 0.1304,
+        "tanOdds": 8.2,
+        "ev": 106.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "マテンロウボンド",
+        "norm": 0.0417,
+        "tanOdds": 24.9,
+        "ev": 103.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "カリーシ",
+        "norm": 0.0348,
+        "tanOdds": 45.5,
+        "ev": 158.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "マイネルラッシュ",
+        "norm": 0.0331,
+        "tanOdds": 43.2,
+        "ev": 142.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ビップジーニー",
+        "norm": 0,
+        "tanOdds": 17.8,
+        "ev": null,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 18.2
+      }
+    ],
+    "savedAt": "2026-05-17T23:30:54.972Z"
   }
 ]
