@@ -394,12 +394,6 @@ textarea:focus{border-color:var(--gold)}
           <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター（%以上の馬のみ対象）</div>
           <input id="sm-winrate-filter" type="number" min="0" max="50" step="1" value="0"
             style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-          <div style="font-size:10px;color:var(--text3);margin-top:2px">0=フィルターなし</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター（%以上の馬のみ対象）</div>
-          <input id="sm-winrate-filter" type="number" min="0" max="50" step="1" value="0"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
           <div style="font-size:10px;color:var(--text3);margin-top:2px">0=フィルターなし（全馬対象）</div>
         </div>
       </div>
@@ -733,9 +727,6 @@ async function saveSoftmaxSettings() {
       data._settings.auto_buy_jra = autoBuyJra;
       data._settings.auto_buy_max = autoBuyMax;
       data._settings.auto_buy_skip_fav = autoBuySkipFav;
-      data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
-      data._settings.sm_winrate_filter = winrateFilter;
-      data._settings.max_bets = maxBetsSave;
       data._settings.max_bets = maxBetsSave;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
@@ -886,13 +877,7 @@ function loadSoftmaxSettings() {
   if(ablEl){ ablEl.checked = autoBuyLocalVal; document.getElementById('auto-buy-local-label').textContent = autoBuyLocalVal ? 'ON' : 'OFF'; }
   if(abjEl){ abjEl.checked = autoBuyJraVal; document.getElementById('auto-buy-jra-label').textContent = autoBuyJraVal ? 'ON' : 'OFF'; }
   if(abmEl) abmEl.value = autoBuyMaxVal;
-  if(absfEl){ absfEl.checked = autoBuySkipFavVal; document.getElementById('auto-buy-skip-fav-label').textContent = autoBuySkipFavVal ? 'スキップON' : 'スキップOFF'; }
-  const wfEl = document.getElementById('sm-winrate-filter');
-  if(wfEl) wfEl.value = localStorage.getItem('sm_winrate_filter') || '0';
-  const sfOddsEl = document.getElementById('auto-buy-skip-fav-odds');
-  if(sfOddsEl) sfOddsEl.value = localStorage.getItem('auto_buy_skip_fav_odds') || '2.0';
-  const mbEl = document.getElementById('max-bets');
-  if(mbEl) mbEl.value = localStorage.getItem('max_bets') || '4';
+  if(absfEl){ absfEl.checked = autoBuySkipFavVal; document.getElementById('auto-buy-skip-fav-label').textContent = autoBuySkipFavVal ? 'スキップ（購入しない）' : '購入する'; }
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -916,6 +901,25 @@ function halfKelly(p,odds){
 }
 
 function calcAll(){
+  // 勝率フィルターを再適用してnormを再計算
+  const _wf = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
+  const _normMethod = localStorage.getItem('norm_method') || 'softmax';
+  if(_wf > 0 && horses.length > 0) {
+    const _filtered = horses.filter(h => (h.pct || 0) >= _wf);
+    const _target = _filtered.length > 0 ? _filtered : horses;
+    let _normMap;
+    if(_normMethod === 'softmax') {
+      const _smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
+      const _smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
+      _normMap = softmaxNorm(_target, _smTemp, _smMinPct);
+    } else {
+      const _tot = _target.reduce((s,h) => s+h.pct, 0);
+      _normMap = {};
+      _target.forEach(h => { _normMap[h.num] = _tot > 0 ? h.pct/_tot : 0; });
+    }
+    horses.forEach(h => { h.norm = _normMap[h.num] || 0; });
+  }
+
   for(const h of horses){
     const tv=document.getElementById('t-'+h.num)?.value;
     // 手動入力がある場合はそちらを優先、なければ取得済みオッズを維持
