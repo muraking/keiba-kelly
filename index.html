@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -772,10 +772,13 @@ async function saveSoftmaxSettings() {
         statusEl.innerHTML = '<span style="color:var(--green)">✓ 保存しました</span>';
         if (ghData) ghData._settings = {sm_temperature: T, sm_minpct: isNaN(minP)?3.0:minP};
       } else {
-        statusEl.innerHTML = '<span style="color:var(--amber)">⚠ ローカルのみ保存</span>';
+        const errBody = await r2.json().catch(()=>({}));
+        statusEl.innerHTML = `<span style="color:var(--amber)">⚠ ローカルのみ保存（${r2.status}: ${errBody.message||''}）</span>`;
+        console.error('GitHub保存失敗', r2.status, errBody);
       }
     } catch(e) {
-      statusEl.innerHTML = '<span style="color:var(--amber)">⚠ ローカルのみ保存</span>';
+      statusEl.innerHTML = `<span style="color:var(--amber)">⚠ ローカルのみ保存（${e.message}）</span>`;
+      console.error('GitHub保存エラー', e);
     }
   } else {
     statusEl.innerHTML = '<span style="color:var(--green)">✓ ローカルに保存しました</span>';
@@ -1008,6 +1011,18 @@ function copyResultText(){
 }
 function calcAll(){
   const _wf = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
+  const _nm = localStorage.getItem('norm_method') || 'softmax';
+  if(horses.length > 0) {
+    const _use = _wf > 0 ? (horses.filter(h=>(h.norm*100)>=_wf).length > 0 ? horses.filter(h=>(h.norm*100)>=_wf) : horses) : horses;
+    let _normMap = {};
+    if(_nm === 'softmax') {
+      _normMap = softmaxNorm(_use, parseFloat(localStorage.getItem('sm_temperature')||'15'), parseFloat(localStorage.getItem('sm_minpct')||'3.0'));
+    } else {
+      const _tot = _use.reduce((s,h)=>s+(h.pct||0),0);
+      _use.forEach(h=>{ _normMap[h.num]=_tot>0?(h.pct||0)/_tot:0; });
+    }
+    horses.forEach(h=>{ h.norm = _normMap[h.num]||0; });
+  }
   for(const h of horses){
     const tv=document.getElementById('t-'+h.num)?.value;
     // 手動入力がある場合はそちらを優先、なければ取得済みオッズを維持
