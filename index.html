@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -804,8 +804,12 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('norm_method', normMethodGh);
     updateNormMethodUI(normMethodGh);
     const autoBuySkipFav = s.auto_buy_skip_fav || false;
-    const autoBuySkipFavOdds = s.auto_buy_skip_fav_odds ?? 2.0;
-    const winrateFilter = s.sm_winrate_filter ?? 0;
+    const autoBuySkipFavOdds = s.auto_buy_skip_fav_odds != null
+      ? s.auto_buy_skip_fav_odds
+      : (parseFloat(localStorage.getItem('auto_buy_skip_fav_odds') || '2.0') || 2.0);
+    const winrateFilter = s.sm_winrate_filter != null
+      ? s.sm_winrate_filter
+      : (parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0);
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
