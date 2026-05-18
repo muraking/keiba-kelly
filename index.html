@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.5</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.6</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -914,6 +914,57 @@ function halfKelly(p,odds){
   return Math.max(0,k*kellyFraction);
 }
 
+
+function copyResultText(){
+  if(!renders || renders.length === 0){ alert('先に計算してください'); return; }
+
+  const lines = [];
+  const raceName = (typeof currentRaceName !== 'undefined' && currentRaceName) || 'レース';
+  lines.push(`【${raceName}】`);
+  lines.push('');
+
+  // 買い目
+  lines.push('▼ 買い目');
+  for(const h of renders){
+    const norm = (h.norm*100).toFixed(1);
+    const ev = h.tanEV ? h.tanEV.toFixed(0) : '−';
+    const odds = h.tanOdds ? h.tanOdds+'倍' : '−';
+    const rank = h._r ? `推奨${h._r} ` : '';
+    lines.push(`${rank}${h.num}番 ${h.name}　勝率${norm}%　${odds}　EV${ev}`);
+  }
+  lines.push('');
+
+  // 期待値100超の馬一覧
+  const ev100 = [...horses]
+    .filter(h => h.tanEV && h.tanEV >= 100 && h.tanOdds)
+    .sort((a,b) => (b.tanEV||0) - (a.tanEV||0));
+
+  if(ev100.length > 0){
+    lines.push('▼ 期待値100超');
+    for(const h of ev100){
+      const norm = (h.norm*100).toFixed(1);
+      const ev = h.tanEV.toFixed(0);
+      const odds = h.tanOdds+'倍';
+      lines.push(`${h.num}番 ${h.name}　勝率${norm}%　${odds}　EV${ev}`);
+    }
+  }
+
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const lbl = document.getElementById('copy-btn-label');
+    if(lbl){ lbl.textContent = '✅ コピーしました'; setTimeout(()=>{ lbl.textContent = '買い目＋期待値一覧をコピー'; }, 2000); }
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const lbl = document.getElementById('copy-btn-label');
+    if(lbl){ lbl.textContent = '✅ コピーしました'; setTimeout(()=>{ lbl.textContent = '買い目＋期待値一覧をコピー'; }, 2000); }
+  });
+}
 function calcAll(){
   const _wf = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
   const _nm = localStorage.getItem('norm_method') || 'softmax';
@@ -1212,6 +1263,12 @@ function calcAll(){
     </tr>`;
   }
   html+=`</tbody></table></div>`;
+
+  // コピーボタン
+  html+=`<button onclick="copyResultText()" style="width:100%;margin-top:10px;padding:12px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+    <span>📋</span><span id="copy-btn-label">買い目＋期待値一覧をコピー</span>
+  </button>`;
+
   html+=`</div>`; // close result-kelly
 
   // 単複推奨セクション
