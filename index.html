@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -566,9 +566,8 @@ function parseData(){
   if(_normMethod === 'softmax') {
     const smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
     const smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
-    const smWinrateFilter = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
-    const filteredHorses = smWinrateFilter > 0 ? horses.filter(h => (h.pct || 0) >= smWinrateFilter) : horses;
-    normMap1 = softmaxNorm(filteredHorses.length > 0 ? filteredHorses : horses, smTemp, smMinPct);
+    // norm計算は全馬で行う（勝率フィルターはevPool絞り込みのみで適用）
+    normMap1 = softmaxNorm(horses, smTemp, smMinPct);
   } else {
     const tot1 = horses.reduce((s,h) => s+h.pct, 0);
     normMap1 = {};
@@ -1729,9 +1728,8 @@ function onRaceChange(){
   if(_normMethod2 === 'softmax') {
     const smTemp2 = parseFloat(ghData?._settings?.sm_temperature || localStorage.getItem('sm_temperature') || '15');
     const smMinPct2 = parseFloat(ghData?._settings?.sm_minpct || localStorage.getItem('sm_minpct') || '3.0');
-    const smWF2 = parseFloat(ghData?._settings?.sm_winrate_filter ?? localStorage.getItem('sm_winrate_filter') ?? '0') || 0;
-    const filteredH2 = smWF2 > 0 ? race.horses.filter(h=>(h.pct||0)>=smWF2) : race.horses;
-    normMap2 = softmaxNorm(filteredH2.length>0?filteredH2:race.horses, smTemp2, smMinPct2);
+    // norm計算は全馬で行う（勝率フィルターはevPool絞り込みのみで適用）
+    normMap2 = softmaxNorm(race.horses, smTemp2, smMinPct2);
   } else {
     const tot2 = race.horses.reduce((s,h) => s+h.pct, 0);
     normMap2 = {};
