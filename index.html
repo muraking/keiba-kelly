@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -956,7 +956,7 @@ function calcAll(){
   // 期待値・オッズ・勝率フィルターで馬を抽出して勝率高い順
   const evPool = [...horses]
     .filter(h => {
-      if(_wf > 0 && (h.pct||0) < _wf) return false;
+      if(_wf > 0 && (h.norm*100) < _wf) return false;
       if(!h.tanEV || !h.tanOdds) return false;
       if(h.tanEV < _evMin) return false;
       if(h.tanEV > _evMax) return false;
