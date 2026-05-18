@@ -15765,7 +15765,7 @@
   "_settings": {
     "sm_temperature": 25,
     "sm_minpct": 3,
-    "ev_min": 120,
+    "ev_min": 110,
     "ev_max": null,
     "odds_min": null,
     "odds_max": 80,
@@ -15776,6 +15776,6 @@
     "norm_method": "softmax",
     "max_bets": 3,
     "auto_buy_skip_fav_odds": 1.7,
-    "sm_winrate_filter": 8
+    "sm_winrate_filter": 5
   }
 }
