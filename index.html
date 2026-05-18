@@ -166,6 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -833,11 +834,12 @@ async function loadSoftmaxFromGithub() {
       currentEl.style.display = 'block';
       currentEl.innerHTML = '📋 現在の設定<br>' + lines.join('<br>');
     }
-    localStorage.setItem('max_bets', String(s.max_bets ?? 4));
+    const maxBets = s.max_bets ?? 4;
+    localStorage.setItem('max_bets', String(maxBets));
     localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
     localStorage.setItem('sm_winrate_filter', String(winrateFilter));
-    const maxBetsElGh = document.getElementById('max-bets');
-    if(maxBetsElGh) maxBetsElGh.value = String(s.max_bets ?? 4);
+    const maxBetsEl = document.getElementById('max-bets');
+    if(maxBetsEl) maxBetsEl.value = String(maxBets);
     statusEl.innerHTML = '<span style="color:var(--green)">✓ GitHubから読み込みました</span>';
     onRaceChange();
   } catch(e) {
@@ -877,7 +879,13 @@ function loadSoftmaxSettings() {
   if(ablEl){ ablEl.checked = autoBuyLocalVal; document.getElementById('auto-buy-local-label').textContent = autoBuyLocalVal ? 'ON' : 'OFF'; }
   if(abjEl){ abjEl.checked = autoBuyJraVal; document.getElementById('auto-buy-jra-label').textContent = autoBuyJraVal ? 'ON' : 'OFF'; }
   if(abmEl) abmEl.value = autoBuyMaxVal;
-  if(absfEl){ absfEl.checked = autoBuySkipFavVal; document.getElementById('auto-buy-skip-fav-label').textContent = autoBuySkipFavVal ? 'スキップ（購入しない）' : '購入する'; }
+  if(absfEl){ absfEl.checked = autoBuySkipFavVal; document.getElementById('auto-buy-skip-fav-label').textContent = autoBuySkipFavVal ? 'スキップON' : 'スキップOFF'; }
+  const wfEl = document.getElementById('sm-winrate-filter');
+  if(wfEl) wfEl.value = localStorage.getItem('sm_winrate_filter') || '0';
+  const sfOddsEl = document.getElementById('auto-buy-skip-fav-odds');
+  if(sfOddsEl) sfOddsEl.value = localStorage.getItem('auto_buy_skip_fav_odds') || '2.0';
+  const mbEl = document.getElementById('max-bets');
+  if(mbEl) mbEl.value = localStorage.getItem('max_bets') || '4';
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -901,27 +909,21 @@ function halfKelly(p,odds){
 }
 
 function calcAll(){
-  // 勝率フィルター適用: フィルター対象馬のみでnorm再計算
   const _wf = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
   const _nm = localStorage.getItem('norm_method') || 'softmax';
   if(horses.length > 0) {
-    const _use = (_wf > 0)
-      ? (horses.filter(h => (h.pct||0) >= _wf).length > 0
-          ? horses.filter(h => (h.pct||0) >= _wf)
-          : horses)
+    const _use = _wf > 0
+      ? (horses.filter(h=>(h.pct||0)>=_wf).length > 0 ? horses.filter(h=>(h.pct||0)>=_wf) : horses)
       : horses;
     let _normMap = {};
     if(_nm === 'softmax') {
-      _normMap = softmaxNorm(_use,
-        parseFloat(localStorage.getItem('sm_temperature')||'15'),
-        parseFloat(localStorage.getItem('sm_minpct')||'3.0'));
+      _normMap = softmaxNorm(_use, parseFloat(localStorage.getItem('sm_temperature')||'15'), parseFloat(localStorage.getItem('sm_minpct')||'3.0'));
     } else {
       const _tot = _use.reduce((s,h)=>s+(h.pct||0),0);
       _use.forEach(h=>{ _normMap[h.num]=_tot>0?(h.pct||0)/_tot:0; });
     }
     horses.forEach(h=>{ h.norm = _normMap[h.num]||0; });
   }
-
   for(const h of horses){
     const tv=document.getElementById('t-'+h.num)?.value;
     // 手動入力がある場合はそちらを優先、なければ取得済みオッズを維持
@@ -945,10 +947,10 @@ function calcAll(){
   const _oddsMin = parseFloat(localStorage.getItem('odds_min') || '0') || 0;
   const _oddsMax = parseFloat(localStorage.getItem('odds_max') || '0') || Infinity;
 
-  // 期待値・オッズフィルター + 勝率フィルターで馬を抽出して勝率高い順
+  // 期待値・オッズ・勝率フィルターで馬を抽出して勝率高い順
   const evPool = [...horses]
     .filter(h => {
-      if(_wf > 0 && (h.pct||0) < _wf) return false;  // 勝率フィルター
+      if(_wf > 0 && (h.pct||0) < _wf) return false;
       if(!h.tanEV || !h.tanOdds) return false;
       if(h.tanEV < _evMin) return false;
       if(h.tanEV > _evMax) return false;
@@ -1636,7 +1638,9 @@ function onRaceChange(){
   if(_normMethod2 === 'softmax') {
     const smTemp2 = parseFloat(ghData?._settings?.sm_temperature || localStorage.getItem('sm_temperature') || '15');
     const smMinPct2 = parseFloat(ghData?._settings?.sm_minpct || localStorage.getItem('sm_minpct') || '3.0');
-    normMap2 = softmaxNorm(race.horses, smTemp2, smMinPct2);
+    const smWF2 = parseFloat(ghData?._settings?.sm_winrate_filter ?? localStorage.getItem('sm_winrate_filter') ?? '0') || 0;
+    const filteredH2 = smWF2 > 0 ? race.horses.filter(h=>(h.pct||0)>=smWF2) : race.horses;
+    normMap2 = softmaxNorm(filteredH2.length>0?filteredH2:race.horses, smTemp2, smMinPct2);
   } else {
     const tot2 = race.horses.reduce((s,h) => s+h.pct, 0);
     normMap2 = {};
