@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -224,7 +224,7 @@ textarea:focus{border-color:var(--gold)}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div class="field" style="margin-bottom:0">
           <label>最大購入点数</label>
-          <select id="max-bets" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
+          <select id="max-bets" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit" onchange="localStorage.setItem('max_bets', this.value)">
             <option value="1">1点</option>
             <option value="2">2点</option>
             <option value="3">3点</option>
@@ -394,7 +394,8 @@ textarea:focus{border-color:var(--gold)}
         <div>
           <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター（%以上の馬のみ対象）</div>
           <input id="sm-winrate-filter" type="number" min="0" max="50" step="1" value="0"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('sm_winrate_filter', this.value)" oninput="localStorage.setItem('sm_winrate_filter', this.value)">
           <div style="font-size:10px;color:var(--text3);margin-top:2px">0=フィルターなし（全馬対象）</div>
         </div>
       </div>
@@ -469,7 +470,8 @@ textarea:focus{border-color:var(--gold)}
         </label>
         <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1番人気が何倍以下の時スキップするか</div>
         <input id="auto-buy-skip-fav-odds" type="number" min="1.0" max="5.0" step="0.1" value="2.0"
-          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+          onchange="localStorage.setItem('auto_buy_skip_fav_odds', this.value)" oninput="localStorage.setItem('auto_buy_skip_fav_odds', this.value)">
         <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 2.0 → 1番人気が2.0倍以下のレースをスキップ</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -2685,7 +2687,7 @@ async function saveRaceResult() {
 loadSoftmaxSettings();
 // 共有タブのアクティブ化を検知して自動読み込み
 const _origSwFn = window.sw;
-window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='share') { loadSoftmaxSettings(); setTimeout(loadSoftmaxFromGithub, 100); } };
+window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='share' || tab==='admin') { loadSoftmaxSettings(); setTimeout(loadSoftmaxFromGithub, 100); } };
 
 </script>
 
