@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.7</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.8</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -474,6 +474,30 @@ textarea:focus{border-color:var(--gold)}
           onchange="localStorage.setItem('auto_buy_skip_fav_odds', this.value)" oninput="localStorage.setItem('auto_buy_skip_fav_odds', this.value)">
         <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 2.0 → 1番人気が2.0倍以下のレースをスキップ</div>
       </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">損切り設定</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
+          <input type="checkbox" id="stop-loss-enabled" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('stop_loss_enabled', this.checked?'1':'0'); document.getElementById('stop-loss-enabled-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)" id="stop-loss-enabled-label">OFF</span>
+        </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">初回投票額から何%以下になったら停止</div>
+        <input id="stop-loss-pct" type="number" min="1" max="99" step="1" value="80"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+          onchange="localStorage.setItem('stop_loss_pct', this.value)" oninput="localStorage.setItem('stop_loss_pct', this.value)">
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 80 → 初回投票額の80%以下になったら自動購入停止</div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">若馬戦スキップ</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="skip-young-race" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('skip_young_race', this.checked?'1':'0'); document.getElementById('skip-young-race-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)" id="skip-young-race-label">OFF</span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると3歳・2歳・新馬戦を自動購入スキップ</div>
+      </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
         <button onclick="saveSoftmaxSettings()" class="btn btn-gold">💾 設定を保存</button>
@@ -698,6 +722,9 @@ async function saveSoftmaxSettings() {
   const autoBuySkipFav = document.getElementById('auto-buy-skip-fav')?.checked || false;
   const autoBuySkipFavOdds = parseFloat(document.getElementById('auto-buy-skip-fav-odds')?.value || '2.0') || 2.0;
   const winrateFilter = parseFloat(document.getElementById('sm-winrate-filter')?.value || '0') || 0;
+  const stopLossEnabled = document.getElementById('stop-loss-enabled')?.checked || false;
+  const stopLossPct = parseInt(document.getElementById('stop-loss-pct')?.value || '80') || 80;
+  const skipYoungRace = document.getElementById('skip-young-race')?.checked || false;
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -733,6 +760,9 @@ async function saveSoftmaxSettings() {
       data._settings.max_bets = maxBetsSave;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
+      data._settings.stop_loss_enabled = stopLossEnabled;
+      data._settings.stop_loss_pct = stopLossPct;
+      data._settings.skip_young_race = skipYoungRace;
       const jsonStr = JSON.stringify(data, null, 2);
       const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
       const r2 = await fetch(apiUrl, {
@@ -807,6 +837,9 @@ async function loadSoftmaxFromGithub() {
     const autoBuySkipFavOdds = s.auto_buy_skip_fav_odds != null
       ? s.auto_buy_skip_fav_odds
       : (parseFloat(localStorage.getItem('auto_buy_skip_fav_odds') || '2.0') || 2.0);
+    const stopLossEnabled = s.stop_loss_enabled || false;
+    const stopLossPct = s.stop_loss_pct ?? 80;
+    const skipYoungRace = s.skip_young_race || false;
     const winrateFilter = s.sm_winrate_filter != null
       ? s.sm_winrate_filter
       : (parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0);
@@ -835,6 +868,7 @@ async function loadSoftmaxFromGithub() {
       `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
+      `損切り: ${stopLossEnabled ? stopLossPct+'%以下で停止' : 'OFF'}　若馬戦スキップ: ${skipYoungRace ? 'ON' : 'OFF'}`,
     ];
     if(currentEl){
       currentEl.style.display = 'block';
@@ -844,8 +878,17 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('max_bets', String(maxBets));
     localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
     localStorage.setItem('sm_winrate_filter', String(winrateFilter));
+    localStorage.setItem('stop_loss_enabled', stopLossEnabled ? '1' : '0');
+    localStorage.setItem('stop_loss_pct', String(stopLossPct));
+    localStorage.setItem('skip_young_race', skipYoungRace ? '1' : '0');
     const maxBetsEl = document.getElementById('max-bets');
     if(maxBetsEl) maxBetsEl.value = String(maxBets);
+    const slEnabledEl = document.getElementById('stop-loss-enabled');
+    if(slEnabledEl){ slEnabledEl.checked = stopLossEnabled; document.getElementById('stop-loss-enabled-label').textContent = stopLossEnabled ? 'ON' : 'OFF'; }
+    const slPctEl = document.getElementById('stop-loss-pct');
+    if(slPctEl) slPctEl.value = stopLossPct;
+    const syEl = document.getElementById('skip-young-race');
+    if(syEl){ syEl.checked = skipYoungRace; document.getElementById('skip-young-race-label').textContent = skipYoungRace ? 'ON' : 'OFF'; }
     statusEl.innerHTML = '<span style="color:var(--green)">✓ GitHubから読み込みました</span>';
     onRaceChange();
   } catch(e) {
@@ -892,6 +935,14 @@ function loadSoftmaxSettings() {
   if(sfOddsEl) sfOddsEl.value = localStorage.getItem('auto_buy_skip_fav_odds') || '2.0';
   const mbEl = document.getElementById('max-bets');
   if(mbEl) mbEl.value = localStorage.getItem('max_bets') || '4';
+  const slEnabledEl = document.getElementById('stop-loss-enabled');
+  const slEnabledVal = localStorage.getItem('stop_loss_enabled') === '1';
+  if(slEnabledEl){ slEnabledEl.checked = slEnabledVal; document.getElementById('stop-loss-enabled-label').textContent = slEnabledVal ? 'ON' : 'OFF'; }
+  const slPctEl = document.getElementById('stop-loss-pct');
+  if(slPctEl) slPctEl.value = localStorage.getItem('stop_loss_pct') || '80';
+  const syEl = document.getElementById('skip-young-race');
+  const syVal = localStorage.getItem('skip_young_race') === '1';
+  if(syEl){ syEl.checked = syVal; document.getElementById('skip-young-race-label').textContent = syVal ? 'ON' : 'OFF'; }
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -2426,7 +2477,7 @@ function executePurchaseJRA(){
     return;
   }
 
-  // 1番人気1倍台スキップチェック（自動購入時）
+  // 1番人気スキップチェック
   const skipFav = localStorage.getItem('auto_buy_skip_fav') === '1';
   if(skipFav){
     const skipFavOdds = parseFloat(localStorage.getItem('auto_buy_skip_fav_odds') || '2.0') || 2.0;
@@ -2435,6 +2486,51 @@ function executePurchaseJRA(){
     if(favOdds && favOdds <= skipFavOdds){
       alert(`⚠️ 1番人気が${favOdds}倍のため自動購入をスキップします（設定: ${skipFavOdds}倍以下スキップ）`);
       return;
+    }
+  }
+
+  // 若馬戦スキップチェック
+  const skipYoung = localStorage.getItem('skip_young_race') === '1';
+  if(skipYoung){
+    const youngPattern = /[23２３]歳|新馬/;
+    const raceName = (typeof currentRaceName !== 'undefined' && currentRaceName) || '';
+    const raceClass = (typeof currentRaceClass !== 'undefined' && currentRaceClass) || '';
+    if(youngPattern.test(raceName) || youngPattern.test(raceClass)){
+      alert(`⚠️ 若馬戦（${raceClass||raceName}）のため自動購入をスキップします`);
+      return;
+    }
+  }
+
+  // 損切りチェック
+  const stopLossOn = localStorage.getItem('stop_loss_enabled') === '1';
+  if(stopLossOn){
+    const stopLossPct = parseInt(localStorage.getItem('stop_loss_pct') || '80') || 80;
+    const isLocal = !['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'].includes(
+      (typeof currentRaceName !== 'undefined' && currentRaceName || '').split(' ')[1] || ''
+    );
+    const storageKey = isLocal ? 'stop_loss_init_local' : 'stop_loss_init_jra';
+    const todayKey = storageKey + '_date';
+    const today = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'2-digit',day:'2-digit'});
+    // 日付が変わったらリセット
+    if(localStorage.getItem(todayKey) !== today){
+      localStorage.removeItem(storageKey);
+      localStorage.setItem(todayKey, today);
+    }
+    const currentBet = bets.reduce((s,b)=>s+b.amount, 0);
+    const initAmount = parseInt(localStorage.getItem(storageKey) || '0');
+    if(initAmount > 0){
+      const threshold = Math.floor(initAmount * stopLossPct / 100);
+      // 現在の残高を購入限度額から推定（簡易版: 今回の賭け金が閾値以上か確認）
+      // 実際は購入後の残高確認が必要なため、ここでは累積損失で判定
+      const totalLost = parseInt(localStorage.getItem(storageKey + '_lost') || '0');
+      if(totalLost > initAmount - threshold){
+        alert(`⚠️ 損切りラインに達しました（初回¥${initAmount.toLocaleString()} → 損失¥${totalLost.toLocaleString()}）。自動購入を停止します。`);
+        return;
+      }
+    } else {
+      // 初回投票額を記録
+      localStorage.setItem(storageKey, String(currentBet));
+      localStorage.setItem(storageKey + '_lost', '0');
     }
   }
 
@@ -2489,6 +2585,12 @@ async function confirmPurchaseRakuten(){
       statusEl.innerHTML = '<span style="color:var(--green)">✅ 楽天競馬 投票処理を開始しました</span>';
       confirmBtn.textContent = '完了';
       if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ 楽天競馬 投票処理を開始しました</span>';
+      // 損切り: 投票額を損失として記録
+      if(localStorage.getItem('stop_loss_enabled') === '1'){
+        const _amt = (_purchaseData?.bets||[]).reduce((s,b)=>s+b.amount,0);
+        const _key = 'stop_loss_init_local_lost';
+        localStorage.setItem(_key, String(parseInt(localStorage.getItem(_key)||'0') + _amt));
+      }
       setTimeout(() => closePurchaseModal(), 3000);
     } else {
       const err = await res.json().catch(()=>({message: res.status}));
