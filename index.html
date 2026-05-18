@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.6</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260518.7</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -934,18 +934,29 @@ function copyResultText(){
   }
   lines.push('');
 
-  // 期待値100超の馬一覧
+  // 期待値100超の馬一覧（rendersにない馬のみ追記）
+  const renderNums = new Set(renders.map(h => h.num));
   const ev100 = [...horses]
-    .filter(h => h.tanEV && h.tanEV >= 100 && h.tanOdds)
-    .sort((a,b) => (b.tanEV||0) - (a.tanEV||0));
+    .filter(h => {
+      if(!h.tanOdds) return false;
+      // tanEVがない場合は再計算
+      const ev = h.tanEV || (h.norm * h.tanOdds * 100);
+      return ev >= 100;
+    })
+    .sort((a,b) => {
+      const ea = a.tanEV || (a.norm * a.tanOdds * 100);
+      const eb = b.tanEV || (b.norm * b.tanOdds * 100);
+      return eb - ea;
+    });
 
   if(ev100.length > 0){
     lines.push('▼ 期待値100超');
     for(const h of ev100){
       const norm = (h.norm*100).toFixed(1);
-      const ev = h.tanEV.toFixed(0);
+      const ev = (h.tanEV || (h.norm * h.tanOdds * 100)).toFixed(0);
       const odds = h.tanOdds+'倍';
-      lines.push(`${h.num}番 ${h.name}　勝率${norm}%　${odds}　EV${ev}`);
+      const inBets = renderNums.has(h.num) ? '★' : '';
+      lines.push(`${inBets}${h.num}番 ${h.name}　勝率${norm}%　${odds}　EV${ev}`);
     }
   }
 
