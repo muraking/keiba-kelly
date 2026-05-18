@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -720,6 +720,9 @@ async function saveSoftmaxSettings() {
   const autoBuySkipFav = document.getElementById('auto-buy-skip-fav')?.checked || false;
   const autoBuySkipFavOdds = parseFloat(document.getElementById('auto-buy-skip-fav-odds')?.value || '2.0') || 2.0;
   const winrateFilter = parseFloat(document.getElementById('sm-winrate-filter')?.value || '0') || 0;
+  const stopLossEnabled = document.getElementById('stop-loss-enabled')?.checked || false;
+  const stopLossPct = parseInt(document.getElementById('stop-loss-pct')?.value || '80') || 80;
+  const skipYoungRace = document.getElementById('skip-young-race')?.checked || false;
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -772,13 +775,10 @@ async function saveSoftmaxSettings() {
         statusEl.innerHTML = '<span style="color:var(--green)">✓ 保存しました</span>';
         if (ghData) ghData._settings = {sm_temperature: T, sm_minpct: isNaN(minP)?3.0:minP};
       } else {
-        const errBody = await r2.json().catch(()=>({}));
-        statusEl.innerHTML = `<span style="color:var(--amber)">⚠ ローカルのみ保存（${r2.status}: ${errBody.message||''}）</span>`;
-        console.error('GitHub保存失敗', r2.status, errBody);
+        statusEl.innerHTML = '<span style="color:var(--amber)">⚠ ローカルのみ保存</span>';
       }
     } catch(e) {
-      statusEl.innerHTML = `<span style="color:var(--amber)">⚠ ローカルのみ保存（${e.message}）</span>`;
-      console.error('GitHub保存エラー', e);
+      statusEl.innerHTML = '<span style="color:var(--amber)">⚠ ローカルのみ保存</span>';
     }
   } else {
     statusEl.innerHTML = '<span style="color:var(--green)">✓ ローカルに保存しました</span>';
