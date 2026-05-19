@@ -8180,6 +8180,78 @@
               "fuku_min": 3,
               "fuku_max": 8.9
             }
+          },
+          "6": {
+            "1": {
+              "tan": 11.3,
+              "fuku_min": 4.4,
+              "fuku_max": 6.5
+            },
+            "2": {
+              "tan": 40.9,
+              "fuku_min": 7.8,
+              "fuku_max": 11.8
+            },
+            "3": {
+              "tan": 86.3,
+              "fuku_min": 16.1,
+              "fuku_max": 24.4
+            },
+            "4": {
+              "tan": 7.9,
+              "fuku_min": 1.5,
+              "fuku_max": 2
+            },
+            "5": {
+              "tan": 93.2,
+              "fuku_min": 13.1,
+              "fuku_max": 20
+            },
+            "6": {
+              "tan": 13.9,
+              "fuku_min": 4.5,
+              "fuku_max": 6.7
+            },
+            "7": {
+              "tan": 6.4,
+              "fuku_min": 1.8,
+              "fuku_max": 2.6
+            },
+            "8": {
+              "tan": 5.5,
+              "fuku_min": 1.4,
+              "fuku_max": 1.9
+            },
+            "9": {
+              "tan": 44,
+              "fuku_min": 6.1,
+              "fuku_max": 9.2
+            },
+            "10": {
+              "tan": 4.3,
+              "fuku_min": 2.3,
+              "fuku_max": 3.2
+            },
+            "11": {
+              "tan": 136.8,
+              "fuku_min": 8.1,
+              "fuku_max": 12.2
+            },
+            "12": {
+              "tan": 11.9,
+              "fuku_min": 3.8,
+              "fuku_max": 5.7
+            },
+            "13": {
+              "tan": 127.7,
+              "fuku_min": 17.6,
+              "fuku_max": 26.7
+            },
+            "14": {
+              "tan": 4.3,
+              "fuku_min": 1.5,
+              "fuku_max": 2
+            }
           }
         },
         "12": {
@@ -9519,7 +9591,7 @@
           }
         }
       },
-      "odds_updated": "2026-05-19T17:00:31.302882+09:00"
+      "odds_updated": "2026-05-19T17:07:28.695374+09:00"
     }
   },
   "_settings": {
