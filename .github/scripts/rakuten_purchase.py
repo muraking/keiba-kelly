@@ -276,60 +276,72 @@ async def fetch_odds(page):
 
 
 async def add_to_cart(page, bets):
-    """単勝オッズをクリックして馬券カゴに追加"""
+    """単勝・複勝をクリックして馬券カゴに追加"""
     print("馬券カゴに追加中...")
 
-    for bet in bets:
-        num = bet['num']
-        print(f"  {num}番を選択...")
-        try:
-            # 列構造自動判定:
-            # 枠番+馬番: 列0=枠番, 列1=馬番, 列4=単勝, 列5=複勝 (高知・佐賀・帯広)
-            # 枠番のみ: 行番号を馬番として使用, 列3=単勝 (盛岡・金沢)
-            clicked = await page.evaluate(f"""
-                () => {{
-                    const tables = document.querySelectorAll('table');
-                    let horseCount = 0;
-                    for (const table of tables) {{
-                        const rows = table.querySelectorAll('tr');
-                        horseCount = 0;
-                        for (const row of rows) {{
-                            const cells = row.querySelectorAll('td');
-                            if (cells.length < 4) continue;
-                            const col0 = cells[0]?.innerText?.trim();
-                            const col1 = cells[1]?.innerText?.trim();
-                            const col0IsNum = /^[0-9]{{1,2}}$/.test(col0);
-                            const col1IsNum = /^[0-9]{{1,2}}$/.test(col1);
-                            if (!col0IsNum) continue;
-                            let tanIdx, numText;
-                            if (col1IsNum) {{
-                                // 枠番+馬番構造
-                                numText = col1; tanIdx = 4;
-                            }} else {{
-                                // 枠番のみ構造 → 行番号を馬番に
-                                horseCount++;
-                                numText = String(horseCount); tanIdx = 3;
-                            }}
-                            if (numText === '{num}') {{
-                                // 単勝オッズセル（tanIdx）のaタグをクリック
-                                const a = cells[tanIdx]?.querySelector('a');
-                                if (a) {{
-                                    a.click();
-                                    return 'a_click:' + cells[tanIdx].innerText.trim();
-                                }}
-                                cells[tanIdx]?.click();
-                                return 'cell_click';
-                            }}
+    # 単勝と複勝を分けて処理
+    tan_bets = [b for b in bets if b.get('bet_type', 'tan') == 'tan']
+    fuku_bets = [b for b in bets if b.get('bet_type') == 'fuku']
+
+    async def click_horse(num, col_offset):
+        """指定馬番の指定列（単勝=0, 複勝=1 のオフセット）をクリック"""
+        clicked = await page.evaluate(f"""
+            () => {{
+                const tables = document.querySelectorAll('table');
+                let horseCount = 0;
+                for (const table of tables) {{
+                    const rows = table.querySelectorAll('tr');
+                    horseCount = 0;
+                    for (const row of rows) {{
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length < 4) continue;
+                        const col0 = cells[0]?.innerText?.trim();
+                        const col1 = cells[1]?.innerText?.trim();
+                        const col0IsNum = /^[0-9]{{1,2}}$/.test(col0);
+                        const col1IsNum = /^[0-9]{{1,2}}$/.test(col1);
+                        if (!col0IsNum) continue;
+                        let baseIdx, numText;
+                        if (col1IsNum) {{
+                            numText = col1; baseIdx = 4;
+                        }} else {{
+                            horseCount++;
+                            numText = String(horseCount); baseIdx = 3;
+                        }}
+                        if (numText === '{num}') {{
+                            const idx = baseIdx + {col_offset};
+                            const a = cells[idx]?.querySelector('a');
+                            if (a) {{ a.click(); return 'a_click:' + cells[idx].innerText.trim(); }}
+                            cells[idx]?.click();
+                            return 'cell_click';
                         }}
                     }}
-                    return false;
                 }}
-            """)
+                return false;
+            }}
+        """)
+        return clicked
+
+    # 単勝を追加
+    for bet in tan_bets:
+        num = bet['num']
+        print(f"  {num}番（単勝）を選択...")
+        try:
+            clicked = await click_horse(num, 0)
             print(f"    {num}番: {clicked}")
             await page.wait_for_timeout(1500)
-
         except Exception as e:
             print(f"    {num}番 エラー: {e}")
+
+    # 複勝を追加
+    for bet in fuku_bets:
+        num = bet['num']
+        print(f"  {num}番（複勝）を選択...")
+        try:
+            clicked = await click_horse(num, 1)
+            print(f"    {num}番複勝: {clicked}")
+            await page.wait_for_timeout(1500)
+        except Exception as e:
+            print(f"    {num}番複勝 エラー: {e}")
 
     await page.wait_for_timeout(1000)
 
@@ -345,9 +357,20 @@ async def add_to_cart(page, bets):
 
 
 async def input_amounts(page, bets):
-    """各馬の金額を入力"""
+    """各馬の金額を入力（単勝/複勝対応）"""
     print("金額入力中...")
-    bet_map = {b['num']: b['amount'] for b in bets}
+    # 単勝と複勝で同じ馬番があるので、順番通りに入力
+    # カゴ内の順序は追加順（単勝→複勝）に対応
+    bet_map = {}
+    for b in bets:
+        key = (b['num'], b.get('bet_type', 'tan'))
+        bet_map[key] = b['amount']
+    # 後方互換: bet_typeなしは単勝として扱う
+    tan_map = {b['num']: b['amount'] for b in bets if b.get('bet_type', 'tan') == 'tan'}
+    fuku_map = {b['num']: b['amount'] for b in bets if b.get('bet_type') == 'fuku'}
+    # 全体のbet_map（馬番→金額、単勝優先）
+    combined_map = {**tan_map}
+    combined_map.update({num: amt for num, amt in fuku_map.items() if num not in combined_map})
 
     try:
         # 金額入力欄を取得（馬番と対応）
@@ -420,7 +443,8 @@ async def purchase(page, venue, race_num, bets, today):
         print("\n========== DRY RUN MODE ==========")
         print("[テスト] 投票確認画面の直前で停止（実際には投票しません）")
         for b in bets:
-            print(f"  {b['num']}番 {b.get('name','')} 単勝 ¥{b['amount']:,}")
+            bet_type_label = "複勝" if b.get('bet_type') == 'fuku' else "単勝"
+            print(f"  {b['num']}番 {b.get('name','')} {bet_type_label} ¥{b['amount']:,}")
         print(f"  合計: ¥{total:,}")
         print("===================================")
         print("✅ DRY RUN完了")
