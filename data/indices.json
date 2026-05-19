@@ -14191,7 +14191,7 @@
     "sm_minpct": 3,
     "ev_min": 110,
     "ev_max": null,
-    "odds_min": null,
+    "odds_min": 5,
     "odds_max": 80,
     "auto_buy_local": true,
     "auto_buy_jra": false,
