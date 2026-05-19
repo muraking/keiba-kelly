@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -496,6 +496,16 @@ textarea:focus{border-color:var(--gold)}
         </label>
         <div style="font-size:10px;color:var(--text3);margin-top:4px">地方: 2歳・3歳・新馬　JRA: 2歳・新馬を自動購入スキップ</div>
       </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">複勝購入設定</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="buy-place-bet" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('buy_place_bet', this.checked?'1':'0'); document.getElementById('buy-place-bet-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)" id="buy-place-bet-label">OFF</span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると買い目対象馬の複勝もハーヴィル公式で計算して購入</div>
+      </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
         <button onclick="saveSoftmaxSettings()" class="btn btn-gold">💾 設定を保存</button>
@@ -722,6 +732,7 @@ async function saveSoftmaxSettings() {
   const stopLossEnabled = document.getElementById('stop-loss-enabled')?.checked || false;
   const stopLossPct = parseInt(document.getElementById('stop-loss-pct')?.value || '80') || 80;
   const skipYoungRace = document.getElementById('skip-young-race')?.checked || false;
+  const buyPlaceBet = document.getElementById('buy-place-bet')?.checked || false;
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -760,6 +771,7 @@ async function saveSoftmaxSettings() {
       data._settings.stop_loss_enabled = stopLossEnabled;
       data._settings.stop_loss_pct = stopLossPct;
       data._settings.skip_young_race = skipYoungRace;
+      data._settings.buy_place_bet = buyPlaceBet;
       data._settings.max_bets = maxBetsSave;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
@@ -842,6 +854,7 @@ async function loadSoftmaxFromGithub() {
     const stopLossEnabled = s.stop_loss_enabled || false;
     const stopLossPct = s.stop_loss_pct ?? 80;
     const skipYoungRace = s.skip_young_race || false;
+    const buyPlaceBet = s.buy_place_bet || false;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -852,6 +865,7 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('stop_loss_enabled', stopLossEnabled ? '1' : '0');
     localStorage.setItem('stop_loss_pct', String(stopLossPct));
     localStorage.setItem('skip_young_race', skipYoungRace ? '1' : '0');
+    localStorage.setItem('buy_place_bet', buyPlaceBet ? '1' : '0');
     const ablEl2 = document.getElementById('auto-buy-local');
     const abjEl2 = document.getElementById('auto-buy-jra');
     const abmEl2 = document.getElementById('auto-buy-max');
@@ -872,6 +886,8 @@ async function loadSoftmaxFromGithub() {
     if(slPctEl) slPctEl.value = stopLossPct;
     const syEl = document.getElementById('skip-young-race');
     if(syEl){ syEl.checked = skipYoungRace; document.getElementById('skip-young-race-label').textContent = skipYoungRace ? 'ON' : 'OFF'; }
+    const bpbEl = document.getElementById('buy-place-bet');
+    if(bpbEl){ bpbEl.checked = buyPlaceBet; document.getElementById('buy-place-bet-label').textContent = buyPlaceBet ? 'ON' : 'OFF'; }
 
     const lines = [
       `温度T: ${T}　最小指数: ${minP}%　勝率フィルター: ${winrateFilter > 0 ? winrateFilter+'%以上' : 'なし'}`,
@@ -947,6 +963,9 @@ function loadSoftmaxSettings() {
   const syEl = document.getElementById('skip-young-race');
   const syVal = localStorage.getItem('skip_young_race') === '1';
   if(syEl){ syEl.checked = syVal; document.getElementById('skip-young-race-label').textContent = syVal ? 'ON' : 'OFF'; }
+  const bpbEl2 = document.getElementById('buy-place-bet');
+  const bpbVal = localStorage.getItem('buy_place_bet') === '1';
+  if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
 }
 
 function softmaxNorm(horses, temperature, minPct) {
