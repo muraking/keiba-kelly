@@ -9666,7 +9666,7 @@
     "max_bets": 3,
     "auto_buy_skip_fav_odds": 1.7,
     "sm_winrate_filter": 6,
-    "stop_loss_enabled": false,
+    "stop_loss_enabled": true,
     "stop_loss_pct": 70,
     "skip_young_race": true
   }
