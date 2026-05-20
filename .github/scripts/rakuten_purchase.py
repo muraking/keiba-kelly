@@ -397,13 +397,13 @@ async def input_amounts(page, bets):
                 }
             """, inp)
 
-            if horse_num and horse_num in bet_map:
-                amount_100 = bet_map[horse_num] // 100
+            if horse_num and horse_num in combined_map:
+                amount_100 = combined_map[horse_num] // 100
                 await inp.fill(str(amount_100))
                 await inp.dispatch_event('input')
                 await inp.dispatch_event('change')
                 await page.keyboard.press('Tab')
-                print(f"  {horse_num}番: {amount_100}（¥{bet_map[horse_num]:,}）")
+                print(f"  {horse_num}番: {amount_100}（¥{combined_map[horse_num]:,}）")
                 await page.wait_for_timeout(300)
 
     except Exception as e:
