@@ -2494,8 +2494,11 @@ function executePurchaseJRA(){
   document.getElementById('purchase-modal').classList.add('show');
 }
 
+let _rakutenPurchasing = false;
 async function confirmPurchaseRakuten(){
   if(!_purchaseData) return;
+  if(_rakutenPurchasing) return;
+  _rakutenPurchasing = true;
   const { placeId, raceNum, venue, bets } = _purchaseData;
   const date = document.getElementById('date-select').value;
   const today = date.replace(/-/g,'');
@@ -2523,17 +2526,19 @@ async function confirmPurchaseRakuten(){
       statusEl.innerHTML = '<span style="color:var(--green)">✅ 楽天競馬 投票処理を開始しました</span>';
       confirmBtn.textContent = '完了';
       if(purchaseStatusEl) purchaseStatusEl.innerHTML = '<span style="color:var(--green)">✅ 楽天競馬 投票処理を開始しました</span>';
-      setTimeout(() => closePurchaseModal(), 3000);
+      setTimeout(() => { closePurchaseModal(); _rakutenPurchasing = false; }, 3000);
     } else {
       const err = await res.json().catch(()=>({message: res.status}));
       statusEl.innerHTML = `<span style="color:var(--red)">❌ エラー: ${err.message||res.status}</span>`;
       confirmBtn.disabled = false;
       confirmBtn.textContent = '投票する';
+      _rakutenPurchasing = false;
     }
   } catch(e){
     statusEl.innerHTML = `<span style="color:var(--red)">❌ 通信エラー: ${e.message}</span>`;
     confirmBtn.disabled = false;
     confirmBtn.textContent = '投票する';
+    _rakutenPurchasing = false;
   }
 }
 
