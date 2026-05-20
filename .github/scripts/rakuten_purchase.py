@@ -154,11 +154,11 @@ async def get_balance(page):
             v = int(m.group(1).replace(',', ''))
             print(f"✅ 購入限度額: ¥{v:,}")
             return v
-        print("⚠️ 購入限度額取得失敗 → デフォルト¥10,000")
-        return 10000
+        print("⚠️ 購入限度額取得失敗 → None")
+        return None
     except Exception as e:
         print(f"⚠️ 残高取得エラー: {e}")
-        return 10000
+        return None
 
 
 async def navigate_to_race(page, venue, race_num, today):
@@ -597,9 +597,32 @@ async def main():
         page.set_default_timeout(TIMEOUT)
 
         await login(page)
-        await get_balance(page)
+        balance = await get_balance(page)
 
-        result = await purchase(page, COURSE_NAME, RACE_NUM, BETS, TODAY)
+        # 残高ベースでbetsを再計算
+        bets = BETS[:]
+        if balance and balance > 0:
+            import math as _math
+            print(f"\n残高ベースでハーフケリー再計算: 資金¥{balance:,}")
+            recalc_bets = []
+            for b in bets:
+                norm = b.get('norm', 0)
+                odds = b.get('odds', 0)
+                if not norm or not odds or odds <= 1:
+                    recalc_bets.append(b)
+                    continue
+                kf = max(0, (norm * odds - 1) / (odds - 1)) * 0.5
+                amount = max(100, int(balance * kf / 100) * 100) if kf > 0 else 100
+                print(f"  {b['num']}番: norm={norm:.3f} odds={odds} kelly={kf:.3f} → ¥{amount:,}")
+                recalc_bets.append({**b, 'amount': amount})
+            bets = recalc_bets
+            total = sum(b['amount'] for b in bets)
+            print(f"  合計: ¥{total:,} / 残高: ¥{balance:,} ({total/balance*100:.1f}%)")
+        else:
+            bets = BETS[:]
+            print("⚠️ 残高取得失敗 → 元の金額で投票")
+
+        result = await purchase(page, COURSE_NAME, RACE_NUM, bets, TODAY)
 
         await browser.close()
 
