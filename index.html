@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260519.5</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260521.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -480,11 +480,11 @@ textarea:focus{border-color:var(--gold)}
             onchange="localStorage.setItem('stop_loss_enabled', this.checked?'1':'0'); document.getElementById('stop-loss-enabled-label').textContent=this.checked?'ON':'OFF'">
           <span style="font-size:13px;color:var(--text)" id="stop-loss-enabled-label">OFF</span>
         </label>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">初回投票額から何%以下の損失で停止</div>
-        <input id="stop-loss-pct" type="number" min="1" max="99" step="1" value="80"
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">投票可能額がこの金額を下回ったら投票しない（円）</div>
+        <input id="stop-loss-amount" type="number" min="0" max="1000000" step="100" value="3000"
           style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
-          onchange="localStorage.setItem('stop_loss_pct', this.value)" oninput="localStorage.setItem('stop_loss_pct', this.value)">
-        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 80 → 初回¥1,500なら¥1,200以上損失で停止</div>
+          onchange="localStorage.setItem('stop_loss_amount', this.value)" oninput="localStorage.setItem('stop_loss_amount', this.value)">
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 3000 → 投票可能額¥3,000未満で自動投票停止</div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -730,7 +730,7 @@ async function saveSoftmaxSettings() {
   const autoBuySkipFavOdds = parseFloat(document.getElementById('auto-buy-skip-fav-odds')?.value || '2.0') || 2.0;
   const winrateFilter = parseFloat(document.getElementById('sm-winrate-filter')?.value || '0') || 0;
   const stopLossEnabled = document.getElementById('stop-loss-enabled')?.checked || false;
-  const stopLossPct = parseInt(document.getElementById('stop-loss-pct')?.value || '80') || 80;
+  const stopLossAmount = parseInt(document.getElementById('stop-loss-amount')?.value || '3000') || 3000;
   const skipYoungRace = document.getElementById('skip-young-race')?.checked || false;
   const buyPlaceBet = document.getElementById('buy-place-bet')?.checked || false;
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
@@ -769,7 +769,7 @@ async function saveSoftmaxSettings() {
       data._settings.sm_winrate_filter = winrateFilter;
       data._settings.max_bets = maxBetsSave;
       data._settings.stop_loss_enabled = stopLossEnabled;
-      data._settings.stop_loss_pct = stopLossPct;
+      data._settings.stop_loss_amount = stopLossAmount;
       data._settings.skip_young_race = skipYoungRace;
       data._settings.buy_place_bet = buyPlaceBet;
       data._settings.max_bets = maxBetsSave;
@@ -852,7 +852,7 @@ async function loadSoftmaxFromGithub() {
     const autoBuySkipFavOdds = s.auto_buy_skip_fav_odds != null ? s.auto_buy_skip_fav_odds : (parseFloat(localStorage.getItem('auto_buy_skip_fav_odds') || '2.0') || 2.0);
     const winrateFilter = s.sm_winrate_filter != null ? s.sm_winrate_filter : (parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0);
     const stopLossEnabled = s.stop_loss_enabled || false;
-    const stopLossPct = s.stop_loss_pct ?? 80;
+    const stopLossAmount = s.stop_loss_amount ?? 3000;
     const skipYoungRace = s.skip_young_race || false;
     const buyPlaceBet = s.buy_place_bet || false;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
@@ -863,7 +863,7 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('sm_winrate_filter', String(winrateFilter));
     localStorage.setItem('max_bets', String(s.max_bets ?? 4));
     localStorage.setItem('stop_loss_enabled', stopLossEnabled ? '1' : '0');
-    localStorage.setItem('stop_loss_pct', String(stopLossPct));
+    localStorage.setItem('stop_loss_amount', String(stopLossAmount));
     localStorage.setItem('skip_young_race', skipYoungRace ? '1' : '0');
     localStorage.setItem('buy_place_bet', buyPlaceBet ? '1' : '0');
     const ablEl2 = document.getElementById('auto-buy-local');
@@ -882,8 +882,8 @@ async function loadSoftmaxFromGithub() {
     if(maxBetsElGh) maxBetsElGh.value = String(s.max_bets ?? 4);
     const slEnabledEl = document.getElementById('stop-loss-enabled');
     if(slEnabledEl){ slEnabledEl.checked = stopLossEnabled; document.getElementById('stop-loss-enabled-label').textContent = stopLossEnabled ? 'ON' : 'OFF'; }
-    const slPctEl = document.getElementById('stop-loss-pct');
-    if(slPctEl) slPctEl.value = stopLossPct;
+    const slPctEl = document.getElementById('stop-loss-amount');
+    if(slPctEl) slPctEl.value = stopLossAmount;
     const syEl = document.getElementById('skip-young-race');
     if(syEl){ syEl.checked = skipYoungRace; document.getElementById('skip-young-race-label').textContent = skipYoungRace ? 'ON' : 'OFF'; }
     const bpbEl = document.getElementById('buy-place-bet');
@@ -897,7 +897,7 @@ async function loadSoftmaxFromGithub() {
       `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
-      `損切り: ${stopLossEnabled ? stopLossPct+'%以下で停止' : 'OFF'}　若馬戦スキップ: ${skipYoungRace ? 'ON' : 'OFF'}`,
+      `損切り: ${stopLossEnabled ? stopLossAmount+'%以下で停止' : 'OFF'}　若馬戦スキップ: ${skipYoungRace ? 'ON' : 'OFF'}`,
     ];
     if(currentEl){
       currentEl.style.display = 'block';
@@ -958,8 +958,8 @@ function loadSoftmaxSettings() {
   const slEnabledEl = document.getElementById('stop-loss-enabled');
   const slEnabledVal = localStorage.getItem('stop_loss_enabled') === '1';
   if(slEnabledEl){ slEnabledEl.checked = slEnabledVal; document.getElementById('stop-loss-enabled-label').textContent = slEnabledVal ? 'ON' : 'OFF'; }
-  const slPctEl = document.getElementById('stop-loss-pct');
-  if(slPctEl) slPctEl.value = localStorage.getItem('stop_loss_pct') || '80';
+  const slPctEl = document.getElementById('stop-loss-amount');
+  if(slPctEl) slPctEl.value = localStorage.getItem('stop_loss_amount') || '3000';
   const syEl = document.getElementById('skip-young-race');
   const syVal = localStorage.getItem('skip_young_race') === '1';
   if(syEl){ syEl.checked = syVal; document.getElementById('skip-young-race-label').textContent = syVal ? 'ON' : 'OFF'; }
