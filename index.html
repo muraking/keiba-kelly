@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260521.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260522.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -488,13 +488,48 @@ textarea:focus{border-color:var(--gold)}
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">若馬戦スキップ</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="checkbox" id="skip-young-race" style="width:18px;height:18px;cursor:pointer"
-            onchange="localStorage.setItem('skip_young_race', this.checked?'1':'0'); document.getElementById('skip-young-race-label').textContent=this.checked?'ON':'OFF'">
-          <span style="font-size:13px;color:var(--text)" id="skip-young-race-label">OFF</span>
-        </label>
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">地方: 2歳・3歳・新馬　JRA: 2歳・新馬を自動購入スキップ</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🚫 レーススキップ設定</div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:bold">地方競馬</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+            <input type="checkbox" id="skip-local-maiden" style="width:15px;height:15px;cursor:pointer"
+              onchange="localStorage.setItem('skip_local_maiden', this.checked?'1':'0')">
+            <span style="font-size:12px;color:var(--text)">新馬戦</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+            <input type="checkbox" id="skip-local-2yo" style="width:15px;height:15px;cursor:pointer"
+              onchange="localStorage.setItem('skip_local_2yo', this.checked?'1':'0')">
+            <span style="font-size:12px;color:var(--text)">2歳戦</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+            <input type="checkbox" id="skip-local-3yo" style="width:15px;height:15px;cursor:pointer"
+              onchange="localStorage.setItem('skip_local_3yo', this.checked?'1':'0')">
+            <span style="font-size:12px;color:var(--text)">3歳戦</span>
+          </label>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:bold">中央競馬（JRA）</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+            <input type="checkbox" id="skip-jra-maiden" style="width:15px;height:15px;cursor:pointer"
+              onchange="localStorage.setItem('skip_jra_maiden', this.checked?'1':'0')">
+            <span style="font-size:12px;color:var(--text)">新馬戦</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+            <input type="checkbox" id="skip-jra-2yo" style="width:15px;height:15px;cursor:pointer"
+              onchange="localStorage.setItem('skip_jra_2yo', this.checked?'1':'0')">
+            <span style="font-size:12px;color:var(--text)">2歳戦</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+            <input type="checkbox" id="skip-jra-3yo" style="width:15px;height:15px;cursor:pointer"
+              onchange="localStorage.setItem('skip_jra_3yo', this.checked?'1':'0')">
+            <span style="font-size:12px;color:var(--text)">3歳戦</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+            <input type="checkbox" id="skip-jra-hurdle" style="width:15px;height:15px;cursor:pointer"
+              onchange="localStorage.setItem('skip_jra_hurdle', this.checked?'1':'0')">
+            <span style="font-size:12px;color:var(--text)">障害</span>
+          </label>
+        </div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -731,7 +766,13 @@ async function saveSoftmaxSettings() {
   const winrateFilter = parseFloat(document.getElementById('sm-winrate-filter')?.value || '0') || 0;
   const stopLossEnabled = document.getElementById('stop-loss-enabled')?.checked || false;
   const stopLossAmount = parseInt(document.getElementById('stop-loss-amount')?.value || '3000') || 3000;
-  const skipYoungRace = document.getElementById('skip-young-race')?.checked || false;
+  const skipLocalMaiden = document.getElementById('skip-local-maiden')?.checked || false;
+  const skipLocal2yo    = document.getElementById('skip-local-2yo')?.checked || false;
+  const skipLocal3yo    = document.getElementById('skip-local-3yo')?.checked || false;
+  const skipJraMaiden   = document.getElementById('skip-jra-maiden')?.checked || false;
+  const skipJra2yo      = document.getElementById('skip-jra-2yo')?.checked || false;
+  const skipJra3yo      = document.getElementById('skip-jra-3yo')?.checked || false;
+  const skipJraHurdle   = document.getElementById('skip-jra-hurdle')?.checked || false;
   const buyPlaceBet = document.getElementById('buy-place-bet')?.checked || false;
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
@@ -770,7 +811,13 @@ async function saveSoftmaxSettings() {
       data._settings.max_bets = maxBetsSave;
       data._settings.stop_loss_enabled = stopLossEnabled;
       data._settings.stop_loss_amount = stopLossAmount;
-      data._settings.skip_young_race = skipYoungRace;
+      data._settings.skip_local_maiden = skipLocalMaiden;
+      data._settings.skip_local_2yo    = skipLocal2yo;
+      data._settings.skip_local_3yo    = skipLocal3yo;
+      data._settings.skip_jra_maiden   = skipJraMaiden;
+      data._settings.skip_jra_2yo      = skipJra2yo;
+      data._settings.skip_jra_3yo      = skipJra3yo;
+      data._settings.skip_jra_hurdle   = skipJraHurdle;
       data._settings.buy_place_bet = buyPlaceBet;
       data._settings.max_bets = maxBetsSave;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
@@ -853,7 +900,13 @@ async function loadSoftmaxFromGithub() {
     const winrateFilter = s.sm_winrate_filter != null ? s.sm_winrate_filter : (parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0);
     const stopLossEnabled = s.stop_loss_enabled || false;
     const stopLossAmount = s.stop_loss_amount ?? 3000;
-    const skipYoungRace = s.skip_young_race || false;
+    const skipLocalMaiden = s.skip_local_maiden || false;
+    const skipLocal2yo    = s.skip_local_2yo    || false;
+    const skipLocal3yo    = s.skip_local_3yo    || false;
+    const skipJraMaiden   = s.skip_jra_maiden   || false;
+    const skipJra2yo      = s.skip_jra_2yo      || false;
+    const skipJra3yo      = s.skip_jra_3yo      || false;
+    const skipJraHurdle   = s.skip_jra_hurdle   || false;
     const buyPlaceBet = s.buy_place_bet || false;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
@@ -864,7 +917,13 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('max_bets', String(s.max_bets ?? 4));
     localStorage.setItem('stop_loss_enabled', stopLossEnabled ? '1' : '0');
     localStorage.setItem('stop_loss_amount', String(stopLossAmount));
-    localStorage.setItem('skip_young_race', skipYoungRace ? '1' : '0');
+    localStorage.setItem('skip_local_maiden', skipLocalMaiden ? '1' : '0');
+  localStorage.setItem('skip_local_2yo',    skipLocal2yo    ? '1' : '0');
+  localStorage.setItem('skip_local_3yo',    skipLocal3yo    ? '1' : '0');
+  localStorage.setItem('skip_jra_maiden',   skipJraMaiden   ? '1' : '0');
+  localStorage.setItem('skip_jra_2yo',      skipJra2yo      ? '1' : '0');
+  localStorage.setItem('skip_jra_3yo',      skipJra3yo      ? '1' : '0');
+  localStorage.setItem('skip_jra_hurdle',   skipJraHurdle   ? '1' : '0');
     localStorage.setItem('buy_place_bet', buyPlaceBet ? '1' : '0');
     const ablEl2 = document.getElementById('auto-buy-local');
     const abjEl2 = document.getElementById('auto-buy-jra');
@@ -884,8 +943,9 @@ async function loadSoftmaxFromGithub() {
     if(slEnabledEl){ slEnabledEl.checked = stopLossEnabled; document.getElementById('stop-loss-enabled-label').textContent = stopLossEnabled ? 'ON' : 'OFF'; }
     const slPctEl = document.getElementById('stop-loss-amount');
     if(slPctEl) slPctEl.value = stopLossAmount;
-    const syEl = document.getElementById('skip-young-race');
-    if(syEl){ syEl.checked = skipYoungRace; document.getElementById('skip-young-race-label').textContent = skipYoungRace ? 'ON' : 'OFF'; }
+    const skipIds = ['skip-local-maiden','skip-local-2yo','skip-local-3yo','skip-jra-maiden','skip-jra-2yo','skip-jra-3yo','skip-jra-hurdle'];
+    const skipVals = [skipLocalMaiden, skipLocal2yo, skipLocal3yo, skipJraMaiden, skipJra2yo, skipJra3yo, skipJraHurdle];
+    skipIds.forEach((id,i) => { const el=document.getElementById(id); if(el) el.checked=skipVals[i]; });
     const bpbEl = document.getElementById('buy-place-bet');
     if(bpbEl){ bpbEl.checked = buyPlaceBet; document.getElementById('buy-place-bet-label').textContent = buyPlaceBet ? 'ON' : 'OFF'; }
 
@@ -897,7 +957,7 @@ async function loadSoftmaxFromGithub() {
       `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
-      `損切り: ${stopLossEnabled ? stopLossAmount+'%以下で停止' : 'OFF'}　若馬戦スキップ: ${skipYoungRace ? 'ON' : 'OFF'}`,
+      `損切り: ${stopLossEnabled ? '¥'+stopLossAmount+'未満で停止' : 'OFF'}　スキップ設定`,
     ];
     if(currentEl){
       currentEl.style.display = 'block';
@@ -960,9 +1020,11 @@ function loadSoftmaxSettings() {
   if(slEnabledEl){ slEnabledEl.checked = slEnabledVal; document.getElementById('stop-loss-enabled-label').textContent = slEnabledVal ? 'ON' : 'OFF'; }
   const slPctEl = document.getElementById('stop-loss-amount');
   if(slPctEl) slPctEl.value = localStorage.getItem('stop_loss_amount') || '3000';
-  const syEl = document.getElementById('skip-young-race');
-  const syVal = localStorage.getItem('skip_young_race') === '1';
-  if(syEl){ syEl.checked = syVal; document.getElementById('skip-young-race-label').textContent = syVal ? 'ON' : 'OFF'; }
+  ['skip-local-maiden','skip-local-2yo','skip-local-3yo','skip-jra-maiden','skip-jra-2yo','skip-jra-3yo','skip-jra-hurdle'].forEach(id => {
+    const el = document.getElementById(id);
+    const key = id.replace(/-/g, '_');
+    if(el) el.checked = localStorage.getItem(key) === '1';
+  });
   const bpbEl2 = document.getElementById('buy-place-bet');
   const bpbVal = localStorage.getItem('buy_place_bet') === '1';
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
