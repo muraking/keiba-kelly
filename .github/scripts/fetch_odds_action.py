@@ -99,13 +99,12 @@ async def fetch_odds(page, venue, race_num, today):
     print(f"ページ内容（先頭200文字）: {text[:200]}")
     await page.screenshot(path="rakuten_odds_debug.png")
 
-    # 会場タブクリック（text=セレクターで直接クリック）
+    # 会場タブクリック
     try:
         await page.click(f'text={venue}', timeout=3000)
         await page.wait_for_timeout(2000)
         print(f"会場タブクリック: {venue}")
     except:
-        # フォールバック: JSで全要素を検索
         clicked = await page.evaluate(f"""
             () => {{
                 for (const el of document.querySelectorAll('*')) {{
@@ -120,14 +119,31 @@ async def fetch_odds(page, venue, race_num, today):
         print(f"JS会場クリック: {clicked}" if clicked else f"会場タブ見つからず: {venue}")
         await page.wait_for_timeout(2000)
 
-    # レース番号クリック（完全一致JSクリック）
+    # レース番号クリック
+    # テーブルのセルは「投票\n20:33\n1」のような複合テキストのため部分一致で検索
+    race_num_padded = str(race_num).zfill(2)
     clicked = await page.evaluate(f"""
         () => {{
-            const els = document.querySelectorAll('a, td, li, span');
+            const target = '{race_num}R';
+            const padded = '{race_num_padded}';
+            const els = document.querySelectorAll('a, td, li, span, button');
+            // 1. 完全一致
             for (const el of els) {{
-                if (el.innerText?.trim() === '{race_num}R') {{
-                    el.click();
-                    return true;
+                if (el.innerText?.trim() === target) {{
+                    el.click(); return 'exact:' + target;
+                }}
+            }}
+            // 2. テキスト含む（中止でない）
+            for (const el of els) {{
+                const t = el.innerText?.trim() || '';
+                if (t.includes(target) && !t.includes('中止')) {{
+                    el.click(); return 'contains:' + t.substring(0, 20).replace(/\\n/g, '|');
+                }}
+            }}
+            // 3. hrefにレースIDを含むaタグ
+            for (const a of document.querySelectorAll('a[href]')) {{
+                if (a.href && a.href.includes(padded) && !a.innerText?.includes('中止')) {{
+                    a.click(); return 'href:' + a.href.substring(a.href.length - 15);
                 }}
             }}
             return false;
@@ -135,7 +151,7 @@ async def fetch_odds(page, venue, race_num, today):
     """)
     if clicked:
         await page.wait_for_timeout(2000)
-        print(f"レース番号クリック: {race_num}R")
+        print(f"レース番号クリック: {race_num}R ({clicked})")
     else:
         print(f"レース番号クリック失敗: {race_num}R")
 
@@ -161,7 +177,6 @@ async def fetch_odds(page, venue, race_num, today):
             print(f"    行{r['ri']}: {r['cells']}")
 
     # テーブルからオッズ取得
-    # 楽天競馬テーブル構造: 列0=枠番, 列1=馬番, 列2=馬名, 列3=騎手, 列4=単勝, 列5=複勝
     result = await page.evaluate("""
         () => {
             const tables = document.querySelectorAll('table');
@@ -173,12 +188,6 @@ async def fetch_odds(page, venue, race_num, today):
                 for (const row of rows) {
                     const cells = row.querySelectorAll('td');
                     if (cells.length < 4) continue;
-                    // 列構造判定:
-                    // 列0=数字, 列1=数字 → 枠番+馬番あり構造 (高知・佐賀・帯広等)
-                    //   列4=単勝, 列5=複勝
-                    // 列0=数字, 列1=文字 → 枠番のみ構造 (盛岡・金沢等)
-                    //   この場合行番号を馬番として使う
-                    //   列3=単勝, 列4=複勝
                     const col0 = cells[0]?.innerText?.trim();
                     const col1 = cells[1]?.innerText?.trim();
                     const col0IsNum = /^[0-9]{1,2}$/.test(col0);
@@ -186,10 +195,8 @@ async def fetch_odds(page, venue, race_num, today):
                     if (!col0IsNum) continue;
                     let tanIdx, fukuIdx2, useRowNum;
                     if (col1IsNum) {
-                        // 枠番+馬番構造 → 列1が馬番
                         tanIdx = 4; fukuIdx2 = 5; useRowNum = false;
                     } else {
-                        // 枠番のみ構造 → 行番号を馬番として使う
                         tanIdx = 3; fukuIdx2 = 4; useRowNum = true;
                     }
                     if (cells.length < tanIdx + 1) continue;
@@ -254,7 +261,6 @@ def save_to_github(venue, race_num, odds, today_jst):
             if "odds" not in data["dates"][today_jst]:
                 data["dates"][today_jst]["odds"] = {}
 
-            # 楽天場コードをキーに保存
             code = VENUE_TO_CODE.get(venue, venue)
             if code not in data["dates"][today_jst]["odds"]:
                 data["dates"][today_jst]["odds"][code] = {}
@@ -309,7 +315,6 @@ async def main():
         await browser.close()
 
     if not odds:
-        # 締切済みの場合はエラーではなくスキップ
         print("⚠️ オッズ取得できませんでした（締切済みの可能性があります）")
         print("✅ スキップして正常終了")
         raise SystemExit(0)
