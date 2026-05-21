@@ -1,271 +1,322 @@
 """
-SPAT4 オッズ取得（GitHub Actions用）
-C900J/C901J 内部APIをexpect_responseで傍受する方式
+楽天競馬 オッズ取得スクリプト
+GitHub Actionsから呼び出され、オッズをindices.jsonに保存する
 """
-import asyncio, os, json, re, sys, base64
-import requests as req_lib
+import asyncio
+import os
+import json
+import base64
+import time
+import requests
 from datetime import datetime, timezone, timedelta
 from playwright.async_api import async_playwright
 
-SPAT4_MEMBERNUM = os.environ.get("SPAT4_MEMBERNUM", "")
-SPAT4_PASS      = os.environ.get("SPAT4_PASS", "")
-GH_TOKEN        = os.environ.get("GH_TOKEN", "")
-GH_USER   = "muraking"
-GH_REPO   = "keiba-kelly"
-GH_BRANCH = "main"
-GH_FILE   = "data/indices.json"
-PLACE_ID  = os.environ.get("PLACE_ID", "")
-RACE_NUM  = int(os.environ.get("RACE_NUM", "1"))
-RACE_DATE = os.environ.get("RACE_DATE", "")
-TODAY_JST = os.environ.get("TODAY_JST", "")
-LOGIN_URL = "https://www.spat4.jp/keiba/pc?C_SPHONE=off"
-TIMEOUT   = 60000
+RAKUTEN_USER = os.environ.get("RAKUTEN_USER", "")
+RAKUTEN_PASS = os.environ.get("RAKUTEN_PASS", "")
+GH_TOKEN     = os.environ.get("GH_TOKEN", "")
+GH_USER      = os.environ.get("GH_USER", "muraking")
+GH_REPO      = os.environ.get("GH_REPO", "keiba-kelly")
+GH_BRANCH    = os.environ.get("GH_BRANCH", "main")
+GH_FILE      = os.environ.get("GH_FILE", "data/indices.json")
+VENUE        = os.environ.get("VENUE", "")
+RACE_NUM     = int(os.environ.get("RACE_NUM", "1"))
+TODAY_JST    = os.environ.get("TODAY_JST", "")
+
+JST = timezone(timedelta(hours=9))
+TIMEOUT = 30000
+
+VENUE_TO_CODE = {
+    "帯広": "03", "帯広ば": "03", "門別": "04", "盛岡": "06", "水沢": "07",
+    "浦和":   "08", "船橋": "09", "大井": "10", "川崎": "11",
+    "金沢":   "12", "笠松": "13", "名古屋": "14", "園田": "17",
+    "姫路":   "18", "高知": "31", "佐賀":  "32",
+}
+
+LOGIN_URL = "https://keiba.rakuten.co.jp/"
+BET_URL   = "https://bet.keiba.rakuten.co.jp/bet/odds/"
+
 
 def now_jst():
-    return datetime.now(timezone(timedelta(hours=9)))
+    return datetime.now(JST)
+
+
+def get_today_jst():
+    return now_jst().strftime("%Y-%m-%d")
+
+
+def get_today():
+    return now_jst().strftime("%Y%m%d")
+
 
 async def login(page):
+    print("ログイン中...")
     await page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=TIMEOUT)
-    await page.wait_for_timeout(5000)
-    await page.fill('input[name="MEMBERNUMR"]', SPAT4_MEMBERNUM)
-    await page.fill('input[name="MEMBERIDR"]', SPAT4_PASS)
+    await page.wait_for_timeout(2000)
+
+    await page.click('text=マイページログイン')
+    await page.wait_for_timeout(2000)
+
+    el = await page.wait_for_selector('input[type="text"]', timeout=5000)
+    await el.click()
+    await el.fill('')
+    await el.type(RAKUTEN_USER, delay=50)
+    await page.wait_for_timeout(500)
     try:
-        async with page.expect_navigation(wait_until="domcontentloaded", timeout=30000):
-            await page.evaluate(
-                "() => { for(const f of document.querySelectorAll('form')){ if(f.querySelector('[name=MEMBERNUMR]')){f.submit();return;} } }"
-            )
-        await page.wait_for_timeout(3000)
-    except Exception as e:
-        print(f"ログイン遷移: {e}")
-    # ログイン後のURLがwww1/www2/www3のサブドメインになっているか確認
-    # なっていない場合はP001Sに明示的に移動
-    if 'www1' not in page.url and 'www2' not in page.url and 'www3' not in page.url:
-        # P001Sに遷移してサブドメインを確定させる
-        try:
-            await page.wait_for_url('**/keiba/pc?HANDLERR=P001S*', timeout=10000)
-        except:
-            pass
-    print(f"ログイン後URL: {page.url}")
-
-
-async def get_odds(page, place_id, race_num, race_date):
-    from urllib.parse import urlparse, urljoin
-    parsed = urlparse(page.url)
-    base_domain = f"{parsed.scheme}://{parsed.netloc}"
-    if parsed.netloc == 'www.spat4.jp':
-        base_domain = "https://www2.spat4.jp"
-
-    p120s_url = f"{base_domain}/keiba/pc?HANDLERR=P120S&RACEDAYR={race_date}&PLACEIDR={place_id}&RACER={race_num}"
-    print(f"P120S: {p120s_url}")
-
-    # レスポンス監視
-    captured_odds = {}
-    wpscript_body = None
-
-    async def on_response(response):
-        nonlocal wpscript_body
-        url = response.url
-        if 'WPScript.js' in url and wpscript_body is None:
-            try: wpscript_body = await response.body()
-            except: pass
-
-    page.on("response", on_response)
-
-    # P120Sを読み込む（networkidleまで待つ）
-    try:
-        await page.goto(p120s_url, wait_until="networkidle", timeout=TIMEOUT)
+        btn = await page.wait_for_selector('button:has-text("次へ")', timeout=3000)
+        await btn.click()
     except:
-        await page.goto(p120s_url, wait_until="domcontentloaded", timeout=TIMEOUT)
-    await page.wait_for_timeout(5000)
-    print(f"現在URL: {page.url}")
+        await page.keyboard.press('Enter')
+    await page.wait_for_timeout(3000)
 
-    # ★ P120SのHTMLからiframe srcを動的取得
-    iframe_srcs = await page.evaluate("""
-        () => Array.from(document.querySelectorAll('iframe,frame')).map(f => ({
-            src: f.src,
-            name: f.name || '',
-            id: f.id || ''
-        }))
-    """)
-    print(f"iframes: {[(f['name'], f['src'][-60:]) for f in iframe_srcs]}")
-
-    # P122S相当のフレームsrcを特定（LEFT nameまたはP122S含む）
-    odds_src = None
-    for f in iframe_srcs:
-        if 'P122S' in f['src'] or f['name'] == 'LEFT':
-            odds_src = f['src']
-            break
-
-    if not odds_src:
-        print("オッズiframeが見つかりません")
-        page.remove_listener("response", on_response)
-        return {}
-
-    # srcが相対URLの場合は絶対URLに変換
-    if odds_src.startswith('/'):
-        odds_src = base_domain + odds_src
-
-    print(f"オッズフレームsrc: {odds_src}")
-
-    # page.framesからオッズフレームを探す
-    # P120SのiframeはP122Sを指しているが、frame.urlはP120Sになる場合がある
-    # → name="LEFT" のフレームを使う（または2番目以降のフレーム）
-    target_frame = None
-    for attempt in range(5):
-        frames = page.frames
-        print(f"フレーム数({attempt+1}): {len(frames)}")
-        for i, frame in enumerate(frames):
-            print(f"  [{i}] name={getattr(frame, 'name', '?')} url={frame.url[-60:]}")
-
-        # name="LEFT"のフレームを探す
-        for frame in frames:
-            if getattr(frame, 'name', '') == 'LEFT':
-                target_frame = frame
-                print(f"LEFTフレーム発見")
-                break
-
-        # なければP120S以外の最初のframesetフレームを使う
-        if not target_frame and len(frames) >= 3:
-            # メインフレーム(0)以外で最初に見つかるフレーム
-            for frame in frames[1:]:
-                if 'P902S' not in frame.url and 'P121S' not in frame.url and 'P901' not in frame.url:
-                    target_frame = frame
-                    print(f"フォールバックフレーム: {frame.url[-60:]}")
-                    break
-
-        if target_frame:
-            break
-        await page.wait_for_timeout(2000)
-
-    if target_frame:
-        try:
-            await target_frame.wait_for_load_state("domcontentloaded", timeout=10000)
-        except: pass
-        await page.wait_for_timeout(2000)
-
-        text = await target_frame.evaluate("() => document.body ? document.body.innerText : ''")
-        v_url = await target_frame.evaluate("() => document.getElementById('_v_url')?.value || ''")
-        print(f"フレーム_v_url: {v_url}")
-        print(f"フレーム内容: {text[:100]}")
-
-        if v_url != '/pc/err' and 'ログイン' not in text[:50]:
-            odds = parse_odds_text(text)
-            if odds:
-                print(f"フレームから{len(odds)}頭取得成功")
-                page.remove_listener("response", on_response)
-                return odds
-
-    # フォールバック: requestsでCookieを引き継いでodds_srcに直接アクセス
-    print("requestsでodds_src直接アクセス...")
-    cookies = await page.context.cookies()
-    import requests as req_lib2
-    session = req_lib2.Session()
-    for c in cookies:
-        session.cookies.set(c['name'], c['value'], domain=c.get('domain', ''))
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
-        "Referer": p120s_url,
-        "Accept": "text/html,application/xhtml+xml,*/*",
-    }
+    el = await page.wait_for_selector('input[type="password"]', timeout=5000)
+    await el.click()
+    await el.fill('')
+    await el.type(RAKUTEN_PASS, delay=50)
+    await page.wait_for_timeout(500)
     try:
-        r = session.get(odds_src, headers=headers, timeout=15)
-        for enc in ['shift_jis', 'cp932', 'utf-8']:
-            try:
-                text2 = r.content.decode(enc)
-                print(f"requests内容({enc}): {text2[:100]}")
-                if 'ログイン' not in text2[:50] and 'エラー' not in text2[:50]:
-                    odds2 = parse_odds_text(text2)
-                    if odds2:
-                        print(f"requestsから{len(odds2)}頭取得成功")
-                        page.remove_listener("response", on_response)
-                        return odds2
-                break
-            except: continue
-    except Exception as e:
-        print(f"requestsエラー: {e}")
-
-    page.remove_listener("response", on_response)
-    return {}
+        btn = await page.wait_for_selector('button:has-text("次へ")', timeout=3000)
+        await btn.click()
+    except:
+        await page.keyboard.press('Enter')
+    await page.wait_for_timeout(4000)
+    print(f"ログイン完了: {page.url}")
 
 
+async def fetch_odds(page, venue, race_num, today):
+    code = VENUE_TO_CODE.get(venue)
+    if not code:
+        raise ValueError(f"未対応の会場: {venue}")
+
+    race_id = f"{today}{code}{str(race_num).zfill(8)}"
+    url = f"{BET_URL}RACEID/{race_id}"
+    print(f"レースページ: {url}")
+
+    await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await page.wait_for_timeout(3000)
+
+    # ページ確認
+    text = await page.evaluate("() => document.body.innerText")
+    print(f"ページ内容（先頭200文字）: {text[:200]}")
+    await page.screenshot(path="rakuten_odds_debug.png")
+
+    # 会場タブクリック（text=セレクターで直接クリック）
+    try:
+        await page.click(f'text={venue}', timeout=3000)
+        await page.wait_for_timeout(2000)
+        print(f"会場タブクリック: {venue}")
+    except:
+        # フォールバック: JSで全要素を検索
+        clicked = await page.evaluate(f"""
+            () => {{
+                for (const el of document.querySelectorAll('*')) {{
+                    if (el.children.length === 0 && el.innerText && el.innerText.trim() === '{venue}') {{
+                        el.click();
+                        return el.tagName;
+                    }}
+                }}
+                return false;
+            }}
+        """)
+        print(f"JS会場クリック: {clicked}" if clicked else f"会場タブ見つからず: {venue}")
+        await page.wait_for_timeout(2000)
+
+    # レース番号クリック（完全一致JSクリック）
+    clicked = await page.evaluate(f"""
+        () => {{
+            const els = document.querySelectorAll('a, td, li, span');
+            for (const el of els) {{
+                if (el.innerText?.trim() === '{race_num}R') {{
+                    el.click();
+                    return true;
+                }}
+            }}
+            return false;
+        }}
+    """)
+    if clicked:
+        await page.wait_for_timeout(2000)
+        print(f"レース番号クリック: {race_num}R")
+    else:
+        print(f"レース番号クリック失敗: {race_num}R")
+
+    # テーブル全体をデバッグダンプ
+    debug_info = await page.evaluate("""
+        () => {
+            const tables = document.querySelectorAll('table');
+            return Array.from(tables).slice(0, 3).map((t, ti) => {
+                const rows = t.querySelectorAll('tr');
+                return {
+                    ti,
+                    rows: Array.from(rows).slice(0, 15).map((r, ri) => {
+                        const cs = r.querySelectorAll('td');
+                        return {ri, cells: Array.from(cs).map(c => c.innerText.trim().substring(0, 10))};
+                    }).filter(r => r.cells.length > 0)
+                };
+            });
+        }
+    """)
+    for t in debug_info:
+        print(f"  [テーブル{t['ti']}]")
+        for r in t['rows']:
+            print(f"    行{r['ri']}: {r['cells']}")
+
+    # テーブルからオッズ取得
+    # 楽天競馬テーブル構造: 列0=枠番, 列1=馬番, 列2=馬名, 列3=騎手, 列4=単勝, 列5=複勝
+    result = await page.evaluate("""
+        () => {
+            const tables = document.querySelectorAll('table');
+            for (const table of tables) {
+                const rows = table.querySelectorAll('tr');
+                const tableResult = {};
+                let found = false;
+                let horseCount = 0;
+                for (const row of rows) {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length < 4) continue;
+                    // 列構造判定:
+                    // 列0=数字, 列1=数字 → 枠番+馬番あり構造 (高知・佐賀・帯広等)
+                    //   列4=単勝, 列5=複勝
+                    // 列0=数字, 列1=文字 → 枠番のみ構造 (盛岡・金沢等)
+                    //   この場合行番号を馬番として使う
+                    //   列3=単勝, 列4=複勝
+                    const col0 = cells[0]?.innerText?.trim();
+                    const col1 = cells[1]?.innerText?.trim();
+                    const col0IsNum = /^[0-9]{1,2}$/.test(col0);
+                    const col1IsNum = /^[0-9]{1,2}$/.test(col1);
+                    if (!col0IsNum) continue;
+                    let tanIdx, fukuIdx2, useRowNum;
+                    if (col1IsNum) {
+                        // 枠番+馬番構造 → 列1が馬番
+                        tanIdx = 4; fukuIdx2 = 5; useRowNum = false;
+                    } else {
+                        // 枠番のみ構造 → 行番号を馬番として使う
+                        tanIdx = 3; fukuIdx2 = 4; useRowNum = true;
+                    }
+                    if (cells.length < tanIdx + 1) continue;
+                    const num = useRowNum ? (horseCount + 1) : parseInt(col1);
+                    if (num < 1 || num > 20) continue;
+                    const tan = parseFloat(cells[tanIdx]?.innerText?.trim());
+                    if (isNaN(tan) || tan < 1.0) {
+                        if (useRowNum) horseCount++;
+                        continue;
+                    }
+                    horseCount++;
+                    found = true;
+                    const entry = { tan: tan };
+                    const fukuText = cells[fukuIdx2]?.innerText?.trim() || '';
+                    if (fukuText.includes('-')) {
+                        const parts = fukuText.split('-');
+                        const fmin = parseFloat(parts[0]);
+                        const fmax = parseFloat(parts[1]);
+                        if (!isNaN(fmin) && fmin > 0) {
+                            entry.fuku_min = fmin;
+                            entry.fuku_max = isNaN(fmax) ? null : fmax;
+                        }
+                    }
+                    tableResult[num] = entry;
+                }
+                if (found) return tableResult;
+            }
+            return {};
+        }
+    """)
+
+    odds_map = {int(k): v for k, v in result.items()}
+    if odds_map:
+        print(f"✅ オッズ取得: {len(odds_map)}頭")
+        for num, o in sorted(odds_map.items()):
+            fuku = f" 複{o.get('fuku_min','?')}-{o.get('fuku_max','?')}" if 'fuku_min' in o else ""
+            print(f"  {num}番: 単{o['tan']}{fuku}")
+    else:
+        print("⚠️ オッズ取得失敗")
+    return odds_map
 
 
-def parse_odds_text(text):
-    """テキスト形式のオッズを解析"""
-    result = {}
-    for line in text.split('\n'):
-        parts = re.split(r'\s{2,}|\t', line.strip())
-        parts = [p.strip().replace(',','') for p in parts if p.strip()]
-        nums, tan, fuku = [], None, None
-        for p in parts:
-            if re.match(r'^\d{1,2}$', p) and 1 <= int(p) <= 18:
-                nums.append(int(p))
-            elif re.match(r'^\d+\.\d+$', p):
-                v = float(p)
-                if 1.0 <= v < 9999.9 and tan is None: tan = v
-            elif re.match(r'^\d+\.?\d*-\d+\.?\d*$', p):
-                fuku = p
-        num = nums[1] if len(nums) >= 2 else (nums[0] if nums else None)
-        if not num or (tan is None and fuku is None): continue
-        if num not in result:
-            e = {}
-            if tan: e["tan"] = tan
-            if fuku:
-                fp = fuku.split("-")
-                try:
-                    fmin = float(fp[0])
-                    if fmin > 0:
-                        e["fuku_min"] = fmin
-                        if len(fp) > 1: e["fuku_max"] = float(fp[1])
-                except: pass
-            result[num] = e
-    return result
-
-def save_to_github(place_id, race_num, odds, today_jst):
+def save_to_github(venue, race_num, odds, today_jst):
     api_url = f"https://api.github.com/repos/{GH_USER}/{GH_REPO}/contents/{GH_FILE}"
     headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+
     for attempt in range(3):
-        r = req_lib.get(api_url, headers=headers)
-        if not r.ok: return False
-        sha = r.json()["sha"]
-        data = json.loads(base64.b64decode(r.json()["content"].replace("\n","")).decode())
-        if "dates" not in data: data["dates"] = {}
-        if today_jst not in data["dates"]: data["dates"][today_jst] = {}
-        if "odds" not in data["dates"][today_jst]: data["dates"][today_jst]["odds"] = {}
-        if place_id not in data["dates"][today_jst]["odds"]:
-            data["dates"][today_jst]["odds"][place_id] = {}
-        data["dates"][today_jst]["odds"][place_id][race_num] = odds
-        data["dates"][today_jst]["odds_updated"] = now_jst().isoformat()
-        json_str = json.dumps(data, ensure_ascii=False, indent=2)
-        body = {
-            "message": f"odds {place_id} {race_num}R {now_jst().strftime('%H:%M')}",
-            "content": base64.b64encode(json_str.encode()).decode(),
-            "sha": sha, "branch": GH_BRANCH
-        }
-        r2 = req_lib.put(api_url, headers=headers, json=body)
-        if r2.status_code in [200, 201]:
-            print("GitHub保存成功")
-            return True
-        if r2.status_code == 409: continue
+        try:
+            r = requests.get(api_url, headers=headers)
+            if not r.ok:
+                print(f"GitHub取得失敗: {r.status_code}")
+                return False
+
+            sha = r.json()["sha"]
+            content = r.json()["content"].replace("\n", "")
+            data = json.loads(base64.b64decode(content).decode())
+
+            if "dates" not in data:
+                data["dates"] = {}
+            if today_jst not in data["dates"]:
+                data["dates"][today_jst] = {}
+            if "odds" not in data["dates"][today_jst]:
+                data["dates"][today_jst]["odds"] = {}
+
+            # 楽天場コードをキーに保存
+            code = VENUE_TO_CODE.get(venue, venue)
+            if code not in data["dates"][today_jst]["odds"]:
+                data["dates"][today_jst]["odds"][code] = {}
+
+            data["dates"][today_jst]["odds"][code][str(race_num)] = odds
+            data["dates"][today_jst]["odds_updated"] = now_jst().isoformat()
+
+            json_str = json.dumps(data, ensure_ascii=False, indent=2)
+            body = {
+                "message": f"rakuten odds {venue} {race_num}R {now_jst().strftime('%H:%M')}",
+                "content": base64.b64encode(json_str.encode()).decode(),
+                "sha": sha,
+                "branch": GH_BRANCH
+            }
+            r2 = requests.put(api_url, headers=headers, json=body)
+            if r2.status_code in [200, 201]:
+                print(f"✅ GitHub保存成功")
+                return True
+            if r2.status_code == 409:
+                print(f"SHA競合 リトライ {attempt+1}/3...")
+                time.sleep(3)
+                continue
+            print(f"保存失敗: {r2.status_code}")
+            return False
+        except Exception as e:
+            print(f"エラー: {e}")
+            return False
     return False
 
+
 async def main():
-    print(f"オッズ取得: PLACE_ID={PLACE_ID} RACE_NUM={RACE_NUM} DATE={RACE_DATE}")
+    if not VENUE:
+        print("❌ VENUE が設定されていません")
+        raise SystemExit(1)
+
+    today     = get_today()
+    today_jst = TODAY_JST or get_today_jst()
+
+    print(f"=== 楽天競馬オッズ取得 ===")
+    print(f"会場: {VENUE} {RACE_NUM}R / 日付: {today_jst}")
+
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
+        browser = await p.chromium.launch(
+            headless=True,
+            args=['--no-sandbox']
         )
-        page = await context.new_page()
+        page = await browser.new_page()
         page.set_default_timeout(TIMEOUT)
+
         await login(page)
-        odds = await get_odds(page, PLACE_ID, RACE_NUM, RACE_DATE)
+        odds = await fetch_odds(page, VENUE, RACE_NUM, today)
         await browser.close()
+
     if not odds:
-        print("オッズ取得失敗")
-        sys.exit(1)
-    print(f"{len(odds)}頭取得成功")
-    save_to_github(PLACE_ID, RACE_NUM, odds, TODAY_JST)
+        # 締切済みの場合はエラーではなくスキップ
+        print("⚠️ オッズ取得できませんでした（締切済みの可能性があります）")
+        print("✅ スキップして正常終了")
+        raise SystemExit(0)
+
+    save_to_github(VENUE, RACE_NUM, odds, today_jst)
+    print("✅ 完了")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
