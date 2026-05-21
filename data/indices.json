@@ -21440,6 +21440,13 @@
     "stop_loss_pct": 70,
     "skip_young_race": true,
     "buy_place_bet": false,
-    "stop_loss_amount": 5000
+    "stop_loss_amount": 5000,
+    "skip_local_maiden": true,
+    "skip_local_2yo": true,
+    "skip_local_3yo": false,
+    "skip_jra_maiden": true,
+    "skip_jra_2yo": true,
+    "skip_jra_3yo": false,
+    "skip_jra_hurdle": true
   }
 }
