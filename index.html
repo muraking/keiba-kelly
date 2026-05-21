@@ -957,7 +957,18 @@ async function loadSoftmaxFromGithub() {
       `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
-      `損切り: ${stopLossEnabled ? '¥'+stopLossAmount+'未満で停止' : 'OFF'}　スキップ設定`,
+      `損切り: ${stopLossEnabled ? '¥'+stopLossAmount+'未満で停止' : 'OFF'}`,
+      (()=>{
+        const skips = [];
+        if(localStorage.getItem('skip_local_maiden')==='1') skips.push('地方新馬');
+        if(localStorage.getItem('skip_local_2yo')==='1') skips.push('地方2歳');
+        if(localStorage.getItem('skip_local_3yo')==='1') skips.push('地方3歳');
+        if(localStorage.getItem('skip_jra_maiden')==='1') skips.push('中央新馬');
+        if(localStorage.getItem('skip_jra_2yo')==='1') skips.push('中央2歳');
+        if(localStorage.getItem('skip_jra_3yo')==='1') skips.push('中央3歳');
+        if(localStorage.getItem('skip_jra_hurdle')==='1') skips.push('中央障害');
+        return `スキップ: ${skips.length > 0 ? skips.join('・') : 'なし'}`;
+      })(),
     ];
     if(currentEl){
       currentEl.style.display = 'block';
