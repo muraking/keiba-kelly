@@ -1982,8 +1982,14 @@ function selectNearestRace(){
 
   // 今日のデータを選択（racesがある日付のみ対象）
   const dateKeys = Object.keys(ghData).sort().filter(d => ghData[d].races && ghData[d].races.length > 0);
-  let targetDate = dateKeys.find(d => d >= todayStr) || dateKeys[dateKeys.length - 1];
-  if(!targetDate){ alert('レースデータが見つかりません。共有タブから保存してください。'); return; }
+  // 今日以降の日付を優先、なければ直近の過去日付
+  let targetDate = dateKeys.find(d => d === todayStr)  // 今日
+    || dateKeys.find(d => d > todayStr)                // 今日以降
+    || null;                                           // 今日のデータがなければ選択しない
+  if(!targetDate){
+    alert('今日（' + todayStr + '）のレースデータが見つかりません。共有タブから今日の日付でレースを保存してください。');
+    return;
+  }
 
   const races = ghData[targetDate].races || [];
   if(!races.length){ alert('レースが見つかりません'); return; }
