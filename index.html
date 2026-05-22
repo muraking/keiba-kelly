@@ -12,18 +12,18 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
 :root{
-  --bg:#0f0f0f;--bg2:#191919;--bg3:#222;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --text:#f0ede8;--text2:#8a8680;--text3:#4a4845;
-  --gold:#d4af6a;--gold2:#b8934a;
-  --green:#4ade80;--green-bg:rgba(74,222,128,0.09);--green-bd:rgba(74,222,128,0.22);
+  --bg:#e4f0f8;--bg2:#f0faf4;--bg3:#b8daf0;
+  --border:rgba(0,80,160,0.08);--border2:rgba(0,80,160,0.16);
+  --text:#0a2540;--text2:#1a5a8a;--text3:#5a9abf;
+  --gold:#e07b00;--gold2:#c06000;
+  --green:#0284c7;--green-bg:rgba(2,132,199,0.09);--green-bd:rgba(2,132,199,0.22);
   --blue:#60a5fa;--blue-bg:rgba(96,165,250,0.09);--blue-bd:rgba(96,165,250,0.22);
-  --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.09);
-  --red:#f87171;--red-bg:rgba(248,113,113,0.09);
+  --amber:#d97706;--amber-bg:rgba(251,191,36,0.09);
+  --red:#dc2626;--red-bg:rgba(220,38,38,0.09);
   --r:10px;--r2:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;font-weight:500}
 .app{max-width:430px;margin:0 auto;padding-bottom:90px}
 
 /* header */
@@ -133,15 +133,15 @@ textarea:focus{border-color:var(--gold)}
 .st-ok{background:var(--green-bg);border:0.5px solid var(--green-bd);color:var(--green)}
 .st-warn{background:var(--amber-bg);border:0.5px solid rgba(251,191,36,.2);color:var(--amber)}
 
-#pw-screen{position:fixed;inset:0;background:#0f0f0f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px}
-.pw-icon{width:56px;height:56px;background:#d4af6a;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+#pw-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px}
+.pw-icon{width:56px;height:56px;background:var(--gold);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
 .pw-icon svg{width:30px;height:30px}
-.pw-title{font-size:18px;font-weight:700;color:#f0ede8;margin-bottom:6px;letter-spacing:-.02em}
+.pw-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.02em}
 .pw-sub{font-size:12px;color:#8a8680;margin-bottom:28px}
-.pw-input{width:100%;max-width:280px;height:48px;background:#191919;border:0.5px solid rgba(255,255,255,0.15);border-radius:12px;color:#f0ede8;font-size:16px;text-align:center;font-family:inherit;outline:none;letter-spacing:.1em;margin-bottom:12px;-webkit-appearance:none}
-.pw-input:focus{border-color:#d4af6a}
-.pw-btn{width:100%;max-width:280px;height:48px;background:#d4af6a;color:#0f0f0f;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
-.pw-err{font-size:12px;color:#f87171;margin-top:8px;min-height:18px}
+.pw-input{width:100%;max-width:280px;height:48px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:16px;text-align:center;font-family:inherit;outline:none;letter-spacing:.1em;margin-bottom:12px;-webkit-appearance:none}
+.pw-input:focus{border-color:var(--gold)}
+.pw-btn{width:100%;max-width:280px;height:48px;background:var(--gold);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+.pw-err{font-size:12px;color:var(--red);margin-top:8px;min-height:18px}
 
 .pw-input+.pw-input{margin-top:8px}
 .kelly-btn{height:44px;border:0.5px solid var(--border2);border-radius:var(--r);background:var(--bg2);color:var(--text2);font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:.15s;line-height:1.4;width:100%}
@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260522.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260522.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -1359,6 +1359,71 @@ function calcAll(){
     }
     html+=`</tbody></table></div>`;
   }
+
+  // 馬連参考（勝率上位2頭 × 推奨馬最大3頭・最大6点）
+  (()=>{
+    // ハーヴィル公式で馬連確率計算
+    function harvilleExacta(norms, ni, nj) {
+      const entries = Object.entries(norms).map(([n,p])=>({n:parseInt(n),p})).filter(e=>e.p>0);
+      const tot = entries.reduce((s,e)=>s+e.p, 0);
+      if(!tot) return 0;
+      const norm = entries.map(e=>({n:e.n, p:e.p/tot}));
+      const pi = norm.find(e=>e.n===ni)?.p || 0;
+      const pj = norm.find(e=>e.n===nj)?.p || 0;
+      if(!pi || !pj) return 0;
+      const pij = pi > 0 && (1-pi) > 0 ? pi * (pj/(1-pi)) : 0;
+      const pji = pj > 0 && (1-pj) > 0 ? pj * (pi/(1-pj)) : 0;
+      return Math.min(pij + pji, 1.0);
+    }
+
+    const normMap = {};
+    horses.forEach(h => { normMap[h.num] = h.norm || 0; });
+
+    // 勝率上位2頭
+    const sorted = [...horses].sort((a,b)=>(b.norm||0)-(a.norm||0));
+    const top2 = sorted.slice(0,2).map(h=>h.num);
+
+    // 推奨馬（買い目あり）最大3頭
+    const recNums = renders.filter(h=>betMap[h.num]>0)
+      .sort((a,b)=>(b.norm||0)-(a.norm||0))
+      .slice(0,3).map(h=>h.num);
+
+    if(recNums.length > 0) {
+      const pairs = [];
+      const seen = new Set();
+      for(const ni of top2) {
+        for(const nj of recNums) {
+          if(ni === nj) continue;
+          const key = [ni,nj].sort((a,b)=>a-b).join('-');
+          if(seen.has(key)) continue;
+          seen.add(key);
+          const prob = harvilleExacta(normMap, ni, nj);
+          const theo = prob > 0 ? (0.75/prob).toFixed(1) : '-';
+          pairs.push({ni, nj, prob, theo});
+        }
+      }
+      pairs.sort((a,b)=>b.prob-a.prob);
+
+      if(pairs.length > 0) {
+        html+=`<div class="sh">🔗 馬連参考（理論値）</div>
+        <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead><tr style="border-bottom:0.5px solid var(--border2)">
+              <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">馬連</th>
+              <th style="padding:6px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">的中率</th>
+              <th style="padding:6px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">理論オッズ</th>
+            </tr></thead><tbody>`;
+        pairs.forEach(({ni,nj,prob,theo}) => {
+          html+=`<tr style="border-bottom:0.5px solid var(--border)">
+            <td style="padding:8px 10px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace">${ni}-${nj}</td>
+            <td style="padding:8px 6px;text-align:right;font-size:11px;color:var(--text2);font-family:'DM Mono',monospace">${(prob*100).toFixed(1)}%</td>
+            <td style="padding:8px 10px;text-align:right;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">${theo}倍</td>
+          </tr>`;
+        });
+        html+=`</tbody></table></div>`;
+      }
+    }
+  })();
 
   // 全馬期待値一覧
   html+=`<div class="sh">全馬 期待値一覧</div>
