@@ -2037,13 +2037,11 @@ function selectNearestRace(){
     return;
   }
 
-  // JST現在時刻を取得
+  // JST現在時刻を取得（getTodayJST()と同じ方式）
   const now = new Date();
-  const jstOffset = 9 * 60; // JST = UTC+9
-  const localOffset = -now.getTimezoneOffset(); // 分単位
-  const jstNow = new Date(now.getTime() + (jstOffset - localOffset) * 60000);
+  const jstNow = new Date(now.getTime() + 9*60*60*1000);
   const todayStr = jstNow.toISOString().split('T')[0];
-  const nowMin = jstNow.getHours() * 60 + jstNow.getMinutes();
+  const nowMin = jstNow.getUTCHours() * 60 + jstNow.getUTCMinutes();
 
   // 今日のデータを選択（racesがある日付のみ対象）
   const dateKeys = Object.keys(ghData).sort().filter(d => ghData[d].races && ghData[d].races.length > 0);
