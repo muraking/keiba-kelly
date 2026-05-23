@@ -31,96 +31,130 @@ TIMEOUT   = 30000
 
 
 async def click_text(page, text):
-    """page.click と tap() の両方を試みる"""
-    try:
-        await page.click(f'text={text}')
-        return True
-    except Exception:
-        pass
-    # フォールバック: query_selector
-    links = await page.query_selector_all('a, button, li')
-    for el in links:
-        try:
-            t = (await el.inner_text()).strip()
-            if t == text:
-                await el.tap()
-                return True
-        except Exception:
-            continue
-    print(f"  ⚠️ '{text}' が見つかりません")
-    return False
-
-
-async def check_horse(page, num):
-    """フォーメーション画面で馬番をタップ
-    IPATフォーメーション: <li><a data-value="馬番" class="ui-link">...</a></li>
-    touchstart+touchend の組み合わせで selected クラスが付く
-    """
-    selector = f'#uma1 a[data-value="{num}"], #uma2 a[data-value="{num}"]'
-    try:
-        el = await page.query_selector(selector)
-        if el:
-            # touchstart+touchend でタップ（Playwrightのtap()相当）
-            await el.dispatch_event('touchstart')
-            await page.wait_for_timeout(100)
-            await el.dispatch_event('touchend')
-            await page.wait_for_timeout(300)
-            # selectedクラスが付いたか確認
-            cls = await el.get_attribute('class')
-            print(f"    {num}番: {'OK selected' if 'selected' in (cls or '') else 'NG class=' + str(cls)}")
-            return True
-    except Exception as e:
-        print(f"    {num}番 dispatch失敗: {e}")
-    # フォールバック: Playwright tap()
-    try:
-        el = await page.query_selector(selector)
-        if el:
-            await el.tap()
-            await page.wait_for_timeout(300)
-            cls = await el.get_attribute('class')
-            print(f"    {num}番: tap {'OK' if 'selected' in (cls or '') else 'NG'}")
-            return True
-    except Exception as e:
-        print(f"    {num}番 tap失敗: {e}")
-    print(f"    {num}番: NG")
-    return False
-
-
-async def check_combo(page, num1, num2):
-    """オッズ選択画面で組み合わせをタップ（jQuery tap が正解）
-    <li><a data-value="4000"><span class="horseCombi">01－02</span></a></li>
-    """
-    n1, n2 = min(num1, num2), max(num1, num2)
-    label = f"{n1:02d}－{n2:02d}"  # 全角ハイフン
-
+    """jQuery tapでテキストリンクをクリック（jQuery Mobile対応）"""
     result = await page.evaluate(f"""
         () => {{
-            const spans = document.querySelectorAll('#odse span.horseCombi');
-            for(const sp of spans) {{
-                const t = sp.innerText.trim();
-                if(t === '{label}' || t === '{n1}-{n2}' || t === '{n1:02d}-{n2:02d}') {{
-                    const a = sp.closest('a');
-                    if(a && typeof $ !== 'undefined') {{
+            // 全ページのリンクからテキスト一致を探す
+            const links = document.querySelectorAll('a');
+            for(const a of links) {{
+                if(a.innerText.trim() === '{text}') {{
+                    if(typeof $ !== 'undefined') {{
                         $(a).trigger('tap');
-                        return 'jquery-tap:' + t;
+                        return 'jquery-tap';
                     }}
-                    // jQuery なければ touchstart+touchend
-                    const touch = new Touch({{identifier: Date.now(), target: a,
-                        clientX: 200, clientY: 300, screenX: 200, screenY: 300,
-                        pageX: 200, pageY: 300, radiusX: 1, radiusY: 1, rotationAngle: 0, force: 1}});
-                    a.dispatchEvent(new TouchEvent('touchstart', {{bubbles:true, cancelable:true,
-                        touches:[touch], targetTouches:[touch], changedTouches:[touch]}}));
-                    a.dispatchEvent(new TouchEvent('touchend', {{bubbles:true, cancelable:true,
-                        touches:[], targetTouches:[], changedTouches:[touch]}}));
-                    return 'touch:' + t;
+                    a.click();
+                    return 'click';
                 }}
             }}
             return false;
         }}
     """)
-    print(f"    {n1:02d}-{n2:02d}: {result or 'NG'}")
-    await page.wait_for_timeout(300)
+    if result:
+        print(f"  '{text}': {result}")
+        return True
+    # フォールバック: page.click
+    try:
+        await page.click(f'text={text}')
+        print(f"  '{text}': page.click OK")
+        return True
+    except Exception as e:
+        print(f"  ⚠️ '{text}' が見つかりません: {e}")
+        return False
+
+
+async def check_horse(page, num):
+    """フォーメーション画面で馬番をタップ
+    jQuery Mobileで非アクティブページのDOMも残るため
+    evaluate内でdisplay:blockにしてからクリック
+    """
+    result = await page.evaluate(f"""
+        () => {{
+            // #uma1または#uma2のa[data-value]を探す（非表示でもOK）
+            const pages = ['#uma1','#uma2'];
+            for(const pid of pages) {{
+                const a = document.querySelector(pid + ' a[data-value="{num}"]');
+                if(!a) continue;
+                // 非表示の場合は一時的に表示
+                const pg = document.querySelector(pid);
+                const origDisplay = pg ? pg.style.display : '';
+                const origVis = pg ? pg.style.visibility : '';
+                if(pg) {{ pg.style.display='block'; pg.style.visibility='visible'; }}
+                // jQuery tapで選択
+                if(typeof $ !== 'undefined') {{
+                    $(a).trigger('tap');
+                    const cls = a.className;
+                    return 'jquery-tap:' + cls;
+                }}
+                // フォールバック: touchstart+touchend
+                const touch = new Touch({{
+                    identifier: Date.now(), target: a,
+                    clientX: 200, clientY: 300, screenX: 200, screenY: 300,
+                    pageX: 200, pageY: 300, radiusX: 1, radiusY: 1, rotationAngle: 0, force: 1
+                }});
+                a.dispatchEvent(new TouchEvent('touchstart', {{
+                    bubbles:true, cancelable:true,
+                    touches:[touch], targetTouches:[touch], changedTouches:[touch]
+                }}));
+                a.dispatchEvent(new TouchEvent('touchend', {{
+                    bubbles:true, cancelable:true,
+                    touches:[], targetTouches:[], changedTouches:[touch]
+                }}));
+                return 'touch:' + a.className;
+            }}
+            return false;
+        }}
+    """)
+    print(f"    {num}番: {result or 'NG'}")
+    await page.wait_for_timeout(400)
     return bool(result)
+
+
+async def check_combo(page, num1, num2):
+    """オッズ選択画面で組み合わせをjQuery tapで選択
+    #odse span.horseCombi に全角ハイフンで馬番が入る
+    """
+    n1, n2 = min(num1, num2), max(num1, num2)
+    label = f"{n1:02d}\uff0d{n2:02d}"  # 全角ハイフン（－）
+
+    result = await page.evaluate(f"""
+        () => {{
+            const labels = ['{n1:02d}\uff0d{n2:02d}', '{n1:02d}-{n2:02d}', '{n1}-{n2}'];
+            // #odseページを一時的に表示
+            const odse = document.querySelector('#odse');
+            if(odse) {{ odse.style.display='block'; odse.style.visibility='visible'; }}
+            const spans = document.querySelectorAll('#odse span.horseCombi');
+            for(const sp of spans) {{
+                const t = sp.innerText.trim();
+                for(const lbl of labels) {{
+                    if(t === lbl || t.replace(/\uff0d/g,'-') === lbl.replace(/\uff0d/g,'-')) {{
+                        const a = sp.closest('a');
+                        if(a && typeof $ !== 'undefined') {{
+                            $(a).trigger('tap');
+                            return 'jquery-tap:' + t + ' cls:' + a.className;
+                        }}
+                        const touch = new Touch({{
+                            identifier: Date.now(), target: a,
+                            clientX: 200, clientY: 300, screenX: 200, screenY: 300,
+                            pageX: 200, pageY: 300, radiusX: 1, radiusY: 1, rotationAngle: 0, force: 1
+                        }});
+                        a.dispatchEvent(new TouchEvent('touchstart', {{
+                            bubbles:true, cancelable:true,
+                            touches:[touch], targetTouches:[touch], changedTouches:[touch]
+                        }}));
+                        a.dispatchEvent(new TouchEvent('touchend', {{
+                            bubbles:true, cancelable:true,
+                            touches:[], targetTouches:[], changedTouches:[touch]
+                        }}));
+                        return 'touch:' + t;
+                    }}
+                }}
+            }}
+            return 'not-found(total:' + spans.length + ')';
+        }}
+    """)
+    print(f"    {n1:02d}-{n2:02d}: {result}")
+    await page.wait_for_timeout(300)
+    return result and 'not-found' not in result
 
 
 async def login(page):
