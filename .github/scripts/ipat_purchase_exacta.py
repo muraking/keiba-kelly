@@ -175,6 +175,10 @@ async def login(page):
     await page.evaluate("ToSPMenu()")
     await page.wait_for_timeout(3000)
     print(f"ログイン完了: {page.url}")
+    init_info = await page.evaluate(
+        "() => ({ odse_hc: (document.querySelector('#odse')||{}).querySelectorAll ? document.querySelector('#odse').querySelectorAll('span.horseCombi').length : -1, pages: Array.from(document.querySelectorAll('[data-role=page]')).map(p=>p.id) })"
+    )
+    print(f"  初期状態: {init_info}")
 
 
 async def purchase(page, course_name, race_num, bets):
