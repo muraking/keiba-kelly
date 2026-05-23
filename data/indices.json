@@ -23496,12 +23496,12 @@
     "exacta_rec1": false,
     "exacta_rec2": false,
     "exacta_rec3": false,
-    "buy_wide": true,
+    "buy_wide": false,
     "wide_amount": 100,
-    "wide_top1": true,
+    "wide_top1": false,
     "wide_top2": false,
-    "wide_rec1": true,
-    "wide_rec2": true,
+    "wide_rec1": false,
+    "wide_rec2": false,
     "wide_rec3": false
   }
 }
