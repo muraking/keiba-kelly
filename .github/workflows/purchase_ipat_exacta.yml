@@ -1,0 +1,46 @@
+name: IPAT Purchase Exacta
+
+on:
+  workflow_dispatch:
+    inputs:
+      course_name:
+        description: '会場名（例: 東京(土)）'
+        required: true
+      race_num:
+        description: 'レース番号'
+        required: true
+      bets:
+        description: '買い目JSON（例: [{"num1":1,"num2":3,"amount":100}]）'
+        required: true
+      dry_run:
+        description: 'テストモード（1=投票直前で停止、0=実際に投票）'
+        required: false
+        default: '0'
+
+jobs:
+  purchase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run IPAT Purchase Exacta
+        env:
+          IPAT_ID: ${{ secrets.IPAT_ID }}
+          IPAT_PIN: ${{ secrets.IPAT_PIN }}
+          IPAT_PARS: ${{ secrets.IPAT_PARS }}
+          COURSE_NAME: ${{ github.event.inputs.course_name }}
+          RACE_NUM: ${{ github.event.inputs.race_num }}
+          BETS: ${{ github.event.inputs.bets }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: python .github/scripts/ipat_purchase_exacta.py
