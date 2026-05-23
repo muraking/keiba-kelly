@@ -30,12 +30,21 @@ LOGIN_URL = "https://www.ipat.jra.go.jp/sp/"
 TIMEOUT   = 30000
 
 
-async def click_text(page, text):
-    """jQuery tapでテキストリンクをクリック（jQuery Mobile対応）"""
+async def click_text(page, text, page_id=None):
+    """jQuery tapでテキストリンクをクリック（jQuery Mobile対応）
+    page_id: 特定のjQMページ内に限定する場合に指定（例: 'uma2'）
+    """
+    scope = f'#{page_id}' if page_id else 'document'
     result = await page.evaluate(f"""
         () => {{
-            // 全ページのリンクからテキスト一致を探す
-            const links = document.querySelectorAll('a');
+            const root = {'document.querySelector("#' + page_id + '")' if page_id else 'document'};
+            if(!root) return 'no-root';
+            // 非表示でも操作できるよう一時表示
+            if(root !== document && root.style) {{
+                root.style.display = 'block';
+                root.style.visibility = 'visible';
+            }}
+            const links = root.querySelectorAll('a');
             for(const a of links) {{
                 if(a.innerText.trim() === '{text}') {{
                     if(typeof $ !== 'undefined') {{
@@ -49,7 +58,7 @@ async def click_text(page, text):
             return false;
         }}
     """)
-    if result:
+    if result and result != 'no-root' and result != 'false':
         print(f"  '{text}': {result}")
         return True
     # フォールバック: page.click
@@ -58,7 +67,7 @@ async def click_text(page, text):
         print(f"  '{text}': page.click OK")
         return True
     except Exception as e:
-        print(f"  ⚠️ '{text}' が見つかりません: {e}")
+        print(f"  ⚠️ '{text}' が見つかりません")
         return False
 
 
@@ -212,7 +221,7 @@ async def purchase(page, course_name, race_num, bets):
         await check_horse(page, num)
 
     # 次へ
-    await click_text(page, '次へ')
+    await click_text(page, '次へ', 'uma1')
     await page.wait_for_timeout(2000)
     print("次へ OK")
 
@@ -222,7 +231,7 @@ async def purchase(page, course_name, race_num, bets):
         await check_horse(page, num)
 
     # オッズ選択画面へ
-    await click_text(page, 'オッズ選択画面へ')
+    await click_text(page, 'オッズ選択画面へ', 'uma2')
     for _w in range(10):
         cnt = await page.evaluate("() => document.querySelectorAll('#odse span.horseCombi').length")
         if cnt > 0:
@@ -247,7 +256,7 @@ async def purchase(page, course_name, race_num, bets):
     print(f"  件数確認: {count}")
 
     # 金額入力画面へ
-    await click_text(page, '金額入力画面へ')
+    await click_text(page, '金額入力画面へ', 'odse')
     await page.wait_for_timeout(2000)
     print("金額入力画面へ OK")
 
