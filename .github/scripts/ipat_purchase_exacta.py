@@ -52,72 +52,63 @@ async def click_text(page, text):
 
 
 async def check_horse(page, num):
-    """フォーメーション画面で馬番の行をクリック"""
-    # IPATフォーメーション画面: tableのtr、最初のtdに馬番が入る
+    """フォーメーション画面で馬番の行右端チェックボックスをクリック"""
+    # IPATフォーメーション画面の構造:
+    # <tr> の各列: 馬番 | 馬名 | 単勝オッズ | チェックボックス(最後のtd)
     result = await page.evaluate("""
         (num) => {
-            // table tr の最初の td が馬番
             const rows = document.querySelectorAll('table tr');
             for(const row of rows) {
                 const tds = row.querySelectorAll('td');
-                if(!tds.length) continue;
+                if(tds.length < 2) continue;
+                // 最初のtdの馬番テキストを確認
                 const numText = tds[0].innerText.trim();
                 if(parseInt(numText) === num) {
-                    const cb = row.querySelector('input[type=checkbox]');
+                    // 最後のtdのチェックボックスをクリック
+                    const lastTd = tds[tds.length - 1];
+                    const cb = lastTd.querySelector('input[type=checkbox]');
                     if(cb) {
-                        if(!cb.checked) cb.click();
-                        return 'cb:' + numText;
+                        cb.click();
+                        return 'cb-last-td:' + numText;
                     }
-                    ['touchstart','touchend','vclick','click'].forEach(evt =>
-                        row.dispatchEvent(new Event(evt, {bubbles:true, cancelable:true}))
-                    );
-                    return 'row:' + numText;
-                }
-            }
-            // フォールバック: td, label, a から馬番テキストを探す
-            const allEl = document.querySelectorAll('td, label, a');
-            for(const el of allEl) {
-                const t = el.innerText.trim();
-                if(t === String(num) || t === String(num).padStart(2,'0')) {
-                    const row = el.closest('tr');
-                    if(row) {
-                        const cb = row.querySelector('input[type=checkbox]');
-                        if(cb) { if(!cb.checked) cb.click(); return 'cb-fb:' + t; }
-                        ['touchstart','touchend','vclick','click'].forEach(evt =>
-                            row.dispatchEvent(new Event(evt, {bubbles:true, cancelable:true}))
-                        );
-                        return 'row-fb:' + t;
+                    // チェックボックスが行全体にある場合
+                    const cbAny = row.querySelector('input[type=checkbox]');
+                    if(cbAny) {
+                        cbAny.click();
+                        return 'cb-any:' + numText;
                     }
-                    ['touchstart','touchend','vclick','click'].forEach(evt =>
-                        el.dispatchEvent(new Event(evt, {bubbles:true, cancelable:true}))
-                    );
-                    return 'el-fb:' + t;
+                    // 行全体をクリック
+                    row.click();
+                    return 'row-click:' + numText;
                 }
             }
             return false;
         }
     """, num)
-    # Playwright tap フォールバック
+    # Playwright フォールバック
     if not result:
         try:
             rows = await page.query_selector_all('table tr')
             for row in rows:
                 cells = await row.query_selector_all('td')
-                if cells:
+                if len(cells) >= 2:
                     first = (await cells[0].inner_text()).strip()
                     if first == str(num) or first == f"{num:02d}":
-                        cb = await row.query_selector('input[type=checkbox]')
+                        # 最後のtdのチェックボックスを探す
+                        last_cell = cells[-1]
+                        cb = await last_cell.query_selector('input[type=checkbox]')
+                        if not cb:
+                            cb = await row.query_selector('input[type=checkbox]')
                         if cb:
                             await cb.click()
                             result = 'cb-playwright'
                         else:
-                            await row.tap()
-                            result = 'tap'
+                            await row.click()
+                            result = 'row-playwright'
                         break
         except Exception as e:
-            print(f"    playwright-tap失敗: {e}")
-    count = await page.evaluate("() => '?'")
-    print(f"    {num}番: {result or 'NG'} (組数:{count})")
+            print(f"    playwright失敗: {e}")
+    print(f"    {num}番: {result or 'NG'}")
     await page.wait_for_timeout(600)
     return bool(result)
 
