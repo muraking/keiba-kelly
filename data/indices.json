@@ -12250,7 +12250,7 @@
     "odds_max": 80,
     "auto_buy_local": true,
     "auto_buy_jra": true,
-    "auto_buy_max": 0,
+    "auto_buy_max": 3000,
     "auto_buy_skip_fav": true,
     "norm_method": "softmax",
     "max_bets": 3,
