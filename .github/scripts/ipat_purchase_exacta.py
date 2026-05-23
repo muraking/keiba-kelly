@@ -52,64 +52,31 @@ async def click_text(page, text):
 
 
 async def check_horse(page, num):
-    """フォーメーション画面で馬番の行右端チェックボックスをクリック"""
-    # IPATフォーメーション画面の構造:
-    # <tr> の各列: 馬番 | 馬名 | 単勝オッズ | チェックボックス(最後のtd)
-    result = await page.evaluate("""
-        (num) => {
-            const rows = document.querySelectorAll('table tr');
-            for(const row of rows) {
-                const tds = row.querySelectorAll('td');
-                if(tds.length < 2) continue;
-                // 最初のtdの馬番テキストを確認
-                const numText = tds[0].innerText.trim();
-                if(parseInt(numText) === num) {
-                    // 最後のtdのチェックボックスをクリック
-                    const lastTd = tds[tds.length - 1];
-                    const cb = lastTd.querySelector('input[type=checkbox]');
-                    if(cb) {
-                        cb.click();
-                        return 'cb-last-td:' + numText;
-                    }
-                    // チェックボックスが行全体にある場合
-                    const cbAny = row.querySelector('input[type=checkbox]');
-                    if(cbAny) {
-                        cbAny.click();
-                        return 'cb-any:' + numText;
-                    }
-                    // 行全体をクリック
-                    row.click();
-                    return 'row-click:' + numText;
-                }
-            }
+    """フォーメーション画面で馬番をタップ（data-value=馬番そのまま）"""
+    # IPATフォーメーション: <li><a data-value="1" ...>1 馬名 オッズ</a></li>
+    # data-valueは馬番そのまま（単勝の1000+num-1とは異なる）
+    selector = f'#uma1 a[data-value="{num}"], #uma2 a[data-value="{num}"]'
+    try:
+        el = await page.query_selector(selector)
+        if el:
+            await el.tap()
+            await page.wait_for_timeout(300)
+            # 組数を確認
+            bet_num = await page.evaluate("() => { const d = document.querySelector('.betNum dd'); return d ? d.innerText.trim() : '?'; }")
+            print(f"    {num}番: tap OK (組数:{bet_num})")
+            return True
+    except Exception as e:
+        print(f"    {num}番 tap失敗: {e}")
+    # フォールバック: evaluate でクリック
+    result = await page.evaluate(f"""
+        () => {{
+            const a = document.querySelector('#uma1 a[data-value="{num}"], #uma2 a[data-value="{num}"]');
+            if(a) {{ a.click(); return true; }}
             return false;
-        }
-    """, num)
-    # Playwright フォールバック
-    if not result:
-        try:
-            rows = await page.query_selector_all('table tr')
-            for row in rows:
-                cells = await row.query_selector_all('td')
-                if len(cells) >= 2:
-                    first = (await cells[0].inner_text()).strip()
-                    if first == str(num) or first == f"{num:02d}":
-                        # 最後のtdのチェックボックスを探す
-                        last_cell = cells[-1]
-                        cb = await last_cell.query_selector('input[type=checkbox]')
-                        if not cb:
-                            cb = await row.query_selector('input[type=checkbox]')
-                        if cb:
-                            await cb.click()
-                            result = 'cb-playwright'
-                        else:
-                            await row.click()
-                            result = 'row-playwright'
-                        break
-        except Exception as e:
-            print(f"    playwright失敗: {e}")
-    print(f"    {num}番: {result or 'NG'}")
-    await page.wait_for_timeout(600)
+        }}
+    """)
+    print(f"    {num}番: evaluate={'OK' if result else 'NG'}")
+    await page.wait_for_timeout(300)
     return bool(result)
 
 
@@ -205,6 +172,25 @@ async def purchase(page, course_name, race_num, bets):
     axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
     partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))
     await page.screenshot(path="ipat_exacta_uma1.png")
+    # HTML構造確認
+    html_info = await page.evaluate(
+        """() => {
+            const rows = document.querySelectorAll('tr');
+            const cbs = document.querySelectorAll('input[type=checkbox]');
+            let r = 'rows:' + rows.length + ' cbs:' + cbs.length + '\n';
+            for(let i=0; i<Math.min(3,rows.length); i++){
+                r += 'R'+i+':' + rows[i].outerHTML.slice(0,200) + '\n';
+            }
+            for(let i=0; i<Math.min(2,cbs.length); i++){
+                const p = cbs[i].closest('tr');
+                const t = p ? p.querySelector('td') : null;
+                r += 'CB'+i+'_num:' + (t?t.innerText.trim():'?') + '\n';
+                r += 'CB'+i+'_html:' + cbs[i].outerHTML + '\n';
+            }
+            return r;
+        }"""
+    )
+    print(f"=== HTML構造 ===\n{html_info}=== END ===")
     print(f"1頭目チェック: {axis_nums}")
     for num in axis_nums:
         await check_horse(page, num)
