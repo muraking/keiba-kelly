@@ -243,29 +243,38 @@ async def purchase(page, course_name, race_num, bets):
         await check_horse(page, num)
 
     # オッズ選択画面へ
-        # 「オッズ選択画面へ」: action=#odse のフォームをsubmit（サーバーからページ再取得）
-    submit_result = await page.evaluate(
-        "() => { const forms = Array.from(document.querySelectorAll('form')); const f = forms.find(x => x.action && x.action.includes('#odse')); if(f){ f.submit(); return 'submitted:'+f.action; } return 'no-form'; }"
-    )
-    print(f"  オッズ選択画面へ: {submit_result}")
-    # ページ読み込み完了を待つ
+        # 「オッズ選択画面へ」: Playwrightのpage.locatorで実際にクリック
+    # uma2を表示状態にする
+    await page.evaluate("() => { const p=document.querySelector('#uma2'); if(p){p.style.display='block';p.style.visibility='visible';} }")
+    await page.wait_for_timeout(500)
+    # 「オッズ選択画面へ」を Playwright locator でクリック（force=True）
+    try:
+        loc = page.locator('#uma2 li.btnColor a').filter(has_text='オッズ選択画面へ')
+        await loc.first.click(force=True, timeout=5000)
+        print("  オッズ選択画面へ: locator click")
+    except Exception as e:
+        print(f"  オッズ選択画面へ click失敗: {e}")
+    # ページ読み込みを待つ
     try:
         await page.wait_for_load_state('domcontentloaded', timeout=15000)
     except Exception:
         pass
     await page.wait_for_timeout(2000)
-    # horseCombiの出現を待つ
-    for _w in range(10):
+    # horseCombiが出現するまで最大15秒待機
+    for _w in range(15):
         cnt = await page.evaluate("() => document.querySelectorAll('#odse span.horseCombi').length")
+        url_now = page.url
         if cnt > 0:
-            print(f"  #odse horseCombi: {cnt}件 ({_w+1}秒待機)")
+            print(f"  #odse horseCombi: {cnt}件 ({_w+1}秒待機) url={url_now}")
+            break
+        if 'odse' in url_now:
+            print(f"  url=#odse到達 horseCombi={cnt}")
             break
         await page.wait_for_timeout(1000)
     else:
-        print("  ⚠️ #odse horseCombi が出現しませんでした")
+        print(f"  ⚠️ #odse horseCombi が出現しませんでした url={page.url}")
     url4 = page.url
     print(f"オッズ選択画面へ OK: {url4}")
-
     # ⑤ 組み合わせチェック
     print("組み合わせチェック...")
     for b in bets:
