@@ -31,39 +31,36 @@ TIMEOUT   = 30000
 
 
 async def click_text(page, text, page_id=None):
-    """jQuery tapでテキストリンクをクリック（jQuery Mobile対応）
-    page_id: 特定のjQMページ内に限定する場合に指定（例: 'uma2'）
+    """テキストリンクをクリック
+    page_id指定時は該当ページを表示してからPlaywrightでforce click
     """
-    scope = f'#{page_id}' if page_id else 'document'
-    result = await page.evaluate(f"""
-        () => {{
-            const root = {'document.querySelector("#' + page_id + '")' if page_id else 'document'};
-            if(!root) return 'no-root';
-            // 非表示でも操作できるよう一時表示
-            if(root !== document && root.style) {{
-                root.style.display = 'block';
-                root.style.visibility = 'visible';
-            }}
-            const links = root.querySelectorAll('a');
-            for(const a of links) {{
-                if(a.innerText.trim() === '{text}') {{
-                    if(typeof $ !== 'undefined') {{
-                        $(a).trigger('tap');
-                        return 'jquery-tap';
-                    }}
-                    a.click();
-                    return 'click';
+    if page_id:
+        # ページを強制表示
+        await page.evaluate(f"""
+            () => {{
+                const pg = document.querySelector('#{page_id}');
+                if(pg) {{
+                    pg.style.display = 'block';
+                    pg.style.visibility = 'visible';
+                    pg.style.opacity = '1';
+                    // ui-page-active付与
+                    document.querySelectorAll('[data-role=page]').forEach(p => p.classList.remove('ui-page-active'));
+                    pg.classList.add('ui-page-active');
                 }}
             }}
-            return false;
-        }}
-    """)
-    if result and result != 'no-root' and result != 'false':
-        print(f"  '{text}': {result}")
-        return True
+        """)
+        await page.wait_for_timeout(300)
+        # locator で force click（非表示でも強制クリック）
+        try:
+            loc = page.locator(f'#{page_id} a').filter(has_text=text)
+            await loc.first.click(force=True, timeout=5000)
+            print(f"  '{text}': force-click on #{page_id}")
+            return True
+        except Exception as e:
+            print(f"  '{text}' force-click失敗: {e}")
     # フォールバック: page.click
     try:
-        await page.click(f'text={text}')
+        await page.click(f'text={text}', timeout=10000)
         print(f"  '{text}': page.click OK")
         return True
     except Exception as e:
