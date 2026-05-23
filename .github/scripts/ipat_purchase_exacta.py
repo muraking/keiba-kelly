@@ -1,7 +1,15 @@
 """
 IPAT SP版 自動購入スクリプト（馬連）
-単勝と同じフローで式別を「馬連」に変更
-馬番選択: 1頭目・2頭目を順番に選択
+フォーメーション方式で購入
+
+フロー:
+  ログイン
+  → オッズ投票 → 会場 → レースR
+  → 式別から選択 → 馬連 → フォーメーション
+  → 1頭目チェック → 次へ
+  → 2頭目チェック → オッズ選択画面へ
+  → 組み合わせ右チェック → 金額入力画面へ
+  → 金額入力 → 入力終了 → 投票
 """
 import asyncio
 import os
@@ -23,6 +31,129 @@ LOGIN_URL = "https://www.ipat.jra.go.jp/sp/"
 TIMEOUT   = 30000
 
 
+async def tap_text(page, text):
+    """テキストで要素を探してtap()"""
+    el = await page.query_selector(f'text={text}')
+    if not el:
+        # リンク全体から探す
+        for link in await page.query_selector_all('a, button'):
+            t = (await link.inner_text()).strip()
+            if t == text:
+                el = link
+                break
+    if el:
+        await el.tap()
+        return True
+    print(f"  ⚠️ '{text}' が見つかりません")
+    return False
+
+
+async def check_horse(page, num):
+    """馬番のチェックボックスをチェック（フォーメーション選択画面）"""
+    # チェックボックス: input[type=checkbox] に隣接する馬番ラベルを探す
+    # IPATのフォーメーション画面では各行に馬番と checkbox がある
+    # まずJavaScriptで馬番テキストを含む行のチェックを試みる
+    result = await page.evaluate(f"""
+        () => {{
+            // 方法1: tr/td 内の馬番テキストから該当 input を探す
+            const rows = document.querySelectorAll('tr, li, .horse-row, [data-num]');
+            for(const row of rows) {{
+                const text = row.innerText || '';
+                const m = text.match(/^\\s*(\\d{{1,2}})\\s/);
+                if(m && parseInt(m[1]) === {num}) {{
+                    const cb = row.querySelector('input[type=checkbox]');
+                    if(cb && !cb.checked) {{
+                        cb.click();
+                        return 'checkbox-clicked';
+                    }}
+                    if(cb && cb.checked) return 'already-checked';
+                }}
+            }}
+            // 方法2: data-value="1000+(num-1)" のリンク
+            const dv = {1000 + (num - 1)};
+            const a = document.querySelector(`a[data-value="${{dv}}"]`);
+            if(a) {{
+                ['touchstart','touchend','vclick','click'].forEach(evt =>
+                    a.dispatchEvent(new Event(evt, {{bubbles:true}}))
+                );
+                return 'link-clicked';
+            }}
+            return false;
+        }}
+    """)
+    if not result:
+        # フォールバック: tap()
+        try:
+            el = await page.query_selector(f'a[data-value="{1000 + (num - 1)}"]')
+            if el:
+                await el.tap()
+                result = 'tap'
+        except Exception as e:
+            print(f"    tap失敗: {e}")
+    print(f"    {num}番: {result}")
+    await page.wait_for_timeout(500)
+    return bool(result)
+
+
+async def check_combo(page, num1, num2):
+    """オッズ選択画面で組み合わせ右のチェックボックスをチェック"""
+    # 画面に "02-04" "02-05" のような形式で表示される
+    # 馬番は0埋め2桁で表示
+    n1 = min(num1, num2)
+    n2 = max(num1, num2)
+    label = f"{n1:02d}-{n2:02d}"
+    label_alt = f"{n1}-{n2}"
+
+    result = await page.evaluate(f"""
+        () => {{
+            const labels = ['{label}', '{label_alt}'];
+            // tr/li の中でラベルを探してチェックボックスをON
+            const rows = document.querySelectorAll('tr, li, div[class*="row"], .combo-row');
+            for(const row of rows) {{
+                const text = (row.innerText || '').replace(/\\s/g, '');
+                for(const lbl of labels) {{
+                    if(text.includes(lbl.replace('-','-')) || text.includes(lbl)) {{
+                        const cb = row.querySelector('input[type=checkbox]');
+                        if(cb) {{
+                            if(!cb.checked) cb.click();
+                            return 'checked:' + lbl;
+                        }}
+                        // チェックボックスがない場合は右端のリンクを探す
+                        const links = row.querySelectorAll('a');
+                        if(links.length > 0) {{
+                            const last = links[links.length - 1];
+                            ['touchstart','touchend','vclick','click'].forEach(evt =>
+                                last.dispatchEvent(new Event(evt, {{bubbles:true}}))
+                            );
+                            return 'link:' + lbl;
+                        }}
+                    }}
+                }}
+            }}
+            // フォールバック: ページ全体のテキストノードから探す
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+            let node;
+            while(node = walker.nextNode()) {{
+                const t = node.textContent.trim().replace(/\\s/g,'');
+                for(const lbl of labels) {{
+                    if(t === lbl.replace('-','-') || t === lbl) {{
+                        const parent = node.parentElement;
+                        const row2 = parent.closest('tr, li, div');
+                        if(row2) {{
+                            const cb2 = row2.querySelector('input[type=checkbox]');
+                            if(cb2) {{ if(!cb2.checked) cb2.click(); return 'walker:' + lbl; }}
+                        }}
+                    }}
+                }}
+            }}
+            return false;
+        }}
+    """)
+    print(f"    {label}: {result}")
+    await page.wait_for_timeout(400)
+    return bool(result)
+
+
 async def login(page):
     await page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=TIMEOUT)
     await page.wait_for_timeout(2000)
@@ -40,222 +171,178 @@ async def purchase(page, course_name, race_num, bets):
     for b in bets:
         print(f"  {b['num1']}-{b['num2']}番 ¥{b['amount']:,}")
 
-    # オッズ投票 → 会場 → レース → 式別から選択 → 馬連
-    await page.click('text=オッズ投票')
+    # ① オッズ投票 → 会場 → レース
+    await tap_text(page, 'オッズ投票')
     await page.wait_for_timeout(2000)
 
     page_text = await page.evaluate("() => document.body.innerText")
-    print(f"会場ページ内容（先頭300文字）: {page_text[:300]}")
-
     course_base = course_name.split('(')[0].strip()
-    if course_name in page_text:
-        click_name = course_name
-    elif course_base in page_text:
-        click_name = course_base
+    click_name = course_name if course_name in page_text else (course_base if course_base in page_text else course_name)
+    if click_name != course_name:
         print(f"コース名変換: {course_name} → {click_name}")
-    else:
-        click_name = course_name
-        print(f"⚠️ コース名が見つからない: {course_name}")
 
-    await page.click(f'text={click_name}')
+    await tap_text(page, click_name)
     await page.wait_for_timeout(2000)
-    await page.click(f'text={race_num}R')
+    await tap_text(page, f'{race_num}R')
     await page.wait_for_timeout(2000)
-    await page.click('text=式別から選択')
-    await page.wait_for_timeout(2000)
-    await page.click('text=馬連')
-    await page.wait_for_timeout(2000)
-    print("馬連オッズ画面 OK")
 
-    # 馬連は1頭目と2頭目を順番に選択
-    # data-value = 1000 + (馬番 - 1) は単勝と同じ
-    for idx, bet in enumerate(bets):
-        num1 = bet['num1']
-        num2 = bet['num2']
-        print(f"  {num1}-{num2}番を選択...")
+    # ② 式別から選択 → 馬連
+    await tap_text(page, '式別から選択')
+    await page.wait_for_timeout(2000)
+    await tap_text(page, '馬連')
+    await page.wait_for_timeout(2000)
 
-        # 1頭目選択
-        dv1 = 1000 + (num1 - 1)
-        result1 = await page.evaluate(f"""
-            () => {{
-                const a = document.querySelector('a[data-value="{dv1}"]');
-                if(!a) return false;
-                ['touchstart','touchend','vclick','click'].forEach(evt => {{
-                    a.dispatchEvent(new Event(evt, {{bubbles:true, cancelable:true}}));
-                }});
-                return true;
-            }}
-        """)
-        if not result1:
-            try:
-                el = await page.query_selector(f'a[data-value="{dv1}"]')
-                if el: await el.tap()
-                result1 = True
-            except: pass
-        print(f"    1頭目({num1}番): {'OK' if result1 else 'NG'}")
-        await page.wait_for_timeout(600)
+    # ③ フォーメーション選択
+    await tap_text(page, 'フォーメーション')
+    await page.wait_for_timeout(2000)
+    print("フォーメーション選択 OK")
 
-        # 2頭目選択
-        dv2 = 1000 + (num2 - 1)
-        result2 = await page.evaluate(f"""
-            () => {{
-                const a = document.querySelector('a[data-value="{dv2}"]');
-                if(!a) return false;
-                ['touchstart','touchend','vclick','click'].forEach(evt => {{
-                    a.dispatchEvent(new Event(evt, {{bubbles:true, cancelable:true}}));
-                }});
-                return true;
-            }}
-        """)
-        if not result2:
-            try:
-                el = await page.query_selector(f'a[data-value="{dv2}"]')
-                if el: await el.tap()
-                result2 = True
-            except: pass
-        print(f"    2頭目({num2}番): {'OK' if result2 else 'NG'}")
-        await page.wait_for_timeout(600)
+    # ④ 1頭目（軸馬）チェック
+    # betsから軸馬一覧を収集（重複なし）
+    tops = list(dict.fromkeys([min(b['num1'],b['num2']) for b in bets] + [max(b['num1'],b['num2']) for b in bets]))
+    # 実際には num1が軸、num2が相手として扱う
+    axis_nums = list(dict.fromkeys([b['num1'] for b in bets]))  # 軸馬（重複なし）
+    partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))  # 相手馬（重複なし）
+
+    print(f"1頭目（軸馬）チェック: {axis_nums}")
+    for num in axis_nums:
+        await check_horse(page, num)
+    await page.wait_for_timeout(500)
+
+    # 次へ
+    await tap_text(page, '次へ')
+    await page.wait_for_timeout(2000)
+    print("1頭目選択 → 次へ OK")
+
+    # ⑤ 2頭目（相手馬）チェック
+    print(f"2頭目（相手馬）チェック: {partner_nums}")
+    for num in partner_nums:
+        await check_horse(page, num)
+    await page.wait_for_timeout(500)
+
+    # オッズ選択画面へ
+    await tap_text(page, 'オッズ選択画面へ')
+    await page.wait_for_timeout(2000)
+    print("2頭目選択 → オッズ選択画面へ OK")
+
+    # ⑥ オッズ選択画面: 組み合わせ右のチェックボックスをON
+    print("組み合わせチェック...")
+    for b in bets:
+        await check_combo(page, b['num1'], b['num2'])
 
     # 件数確認
     count = await page.evaluate(r"""
         () => {
-            const text = document.querySelector('#odse')?.innerText || '';
-            const m = text.match(/合計件数：(\d+)/);
+            const text = document.body.innerText;
+            const m = text.match(/合計件数[：:]\s*(\d+)/);
             return m ? m[1] : '不明';
         }
     """)
     print(f"  選択件数: {count}")
+    await page.wait_for_timeout(500)
 
     # 金額入力画面へ
-    print("金額入力画面へ...")
-    kin_btn = await page.query_selector('#odse a:has-text("金額入力画面へ")')
-    if not kin_btn:
-        links = await page.query_selector_all('a')
-        for link in links:
-            t = (await link.inner_text()).strip()
-            if t == '金額入力画面へ':
-                kin_btn = link
-                break
-    if kin_btn:
-        await kin_btn.tap()
-        print("  金額入力画面へ tap() OK")
-    else:
-        print("  ⚠️ 金額入力画面へ ボタンが見つかりません")
+    await tap_text(page, '金額入力画面へ')
+    await page.wait_for_timeout(2000)
+    print("金額入力画面へ OK")
 
-    await page.wait_for_selector('#kin', state='visible', timeout=10000)
-    print("#kin 表示OK")
+    # ⑦ 金額入力（1件ごとタブ）
+    # 「1件ごと」タブをクリック
+    await tap_text(page, '1件ごと')
+    await page.wait_for_timeout(1000)
 
-    # 金額入力
     print("金額入力...")
-    tel_inputs = await page.query_selector_all('#kin_list input[type="tel"], #kin input[type="tel"]')
-    print(f"  tel入力欄数: {len(tel_inputs)}")
+    # tel入力欄を取得
+    tel_inputs = await page.query_selector_all('input[type="tel"], input[type="number"]')
+    print(f"  入力欄数: {len(tel_inputs)}")
 
-    kin_text = await page.evaluate("() => document.querySelector('#kin_list')?.innerText || ''")
-    print(f"  kin_list: {kin_text[:300]}")
+    # 表示テキストから組み合わせ順を解析
+    page_text2 = await page.evaluate("() => document.body.innerText")
+    print(f"  金額入力画面（先頭500文字）: {page_text2[:500]}")
 
-    # 馬連の組み合わせを抽出（例: "01\n03" → (1,3)）
-    combos_in_list = []
-    lines = [l.strip() for l in kin_text.split("\n") if l.strip()]
-    i = 0
-    while i < len(lines):
-        m1 = re.match(r'^(\d{2})$', lines[i])
-        if m1 and i+1 < len(lines):
-            m2 = re.match(r'^(\d{2})$', lines[i+1])
-            if m2:
-                combos_in_list.append((int(m1.group(1)), int(m2.group(1))))
-                i += 2
-                continue
-        i += 1
-
-    print(f"  組み合わせ順: {combos_in_list}")
-
-    # bet_map: (min,max) → amount
+    # 組み合わせ→金額マップ
     bet_map = {(min(b['num1'],b['num2']), max(b['num1'],b['num2'])): b['amount'] for b in bets}
+    default_amount = bets[0]['amount'] if bets else 100
 
-    if combos_in_list and len(combos_in_list) == len(tel_inputs):
-        for (n1, n2), inp in zip(combos_in_list, tel_inputs):
-            key = (min(n1,n2), max(n1,n2))
-            amount = bet_map.get(key, bets[0]['amount'])
+    # 各入力欄に金額を設定
+    # 画面の各行に "東京(日)1R 馬連 02-04" のように表示される
+    combo_pattern = re.compile(r'(\d{1,2})[－\-](\d{1,2})')
+    lines = [l.strip() for l in page_text2.split('\n') if l.strip()]
+    combos_order = []
+    for line in lines:
+        m = combo_pattern.search(line)
+        if m:
+            n1 = int(m.group(1))
+            n2 = int(m.group(2))
+            combos_order.append((min(n1,n2), max(n1,n2)))
+
+    print(f"  組み合わせ順: {combos_order}")
+
+    if combos_order and len(combos_order) == len(tel_inputs):
+        for combo, inp in zip(combos_order, tel_inputs):
+            amount = bet_map.get(combo, default_amount)
             amount_100 = amount // 100
             await inp.fill(str(amount_100))
             await inp.dispatch_event('change')
-            print(f"  {n1}-{n2}: {amount_100}（¥{amount:,}）")
+            print(f"  {combo[0]:02d}-{combo[1]:02d}: {amount_100}×100=¥{amount}")
             await page.wait_for_timeout(200)
-    else:
-        # フォールバック: 全欄に同一金額
-        unit_amount = bets[0]['amount'] // 100 if bets else 1
+    elif tel_inputs:
+        # フォールバック: 全欄同一金額
+        amount_100 = default_amount // 100
         for inp in tel_inputs:
-            await inp.fill(str(unit_amount))
+            await inp.fill(str(amount_100))
             await inp.dispatch_event('change')
             await page.wait_for_timeout(200)
-        print(f"  フォールバック: 全欄 {unit_amount}（¥{bets[0]['amount']:,}）")
-
-    # 入力終了
-    print("入力終了...")
-    end_btn = None
-    for link in await page.query_selector_all('a'):
-        if (await link.inner_text()).strip() == '入力終了':
-            end_btn = link
-            break
-    if end_btn:
-        await end_btn.tap()
-        print("  入力終了 tap() OK")
-    await page.wait_for_timeout(3000)
-
-    # 合計金額入力
-    print(f"合計金額 ¥{total} 入力...")
-    for inp in await page.query_selector_all('input[type="tel"]'):
-        if await inp.is_visible():
-            await inp.fill(str(total))
-            print("  合計金額入力OK")
-            break
+        print(f"  フォールバック: 全欄 {amount_100}×100=¥{default_amount}")
+    else:
+        print("  ⚠️ 金額入力欄が見つかりません")
 
     await page.screenshot(path="ipat_exacta_confirm.png")
 
     if DRY_RUN:
         print("\n========== DRY RUN MODE ==========")
         for b in bets:
-            print(f"  {b['num1']}-{b['num2']}番 馬連 ¥{b['amount']:,}")
+            print(f"  {b['num1']:02d}-{b['num2']:02d} 馬連 ¥{b['amount']:,}")
         print(f"  合計: ¥{total:,}")
-        print("===================================")
-        print("✅ DRY RUN完了")
+        print("===================================\n✅ DRY RUN完了（投票しません）")
         return True
 
-    # 投票
-    print("投票...")
-    page.on('dialog', lambda d: asyncio.ensure_future(d.accept()))
-    for link in await page.query_selector_all('a'):
-        if (await link.inner_text()).strip() == '投票':
-            await link.tap()
-            print("  投票 tap() OK")
-            break
+    # ⑧ 入力終了 → 投票
+    await tap_text(page, '入力終了')
     await page.wait_for_timeout(3000)
 
-    # 合計金額確認画面対応
-    page_text2 = await page.evaluate("() => document.body.innerText")
-    if '合計金額入力' in page_text2 and '受付番号' not in page_text2:
-        print("合計金額確認画面 → 再入力...")
+    # 合計金額入力欄への対応
+    page_text3 = await page.evaluate("() => document.body.innerText")
+    if '合計金額' in page_text3 and '受付番号' not in page_text3:
+        print("合計金額入力画面...")
         for inp in await page.query_selector_all('input[type="tel"]'):
             if await inp.is_visible():
                 await inp.fill(str(total))
-                print(f"  再入力OK: ¥{total}")
+                print(f"  合計: ¥{total}")
                 break
         await page.wait_for_timeout(500)
-        for link in await page.query_selector_all('a'):
-            if (await link.inner_text()).strip() == '投票':
-                await link.tap()
-                print("  2回目投票 tap() OK")
+
+    page.on('dialog', lambda d: asyncio.ensure_future(d.accept()))
+    await tap_text(page, '投票')
+    await page.wait_for_timeout(3000)
+
+    # 2回目投票対応
+    page_text4 = await page.evaluate("() => document.body.innerText")
+    if '合計金額' in page_text4 and '受付番号' not in page_text4:
+        for inp in await page.query_selector_all('input[type="tel"]'):
+            if await inp.is_visible():
+                await inp.fill(str(total))
                 break
+        await page.wait_for_timeout(500)
+        await tap_text(page, '投票')
         await page.wait_for_timeout(3000)
 
     await page.screenshot(path="ipat_exacta_result.png")
-    text = await page.evaluate("() => document.body.innerText")
-    lines = [l.strip() for l in text.split('\n') if l.strip()]
-    print("結果:")
-    for line in lines[:15]:
+    result_text = await page.evaluate("() => document.body.innerText")
+    for line in [l.strip() for l in result_text.split('\n') if l.strip()][:15]:
         print(f"  {line}")
 
-    success = '受付番号' in text or 'ありがとう' in text
+    success = '受付番号' in result_text or 'ありがとう' in result_text
     print(f"\n{'✅ 馬連投票完了！' if success else '⚠️ 投票結果不明'}")
     return success
 
@@ -263,9 +350,10 @@ async def purchase(page, course_name, race_num, bets):
 async def main():
     global COURSE_NAME, RACE_NUM, BETS
     if not COURSE_NAME:
-        COURSE_NAME = "東京(土)"
+        COURSE_NAME = "東京(日)"
         RACE_NUM = 1
-        BETS = [{"num1": 1, "num2": 3, "amount": 100}]
+        BETS = [{"num1": 2, "num2": 4, "amount": 100},
+                {"num1": 2, "num2": 5, "amount": 100}]
 
     print(f"=== IPAT自動購入（馬連）===")
     print(f"会場: {COURSE_NAME} {RACE_NUM}R")
