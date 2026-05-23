@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260523.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260523.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -609,9 +609,10 @@ function parseData(){
   const _normMethod = localStorage.getItem('norm_method') || 'softmax';
   let normMap1;
   if(_normMethod === 'softmax') {
-    const smTemp = parseFloat(localStorage.getItem('sm_temperature') || '15');
-    const smMinPct = parseFloat(localStorage.getItem('sm_minpct') || '3.0');
-    // norm計算は全馬で行う（勝率フィルターはevPool絞り込みのみで適用）
+    const _sett1 = ghData?._settings || {};
+    const smTemp = parseFloat(_sett1.sm_temperature != null ? _sett1.sm_temperature : (localStorage.getItem('sm_temperature') || '15'));
+    const smMinPct = parseFloat(_sett1.sm_minpct != null ? _sett1.sm_minpct : (localStorage.getItem('sm_minpct') || '3.0'));
+    console.log('[norm/parseData] softmax T=' + smTemp + ' minPct=' + smMinPct);
     normMap1 = softmaxNorm(horses, smTemp, smMinPct);
   } else {
     const tot1 = horses.reduce((s,h) => s+h.pct, 0);
@@ -1880,12 +1881,14 @@ function onRaceChange(){
   }
 
   // 勝率計算方式に応じて変換
-  const _normMethod2 = ghData?._settings?.norm_method || localStorage.getItem('norm_method') || 'softmax';
+  // _settingsを優先、なければlocalStorage（null/undefinedの場合のみフォールバック）
+  const _sett2 = ghData?._settings || {};
+  const _normMethod2 = (_sett2.norm_method != null ? _sett2.norm_method : localStorage.getItem('norm_method')) || 'softmax';
   let normMap2;
   if(_normMethod2 === 'softmax') {
-    const smTemp2 = parseFloat(ghData?._settings?.sm_temperature || localStorage.getItem('sm_temperature') || '15');
-    const smMinPct2 = parseFloat(ghData?._settings?.sm_minpct || localStorage.getItem('sm_minpct') || '3.0');
-    // norm計算は全馬で行う（勝率フィルターはevPool絞り込みのみで適用）
+    const smTemp2 = parseFloat(_sett2.sm_temperature != null ? _sett2.sm_temperature : (localStorage.getItem('sm_temperature') || '15'));
+    const smMinPct2 = parseFloat(_sett2.sm_minpct != null ? _sett2.sm_minpct : (localStorage.getItem('sm_minpct') || '3.0'));
+    console.log('[norm] softmax T=' + smTemp2 + ' minPct=' + smMinPct2 + ' source=' + (_sett2.sm_temperature != null ? 'github' : 'localStorage'));
     normMap2 = softmaxNorm(race.horses, smTemp2, smMinPct2);
   } else {
     const tot2 = race.horses.reduce((s,h) => s+h.pct, 0);
