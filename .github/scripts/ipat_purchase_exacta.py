@@ -234,7 +234,15 @@ async def purchase(page, course_name, race_num, bets):
 
     # オッズ選択画面へ
     await click_text(page, 'オッズ選択画面へ')
-    await page.wait_for_timeout(3000)
+    # #odseのhorseCombiが出現するまで最大10秒待機
+    for _w in range(10):
+        cnt = await page.evaluate("() => document.querySelectorAll('#odse span.horseCombi').length")
+        if cnt > 0:
+            print(f"  #odse horseCombi: {cnt}件 ({_w+1}秒待機)")
+            break
+        await page.wait_for_timeout(1000)
+    else:
+        print("  ⚠️ #odse horseCombi が出現しませんでした")
     url4 = page.url
     print(f"オッズ選択画面へ OK: {url4}")
 
