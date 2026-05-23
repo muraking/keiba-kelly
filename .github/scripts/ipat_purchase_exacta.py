@@ -52,39 +52,72 @@ async def click_text(page, text):
 
 
 async def check_horse(page, num):
-    """フォーメーション画面で馬番をチェック（data-value方式 + checkbox方式）"""
-    dv = 1000 + (num - 1)
-    # まず data-value リンク
-    result = await page.evaluate(f"""
-        () => {{
-            const a = document.querySelector('a[data-value="{dv}"]');
-            if(a) {{
-                ['touchstart','touchend','vclick','click'].forEach(evt =>
-                    a.dispatchEvent(new Event(evt, {{bubbles:true, cancelable:true}}))
-                );
-                return 'dv-click';
-            }}
-            // checkbox 方式
-            const rows = document.querySelectorAll('tr, li');
-            for(const row of rows) {{
-                const t = row.innerText.trim();
-                if(t.startsWith('{num:02d}') || t.startsWith('{num} ') || t.startsWith('{num}\\n')) {{
+    """フォーメーション画面で馬番の行をクリック"""
+    # IPATフォーメーション画面: tableのtr、最初のtdに馬番が入る
+    result = await page.evaluate("""
+        (num) => {
+            // table tr の最初の td が馬番
+            const rows = document.querySelectorAll('table tr');
+            for(const row of rows) {
+                const tds = row.querySelectorAll('td');
+                if(!tds.length) continue;
+                const numText = tds[0].innerText.trim();
+                if(parseInt(numText) === num) {
                     const cb = row.querySelector('input[type=checkbox]');
-                    if(cb) {{ if(!cb.checked) cb.click(); return 'checkbox'; }}
-                }}
-            }}
+                    if(cb) {
+                        if(!cb.checked) cb.click();
+                        return 'cb:' + numText;
+                    }
+                    ['touchstart','touchend','vclick','click'].forEach(evt =>
+                        row.dispatchEvent(new Event(evt, {bubbles:true, cancelable:true}))
+                    );
+                    return 'row:' + numText;
+                }
+            }
+            // フォールバック: td, label, a から馬番テキストを探す
+            const allEl = document.querySelectorAll('td, label, a');
+            for(const el of allEl) {
+                const t = el.innerText.trim();
+                if(t === String(num) || t === String(num).padStart(2,'0')) {
+                    const row = el.closest('tr');
+                    if(row) {
+                        const cb = row.querySelector('input[type=checkbox]');
+                        if(cb) { if(!cb.checked) cb.click(); return 'cb-fb:' + t; }
+                        ['touchstart','touchend','vclick','click'].forEach(evt =>
+                            row.dispatchEvent(new Event(evt, {bubbles:true, cancelable:true}))
+                        );
+                        return 'row-fb:' + t;
+                    }
+                    ['touchstart','touchend','vclick','click'].forEach(evt =>
+                        el.dispatchEvent(new Event(evt, {bubbles:true, cancelable:true}))
+                    );
+                    return 'el-fb:' + t;
+                }
+            }
             return false;
-        }}
-    """)
+        }
+    """, num)
+    # Playwright tap フォールバック
     if not result:
         try:
-            el = await page.query_selector(f'a[data-value="{dv}"]')
-            if el:
-                await el.tap()
-                result = 'tap'
-        except Exception:
-            pass
-    print(f"    {num}番: {result or 'NG'}")
+            rows = await page.query_selector_all('table tr')
+            for row in rows:
+                cells = await row.query_selector_all('td')
+                if cells:
+                    first = (await cells[0].inner_text()).strip()
+                    if first == str(num) or first == f"{num:02d}":
+                        cb = await row.query_selector('input[type=checkbox]')
+                        if cb:
+                            await cb.click()
+                            result = 'cb-playwright'
+                        else:
+                            await row.tap()
+                            result = 'tap'
+                        break
+        except Exception as e:
+            print(f"    playwright-tap失敗: {e}")
+    count = await page.evaluate("() => '?'")
+    print(f"    {num}番: {result or 'NG'} (組数:{count})")
     await page.wait_for_timeout(600)
     return bool(result)
 
@@ -180,6 +213,7 @@ async def purchase(page, course_name, race_num, bets):
     # ③ 1頭目（軸馬）チェック
     axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
     partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))
+    await page.screenshot(path="ipat_exacta_uma1.png")
     print(f"1頭目チェック: {axis_nums}")
     for num in axis_nums:
         await check_horse(page, num)
