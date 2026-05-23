@@ -243,8 +243,18 @@ async def purchase(page, course_name, race_num, bets):
         await check_horse(page, num)
 
     # オッズ選択画面へ
-    await click_text(page, 'オッズ選択画面へ', 'uma2')
-    # #odseのhorseCombiが出現するまで最大10秒待機
+        # 「オッズ選択画面へ」: action=#odse のフォームをsubmit（サーバーからページ再取得）
+    submit_result = await page.evaluate(
+        "() => { const forms = Array.from(document.querySelectorAll('form')); const f = forms.find(x => x.action && x.action.includes('#odse')); if(f){ f.submit(); return 'submitted:'+f.action; } return 'no-form'; }"
+    )
+    print(f"  オッズ選択画面へ: {submit_result}")
+    # ページ読み込み完了を待つ
+    try:
+        await page.wait_for_load_state('domcontentloaded', timeout=15000)
+    except Exception:
+        pass
+    await page.wait_for_timeout(2000)
+    # horseCombiの出現を待つ
     for _w in range(10):
         cnt = await page.evaluate("() => document.querySelectorAll('#odse span.horseCombi').length")
         if cnt > 0:

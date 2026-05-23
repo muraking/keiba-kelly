@@ -172,6 +172,10 @@ async def login(page):
     await page.evaluate("ToSPMenu()")
     await page.wait_for_timeout(3000)
     print(f"ログイン完了: {page.url}")
+    init_info = await page.evaluate(
+        "() => ({ odse_hc: (document.querySelector('#odse')||{}).querySelectorAll ? document.querySelector('#odse').querySelectorAll('span.horseCombi').length : -1, pages: Array.from(document.querySelectorAll('[data-role=page]')).map(p=>p.id) })"
+    )
+    print(f"  初期状態: {init_info}")
 
 
 async def purchase(page, course_name, race_num, bets):
@@ -202,33 +206,55 @@ async def purchase(page, course_name, race_num, bets):
     await page.click('text=式別から選択')
     await page.wait_for_timeout(2000)
     await page.click('text=ワイド')
-    await page.wait_for_timeout(2000)
-    print("式別→馬連 OK")
+    await page.wait_for_timeout(3000)  # 式別→馬連の画面遷移を待つ
+    url1 = page.url
+    print(f"式別→馬連 OK: {url1}")
 
-    # ② フォーメーション選択
+    # ② フォーメーション選択（通常/ながし/ボックス/フォーメーション画面）
+    page_text_f = await page.evaluate("() => document.body.innerText")
+    print(f"  フォーメーション画面テキスト（先頭200文字）: {page_text_f[:200]}")
     await page.click('text=フォーメーション')
-    await page.wait_for_timeout(2000)
-    print("フォーメーション OK")
+    await page.wait_for_timeout(3000)  # フォーメーション→1頭目選択の遷移を待つ
+    url2 = page.url
+    print(f"フォーメーション OK: {url2}")
 
     # ③ 1頭目（軸馬）チェック
     axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
     partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))
+    await page.screenshot(path="ipat_wide_uma1.png")
+    # HTML構造確認（削除済み）
     print(f"1頭目チェック: {axis_nums}")
     for num in axis_nums:
         await check_horse(page, num)
 
-    # 次へ
+    # 次へ（2頭目選択画面へ遷移）
+    page_text_1 = await page.evaluate("() => document.body.innerText")
+    print(f"  1頭目選択後テキスト（先頭200文字）: {page_text_1[:200]}")
     await click_text(page, '次へ', 'uma1')
-    await page.wait_for_timeout(2000)
-    print("次へ OK")
+    await page.wait_for_timeout(3000)
+    url3 = page.url
+    print(f"次へ OK: {url3}")
 
     # ④ 2頭目（相手馬）チェック
+    page_text_2 = await page.evaluate("() => document.body.innerText")
+    print(f"  2頭目選択画面テキスト（先頭200文字）: {page_text_2[:200]}")
     print(f"2頭目チェック: {partner_nums}")
     for num in partner_nums:
         await check_horse(page, num)
 
     # オッズ選択画面へ
-    await click_text(page, 'オッズ選択画面へ', 'uma2')
+        # 「オッズ選択画面へ」: action=#odse のフォームをsubmit（サーバーからページ再取得）
+    submit_result = await page.evaluate(
+        "() => { const forms = Array.from(document.querySelectorAll('form')); const f = forms.find(x => x.action && x.action.includes('#odse')); if(f){ f.submit(); return 'submitted:'+f.action; } return 'no-form'; }"
+    )
+    print(f"  オッズ選択画面へ: {submit_result}")
+    # ページ読み込み完了を待つ
+    try:
+        await page.wait_for_load_state('domcontentloaded', timeout=15000)
+    except Exception:
+        pass
+    await page.wait_for_timeout(2000)
+    # horseCombiの出現を待つ
     for _w in range(10):
         cnt = await page.evaluate("() => document.querySelectorAll('#odse span.horseCombi').length")
         if cnt > 0:
@@ -237,7 +263,8 @@ async def purchase(page, course_name, race_num, bets):
         await page.wait_for_timeout(1000)
     else:
         print("  ⚠️ #odse horseCombi が出現しませんでした")
-    print("オッズ選択画面へ OK")
+    url4 = page.url
+    print(f"オッズ選択画面へ OK: {url4}")
 
     # ⑤ 組み合わせチェック
     print("組み合わせチェック...")
