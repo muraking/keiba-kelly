@@ -52,68 +52,74 @@ async def click_text(page, text):
 
 
 async def check_horse(page, num):
-    """フォーメーション画面で馬番をタップ（data-value=馬番そのまま）"""
-    # IPATフォーメーション: <li><a data-value="1" ...>1 馬名 オッズ</a></li>
-    # data-valueは馬番そのまま（単勝の1000+num-1とは異なる）
+    """フォーメーション画面で馬番をタップ
+    IPATフォーメーション: <li><a data-value="馬番" class="ui-link">...</a></li>
+    touchstart+touchend の組み合わせで selected クラスが付く
+    """
     selector = f'#uma1 a[data-value="{num}"], #uma2 a[data-value="{num}"]'
+    try:
+        el = await page.query_selector(selector)
+        if el:
+            # touchstart+touchend でタップ（Playwrightのtap()相当）
+            await el.dispatch_event('touchstart')
+            await page.wait_for_timeout(100)
+            await el.dispatch_event('touchend')
+            await page.wait_for_timeout(300)
+            # selectedクラスが付いたか確認
+            cls = await el.get_attribute('class')
+            print(f"    {num}番: {'OK selected' if 'selected' in (cls or '') else 'NG class=' + str(cls)}")
+            return True
+    except Exception as e:
+        print(f"    {num}番 dispatch失敗: {e}")
+    # フォールバック: Playwright tap()
     try:
         el = await page.query_selector(selector)
         if el:
             await el.tap()
             await page.wait_for_timeout(300)
-            # 組数を確認
-            bet_num = await page.evaluate("() => { const d = document.querySelector('.betNum dd'); return d ? d.innerText.trim() : '?'; }")
-            print(f"    {num}番: tap OK (組数:{bet_num})")
+            cls = await el.get_attribute('class')
+            print(f"    {num}番: tap {'OK' if 'selected' in (cls or '') else 'NG'}")
             return True
     except Exception as e:
         print(f"    {num}番 tap失敗: {e}")
-    # フォールバック: evaluate でクリック
-    result = await page.evaluate(f"""
-        () => {{
-            const a = document.querySelector('#uma1 a[data-value="{num}"], #uma2 a[data-value="{num}"]');
-            if(a) {{ a.click(); return true; }}
-            return false;
-        }}
-    """)
-    print(f"    {num}番: evaluate={'OK' if result else 'NG'}")
-    await page.wait_for_timeout(300)
-    return bool(result)
+    print(f"    {num}番: NG")
+    return False
 
 
 async def check_combo(page, num1, num2):
-    """オッズ選択画面で組み合わせの右チェックボックスをON"""
+    """オッズ選択画面で組み合わせをタップ（jQuery tap が正解）
+    <li><a data-value="4000"><span class="horseCombi">01－02</span></a></li>
+    """
     n1, n2 = min(num1, num2), max(num1, num2)
-    labels = [f"{n1:02d}－{n2:02d}", f"{n1:02d}-{n2:02d}", f"{n1}-{n2}"]
+    label = f"{n1:02d}－{n2:02d}"  # 全角ハイフン
 
     result = await page.evaluate(f"""
         () => {{
-            const labels = {json.dumps(labels)};
-            // tr/li 行からラベルを探してチェック
-            const rows = document.querySelectorAll('tr, li');
-            for(const row of rows) {{
-                const text = (row.innerText || '').replace(/\\s+/g,'');
-                for(const lbl of labels) {{
-                    const clean = lbl.replace(/[\\s－-]/g,'');
-                    if(text.includes(clean) || text.includes(lbl.replace('-','－')) || text.includes(lbl)) {{
-                        // 行内の最後のリンクまたはチェックボックス
-                        const cb = row.querySelector('input[type=checkbox]');
-                        if(cb) {{ if(!cb.checked) cb.click(); return 'cb:'+lbl; }}
-                        const links = row.querySelectorAll('a');
-                        if(links.length) {{
-                            const last = links[links.length-1];
-                            ['touchstart','touchend','vclick','click'].forEach(e =>
-                                last.dispatchEvent(new Event(e, {{bubbles:true}}))
-                            );
-                            return 'link:'+lbl;
-                        }}
+            const spans = document.querySelectorAll('#odse span.horseCombi');
+            for(const sp of spans) {{
+                const t = sp.innerText.trim();
+                if(t === '{label}' || t === '{n1}-{n2}' || t === '{n1:02d}-{n2:02d}') {{
+                    const a = sp.closest('a');
+                    if(a && typeof $ !== 'undefined') {{
+                        $(a).trigger('tap');
+                        return 'jquery-tap:' + t;
                     }}
+                    // jQuery なければ touchstart+touchend
+                    const touch = new Touch({{identifier: Date.now(), target: a,
+                        clientX: 200, clientY: 300, screenX: 200, screenY: 300,
+                        pageX: 200, pageY: 300, radiusX: 1, radiusY: 1, rotationAngle: 0, force: 1}});
+                    a.dispatchEvent(new TouchEvent('touchstart', {{bubbles:true, cancelable:true,
+                        touches:[touch], targetTouches:[touch], changedTouches:[touch]}}));
+                    a.dispatchEvent(new TouchEvent('touchend', {{bubbles:true, cancelable:true,
+                        touches:[], targetTouches:[], changedTouches:[touch]}}));
+                    return 'touch:' + t;
                 }}
             }}
             return false;
         }}
     """)
     print(f"    {n1:02d}-{n2:02d}: {result or 'NG'}")
-    await page.wait_for_timeout(400)
+    await page.wait_for_timeout(300)
     return bool(result)
 
 
