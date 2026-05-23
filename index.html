@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260523.5</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260523.6</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -1738,9 +1738,11 @@ async function fetchRaceList(){
     // 新旧フォーマット対応
     if(data.dates){
       ghData = data.dates;
+      ghData._settings = data._settings || {};
     } else if(data.races && data.races.length){
       ghData = {};
       ghData[data.date || '不明'] = { races: data.races };
+      ghData._settings = data._settings || {};
     } else {
       throw new Error('レースデータが空です。共有タブから保存してください。');
     }
@@ -2135,6 +2137,7 @@ async function refreshOdds(){
       // ghDataを更新
       if(data.dates){
         ghData = data.dates;
+        ghData._settings = data._settings || {};  // _settingsも更新
       }
 
       // 現在選択中のレースを再表示
@@ -2328,7 +2331,7 @@ function startAutoRefresh(){
       const res = await fetch(url);
       if(!res.ok) return;
       const data = await res.json();
-      if(data.dates) ghData = data.dates;
+      if(data.dates){ ghData = data.dates; ghData._settings = data._settings || {}; }
       // オッズ更新時刻を比較して変化を検知
       const prevUpdated = ghData[date]?.odds_updated;
       onRaceChange();
