@@ -10155,5 +10155,114 @@
       }
     ],
     "savedAt": "2026-05-17T23:30:54.972Z"
+  },
+  {
+    "date": "5/24 新潟 1R",
+    "venue": "新潟",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 10,
+    "winOdds": 3.5,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 110,
+    "ev_max": 500,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "マイネルユーゲント",
+        "norm": 0.1628,
+        "tanOdds": 3.2,
+        "ev": 52.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.5
+      },
+      {
+        "num": 11,
+        "name": "リュウセイコウテイ",
+        "norm": 0.1046,
+        "tanOdds": 12.9,
+        "ev": 134.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ブライティアロード",
+        "norm": 0.0548,
+        "tanOdds": 75.9,
+        "ev": 415.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ドゥボヌール",
+        "norm": 0.0482,
+        "tanOdds": 38.3,
+        "ev": 184.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "チャーミングアイ",
+        "norm": 0.0419,
+        "tanOdds": 39.2,
+        "ev": 164.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ウインラブソング",
+        "norm": 0.0379,
+        "tanOdds": 124.7,
+        "ev": 472.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "シンデレラリバティ",
+        "norm": 0.0375,
+        "tanOdds": 135.6,
+        "ev": 508.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ピコテーパー",
+        "norm": 0.0371,
+        "tanOdds": 48.7,
+        "ev": 180.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "アンコ",
+        "norm": 0.0354,
+        "tanOdds": 111.4,
+        "ev": 394.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-24T12:46:00.276Z"
   }
 ]
