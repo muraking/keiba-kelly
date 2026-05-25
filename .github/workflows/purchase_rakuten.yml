@@ -16,6 +16,10 @@ on:
         description: '日付 YYYYMMDD（空欄=自動）'
         required: false
         default: ''
+      dry_run:
+        description: 'テストモード（1=投票しない、0=実際に投票）'
+        required: false
+        default: '0'
 
 jobs:
   purchase:
@@ -45,7 +49,7 @@ jobs:
           RACE_NUM:     ${{ github.event.inputs.race_num }}
           BETS:         ${{ github.event.inputs.bets }}
           TODAY:        ${{ github.event.inputs.today }}
-          DRY_RUN:      "0"
+          DRY_RUN:      ${{ github.event.inputs.dry_run }}
         run: python .github/scripts/rakuten_purchase.py
 
       - name: スクリーンショットをアップロード
