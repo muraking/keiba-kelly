@@ -378,38 +378,25 @@ async def add_to_cart_combo(page, bets, bet_type):
     print(f"{label}フォーメーション選択中...")
 
     # ① 現在の式別タブ一覧を確認してからクリック
-    tab_text = await page.evaluate("() => Array.from(document.querySelectorAll('.shubetsu a, .shubetsu li, #shubetsu a, table.shubetsu td, .betType a, .betType li')).map(e=>e.innerText.trim()).join('|')")
-    print(f"  式別タブ一覧: {tab_text}")
-
-    # 式別タブのテキストマップ
     tab_label = '馬連' if bet_type == 'exacta' else 'ワイド'
-    # 楽天競馬の式別タブを探す（複数のセレクタを試みる）
+    # 式別タブ: 楽天競馬bet画面では <a> テキストで式別が並ぶ
     tab_clicked = False
-    for selector in [f'text={tab_label}', '.shubetsu a', '#shubetsu a', 'table.shubetsu td a']:
-        try:
-            if 'text=' in selector:
-                await page.click(selector, timeout=3000)
-            else:
-                # テキストが一致する要素を探す
-                elements = await page.query_selector_all(selector)
-                for el in elements:
-                    t = (await el.inner_text()).strip()
-                    if tab_label in t:
-                        await el.click()
-                        break
-                else:
-                    continue
+    try:
+        # 完全一致する <a> をクリック
+        loc = page.locator(f'a:text-is("{tab_label}")')
+        cnt = await loc.count()
+        print(f"  式別タブ '{tab_label}' 候補数: {cnt}")
+        if cnt > 0:
+            await loc.first.click(timeout=5000)
             await page.wait_for_timeout(1000)
-            print(f"  式別タブ '{tab_label}' OK ({selector})")
+            print(f"  式別タブ '{tab_label}' OK")
             tab_clicked = True
-            break
-        except Exception:
-            continue
+    except Exception as e:
+        print(f"  式別タブ '{tab_label}' 失敗: {e}")
 
     if not tab_clicked:
-        print(f"  ⚠️ 式別タブ '{tab_label}' が見つかりません - ページテキスト確認:")
         pt = await page.evaluate("() => document.body.innerText.slice(0,300)")
-        print(f"  {pt}")
+        print(f"  ページテキスト: {pt}")
 
     # ② フォーメーション方式をクリック
     fmt_clicked = False
@@ -603,6 +590,10 @@ async def purchase(page, venue, race_num, bets, today):
         return False
 
     await page.screenshot(path="rakuten_01_race.png")
+
+    # 式別タブの実際のHTMLを確認
+    shubetsu_info = await page.evaluate("() => { var r=''; var links=document.querySelectorAll('a'); for(var i=0;i<links.length;i++){var t=links[i].innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単','枠連','枠単'].indexOf(t)>=0){r+=t+'['+links[i].className+'] ';}} return r||'not found'; }")
+    print(f"  式別リンク: {shubetsu_info}")
 
     # bet_typeを確認（馬連・ワイドか単勝・複勝か）
     combo_bets = [b for b in bets if b.get('bet_type') in ('exacta', 'wide')]
