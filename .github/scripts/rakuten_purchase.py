@@ -451,8 +451,8 @@ async def add_to_cart_combo(page, bets, bet_type):
     else:
         print("  ⚠️ フォーメーション選択失敗")
 
-    # ③ ページ構造をダンプ（1行evaluate）
-    page_info = await page.evaluate("() => { var t=document.querySelectorAll('table'); var r='tables:'+t.length; for(var i=0;i<Math.min(3,t.length);i++){var rows=t[i].querySelectorAll('tr');r+=' tbl'+i+'('+rows.length+'rows)';if(rows.length>1){var cs=rows[1].querySelectorAll('td');r+='['+Array.from(cs).map(function(c){return c.innerText.trim().slice(0,5);}).join('|')+']';}} return r; }")
+    # ③ ページ構造をダンプ（詳細版）
+    page_info = await page.evaluate("() => { var t=document.querySelectorAll('table'); var r='tables:'+t.length; for(var i=0;i<Math.min(5,t.length);i++){var rows=t[i].querySelectorAll('tr');r+=' tbl'+i+'('+rows.length+'rows)';for(var j=0;j<Math.min(3,rows.length);j++){var cs=rows[j].querySelectorAll('td,th');r+=' R'+j+'['+Array.from(cs).map(function(c){return (c.innerText.trim()||c.innerHTML.trim()).slice(0,20);}).join('|')+']';}} return r; }")
     print(f"  テーブル構造: {page_info}")
 
     # 軸馬・相手馬
