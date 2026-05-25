@@ -385,13 +385,18 @@ async def add_to_cart_combo(page, bets, bet_type):
     else:
         tab_labels = ['ワイド']
 
-    # 通常投票画面に遷移（式別タブが表示されるページ）
-    current_url = page.url
-    if 'odds' in current_url:
-        normal_url = current_url.replace('/odds/', '/purchase/')
-        print(f"  通常投票に遷移: {normal_url}")
-        await page.goto(normal_url, wait_until='domcontentloaded', timeout=TIMEOUT)
-        await page.wait_for_timeout(2000)
+    # 「通常投票」タブをクリックして式別タブを表示
+    try:
+        await page.click('text=通常', timeout=3000)
+        await page.wait_for_timeout(1500)
+        print("  通常投票タブ クリックOK")
+    except Exception:
+        try:
+            await page.click('text=通常投票', timeout=3000)
+            await page.wait_for_timeout(1500)
+            print("  通常投票 クリックOK")
+        except Exception as e:
+            print(f"  通常投票クリック失敗: {e}")
 
     # 式別タブをクリック（馬連→馬複の順で試す）
     tab_clicked = False
