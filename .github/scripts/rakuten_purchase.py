@@ -356,6 +356,224 @@ async def add_to_cart(page, bets):
     print(f"カゴ件数: {cart_count}")
 
 
+async def navigate_to_bet_type(page, bet_type):
+    """楽天競馬で式別タブを切り替える
+    bet_type: 'exacta'=馬連, 'wide'=ワイド
+    """
+    label = '馬連' if bet_type == 'exacta' else 'ワイド'
+    try:
+        # 式別タブをクリック
+        await page.click(f'text={label}')
+        await page.wait_for_timeout(1500)
+        print(f"  式別タブ '{label}' クリック OK")
+        return True
+    except Exception as e:
+        print(f"  ⚠️ 式別タブ '{label}' クリック失敗: {e}")
+        return False
+
+
+async def select_bet_type_tab(page, bet_type):
+    """楽天競馬の式別タブを切り替え
+    bet_type: 'exacta'=馬連, 'wide'=ワイド
+    """
+    # 画像確認: 式別タブは「馬祥」(馬連)「ワイド」等
+    label_map = {'exacta': '馬祥', 'wide': 'ワイド'}
+    label = label_map.get(bet_type, '馬祥')
+    try:
+        # 式別タブをクリック
+        tab = await page.query_selector(f'text={label}')
+        if not tab:
+            # フォールバック: 「馬連」テキストでも試す
+            tab = await page.query_selector('text=馬連') if bet_type == 'exacta' else None
+        if tab:
+            await tab.click()
+            await page.wait_for_timeout(1000)
+            print(f"  式別タブ '{label}' OK")
+            return True
+    except Exception as e:
+        print(f"  式別タブ失敗: {e}")
+    return False
+
+
+async def select_formation(page):
+    """フォーメーション方式を選択"""
+    try:
+        btn = await page.query_selector('text=フォーメーション')
+        if btn:
+            await btn.click()
+            await page.wait_for_timeout(500)
+            print("  フォーメーション選択OK")
+            return True
+    except Exception as e:
+        print(f"  フォーメーション選択失敗: {e}")
+    return False
+
+
+async def click_horse_formation(page, num, col):
+    """フォーメーション画面で馬番ボタンをクリック
+    col: 0=馬1列, 1=馬2列
+    画像構造: 馬1列と馬2列がそれぞれ縦に馬番ボタン並ぶ
+    """
+    result = await page.evaluate(f"""
+        () => {{
+            // フォーメーションの馬番ボタン: テーブルの各行に馬1・馬2の馬番が並ぶ
+            // 画像: 馬1列(左) | 馬2列(右) で各馬番がセル
+            const tables = document.querySelectorAll('table');
+            for(const tbl of tables) {{
+                const rows = tbl.querySelectorAll('tr');
+                for(const row of rows) {{
+                    const cells = row.querySelectorAll('td');
+                    if(cells.length < 2) continue;
+                    // 行の馬番セルを特定
+                    // 馬1列=インデックス0側, 馬2列=インデックス1側
+                    const cell = cells[{col}];
+                    if(!cell) continue;
+                    const text = cell.innerText?.trim();
+                    if(text === String({num}) || text === String({num}).padStart(2,'0')) {{
+                        cell.click();
+                        return 'click:col{col}:' + text;
+                    }}
+                    // ボタン要素の場合
+                    const btns = cell.querySelectorAll('a, button, input[type=button]');
+                    for(const btn of btns) {{
+                        const t = btn.innerText?.trim() || btn.value?.trim();
+                        if(t === String({num}) || t === String({num}).padStart(2,'0')) {{
+                            btn.click();
+                            return 'btn:col{col}:' + t;
+                        }}
+                    }}
+                }}
+            }}
+            // フォールバック: data-num属性やclass名で探す
+            const allBtns = document.querySelectorAll('a[data-num], button[data-num], td.horse');
+            for(const btn of allBtns) {{
+                if(btn.dataset.num === String({num})) {{
+                    btn.click();
+                    return 'data-num:' + {num};
+                }}
+            }}
+            return false;
+        }}
+    """)
+    print(f"    {num}番(col{col}): {result or 'NG'}")
+    await page.wait_for_timeout(500)
+    return bool(result)
+
+
+async def add_to_cart_combo(page, bets, bet_type):
+    """馬連・ワイドをフォーメーション方式でカゴに追加
+    bets: [{"num1": 1, "num2": 3, "amount": 100}, ...]
+    bet_type: 'exacta' or 'wide'
+    """
+    label = '馬連' if bet_type == 'exacta' else 'ワイド'
+    print(f"{label}フォーメーション選択中...")
+
+    # 式別タブ切り替え
+    await select_bet_type_tab(page, bet_type)
+    # フォーメーション選択
+    await select_formation(page)
+    await page.wait_for_timeout(500)
+
+    # 軸馬（馬1列）と相手馬（馬2列）を収集
+    axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
+    partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))
+    print(f"  馬1列（軸）: {axis_nums}")
+    print(f"  馬2列（相手）: {partner_nums}")
+
+    # 馬1列の馬番をクリック
+    for num in axis_nums:
+        await click_horse_formation(page, num, 0)
+
+    # 馬2列の馬番をクリック
+    for num in partner_nums:
+        await click_horse_formation(page, num, 1)
+
+    # 組数確認
+    kumiCount = await page.evaluate(r"""
+        () => {
+            const m = document.body.innerText.match(/組数[：:]?\s*(\d+)/);
+            return m ? m[1] : '不明';
+        }
+    """)
+    print(f"  選択組数: {kumiCount}")
+
+    # 金額入力してセット
+    unit_amount = bets[0]['amount'] if bets else 100
+    print(f"  金額入力: ¥{unit_amount}")
+
+    # 金額入力欄（100円単位）
+    inp = await page.query_selector('input[type=text]:visible, input[type=number]:visible')
+    if inp:
+        await inp.fill(str(unit_amount // 100))
+        await page.wait_for_timeout(300)
+        print(f"  金額入力OK: {unit_amount//100}×100=¥{unit_amount}")
+    else:
+        # 数字ボタンで入力
+        digits = str(unit_amount // 100)
+        for d in digits:
+            try:
+                await page.click(f'text={d}', timeout=3000)
+                await page.wait_for_timeout(200)
+            except:
+                pass
+        print(f"  数字ボタン入力: {unit_amount//100}")
+
+    # セットボタン
+    try:
+        await page.click('text=セット')
+        await page.wait_for_timeout(1000)
+        print("  セットOK")
+    except Exception as e:
+        print(f"  セット失敗: {e}")
+
+    # カゴ確認
+    cart_count = await page.evaluate(r"""
+        () => {
+            const m = document.body.innerText.match(/件数[：:]?\s*(\d+)\/\d+件/);
+            return m ? m[1] : '不明';
+        }
+    """)
+    print(f"カゴ件数: {cart_count}")
+
+
+async def input_amounts_combo(page, bets):
+    """馬連・ワイドの金額を入力"""
+    print("金額入力中（馬連・ワイド）...")
+    # 楽天は単勝と同じ金額入力UI（馬番ごとに金額欄）
+    # または一括金額入力の場合もある
+    # まずページテキストを確認
+    page_text = await page.evaluate("() => document.body.innerText")
+    print(f"  金額入力画面（先頭200文字）: {page_text[:200]}")
+
+    # bet_map: (min, max) → amount
+    bet_map = {(min(b['num1'],b['num2']), max(b['num1'],b['num2'])): b['amount'] for b in bets}
+
+    # 入力欄を探す（単勝と同じ形式を試みる）
+    inputs = await page.query_selector_all('input[type="text"]:visible, input[type="number"]:visible, input[type="tel"]:visible')
+    print(f"  入力欄数: {len(inputs)}")
+
+    if not inputs:
+        print("  ⚠️ 金額入力欄なし")
+        return
+
+    # 1欄の場合は代表金額を入力
+    if len(inputs) == 1:
+        amount = list(bet_map.values())[0] if bet_map else bets[0]['amount']
+        await inputs[0].fill(str(amount))
+        await inputs[0].dispatch_event('change')
+        print(f"  一括入力: ¥{amount}")
+        return
+
+    # 複数欄の場合は順番に入力
+    for i, inp in enumerate(inputs):
+        if i < len(bets):
+            amount = bets[i]['amount']
+            await inp.fill(str(amount))
+            await inp.dispatch_event('change')
+            await page.wait_for_timeout(200)
+    print(f"  {len(inputs)}欄入力完了")
+
+
 async def input_amounts(page, bets):
     """各馬の金額を入力（単勝/複勝対応）"""
     print("金額入力中...")
@@ -423,32 +641,47 @@ async def purchase(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_01_race.png")
 
-    # 式別「単勝/複勝」を確認（デフォルトで選択済みのはず）
-    try:
-        await page.click('text=単勝/複勝')
-        await page.wait_for_timeout(500)
-    except:
-        pass
+    # bet_typeを確認（馬連・ワイドか単勝・複勝か）
+    combo_bets = [b for b in bets if b.get('bet_type') in ('exacta', 'wide')]
+    tan_fuku_bets = [b for b in bets if b.get('bet_type') not in ('exacta', 'wide')]
 
-    # 馬券カゴに追加
-    await add_to_cart(page, bets)
-    await page.screenshot(path="rakuten_02_cart.png")
-
-    # 金額入力
-    await input_amounts(page, bets)
-    await page.screenshot(path="rakuten_03_amount.png")
-
-    # DRY RUN
-    if DRY_RUN:
-        print("\n========== DRY RUN MODE ==========")
-        print("[テスト] 投票確認画面の直前で停止（実際には投票しません）")
-        for b in bets:
-            bet_type_label = "複勝" if b.get('bet_type') == 'fuku' else "単勝"
-            print(f"  {b['num']}番 {b.get('name','')} {bet_type_label} ¥{b['amount']:,}")
-        print(f"  合計: ¥{total:,}")
-        print("===================================")
-        print("✅ DRY RUN完了")
-        return True
+    if combo_bets:
+        # 馬連・ワイドの場合（add_to_cart_combo が式別選択〜セットまで一括処理）
+        bet_type = combo_bets[0].get('bet_type')
+        label = '馬連' if bet_type == 'exacta' else 'ワイド'
+        await add_to_cart_combo(page, combo_bets, bet_type)
+        await page.screenshot(path=f"rakuten_02_cart_{bet_type}.png")
+        # DRY RUN
+        if DRY_RUN:
+            print("\n========== DRY RUN MODE ==========")
+            print(f"[テスト] {label}投票確認画面の直前で停止（実際には投票しません）")
+            for b in combo_bets:
+                print(f"  {b['num1']:02d}-{b['num2']:02d} {label} ¥{b['amount']:,}")
+            print(f"  合計: ¥{total:,}")
+            print("===================================")
+            print("✅ DRY RUN完了")
+            return True
+    else:
+        # 単勝・複勝の場合（既存処理）
+        try:
+            await page.click('text=単勝/複勝')
+            await page.wait_for_timeout(500)
+        except:
+            pass
+        await add_to_cart(page, tan_fuku_bets)
+        await page.screenshot(path="rakuten_02_cart.png")
+        await input_amounts(page, tan_fuku_bets)
+        await page.screenshot(path="rakuten_03_amount.png")
+        if DRY_RUN:
+            print("\n========== DRY RUN MODE ==========")
+            print("[テスト] 投票確認画面の直前で停止（実際には投票しません）")
+            for b in tan_fuku_bets:
+                bet_type_label = "複勝" if b.get('bet_type') == 'fuku' else "単勝"
+                print(f"  {b['num']}番 {b.get('name','')} {bet_type_label} ¥{b['amount']:,}")
+            print(f"  合計: ¥{total:,}")
+            print("===================================")
+            print("✅ DRY RUN完了")
+            return True
 
     # 「投票内容を確認する」ボタン
     print("投票内容を確認する...")
