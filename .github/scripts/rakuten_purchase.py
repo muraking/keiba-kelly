@@ -498,6 +498,27 @@ async def add_to_cart_combo(page, bets, bet_type):
         """)
         return clicked
 
+    # cells[5]の実際のHTMLを確認
+    cell5_html = await page.evaluate("""
+        () => {
+            var tables = document.querySelectorAll('table');
+            for(var ti=0; ti<tables.length; ti++) {
+                var rows = tables[ti].querySelectorAll('tr');
+                for(var ri=0; ri<rows.length; ri++) {
+                    var cells = rows[ri].querySelectorAll('td');
+                    if(cells.length < 6) continue;
+                    var c0 = cells[0].innerText.trim();
+                    var c1 = cells[1].innerText.trim();
+                    if(/^[0-9]{1,2}$/.test(c0) && /^[0-9]{1,2}$/.test(c1)) {
+                        return 'c0=' + c0 + ' c1=' + c1 + ' c5_html=' + cells[5].innerHTML.slice(0,100) + ' c5_text=' + cells[5].innerText.trim();
+                    }
+                }
+            }
+            return 'not found';
+        }
+    """)
+    print(f"  cells[5]確認: {cell5_html}")
+
     print(f"  馬1（軸）: {axis_nums}")
     for num in axis_nums:
         result = await click_combo_horse(num, 1)
