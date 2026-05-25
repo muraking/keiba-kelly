@@ -373,171 +373,102 @@ async def navigate_to_bet_type(page, bet_type):
 
 
 async def add_to_cart_combo(page, bets, bet_type):
-    """馬連・ワイドをフォーメーション方式でカゴに追加
-    楽天競馬フォーメーション画面:
-      式別タブ: 馬祥(馬連) or ワイド
-      方式タブ: フォーメーション
-      テーブル: 馬1列・馬2列が横並び、各列に馬番ボタン
-    """
+    """馬連・ワイドをフォーメーション方式でカゴに追加"""
     label = '馬連' if bet_type == 'exacta' else 'ワイド'
-    tab_label = '馬祥' if bet_type == 'exacta' else 'ワイド'
     print(f"{label}フォーメーション選択中...")
 
-    # ① 式別タブをクリック（馬祥 or ワイド）
-    try:
-        await page.click(f'text={tab_label}', timeout=5000)
-        await page.wait_for_timeout(1000)
-        print(f"  式別タブ '{tab_label}' OK")
-    except Exception as e:
-        print(f"  式別タブ '{tab_label}' 失敗: {e}")
-        # フォールバック: 「馬連」テキストでも試す
-        if bet_type == 'exacta':
-            try:
-                await page.click('text=馬連', timeout=3000)
-                await page.wait_for_timeout(1000)
-                print("  式別タブ '馬連' フォールバックOK")
-            except Exception as e2:
-                print(f"  式別タブ '馬連' も失敗: {e2}")
+    # ① 現在の式別タブ一覧を確認してからクリック
+    tab_text = await page.evaluate("() => Array.from(document.querySelectorAll('.shubetsu a, .shubetsu li, #shubetsu a, table.shubetsu td, .betType a, .betType li')).map(e=>e.innerText.trim()).join('|')")
+    print(f"  式別タブ一覧: {tab_text}")
+
+    # 式別タブのテキストマップ
+    tab_label = '馬連' if bet_type == 'exacta' else 'ワイド'
+    # 楽天競馬の式別タブを探す（複数のセレクタを試みる）
+    tab_clicked = False
+    for selector in [f'text={tab_label}', '.shubetsu a', '#shubetsu a', 'table.shubetsu td a']:
+        try:
+            if 'text=' in selector:
+                await page.click(selector, timeout=3000)
+            else:
+                # テキストが一致する要素を探す
+                elements = await page.query_selector_all(selector)
+                for el in elements:
+                    t = (await el.inner_text()).strip()
+                    if tab_label in t:
+                        await el.click()
+                        break
+                else:
+                    continue
+            await page.wait_for_timeout(1000)
+            print(f"  式別タブ '{tab_label}' OK ({selector})")
+            tab_clicked = True
+            break
+        except Exception:
+            continue
+
+    if not tab_clicked:
+        print(f"  ⚠️ 式別タブ '{tab_label}' が見つかりません - ページテキスト確認:")
+        pt = await page.evaluate("() => document.body.innerText.slice(0,300)")
+        print(f"  {pt}")
 
     # ② フォーメーション方式をクリック
-    try:
-        await page.click('text=フォーメーション', timeout=5000)
+    fmt_clicked = False
+    for selector in ['text=フォーメーション', '.method a', '#method a', 'table.method td a']:
+        try:
+            if 'text=' in selector:
+                # 完全一致するボタンを探す（説明文のdlではなくリンクを優先）
+                loc = page.locator('a:has-text("フォーメーション"), button:has-text("フォーメーション"), input[value="フォーメーション"]')
+                cnt = await loc.count()
+                if cnt > 0:
+                    await loc.first.click(timeout=3000)
+                    fmt_clicked = True
+                    break
+            else:
+                elements = await page.query_selector_all(selector)
+                for el in elements:
+                    t = (await el.inner_text()).strip()
+                    if 'フォーメーション' in t and len(t) < 10:
+                        await el.click()
+                        fmt_clicked = True
+                        break
+                if fmt_clicked:
+                    break
+        except Exception:
+            continue
+
+    if fmt_clicked:
         await page.wait_for_timeout(1000)
         print("  フォーメーション OK")
-    except Exception as e:
-        print(f"  フォーメーション失敗: {e}")
-        # force click で試す
-        try:
-            loc = page.locator('text=フォーメーション')
-            await loc.first.click(force=True, timeout=3000)
-            await page.wait_for_timeout(1000)
-            print("  フォーメーション force-click OK")
-        except Exception as e2:
-            print(f"  フォーメーション force-click も失敗: {e2}")
+    else:
+        print("  ⚠️ フォーメーション選択失敗")
 
-    # ページ構造をダンプ（デバッグ）
-    page_info = await page.evaluate("""
-        () => {
-            // 馬番ボタンの構造を確認
-            const tables = document.querySelectorAll('table');
-            let info = 'tables:' + tables.length + '\n';
-            for(let i=0; i<Math.min(3,tables.length); i++) {
-                const rows = tables[i].querySelectorAll('tr');
-                info += 'tbl' + i + ' rows:' + rows.length + '\n';
-                if(rows.length > 0) info += '  th:' + (tables[i].querySelector('th')?.innerText||'').replace(/\n/g,'|') + '\n';
-                if(rows.length > 1) {
-                    const cells = rows[1].querySelectorAll('td');
-                    info += '  row1 cells:' + cells.length + ' text:' + Array.from(cells).map(c=>c.innerText.trim().slice(0,10)).join('|') + '\n';
-                }
-            }
-            return info;
-        }
-    """)
-    print(f"  テーブル構造:\n{page_info}")
+    # ③ ページ構造をダンプ（1行evaluate）
+    page_info = await page.evaluate("() => { var t=document.querySelectorAll('table'); var r='tables:'+t.length; for(var i=0;i<Math.min(3,t.length);i++){var rows=t[i].querySelectorAll('tr');r+=' tbl'+i+'('+rows.length+'rows)';if(rows.length>1){var cs=rows[1].querySelectorAll('td');r+='['+Array.from(cs).map(function(c){return c.innerText.trim().slice(0,5);}).join('|')+']';}} return r; }")
+    print(f"  テーブル構造: {page_info}")
 
-    # 軸馬・相手馬を収集
+    # 軸馬・相手馬
     axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
     partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))
     print(f"  馬1（軸）: {axis_nums}")
     print(f"  馬2（相手）: {partner_nums}")
 
-    # ③ 馬1列の馬番をクリック
+    # ④ 馬1列の馬番をクリック（全tdから馬番テキストの1番目）
     for num in axis_nums:
-        result = await page.evaluate(f"""
-            () => {{
-                // 馬1列のヘッダーを持つテーブルから馬番ボタンを探す
-                const tables = document.querySelectorAll('table');
-                for(const tbl of tables) {{
-                    const headers = Array.from(tbl.querySelectorAll('th')).map(th=>th.innerText.trim());
-                    // 「馬1」「馬1列」「軸」などが含まれるテーブル
-                    const hasUma1 = headers.some(h=>h.includes('馬1') || h.includes('軸'));
-                    if(!hasUma1 && !headers.some(h=>h.includes('単勝'))) continue;
-                    
-                    // 行の中から馬番={num}を探す（最初の列）
-                    const rows = tbl.querySelectorAll('tr');
-                    for(const row of rows) {{
-                        const cells = row.querySelectorAll('td');
-                        if(cells.length < 1) continue;
-                        
-                        // 馬1列の馬番セル（左側の列）
-                        // 構造: 単勝オッズ | 馬1列ボタン | 馬番 | 馬名 | 馬2列ボタン | 単勝オッズ
-                        for(let ci=0; ci<cells.length; ci++) {{
-                            const t = cells[ci].innerText.trim();
-                            if(t === String({num}) || t === String({num}).padStart(2,'0')) {{
-                                // この馬番に対応する馬1列のセルをクリック
-                                // 馬番の左側にある「全通り」または馬番ボタン列
-                                const prevCell = ci > 0 ? cells[ci-1] : null;
-                                if(prevCell) {{
-                                    prevCell.click();
-                                    return 'uma1-prev-cell:' + t;
-                                }}
-                                cells[ci].click();
-                                return 'uma1-cell:' + t;
-                            }}
-                        }}
-                    }}
-                }}
-                // フォールバック: テキスト=馬番の全要素から探してクリック
-                const allCells = document.querySelectorAll('td');
-                let count = 0;
-                for(const cell of allCells) {{
-                    if(cell.innerText.trim() === String({num})) {{
-                        count++;
-                        if(count === 1) {{ // 最初に見つかった馬番セル（馬1列想定）
-                            cell.click();
-                            return 'fb-cell1:' + count;
-                        }}
-                    }}
-                }}
-                return false;
-            }}
-        """)
+        result = await page.evaluate(f"() => {{ var cells=document.querySelectorAll('td'); var count=0; for(var i=0;i<cells.length;i++){{ var t=cells[i].innerText.trim(); if(t==='{num}'||t==='{num:02d}'){{ count++; if(count===1){{ cells[i].click(); return 'uma1:'+count; }} }} }} return false; }}")
         print(f"    馬1:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
-    # ④ 馬2列の馬番をクリック
+    # ⑤ 馬2列の馬番をクリック（全tdから馬番テキストの2番目）
     for num in partner_nums:
-        result = await page.evaluate(f"""
-            () => {{
-                // 馬2列: 馬番テキスト=numが2回目に現れるセル
-                const allCells = document.querySelectorAll('td');
-                let count = 0;
-                for(const cell of allCells) {{
-                    if(cell.innerText.trim() === String({num}) || cell.innerText.trim() === String({num}).padStart(2,'0')) {{
-                        count++;
-                        if(count === 2) {{ // 2番目 = 馬2列
-                            cell.click();
-                            return 'uma2-cell:' + count;
-                        }}
-                    }}
-                }}
-                // フォールバック: 馬番セルの右側のセルをクリック
-                count = 0;
-                for(const cell of allCells) {{
-                    if(cell.innerText.trim() === String({num})) {{
-                        count++;
-                        if(count === 1) {{
-                            const nextCell = cell.nextElementSibling;
-                            if(nextCell) {{ nextCell.click(); return 'next-cell:' + cell.innerText.trim(); }}
-                        }}
-                    }}
-                }}
-                return false;
-            }}
-        """)
+        result = await page.evaluate(f"() => {{ var cells=document.querySelectorAll('td'); var count=0; for(var i=0;i<cells.length;i++){{ var t=cells[i].innerText.trim(); if(t==='{num}'||t==='{num:02d}'){{ count++; if(count===2){{ cells[i].click(); return 'uma2:'+count; }} }} }} return false; }}")
         print(f"    馬2:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
     # 組数確認
-    kumi = await page.evaluate(r"""
-        () => {
-            const m = document.body.innerText.match(/組数[：:]?\s*(\d+)/);
-            return m ? m[1] : '不明';
-        }
-    """)
+    kumi = await page.evaluate("() => { var m=document.body.innerText.match(/組数[：:]?\s*(\d+)/); return m?m[1]:'不明'; }")
     print(f"  選択組数: {kumi}")
 
-    # ⑤ 金額入力
+    # ⑥ 金額入力
     unit_amount = bets[0]['amount'] if bets else 100
     inp = await page.query_selector('input[type=text]:visible, input[type=number]:visible')
     if inp:
@@ -545,15 +476,14 @@ async def add_to_cart_combo(page, bets, bet_type):
         await inp.dispatch_event('change')
         print(f"  金額入力OK: {unit_amount//100}×100=¥{unit_amount}")
     else:
-        digits = str(unit_amount // 100)
-        for d in digits:
+        for d in str(unit_amount // 100):
             try:
                 await page.click(f'text={d}', timeout=2000)
                 await page.wait_for_timeout(200)
             except: pass
         print(f"  数字ボタン入力: {unit_amount//100}")
 
-    # ⑥ セット
+    # ⑦ セット
     try:
         await page.click('text=セット', timeout=5000)
         await page.wait_for_timeout(1000)
@@ -561,15 +491,7 @@ async def add_to_cart_combo(page, bets, bet_type):
     except Exception as e:
         print(f"  セット失敗: {e}")
 
-    # カゴ確認
-    cart = await page.evaluate(r"""
-        () => {
-            const m = document.body.innerText.match(/件数[：:]?\s*(\d+)\/\d+件/);
-            if(m) return m[1];
-            const m2 = document.body.innerText.match(/件数[：:]?\s*(\d+)/);
-            return m2 ? m2[1] : '不明';
-        }
-    """)
+    cart = await page.evaluate("() => { var m=document.body.innerText.match(/件数[：:]?\s*(\d+)/); return m?m[1]:'不明'; }")
     print(f"カゴ件数: {cart}")
 
 
