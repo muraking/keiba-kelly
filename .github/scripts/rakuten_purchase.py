@@ -39,6 +39,7 @@ VENUE_TO_CODE = {
 
 LOGIN_URL = "https://keiba.rakuten.co.jp/"
 BET_URL   = "https://bet.keiba.rakuten.co.jp/bet/odds/"
+BET_NORMAL_URL = "https://bet.keiba.rakuten.co.jp/bet/purchase/"
 
 
 def get_today():
@@ -378,24 +379,40 @@ async def add_to_cart_combo(page, bets, bet_type):
     print(f"{label}フォーメーション選択中...")
 
     # ① 現在の式別タブ一覧を確認してからクリック
-    tab_label = '馬連' if bet_type == 'exacta' else 'ワイド'
-    # 式別タブ: 楽天競馬bet画面では <a> テキストで式別が並ぶ
+    # 式別ラベル: 馬連=馬連 or 馬複（帯広=ばんえい）、ワイド=ワイド
+    if bet_type == 'exacta':
+        tab_labels = ['馬連', '馬複']  # 馬連を先に試し、なければ馬複
+    else:
+        tab_labels = ['ワイド']
+
+    # 通常投票画面に遷移（式別タブが表示されるページ）
+    current_url = page.url
+    if 'odds' in current_url:
+        normal_url = current_url.replace('/odds/', '/purchase/')
+        print(f"  通常投票に遷移: {normal_url}")
+        await page.goto(normal_url, wait_until='domcontentloaded', timeout=TIMEOUT)
+        await page.wait_for_timeout(2000)
+
+    # 式別タブをクリック（馬連→馬複の順で試す）
     tab_clicked = False
-    try:
-        # 完全一致する <a> をクリック
-        loc = page.locator(f'a:text-is("{tab_label}")')
-        cnt = await loc.count()
-        print(f"  式別タブ '{tab_label}' 候補数: {cnt}")
-        if cnt > 0:
-            await loc.first.click(timeout=5000)
-            await page.wait_for_timeout(1000)
-            print(f"  式別タブ '{tab_label}' OK")
-            tab_clicked = True
-    except Exception as e:
-        print(f"  式別タブ '{tab_label}' 失敗: {e}")
+    tab_label = tab_labels[0]
+    for try_label in tab_labels:
+        try:
+            loc = page.locator(f'a:text-is("{try_label}")')
+            cnt = await loc.count()
+            print(f"  式別タブ '{try_label}' 候補数: {cnt}")
+            if cnt > 0:
+                await loc.first.click(timeout=5000)
+                await page.wait_for_timeout(1000)
+                tab_label = try_label
+                print(f"  式別タブ '{try_label}' OK")
+                tab_clicked = True
+                break
+        except Exception as e:
+            print(f"  式別タブ '{try_label}' 失敗: {e}")
 
     if not tab_clicked:
-        pt = await page.evaluate("() => document.body.innerText.slice(0,300)")
+        pt = await page.evaluate("() => document.body.innerText.slice(0,400)")
         print(f"  ページテキスト: {pt}")
 
     # ② フォーメーション方式をクリック
