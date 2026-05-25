@@ -461,15 +461,46 @@ async def add_to_cart_combo(page, bets, bet_type):
     print(f"  馬1（軸）: {axis_nums}")
     print(f"  馬2（相手）: {partner_nums}")
 
-    # ④ 馬1列の馬番をクリック（全tdから馬番テキストの1番目）
+    # ④ 馬1列・馬2列の馬番をクリック
+    # 構造: cells[0]=枠番 cells[1]=馬番 cells[2]=馬名 cells[3]=騎手
+    #        cells[4]=単勝オッズ cells[5]=馬1ボタン cells[6]=馬2ボタン cells[7]=3着
+    # ヘッダー行(全通り)を除いたデータ行で馬番を探す
+
+    async def click_combo_horse(num, col_idx):
+        """フォーメーションの馬1(col_idx=5)または馬2(col_idx=6)列をクリック"""
+        result = await page.evaluate(f"""
+            () => {{
+                var tables = document.querySelectorAll('table');
+                for(var ti=0; ti<tables.length; ti++) {{
+                    var rows = tables[ti].querySelectorAll('tr');
+                    for(var ri=0; ri<rows.length; ri++) {{
+                        var cells = rows[ri].querySelectorAll('td');
+                        if(cells.length < 7) continue;
+                        // cells[1]が馬番
+                        var umaNum = cells[1].innerText.trim();
+                        if(umaNum === '{num}' || umaNum === '{num:02d}') {{
+                            // cells[{col_idx}]の aタグをクリック
+                            var targetCell = cells[{col_idx}];
+                            var a = targetCell ? targetCell.querySelector('a') : null;
+                            if(a) {{ a.click(); return 'a-click:uma' + {col_idx} - 4 + ':' + umaNum; }}
+                            if(targetCell) {{ targetCell.click(); return 'cell-click:' + umaNum; }}
+                        }}
+                    }}
+                }}
+                return false;
+            }}
+        """)
+        return result
+
+    print(f"  馬1（軸）: {axis_nums}")
     for num in axis_nums:
-        result = await page.evaluate(f"() => {{ var cells=document.querySelectorAll('td'); var count=0; for(var i=0;i<cells.length;i++){{ var t=cells[i].innerText.trim(); if(t==='{num}'||t==='{num:02d}'){{ count++; if(count===1){{ cells[i].click(); return 'uma1:'+count; }} }} }} return false; }}")
+        result = await click_combo_horse(num, 5)
         print(f"    馬1:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
-    # ⑤ 馬2列の馬番をクリック（全tdから馬番テキストの2番目）
+    print(f"  馬2（相手）: {partner_nums}")
     for num in partner_nums:
-        result = await page.evaluate(f"() => {{ var cells=document.querySelectorAll('td'); var count=0; for(var i=0;i<cells.length;i++){{ var t=cells[i].innerText.trim(); if(t==='{num}'||t==='{num:02d}'){{ count++; if(count===2){{ cells[i].click(); return 'uma2:'+count; }} }} }} return false; }}")
+        result = await click_combo_horse(num, 6)
         print(f"    馬2:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
