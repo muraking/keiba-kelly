@@ -665,12 +665,58 @@ async def purchase(page, venue, race_num, bets, today):
     cart_text = await page.evaluate("() => document.body.innerText.slice(0,500)")
     print(f"  確認前ページ(先頭500): {cart_text[:300]}")
     try:
-        # 「投票内容を確認する」ボタンを探す
-        loc = page.locator('text=投票内容を確認する')
-        cnt = await loc.count()
-        print(f"  '投票内容を確認する' 候補数: {cnt}")
-        if cnt > 0:
-            await loc.first.click(timeout=10000)
+        # カゴエリアの「投票内容を確認する」ボタンを探す
+        # input[type=submit], button, a.voteConfirmBtn など複数の形式を試す
+        confirm_result = await page.evaluate("""
+            () => {
+                // input[type=submit] or input[type=button] でテキスト一致
+                const inputs = document.querySelectorAll('input[type=submit], input[type=button]');
+                for(const inp of inputs) {
+                    if(inp.value && inp.value.includes('投票内容を確認')) {
+                        inp.scrollIntoView({behavior:'instant',block:'center'});
+                        inp.click();
+                        return 'input:' + inp.value;
+                    }
+                }
+                // button要素
+                const btns = document.querySelectorAll('button');
+                for(const btn of btns) {
+                    if(btn.innerText && btn.innerText.includes('投票内容を確認')) {
+                        btn.scrollIntoView({behavior:'instant',block:'center'});
+                        btn.click();
+                        return 'button:' + btn.innerText.trim();
+                    }
+                }
+                // class名にvoteやconfirmが含まれるa要素
+                const links = document.querySelectorAll('a.voteBtn, a.confirmBtn, a[class*=vote], a[class*=confirm]');
+                for(const a of links) {
+                    if(a.innerText && a.innerText.includes('投票内容を確認')) {
+                        a.scrollIntoView({behavior:'instant',block:'center'});
+                        a.click();
+                        return 'a-class:' + a.className;
+                    }
+                }
+                // 全a要素からカゴ右側のボタンを探す（href=/bet/confirmなど）
+                const allA = document.querySelectorAll('a');
+                for(const a of allA) {
+                    if(a.innerText && a.innerText.trim() === '投票内容を確認する') {
+                        a.scrollIntoView({behavior:'instant',block:'center'});
+                        a.click();
+                        return 'a-exact:' + (a.href||'') + ' class:' + a.className;
+                    }
+                }
+                // 全要素の確認ボタン情報をデバッグ出力
+                const allElems = document.querySelectorAll('a, button, input');
+                const matches = [];
+                for(const el of allElems) {
+                    const t = (el.innerText || el.value || '').trim();
+                    if(t.includes('投票')) matches.push(el.tagName+':'+t.slice(0,30)+' href:'+(el.href||'')+' class:'+el.className);
+                }
+                return 'debug:' + matches.join(' | ');
+            }
+        """)
+        print(f"  確認ボタン結果: {confirm_result}")
+        if confirm_result and not confirm_result.startswith('debug:'):
             await page.wait_for_timeout(3000)
             confirm_url = page.url
             confirm_text = await page.evaluate("() => document.body.innerText.slice(0,300)")
