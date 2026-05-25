@@ -466,41 +466,47 @@ async def add_to_cart_combo(page, bets, bet_type):
     #        cells[4]=単勝オッズ cells[5]=馬1ボタン cells[6]=馬2ボタン cells[7]=3着
     # ヘッダー行(全通り)を除いたデータ行で馬番を探す
 
-    async def click_combo_horse(num, col_idx):
-        """フォーメーションの馬1(col_idx=5)または馬2(col_idx=6)列をクリック"""
-        result = await page.evaluate(f"""
+    async def click_combo_horse(num, col_offset):
+        """フォーメーションの馬番ボタンをクリック（単勝click_horseと同方式）
+        col_offset: 1=馬1列, 2=馬2列 (baseIdx=4から+offset)
+        """
+        clicked = await page.evaluate(f"""
             () => {{
-                var tables = document.querySelectorAll('table');
-                for(var ti=0; ti<tables.length; ti++) {{
-                    var rows = tables[ti].querySelectorAll('tr');
-                    for(var ri=0; ri<rows.length; ri++) {{
-                        var cells = rows[ri].querySelectorAll('td');
-                        if(cells.length < 7) continue;
-                        // cells[1]が馬番
-                        var umaNum = cells[1].innerText.trim();
-                        if(umaNum === '{num}' || umaNum === '{num:02d}') {{
-                            // cells[{col_idx}]の aタグをクリック
-                            var targetCell = cells[{col_idx}];
-                            var a = targetCell ? targetCell.querySelector('a') : null;
-                            if(a) {{ a.click(); return 'a-click:uma' + {col_idx} - 4 + ':' + umaNum; }}
-                            if(targetCell) {{ targetCell.click(); return 'cell-click:' + umaNum; }}
+                const tables = document.querySelectorAll('table');
+                for (const table of tables) {{
+                    const rows = table.querySelectorAll('tr');
+                    for (const row of rows) {{
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length < 6) continue;
+                        const col0 = cells[0]?.innerText?.trim();
+                        const col1 = cells[1]?.innerText?.trim();
+                        const col0IsNum = /^[0-9]{{1,2}}$/.test(col0);
+                        const col1IsNum = /^[0-9]{{1,2}}$/.test(col1);
+                        if (!col0IsNum || !col1IsNum) continue;
+                        // col1が馬番
+                        if (col1 === '{num}' || col1 === '{num:02d}') {{
+                            const idx = 4 + {col_offset};
+                            const a = cells[idx]?.querySelector('a');
+                            if (a) {{ a.click(); return 'a_click:col' + idx + ':' + col1; }}
+                            cells[idx]?.click();
+                            return 'cell_click:col' + idx + ':' + col1;
                         }}
                     }}
                 }}
                 return false;
             }}
         """)
-        return result
+        return clicked
 
     print(f"  馬1（軸）: {axis_nums}")
     for num in axis_nums:
-        result = await click_combo_horse(num, 5)
+        result = await click_combo_horse(num, 1)
         print(f"    馬1:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
     print(f"  馬2（相手）: {partner_nums}")
     for num in partner_nums:
-        result = await click_combo_horse(num, 6)
+        result = await click_combo_horse(num, 2)
         print(f"    馬2:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
