@@ -661,9 +661,24 @@ async def purchase(page, venue, race_num, bets, today):
 
     # 「投票内容を確認する」ボタン
     print("投票内容を確認する...")
+    # まずカゴの件数と状態を再確認
+    cart_text = await page.evaluate("() => document.body.innerText.slice(0,500)")
+    print(f"  確認前ページ(先頭500): {cart_text[:300]}")
     try:
-        await page.click('text=投票内容を確認する')
-        await page.wait_for_timeout(3000)
+        # 「投票内容を確認する」ボタンを探す
+        loc = page.locator('text=投票内容を確認する')
+        cnt = await loc.count()
+        print(f"  '投票内容を確認する' 候補数: {cnt}")
+        if cnt > 0:
+            await loc.first.click(timeout=10000)
+            await page.wait_for_timeout(3000)
+            confirm_url = page.url
+            confirm_text = await page.evaluate("() => document.body.innerText.slice(0,300)")
+            print(f"  確認後URL: {confirm_url}")
+            print(f"  確認後テキスト: {confirm_text[:200]}")
+        else:
+            print("  ⚠️ 確認ボタンが見つかりません")
+            return False
     except Exception as e:
         print(f"  ⚠️ 確認ボタンエラー: {e}")
         return False
