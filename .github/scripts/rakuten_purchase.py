@@ -632,7 +632,11 @@ async def purchase(page, venue, race_num, bets, today):
     total = sum(b['amount'] for b in bets)
     print(f"\n=== 購入: {venue} {race_num}R 合計¥{total:,} ===")
     for b in bets:
-        print(f"  {b['num']}番 {b.get('name','')} ¥{b['amount']:,}")
+        if 'num1' in b:
+            _lbl = '馬連' if b.get('bet_type') == 'exacta' else 'ワイド'
+            print(f"  {b['num1']}-{b['num2']}番 {_lbl} ¥{b['amount']:,}")
+        else:
+            print(f"  {b['num']}番 {b.get('name','')} ¥{b['amount']:,}")
 
     # レースページへ移動
     ok = await navigate_to_race(page, venue, race_num, today)
