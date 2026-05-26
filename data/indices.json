@@ -31446,7 +31446,7 @@
     "auto_buy_max": 3000,
     "auto_buy_skip_fav": true,
     "norm_method": "softmax",
-    "max_bets": 3,
+    "max_bets": 4,
     "auto_buy_skip_fav_odds": 1.7,
     "sm_winrate_filter": 3,
     "stop_loss_enabled": true,
