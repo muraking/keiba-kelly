@@ -498,27 +498,27 @@ async def add_to_cart_combo(page, bets, bet_type):
         """)
         return clicked
 
-    # 全テーブルの行構造を詳細確認
-    cell5_html = await page.evaluate("""
-        () => {
-            var tables = document.querySelectorAll('table');
-            var out = 'total_tables:' + tables.length + '\n';
-            for(var ti=0; ti<tables.length; ti++) {
-                var rows = tables[ti].querySelectorAll('tr');
-                out += 'tbl' + ti + ' rows:' + rows.length + '\n';
-                for(var ri=0; ri<Math.min(3, rows.length); ri++) {
-                    var cells = rows[ri].querySelectorAll('td');
-                    out += '  R' + ri + ' cells:' + cells.length;
-                    if(cells.length > 0) out += ' c0="' + cells[0].innerText.trim().slice(0,5) + '"';
-                    if(cells.length > 1) out += ' c1="' + cells[1].innerText.trim().slice(0,5) + '"';
-                    if(cells.length > 5) out += ' c5_html="' + cells[5].innerHTML.slice(0,60) + '"';
-                    out += '\n';
-                }
-            }
-            return out;
-        }
-    """)
-    print(f"  詳細構造:\n{cell5_html}")
+    # cells[5]HTMLを確認（文字列連結でSyntaxError回避）
+    cell5_html = await page.evaluate(
+        "() => {"
+        "  var tables = document.querySelectorAll('table');"
+        "  for(var ti=0; ti<tables.length; ti++) {"
+        "    var rows = tables[ti].querySelectorAll('tr');"
+        "    for(var ri=0; ri<rows.length; ri++) {"
+        "      var cells = rows[ri].querySelectorAll('td');"
+        "      if(cells.length < 6) continue;"
+        "      var c0 = cells[0].innerText.trim();"
+        "      var c1 = cells[1].innerText.trim();"
+        "      if(/^[0-9]{1,2}$/.test(c0) && /^[0-9]{1,2}$/.test(c1)) {"
+        "        return 'c0=' + c0 + ' c1=' + c1 + ' c5=' + cells[5].innerHTML.slice(0,80);"
+        "      }"
+        "    }"
+        "  }"
+        "  return 'not found';"
+        "}"
+    )
+    print(f"  cells[5]確認: {cell5_html}")
+
 
     print(f"  馬1（軸）: {axis_nums}")
     for num in axis_nums:
