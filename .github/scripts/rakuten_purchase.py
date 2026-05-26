@@ -468,7 +468,7 @@ async def add_to_cart_combo(page, bets, bet_type):
 
     async def click_combo_horse(num, col_offset):
         """フォーメーションの馬番ボタンをクリック
-        col_offset: 1=馬1列, 2=馬2列
+        col_offset: 0=馬1列(cells[4]=kaime1), 1=馬2列(cells[5]=kaime2)
         帯広: cells[0]=枠番, cells[1]=馬番, cells[4+offset]=ボタン
         浦和等: cells[0]=枠番(=馬番), cells[1]=馬名, cells[4+offset]=ボタン
         → cells[0]が馬番と一致する行を探す
@@ -509,13 +509,13 @@ async def add_to_cart_combo(page, bets, bet_type):
 
     print(f"  馬1（軸）: {axis_nums}")
     for num in axis_nums:
-        result = await click_combo_horse(num, 1)
+        result = await click_combo_horse(num, 0)  # cells[4]=kaime1
         print(f"    馬1:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
     print(f"  馬2（相手）: {partner_nums}")
     for num in partner_nums:
-        result = await click_combo_horse(num, 2)
+        result = await click_combo_horse(num, 1)  # cells[5]=kaime2
         print(f"    馬2:{num}番: {result or 'NG'}")
         await page.wait_for_timeout(500)
 
