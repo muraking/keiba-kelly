@@ -467,57 +467,44 @@ async def add_to_cart_combo(page, bets, bet_type):
     # ヘッダー行(全通り)を除いたデータ行で馬番を探す
 
     async def click_combo_horse(num, col_offset):
-        """フォーメーションの馬番ボタンをクリック（単勝click_horseと同方式）
-        col_offset: 1=馬1列, 2=馬2列 (baseIdx=4から+offset)
+        """フォーメーションの馬番ボタンをクリック
+        col_offset: 1=馬1列, 2=馬2列
+        帯広: cells[0]=枠番, cells[1]=馬番, cells[4+offset]=ボタン
+        浦和等: cells[0]=枠番(=馬番), cells[1]=馬名, cells[4+offset]=ボタン
+        → cells[0]が馬番と一致する行を探す
         """
-        clicked = await page.evaluate(f"""
-            () => {{
-                const tables = document.querySelectorAll('table');
-                for (const table of tables) {{
-                    const rows = table.querySelectorAll('tr');
-                    for (const row of rows) {{
-                        const cells = row.querySelectorAll('td');
-                        if (cells.length < 6) continue;
-                        const col0 = cells[0]?.innerText?.trim();
-                        const col1 = cells[1]?.innerText?.trim();
-                        const col0IsNum = /^[0-9]{{1,2}}$/.test(col0);
-                        const col1IsNum = /^[0-9]{{1,2}}$/.test(col1);
-                        if (!col0IsNum || !col1IsNum) continue;
-                        // col1が馬番
-                        if (col1 === '{num}' || col1 === '{num:02d}') {{
-                            const idx = 4 + {col_offset};
-                            const a = cells[idx]?.querySelector('a');
-                            if (a) {{ a.click(); return 'a_click:col' + idx + ':' + col1; }}
-                            cells[idx]?.click();
-                            return 'cell_click:col' + idx + ':' + col1;
-                        }}
-                    }}
-                }}
-                return false;
-            }}
-        """)
+        num_str = str(num)
+        num_str2 = f"{num:02d}"
+        clicked = await page.evaluate(
+            f"() => {{"
+            f"  const tables = document.querySelectorAll('table');"
+            f"  for (const table of tables) {{"
+            f"    const rows = table.querySelectorAll('tr');"
+            f"    for (const row of rows) {{"
+            f"      const cells = row.querySelectorAll('td');"
+            f"      if (cells.length < 5) continue;"
+            f"      const c0 = cells[0].innerText.trim();"
+            f"      const c1 = cells[1].innerText.trim();"
+            f"      const c0ok = c0 === '{num_str}' || c0 === '{num_str2}';"
+            f"      const c1ok = /^[0-9]{{1,2}}$/.test(c1) && (c1 === '{num_str}' || c1 === '{num_str2}');"
+            f"      if (!c0ok && !c1ok) continue;"
+            f"      if (!/^[0-9]{{1,2}}$/.test(c0)) continue;"
+            f"      const idx = 4 + {col_offset};"
+            f"      if (cells.length <= idx) continue;"
+            f"      const a = cells[idx].querySelector('a');"
+            f"      if (a) {{ a.click(); return 'a_click:c0=' + c0 + ':col' + idx; }}"
+            f"      cells[idx].click();"
+            f"      return 'cell_click:c0=' + c0 + ':col' + idx;"
+            f"    }}"
+            f"  }}"
+            f"  return false;"
+            f"}}"
+        )
         return clicked
 
-    # cells[5]HTMLを確認（文字列連結でSyntaxError回避）
-    cell5_html = await page.evaluate(
-        "() => {"
-        "  var tables = document.querySelectorAll('table');"
-        "  for(var ti=0; ti<tables.length; ti++) {"
-        "    var rows = tables[ti].querySelectorAll('tr');"
-        "    for(var ri=0; ri<rows.length; ri++) {"
-        "      var cells = rows[ri].querySelectorAll('td');"
-        "      if(cells.length < 6) continue;"
-        "      var c0 = cells[0].innerText.trim();"
-        "      var c1 = cells[1].innerText.trim();"
-        "      if(/^[0-9]{1,2}$/.test(c0) && /^[0-9]{1,2}$/.test(c1)) {"
-        "        return 'c0=' + c0 + ' c1=' + c1 + ' c5=' + cells[5].innerHTML.slice(0,80);"
-        "      }"
-        "    }"
-        "  }"
-        "  return 'not found';"
-        "}"
-    )
-    print(f"  cells[5]確認: {cell5_html}")
+    # 構造確認済み: cells[0]=枠番(馬番), cells[1]=馬名, cells[4+offset]=ボタン
+    print("  フォーメーション構造確認: cells[0]=枠番(馬番), cells[4]=馬1ボタン, cells[5]=馬2ボタン")
+
 
 
     print(f"  馬1（軸）: {axis_nums}")
