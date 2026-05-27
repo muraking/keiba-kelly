@@ -451,18 +451,16 @@ async def add_to_cart_combo(page, bets, bet_type):
     else:
         print("  ⚠️ フォーメーション選択失敗 → 再試行")
         # フォーメーションボタンをJSで直接クリック
-        fmt_clicked = await page.evaluate("""
-            () => {
-                const els = document.querySelectorAll('a, button, input[type="button"]');
-                for (const el of els) {
-                    const t = (el.innerText || el.value || '').trim();
-                    if (t === 'フォーメーション' || t === 'フォーメーション\n') {
-                        el.click(); return true;
-                    }
-                }
-                return false;
-            }
-        """)
+        fmt_clicked = await page.evaluate(
+            "() => {"
+            "  const els = document.querySelectorAll('a, button');"
+            "  for (const el of els) {"
+            "    const t = (el.innerText || el.value || '').trim();"
+            "    if (t === 'フォーメーション') { el.click(); return true; }"
+            "  }"
+            "  return false;"
+            "}"
+        )
         await page.wait_for_timeout(1500)
         if fmt_clicked:
             print("  フォーメーション JS再試行 OK")
