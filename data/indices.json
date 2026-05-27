@@ -15777,7 +15777,7 @@
     "auto_buy_skip_fav": true,
     "norm_method": "softmax",
     "max_bets": 3,
-    "auto_buy_skip_fav_odds": 1.7,
+    "auto_buy_skip_fav_odds": 1.5,
     "sm_winrate_filter": 3,
     "stop_loss_enabled": true,
     "stop_loss_pct": 70,
