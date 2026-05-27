@@ -422,6 +422,7 @@ async def add_to_cart_combo(page, bets, bet_type):
         print(f"  ページテキスト: {pt}")
 
     # ② フォーメーション方式をクリック（方式行の4番目のリンクがフォーメーション）
+    await page.wait_for_timeout(2000)  # 式別タブ切替後の描画待ち
     fmt_clicked = await page.evaluate(
         "() => {"
         "  const els = document.querySelectorAll('a, button, td');"
