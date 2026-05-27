@@ -449,7 +449,26 @@ async def add_to_cart_combo(page, bets, bet_type):
         await page.wait_for_timeout(1000)
         print("  フォーメーション OK")
     else:
-        print("  ⚠️ フォーメーション選択失敗")
+        print("  ⚠️ フォーメーション選択失敗 → 再試行")
+        # フォーメーションボタンをJSで直接クリック
+        fmt_clicked = await page.evaluate("""
+            () => {
+                const els = document.querySelectorAll('a, button, input[type="button"]');
+                for (const el of els) {
+                    const t = (el.innerText || el.value || '').trim();
+                    if (t === 'フォーメーション' || t === 'フォーメーション\n') {
+                        el.click(); return true;
+                    }
+                }
+                return false;
+            }
+        """)
+        await page.wait_for_timeout(1500)
+        if fmt_clicked:
+            print("  フォーメーション JS再試行 OK")
+        else:
+            print("  ⚠️ フォーメーション選択 最終失敗 → スキップ")
+            return
 
     # ③ ページ構造をダンプ（詳細版）
     page_info = await page.evaluate("() => { var t=document.querySelectorAll('table'); var r='tables:'+t.length; for(var i=0;i<Math.min(5,t.length);i++){var rows=t[i].querySelectorAll('tr');r+=' tbl'+i+'('+rows.length+'rows)';for(var j=0;j<Math.min(3,rows.length);j++){var cs=rows[j].querySelectorAll('td,th');r+=' R'+j+'['+Array.from(cs).map(function(c){return (c.innerText.trim()||c.innerHTML.trim()).slice(0,20);}).join('|')+']';}} return r; }")
