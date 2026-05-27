@@ -207,7 +207,7 @@ async def confirm_and_vote(page, total, label):
         inp = await page.query_selector('input[type="text"]:visible, input[type="number"]:visible, input[type="tel"]:visible')
         if inp:
             await inp.click()
-            await inp.triple_click()
+            await inp.click(click_count=3)
             await inp.fill(str(total))
             await inp.dispatch_event('input')
             await inp.dispatch_event('change')
