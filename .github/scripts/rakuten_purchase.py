@@ -412,6 +412,7 @@ async def add_to_cart_combo(page, bets, bet_type):
                 tab_label = try_label
                 print(f"  式別タブ '{try_label}' OK")
                 tab_clicked = True
+                await page.wait_for_timeout(1500)  # 式別切替後の描画待ち
                 break
         except Exception as e:
             print(f"  式別タブ '{try_label}' 失敗: {e}")
@@ -420,53 +421,29 @@ async def add_to_cart_combo(page, bets, bet_type):
         pt = await page.evaluate("() => document.body.innerText.slice(0,400)")
         print(f"  ページテキスト: {pt}")
 
-    # ② フォーメーション方式をクリック
-    fmt_clicked = False
-    for selector in ['text=フォーメーション', '.method a', '#method a', 'table.method td a']:
-        try:
-            if 'text=' in selector:
-                # 完全一致するボタンを探す（説明文のdlではなくリンクを優先）
-                loc = page.locator('a:has-text("フォーメーション"), button:has-text("フォーメーション"), input[value="フォーメーション"]')
-                cnt = await loc.count()
-                if cnt > 0:
-                    await loc.first.click(timeout=3000)
-                    fmt_clicked = True
-                    break
-            else:
-                elements = await page.query_selector_all(selector)
-                for el in elements:
-                    t = (await el.inner_text()).strip()
-                    if 'フォーメーション' in t and len(t) < 10:
-                        await el.click()
-                        fmt_clicked = True
-                        break
-                if fmt_clicked:
-                    break
-        except Exception:
-            continue
-
+    # ② フォーメーション方式をクリック（方式行の4番目のリンクがフォーメーション）
+    fmt_clicked = await page.evaluate(
+        "() => {"
+        "  const els = document.querySelectorAll('a, button, td');"
+        "  for (const el of els) {"
+        "    const t = (el.innerText || el.textContent || '').trim();"
+        "    if (t.includes('フォーメーション') && t.length < 15) {"
+        "      el.click(); return 'found:' + t;"
+        "    }"
+        "  }"
+        "  return false;"
+        "}"
+    )
     if fmt_clicked:
-        await page.wait_for_timeout(1000)
+        print(f"  フォーメーション発見: {fmt_clicked}")
+        fmt_clicked = True
+
+    await page.wait_for_timeout(1000)
+    if fmt_clicked:
         print("  フォーメーション OK")
     else:
-        print("  ⚠️ フォーメーション選択失敗 → 再試行")
-        # フォーメーションボタンをJSで直接クリック
-        fmt_clicked = await page.evaluate(
-            "() => {"
-            "  const els = document.querySelectorAll('a, button');"
-            "  for (const el of els) {"
-            "    const t = (el.innerText || el.value || '').trim();"
-            "    if (t === 'フォーメーション') { el.click(); return true; }"
-            "  }"
-            "  return false;"
-            "}"
-        )
-        await page.wait_for_timeout(1500)
-        if fmt_clicked:
-            print("  フォーメーション JS再試行 OK")
-        else:
-            print("  ⚠️ フォーメーション選択 最終失敗 → スキップ")
-            return
+        print("  ⚠️ フォーメーション選択失敗 → スキップ")
+        return False
 
     # ③ ページ構造をダンプ（詳細版）
     page_info = await page.evaluate("() => { var t=document.querySelectorAll('table'); var r='tables:'+t.length; for(var i=0;i<Math.min(5,t.length);i++){var rows=t[i].querySelectorAll('tr');r+=' tbl'+i+'('+rows.length+'rows)';for(var j=0;j<Math.min(3,rows.length);j++){var cs=rows[j].querySelectorAll('td,th');r+=' R'+j+'['+Array.from(cs).map(function(c){return (c.innerText.trim()||c.innerHTML.trim()).slice(0,20);}).join('|')+']';}} return r; }")
@@ -688,8 +665,11 @@ async def purchase(page, venue, race_num, bets, today):
         # 馬連・ワイドの場合（add_to_cart_combo が式別選択〜セットまで一括処理）
         bet_type = combo_bets[0].get('bet_type')
         label = '馬連' if bet_type == 'exacta' else 'ワイド'
-        await add_to_cart_combo(page, combo_bets, bet_type)
+        cart_ok = await add_to_cart_combo(page, combo_bets, bet_type)
         await page.screenshot(path=f"rakuten_02_cart_{bet_type}.png")
+        if cart_ok is False:
+            print("  ❌ フォーメーション失敗のため購入スキップ")
+            return False
         # DRY RUN
         if DRY_RUN:
             print("\n========== DRY RUN MODE ==========")
