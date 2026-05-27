@@ -1,0 +1,516 @@
+"""
+楽天競馬 単勝→馬連→ワイド 順次実行テストスクリプト
+DRY_RUN=1: 投票確認画面の直前で停止（実際には投票しない）
+DRY_RUN=0: 実際に投票する
+
+使い方:
+  RAKUTEN_USER=xxx RAKUTEN_PASS=xxx \
+  COURSE_NAME=浦和 RACE_NUM=1 \
+  DRY_RUN=1 \
+  python rakuten_test.py
+"""
+import asyncio
+import os
+import json
+import re
+from playwright.async_api import async_playwright
+
+RAKUTEN_USER = os.environ.get("RAKUTEN_USER", "")
+RAKUTEN_PASS = os.environ.get("RAKUTEN_PASS", "")
+COURSE_NAME  = os.environ.get("COURSE_NAME", "浦和")
+RACE_NUM     = int(os.environ.get("RACE_NUM", "1"))
+DRY_RUN      = os.environ.get("DRY_RUN", "1") != "0"
+TODAY        = os.environ.get("TODAY", "")
+
+TIMEOUT = 30000
+
+VENUE_TO_CODE = {
+    "帯広": "03", "帯広ば": "03", "門別": "04", "盛岡": "06", "水沢": "07",
+    "浦和": "08", "船橋": "09", "大井": "10", "川崎": "11",
+    "金沢": "12", "笠松": "13", "名古屋": "14", "園田": "17",
+    "姫路": "18", "高知": "31", "佐賀":  "32",
+}
+
+LOGIN_URL = "https://keiba.rakuten.co.jp/"
+BET_URL   = "https://bet.keiba.rakuten.co.jp/bet/odds/"
+
+
+def get_today():
+    from datetime import datetime, timezone, timedelta
+    return datetime.now(timezone(timedelta(hours=9))).strftime("%Y%m%d")
+
+
+def build_race_id(venue, race_num, today):
+    code = VENUE_TO_CODE.get(venue)
+    if not code:
+        raise ValueError(f"未対応の会場: {venue}")
+    return f"{today}{code}{str(race_num).zfill(8)}"
+
+
+# ===== ログイン =====
+async def login(page):
+    print("\n[ログイン]")
+    await page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await page.wait_for_timeout(2000)
+    try:
+        await page.click('text=マイページログイン')
+    except:
+        await page.click('a:has-text("ログイン")')
+    await page.wait_for_timeout(2000)
+
+    for selector in ['input[type="text"]', 'input[type="email"]']:
+        try:
+            el = await page.wait_for_selector(selector, timeout=5000)
+            await el.fill(RAKUTEN_USER)
+            break
+        except:
+            continue
+    await page.wait_for_timeout(300)
+    try:
+        btn = await page.wait_for_selector('button:has-text("次へ")', timeout=3000)
+        await btn.click()
+    except:
+        await page.keyboard.press('Enter')
+    await page.wait_for_timeout(3000)
+
+    for selector in ['input[type="password"]']:
+        try:
+            el = await page.wait_for_selector(selector, timeout=5000)
+            await el.fill(RAKUTEN_PASS)
+            break
+        except:
+            continue
+    await page.wait_for_timeout(300)
+    try:
+        btn = await page.wait_for_selector('button:has-text("次へ")', timeout=3000)
+        await btn.click()
+    except:
+        await page.keyboard.press('Enter')
+    await page.wait_for_timeout(4000)
+
+    text = await page.evaluate("() => document.body.innerText")
+    if "ログアウト" in text or "マイページ" in text:
+        print("  ✅ ログイン成功")
+        return True
+    print("  ❌ ログイン失敗")
+    return False
+
+
+# ===== 残高取得 =====
+async def get_balance(page):
+    await page.goto(BET_URL, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await page.wait_for_timeout(2000)
+    text = await page.evaluate("() => document.body.innerText")
+    m = re.search(r'購入限度額\s*([\d,]+)', text)
+    if m:
+        v = int(m.group(1).replace(',', ''))
+        print(f"  💴 購入限度額: ¥{v:,}")
+        return v
+    return None
+
+
+# ===== レースページへ移動 =====
+async def navigate_to_race(page, venue, race_num, today):
+    race_id = build_race_id(venue, race_num, today)
+    url = f"{BET_URL}RACEID/{race_id}"
+    print(f"  レースページ: {url}")
+    await page.goto(url, wait_until="domcontentloaded", timeout=TIMEOUT)
+    await page.wait_for_timeout(3000)
+
+    # 会場タブ
+    try:
+        tab = await page.query_selector(f'a:has-text("{venue}")')
+        if tab:
+            await tab.click()
+            await page.wait_for_timeout(2000)
+            print(f"  会場タブ: {venue}")
+    except:
+        pass
+
+    # レース番号
+    clicked = await page.evaluate(f"""() => {{
+        for (const el of document.querySelectorAll('a, td, li, span')) {{
+            if (el.innerText?.trim() === '{race_num}R') {{ el.click(); return true; }}
+        }}
+        return false;
+    }}""")
+    if clicked:
+        await page.wait_for_timeout(2000)
+        print(f"  レース番号: {race_num}R クリックOK")
+
+    text = await page.evaluate("() => document.body.innerText")
+    ok = "単勝" in text or "複勝" in text
+    print(f"  レースページ表示: {'OK' if ok else 'NG'}")
+    return ok
+
+
+# ===== 単勝購入 =====
+async def purchase_tan(page, venue, race_num, bets, today):
+    """単勝・複勝の購入"""
+    print(f"\n{'='*40}")
+    print(f"[単勝] {venue} {race_num}R")
+    for b in bets:
+        print(f"  {b['num']}番 {b.get('name','')} ¥{b['amount']:,}")
+
+    ok = await navigate_to_race(page, venue, race_num, today)
+    if not ok:
+        return False
+
+    await page.screenshot(path="test_01_tan_race.png")
+
+    # 馬番クリック
+    for bet in bets:
+        num = bet['num']
+        clicked = await page.evaluate(f"""() => {{
+            for (const table of document.querySelectorAll('table')) {{
+                let cnt = 0;
+                for (const row of table.querySelectorAll('tr')) {{
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length < 4) continue;
+                    const c0 = cells[0]?.innerText?.trim();
+                    const c1 = cells[1]?.innerText?.trim();
+                    if (!/^[0-9]{{1,2}}$/.test(c0)) continue;
+                    const isNum = /^[0-9]{{1,2}}$/.test(c1);
+                    cnt++;
+                    const numText = isNum ? c1 : String(cnt);
+                    const baseIdx = isNum ? 4 : 3;
+                    if (numText === '{num}') {{
+                        const a = cells[baseIdx]?.querySelector('a');
+                        if (a) {{ a.click(); return 'a:' + numText; }}
+                        cells[baseIdx]?.click();
+                        return 'cell:' + numText;
+                    }}
+                }}
+            }}
+            return false;
+        }}""")
+        print(f"  {num}番クリック: {clicked or 'NG'}")
+        await page.wait_for_timeout(1000)
+
+    # 金額入力
+    for bet in bets:
+        num = bet['num']
+        amount = bet['amount']
+        inputs = await page.query_selector_all('input[type="text"]')
+        for inp in inputs:
+            if not await inp.is_visible():
+                continue
+            row_num = await page.evaluate("""(el) => {
+                const row = el.closest('tr');
+                if (!row) return null;
+                for (const cell of row.querySelectorAll('td')) {
+                    const t = cell.innerText.trim();
+                    if (/^\\d{1,2}$/.test(t) && +t >= 1 && +t <= 18) return +t;
+                }
+                return null;
+            }""", inp)
+            if row_num == num:
+                await inp.fill(str(amount // 100))
+                await inp.dispatch_event('change')
+                print(f"  {num}番金額: ¥{amount:,}")
+                break
+
+    await page.screenshot(path="test_02_tan_cart.png")
+
+    if DRY_RUN:
+        print("  [DRY RUN] 単勝: 確認ボタン押下前で停止")
+        return True
+
+    return await confirm_and_vote(page, sum(b['amount'] for b in bets), "tan")
+
+
+# ===== 馬連・ワイド購入 =====
+async def purchase_combo(page, venue, race_num, bets, bet_type, today):
+    """馬連またはワイドのフォーメーション購入"""
+    label = '馬連' if bet_type == 'exacta' else 'ワイド'
+    print(f"\n{'='*40}")
+    print(f"[{label}] {venue} {race_num}R")
+    for b in bets:
+        print(f"  {b['num1']}-{b['num2']}番 ¥{b['amount']:,}")
+
+    ok = await navigate_to_race(page, venue, race_num, today)
+    if not ok:
+        return False
+
+    await page.screenshot(path=f"test_03_{bet_type}_race.png")
+
+    # 通常タブ
+    for label_try in ['通常', '通常投票']:
+        try:
+            await page.click(f'text={label_try}', timeout=3000)
+            await page.wait_for_timeout(1500)
+            print(f"  通常タブ: OK")
+            break
+        except:
+            pass
+
+    # 式別タブ
+    tab_candidates = ['馬連', '馬複'] if bet_type == 'exacta' else ['ワイド']
+    for try_label in tab_candidates:
+        try:
+            loc = page.locator(f'a:text-is("{try_label}")')
+            if await loc.count() > 0:
+                await loc.first.click(timeout=5000)
+                await page.wait_for_timeout(1000)
+                print(f"  式別タブ '{try_label}': OK")
+                break
+        except:
+            pass
+
+    # フォーメーション（ポーリング最大10秒）
+    fmt_clicked = False
+    for _retry in range(10):
+        await page.wait_for_timeout(1000)
+        result = await page.evaluate("""() => {
+            for (const el of document.querySelectorAll('a, button, td, li, span')) {
+                const t = (el.innerText || el.textContent || '').trim();
+                if (t.includes('フォーメーション') && t.length < 15) {
+                    el.click(); return 'found:' + t;
+                }
+            }
+            return false;
+        }""")
+        if result:
+            fmt_clicked = result
+            print(f"  フォーメーション({_retry+1}回目): {fmt_clicked}")
+            break
+        if _retry == 4:
+            pt = await page.evaluate("() => document.body.innerText.slice(0,300)")
+            print(f"  [5秒後ページ]: {pt}")
+
+    if not fmt_clicked:
+        pt = await page.evaluate("() => document.body.innerText.slice(0,300)")
+        print(f"  [10秒後ページ]: {pt}")
+        print(f"  ❌ フォーメーション選択失敗")
+        return False
+
+    await page.wait_for_timeout(1000)
+
+    # 馬番クリック
+    axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
+    partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))
+    print(f"  馬1（軸）: {axis_nums}")
+    print(f"  馬2（相手）: {partner_nums}")
+
+    async def click_combo_horse(num, col_offset):
+        ns, ns2 = str(num), f"{num:02d}"
+        return await page.evaluate(f"""() => {{
+            for (const table of document.querySelectorAll('table')) {{
+                for (const row of table.querySelectorAll('tr')) {{
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length < 5) continue;
+                    const c0 = cells[0].innerText.trim();
+                    const c1 = cells[1].innerText.trim();
+                    const c0ok = c0 === '{ns}' || c0 === '{ns2}';
+                    const c1ok = /^[0-9]{{1,2}}$/.test(c1) && (c1 === '{ns}' || c1 === '{ns2}');
+                    if (!c0ok && !c1ok) continue;
+                    if (!/^[0-9]{{1,2}}$/.test(c0)) continue;
+                    const idx = 4 + {col_offset};
+                    if (cells.length <= idx) continue;
+                    const a = cells[idx].querySelector('a');
+                    if (a) {{ a.click(); return 'a:c0=' + c0 + ':col' + idx; }}
+                    cells[idx].click();
+                    return 'cell:c0=' + c0 + ':col' + idx;
+                }}
+            }}
+            return false;
+        }}""")
+
+    for num in axis_nums:
+        r = await click_combo_horse(num, 0)
+        print(f"    馬1:{num}番: {r or 'NG'}")
+        await page.wait_for_timeout(500)
+
+    for num in partner_nums:
+        r = await click_combo_horse(num, 1)
+        print(f"    馬2:{num}番: {r or 'NG'}")
+        await page.wait_for_timeout(500)
+
+    kumi = await page.evaluate("() => { const m=document.body.innerText.match(/組数[：:]?\\s*(\\d+)/); return m?m[1]:'不明'; }")
+    print(f"  選択組数: {kumi}")
+
+    # 金額入力
+    unit_amount = bets[0]['amount']
+    inp = await page.query_selector('input[type=text]:visible, input[type=number]:visible')
+    if inp:
+        await inp.fill(str(unit_amount // 100))
+        await inp.dispatch_event('change')
+        print(f"  金額入力: {unit_amount//100}×100=¥{unit_amount}")
+    else:
+        print(f"  ⚠️ 金額入力欄なし")
+
+    # セット
+    try:
+        await page.click('text=セット', timeout=5000)
+        await page.wait_for_timeout(1000)
+        print("  セット: OK")
+    except Exception as e:
+        print(f"  セット失敗: {e}")
+
+    # セット後のカゴ確認
+    cart_text = await page.evaluate("() => document.body.innerText.slice(0,400)")
+    print(f"  [セット後カゴ]: {cart_text[:300]}")
+    cart = await page.evaluate("() => { const m=document.body.innerText.match(/件数[：:]?\\s*(\\d+)/); return m?m[1]:'不明'; }")
+    print(f"  カゴ件数: {cart}")
+
+    await page.screenshot(path=f"test_04_{bet_type}_cart.png")
+
+    if DRY_RUN:
+        print(f"  [DRY RUN] {label}: 確認ボタン押下前で停止")
+        return True
+
+    return await confirm_and_vote(page, sum(b['amount'] for b in bets), bet_type)
+
+
+# ===== 投票確認→投票 =====
+async def confirm_and_vote(page, total, bet_type_label):
+    print(f"\n[投票確認] 合計¥{total:,}")
+
+    # 確認ボタン
+    confirm_result = await page.evaluate("""() => {
+        for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
+            const t = (el.value || el.innerText || '').trim();
+            if (t.includes('投票内容を確認')) {
+                el.scrollIntoView({behavior:'instant',block:'center'});
+                el.click();
+                return el.tagName + ':' + el.className + ':' + t;
+            }
+        }
+        return null;
+    }""")
+    print(f"  確認ボタン: {confirm_result or 'NG'}")
+    if not confirm_result:
+        return False
+    await page.wait_for_timeout(3000)
+    await page.screenshot(path=f"test_05_{bet_type_label}_confirm.png")
+
+    async def handle_dialog(dialog):
+        print(f"  💬 ダイアログ: {dialog.message[:80]}")
+        await dialog.accept()
+    page.on('dialog', handle_dialog)
+
+    # 投票ループ（最大3回、毎回金額入力）
+    for step in range(3):
+        print(f"  投票する（ステップ{step+1}）...")
+
+        # 毎回投票金額を入力
+        inp = await page.query_selector('input[type="text"]:visible, input[type="number"]:visible, input[type="tel"]:visible')
+        if inp:
+            await inp.click()
+            await inp.triple_click()
+            await inp.fill(str(total))
+            await inp.dispatch_event('input')
+            await inp.dispatch_event('change')
+            await page.wait_for_timeout(500)
+            print(f"  投票金額入力: ¥{total:,}")
+
+        clicked = await page.evaluate("""() => {
+            const voteBtn = document.querySelector('a.voteBtn, input.voteBtn, button.voteBtn');
+            if (voteBtn) { voteBtn.scrollIntoView({behavior:'instant',block:'center'}); voteBtn.click(); return 'voteBtn:'+voteBtn.tagName; }
+            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
+                if ((el.value||el.innerText||'').trim() === '投票する') {
+                    el.scrollIntoView({behavior:'instant',block:'center'}); el.click();
+                    return '投票する:'+el.tagName;
+                }
+            }
+            return null;
+        }""")
+        print(f"  投票ボタン: {clicked or 'NG'}")
+        if not clicked:
+            break
+        await page.wait_for_timeout(4000)
+
+        text = await page.evaluate("() => document.body.innerText")
+        if '受付番号' in text or '投票が完了' in text or 'ありがとうございました' in text:
+            await page.screenshot(path=f"test_06_{bet_type_label}_done.png")
+            print("  ✅ 投票完了！")
+            return True
+        if '投票可能件数' in text and '投票内容確認' not in text:
+            await page.screenshot(path=f"test_06_{bet_type_label}_done.png")
+            print("  ✅ 投票完了！")
+            return True
+        if '投票内容確認' in text:
+            print(f"  → まだ確認画面。再試行...")
+            continue
+        break
+
+    await page.screenshot(path=f"test_06_{bet_type_label}_unknown.png")
+    print("  ⚠️ 投票結果不明")
+    return False
+
+
+# ===== メイン =====
+async def main():
+    global TODAY
+    if not TODAY:
+        TODAY = get_today()
+
+    print(f"=== 楽天競馬 順次購入テスト ===")
+    print(f"DRY_RUN: {DRY_RUN}")
+    print(f"会場: {COURSE_NAME} {RACE_NUM}R / 日付: {TODAY}")
+
+    # テスト用の買い目（実際はspat4_scheduler.pyから渡される）
+    # 単勝
+    tan_bets = [
+        {"num": 3, "name": "テスト馬A", "amount": 200, "norm": 0.3, "odds": 5.0},
+        {"num": 7, "name": "テスト馬B", "amount": 100, "norm": 0.2, "odds": 8.0},
+    ]
+    # 馬連
+    exacta_bets = [
+        {"num1": 3, "num2": 7, "amount": 200, "bet_type": "exacta"},
+        {"num1": 3, "num2": 5, "amount": 200, "bet_type": "exacta"},
+    ]
+    # ワイド
+    wide_bets = [
+        {"num1": 3, "num2": 7, "amount": 200, "bet_type": "wide"},
+        {"num1": 3, "num2": 5, "amount": 200, "bet_type": "wide"},
+    ]
+
+    results = {}
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True, args=['--no-sandbox'])
+        page = await browser.new_page()
+        page.set_default_timeout(TIMEOUT)
+
+        # ログイン（1回だけ）
+        login_ok = await login(page)
+        if not login_ok:
+            print("❌ ログイン失敗 → 終了")
+            await browser.close()
+            return
+
+        balance = await get_balance(page)
+
+        # ① 単勝
+        print(f"\n{'#'*40}")
+        print(f"# STEP 1: 単勝")
+        print(f"{'#'*40}")
+        results['tan'] = await purchase_tan(page, COURSE_NAME, RACE_NUM, tan_bets, TODAY)
+        print(f"単勝結果: {'✅ OK' if results['tan'] else '❌ NG'}")
+
+        # ② 馬連
+        print(f"\n{'#'*40}")
+        print(f"# STEP 2: 馬連")
+        print(f"{'#'*40}")
+        results['exacta'] = await purchase_combo(page, COURSE_NAME, RACE_NUM, exacta_bets, 'exacta', TODAY)
+        print(f"馬連結果: {'✅ OK' if results['exacta'] else '❌ NG'}")
+
+        # ③ ワイド
+        print(f"\n{'#'*40}")
+        print(f"# STEP 3: ワイド")
+        print(f"{'#'*40}")
+        results['wide'] = await purchase_combo(page, COURSE_NAME, RACE_NUM, wide_bets, 'wide', TODAY)
+        print(f"ワイド結果: {'✅ OK' if results['wide'] else '❌ NG'}")
+
+        await browser.close()
+
+    print(f"\n{'='*40}")
+    print(f"=== テスト結果サマリー ===")
+    for k, v in results.items():
+        print(f"  {k}: {'✅ OK' if v else '❌ NG'}")
+    print(f"{'='*40}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
