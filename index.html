@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260525.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260528.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -1231,6 +1231,34 @@ function loadSoftmaxSettings() {
   ['skip-local-maiden','skip-local-2yo','skip-local-3yo','skip-jra-maiden','skip-jra-2yo','skip-jra-3yo','skip-jra-hurdle'].forEach(id => {
     const el = document.getElementById(id);
     const key = id.replace(/-/g, '_');
+    if(el) el.checked = localStorage.getItem(key) === '1';
+  });
+  // 馬連設定
+  const buyExactaLocalEl = document.getElementById('buy-exacta-local');
+  const buyExactaLocalVal = localStorage.getItem('buy_exacta_local') === '1';
+  if(buyExactaLocalEl){ buyExactaLocalEl.checked = buyExactaLocalVal; document.getElementById('buy-exacta-local-label').textContent = buyExactaLocalVal ? 'ON' : 'OFF'; }
+  const buyExactaJraEl = document.getElementById('buy-exacta-jra');
+  const buyExactaJraVal = localStorage.getItem('buy_exacta_jra') === '1';
+  if(buyExactaJraEl){ buyExactaJraEl.checked = buyExactaJraVal; document.getElementById('buy-exacta-jra-label').textContent = buyExactaJraVal ? 'ON' : 'OFF'; }
+  const exactaAmtEl = document.getElementById('exacta-amount');
+  if(exactaAmtEl) exactaAmtEl.value = localStorage.getItem('exacta_amount') || '100';
+  ['exacta-top1','exacta-top2','exacta-rec1','exacta-rec2','exacta-rec3'].forEach(id => {
+    const el = document.getElementById(id);
+    const key = id.replace(/-/g,'_');
+    if(el) el.checked = localStorage.getItem(key) === '1';
+  });
+  // ワイド設定
+  const buyWideLocalEl = document.getElementById('buy-wide-local');
+  const buyWideLocalVal = localStorage.getItem('buy_wide_local') === '1';
+  if(buyWideLocalEl){ buyWideLocalEl.checked = buyWideLocalVal; document.getElementById('buy-wide-local-label').textContent = buyWideLocalVal ? 'ON' : 'OFF'; }
+  const buyWideJraEl = document.getElementById('buy-wide-jra');
+  const buyWideJraVal = localStorage.getItem('buy_wide_jra') === '1';
+  if(buyWideJraEl){ buyWideJraEl.checked = buyWideJraVal; document.getElementById('buy-wide-jra-label').textContent = buyWideJraVal ? 'ON' : 'OFF'; }
+  const wideAmtEl = document.getElementById('wide-amount');
+  if(wideAmtEl) wideAmtEl.value = localStorage.getItem('wide_amount') || '100';
+  ['wide-top1','wide-top2','wide-rec1','wide-rec2','wide-rec3'].forEach(id => {
+    const el = document.getElementById(id);
+    const key = id.replace(/-/g,'_');
     if(el) el.checked = localStorage.getItem(key) === '1';
   });
   const bpbEl2 = document.getElementById('buy-place-bet');
