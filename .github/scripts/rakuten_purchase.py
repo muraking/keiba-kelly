@@ -178,58 +178,52 @@ async def confirm_and_vote(page, total, label):
     cart_text = await page.evaluate("() => document.body.innerText.slice(0,300)")
     print(f"  確認前ページ: {cart_text[:200]}")
 
-    # 確認ボタンが有効になるまで最大10秒待機（btn-disabled対応）
-    confirm_result = None
-    for _retry in range(10):
-        await page.wait_for_timeout(1000)
-        confirm_result = await page.evaluate("""() => {
-            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
-                const t = (el.value || el.innerText || '').trim();
-                if (!t.includes('投票内容を確認')) continue;
-                if (el.classList && el.classList.contains('btn-disabled')) continue;
-                if (el.disabled) continue;
+    # 確認ボタンをクリック（旧コード方式: btn-disabledチェックなしでシンプルに）
+    confirm_result = await page.evaluate("""() => {
+        for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
+            const t = (el.value || el.innerText || '').trim();
+            if (t.includes('投票内容を確認')) {
                 el.scrollIntoView({behavior:'instant',block:'center'});
                 el.click();
                 return el.tagName + ':' + el.className + ':' + t;
             }
-            return null;
-        }""")
-        if confirm_result:
-            break
-        if _retry == 4:
-            pt = await page.evaluate("() => document.body.innerText.slice(0,200)")
-            print(f"  [5秒後確認ボタン待機中]: {pt}")
-    print(f"  確認ボタン: {confirm_result or 'NG（btn-disabled等）'}")
+        }
+        return null;
+    }""")
+    print(f"  確認ボタン: {confirm_result or 'NG'}")
     if not confirm_result:
         return False
     await page.wait_for_timeout(3000)
     await page.screenshot(path=f"rakuten_confirm_{label}.png")
+
+    # 確認後ページを表示（デバッグ）
+    confirm_page_text = await page.evaluate("() => document.body.innerText.slice(0,400)")
+    print(f"  確認後ページ: {confirm_page_text[:300]}")
 
     async def handle_dialog(dialog):
         print(f"  💬 ダイアログ: {dialog.message[:80]}")
         await dialog.accept()
     page.on('dialog', handle_dialog)
 
-    # 投票ループ（最大3回・毎回金額入力）
-    for step in range(3):
-        print(f"  投票する（ステップ{step+1}）...")
+    # 投票金額入力（1回だけ・旧コード方式のfill）
+    try:
+        inp = await page.query_selector('input[type="text"]:visible, input[type="number"]:visible, input[type="tel"]:visible')
+        if inp:
+            await inp.click()
+            await inp.fill(str(total))
+            await inp.dispatch_event('input')
+            await inp.dispatch_event('change')
+            await page.wait_for_timeout(500)
+            val = await inp.input_value()
+            print(f"  投票金額入力: ¥{total:,} (実際の値: {val})")
+        else:
+            print(f"  投票金額入力欄なし")
+    except Exception as e:
+        print(f"  投票金額入力エラー: {e}")
 
-        # React対応の投票金額入力（nativeInputValueSetterで確実に値を設定）
-        inp_result = await page.evaluate(f"""() => {{
-            const inp = document.querySelector('input[type="text"], input[type="number"], input[type="tel"]');
-            if (!inp) return 'no_input';
-            // React用: nativeInputValueSetterで値をセット
-            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-                window.HTMLInputElement.prototype, 'value'
-            ).set;
-            nativeInputValueSetter.call(inp, '{total}');
-            inp.dispatchEvent(new Event('input', {{ bubbles: true }}));
-            inp.dispatchEvent(new Event('change', {{ bubbles: true }}));
-            inp.dispatchEvent(new Event('blur', {{ bubbles: true }}));
-            return 'ok:' + inp.value;
-        }}""")
-        print(f"  投票金額入力: ¥{total:,} ({inp_result})")
-        await page.wait_for_timeout(800)
+    # 「投票する」ボタン（旧コード: range(2)、確認画面ならステップ2へそのまま再クリック）
+    for step in range(2):
+        print(f"  投票する（ステップ{step+1}）...")
 
         clicked = await page.evaluate("""() => {
             const voteBtn = document.querySelector('a.voteBtn, input.voteBtn, button.voteBtn');
@@ -245,10 +239,16 @@ async def confirm_and_vote(page, total, label):
                     return '投票する:' + el.tagName;
                 }
             }
-            return null;
+            // デバッグ: ボタン一覧
+            const all = [];
+            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
+                const t = (el.value||el.innerText||'').trim().slice(0,20);
+                if (t) all.push(t);
+            }
+            return 'NOTFOUND:' + all.slice(0,8).join('|');
         }""")
         print(f"  投票ボタン: {clicked or 'NG'}")
-        if not clicked:
+        if not clicked or clicked.startswith('NOTFOUND:'):
             break
         await page.wait_for_timeout(4000)
 
@@ -270,7 +270,8 @@ async def confirm_and_vote(page, total, label):
             print(f"  ✅ 投票完了！")
             return True
         if '投票内容確認' in text:
-            print(f"  → まだ確認画面。再試行...")
+            # 旧コード: 確認画面ならそのままステップ2へ（金額再入力なし）
+            print(f"  → 投票内容確認画面。ステップ2へ...")
             continue
         break
 
@@ -359,17 +360,13 @@ async def purchase_tan(page, venue, race_num, bets, today):
         }""", inp)
         combined = {b['num']: b['amount'] for b in bets}
         if row_num and row_num in combined:
-            amount_val = combined[row_num] // 100
-            # React対応: nativeInputValueSetterで確実に値をセット
-            await page.evaluate(f"""(el) => {{
-                const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-                setter.call(el, '{amount_val}');
-                el.dispatchEvent(new Event('input', {{ bubbles: true }}));
-                el.dispatchEvent(new Event('change', {{ bubbles: true }}));
-                el.dispatchEvent(new Event('blur', {{ bubbles: true }}));
-            }}""", inp)
+            amount_val = str(combined[row_num] // 100)
+            await inp.fill(amount_val)
+            await inp.dispatch_event('input')
+            await inp.dispatch_event('change')
+            await page.keyboard.press('Tab')
             print(f"  {row_num}番金額入力: ¥{combined[row_num]:,}")
-            await page.wait_for_timeout(500)
+            await page.wait_for_timeout(300)
 
     await page.screenshot(path="rakuten_tan_cart.png")
 
