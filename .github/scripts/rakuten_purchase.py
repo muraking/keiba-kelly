@@ -214,17 +214,22 @@ async def confirm_and_vote(page, total, label):
     for step in range(3):
         print(f"  投票する（ステップ{step+1}）...")
 
-        inp = await page.query_selector('input[type="text"]:visible, input[type="number"]:visible, input[type="tel"]:visible')
-        if inp:
-            await inp.click()
-            await inp.click(click_count=3)
-            await inp.fill('')
-            await inp.type(str(total), delay=50)
-            await inp.dispatch_event('input')
-            await inp.dispatch_event('change')
-            await page.keyboard.press('Tab')
-            await page.wait_for_timeout(800)
-            print(f"  投票金額入力: ¥{total:,}")
+        # React対応の投票金額入力（nativeInputValueSetterで確実に値を設定）
+        inp_result = await page.evaluate(f"""() => {{
+            const inp = document.querySelector('input[type="text"], input[type="number"], input[type="tel"]');
+            if (!inp) return 'no_input';
+            // React用: nativeInputValueSetterで値をセット
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, 'value'
+            ).set;
+            nativeInputValueSetter.call(inp, '{total}');
+            inp.dispatchEvent(new Event('input', {{ bubbles: true }}));
+            inp.dispatchEvent(new Event('change', {{ bubbles: true }}));
+            inp.dispatchEvent(new Event('blur', {{ bubbles: true }}));
+            return 'ok:' + inp.value;
+        }}""")
+        print(f"  投票金額入力: ¥{total:,} ({inp_result})")
+        await page.wait_for_timeout(800)
 
         clicked = await page.evaluate("""() => {
             const voteBtn = document.querySelector('a.voteBtn, input.voteBtn, button.voteBtn');
@@ -354,10 +359,17 @@ async def purchase_tan(page, venue, race_num, bets, today):
         }""", inp)
         combined = {b['num']: b['amount'] for b in bets}
         if row_num and row_num in combined:
-            await inp.fill(str(combined[row_num] // 100))
-            await inp.dispatch_event('change')
+            amount_val = combined[row_num] // 100
+            # React対応: nativeInputValueSetterで確実に値をセット
+            await page.evaluate(f"""(el) => {{
+                const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                setter.call(el, '{amount_val}');
+                el.dispatchEvent(new Event('input', {{ bubbles: true }}));
+                el.dispatchEvent(new Event('change', {{ bubbles: true }}));
+                el.dispatchEvent(new Event('blur', {{ bubbles: true }}));
+            }}""", inp)
             print(f"  {row_num}番金額入力: ¥{combined[row_num]:,}")
-            await page.wait_for_timeout(300)
+            await page.wait_for_timeout(500)
 
     await page.screenshot(path="rakuten_tan_cart.png")
 
