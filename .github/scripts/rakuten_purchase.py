@@ -178,18 +178,28 @@ async def confirm_and_vote(page, total, label):
     cart_text = await page.evaluate("() => document.body.innerText.slice(0,300)")
     print(f"  確認前ページ: {cart_text[:200]}")
 
-    confirm_result = await page.evaluate("""() => {
-        for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
-            const t = (el.value || el.innerText || '').trim();
-            if (t.includes('投票内容を確認')) {
+    # 確認ボタンが有効になるまで最大10秒待機（btn-disabled対応）
+    confirm_result = None
+    for _retry in range(10):
+        await page.wait_for_timeout(1000)
+        confirm_result = await page.evaluate("""() => {
+            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
+                const t = (el.value || el.innerText || '').trim();
+                if (!t.includes('投票内容を確認')) continue;
+                if (el.classList && el.classList.contains('btn-disabled')) continue;
+                if (el.disabled) continue;
                 el.scrollIntoView({behavior:'instant',block:'center'});
                 el.click();
                 return el.tagName + ':' + el.className + ':' + t;
             }
-        }
-        return null;
-    }""")
-    print(f"  確認ボタン: {confirm_result or 'NG'}")
+            return null;
+        }""")
+        if confirm_result:
+            break
+        if _retry == 4:
+            pt = await page.evaluate("() => document.body.innerText.slice(0,200)")
+            print(f"  [5秒後確認ボタン待機中]: {pt}")
+    print(f"  確認ボタン: {confirm_result or 'NG（btn-disabled等）'}")
     if not confirm_result:
         return False
     await page.wait_for_timeout(3000)
@@ -208,10 +218,12 @@ async def confirm_and_vote(page, total, label):
         if inp:
             await inp.click()
             await inp.click(click_count=3)
-            await inp.fill(str(total))
+            await inp.fill('')
+            await inp.type(str(total), delay=50)
             await inp.dispatch_event('input')
             await inp.dispatch_event('change')
-            await page.wait_for_timeout(500)
+            await page.keyboard.press('Tab')
+            await page.wait_for_timeout(800)
             print(f"  投票金額入力: ¥{total:,}")
 
         clicked = await page.evaluate("""() => {
