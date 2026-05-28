@@ -1166,7 +1166,21 @@ async function loadSoftmaxFromGithub() {
         if(localStorage.getItem('skip_jra_hurdle')==='1') skips.push('中央障害');
         return `スキップ: ${skips.length > 0 ? skips.join('・') : 'なし'}`;
       })(),
-    ];
+      (()=>{
+        if(!buyExactaLocal && !buyExactaJra) return null;
+        const tops = [exactaTop1 && '勝率1', exactaTop2 && '勝率2'].filter(Boolean).join('・') || '-';
+        const recs = [exactaRec1 && '推奨1', exactaRec2 && '推奨2', exactaRec3 && '推奨3'].filter(Boolean).join('・') || '-';
+        const where = [buyExactaLocal && '地方', buyExactaJra && '中央'].filter(Boolean).join('/');
+        return `馬連(${where}): 軸=${tops} 相手=${recs} ¥${exactaAmount}/点`;
+      })(),
+      (()=>{
+        if(!buyWideLocal && !buyWideJra) return null;
+        const tops = [wideTop1 && '勝率1', wideTop2 && '勝率2'].filter(Boolean).join('・') || '-';
+        const recs = [wideRec1 && '推奨1', wideRec2 && '推奨2', wideRec3 && '推奨3'].filter(Boolean).join('・') || '-';
+        const where = [buyWideLocal && '地方', buyWideJra && '中央'].filter(Boolean).join('/');
+        return `ワイド(${where}): 軸=${tops} 相手=${recs} ¥${wideAmount}/点`;
+      })(),
+    ].filter(v => v !== null);
     if(currentEl){
       currentEl.style.display = 'block';
       currentEl.innerHTML = '📋 現在の設定<br>' + lines.join('<br>');
