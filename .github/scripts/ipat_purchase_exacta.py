@@ -125,7 +125,7 @@ async def purchase(page, course_name, race_num, bets, bet_type):
         print(f"  {b['num1']}-{b['num2']}番 ¥{b['amount']:,}")
 
     # ① オッズ投票（Playwright click→ページ遷移を待つ）
-    await page.click('text=オッズ投票')
+    await page.tap('text=オッズ投票')
     await page.wait_for_timeout(2000)
     print(f"オッズ投票: {page.url}")
 
@@ -135,49 +135,49 @@ async def purchase(page, course_name, race_num, bets, bet_type):
     click_name = course_name if course_name in page_text else (course_base if course_base in page_text else course_name)
     if click_name != course_name:
         print(f"コース名変換: {course_name} → {click_name}")
-    await page.click(f'text={click_name}')
+    await page.tap(f'text={click_name}')
     await page.wait_for_timeout(2000)
 
-    # ③ レース番号（span.raceNumのテキストまたはdata-valueで選択）
-    clicked_race = await page.evaluate(f"""
-        () => {{
-            // span.raceNumのテキストで完全一致
-            const spans = document.querySelectorAll('span.raceNum');
-            for (const span of spans) {{
-                if (span.innerText.trim() === '{race_num}R') {{
-                    const a = span.closest('a');
-                    if (a) {{ a.click(); return 'span_match'; }}
-                }}
-            }}
-            // data-value=(race_num-1)で選択
-            const a = document.querySelector('a[data-value="{race_num - 1}"]');
-            if (a) {{ a.click(); return 'data_value'; }}
-            // フォールバック: innerTextに{race_num}Rを含む
-            const links = document.querySelectorAll('a');
-            for (const l of links) {{
-                if (l.innerText.includes('{race_num}R')) {{
-                    l.click(); return 'includes';
-                }}
-            }}
-            return false;
-        }}
-    """)
-    if not clicked_race:
-        raise Exception(f"{race_num}Rが見つかりません")
+    # ③ レース番号（Playwright tapで選択）
+    try:
+        el = await page.query_selector(f'a.raceList:has(span.raceNum)')
+        # span.raceNumのテキストでマッチするリンクをtap
+        race_el = None
+        race_links = await page.query_selector_all('a.raceList')
+        for rl in race_links:
+            span = await rl.query_selector('span.raceNum')
+            if span:
+                txt = (await span.inner_text()).strip()
+                if txt == f'{race_num}R':
+                    race_el = rl
+                    break
+        if race_el:
+            await race_el.tap()
+            clicked_race = 'tap_raceList'
+        else:
+            # フォールバック: data-value=(race_num-1)
+            race_el = await page.query_selector(f'a[data-value="{race_num - 1}"]')
+            if race_el:
+                await race_el.tap()
+                clicked_race = 'tap_data_value'
+            else:
+                raise Exception(f"{race_num}Rが見つかりません")
+    except Exception as e:
+        raise Exception(f"レース選択失敗: {e}")
     await page.wait_for_timeout(2000)
     print(f"レース選択: {race_num}R ({clicked_race}) / URL: {page.url}")
 
     # ④ 式別から選択
-    await page.click('text=式別から選択')
+    await page.tap('text=式別から選択')
     await page.wait_for_timeout(2000)
 
     # ⑤ 式別（馬連 or ワイド）
-    await page.click(f'text={bet_label}')
+    await page.tap(f'text={bet_label}')
     await page.wait_for_timeout(2000)
     print(f"式別→{bet_label}: OK / URL: {page.url}")
 
     # ⑥ フォーメーション
-    await page.click('text=フォーメーション')
+    await page.tap('text=フォーメーション')
     await page.wait_for_timeout(2000)
     print(f"フォーメーション: OK / URL: {page.url}")
 
