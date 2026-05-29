@@ -310,10 +310,12 @@ async def main():
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+        context = await browser.new_context(has_touch=True)
+        page = await context.new_page()
         page.set_default_timeout(TIMEOUT)
         await login(page)
         result = await purchase(page, COURSE_NAME, RACE_NUM, BETS, BET_TYPE)
+        await context.close()
         await browser.close()
         if not result:
             raise SystemExit(1)
