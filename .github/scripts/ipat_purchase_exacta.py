@@ -41,97 +41,64 @@ async def login(page):
 
 
 async def tap_horse(page, page_id, num):
-    """指定ページ（#uma1 or #uma2）内で馬番をjQuery tapイベントで選択
-    jQuery MobileはSPAなので、display:noneでもDOM上には存在する"""
-    # まずjQuery Mobileでページ切り替えを明示的に行う
-    await page.evaluate(f"""
-        () => {{
-            if (typeof $.mobile !== 'undefined') {{
-                $.mobile.changePage('#{page_id}', {{transition:'none'}});
-            }}
-        }}
-    """)
-    await page.wait_for_timeout(800)
-    result = await page.evaluate(f"""
-        () => {{
-            // display:noneでもIDで取得して操作
-            const pageEl = document.getElementById('{page_id}');
-            if (!pageEl) return 'no_page:{page_id}';
-            const a = pageEl.querySelector('a[data-value="{num}"]');
-            if (!a) return 'no_horse:{num}';
-            if (typeof $ !== 'undefined') {{
-                $(a).trigger('tap');
-                return 'tap:' + a.getAttribute('data-value') + ':selected=' + a.classList.contains('selected');
-            }}
-            ['touchstart','touchend','vclick','click'].forEach(evt => {{
-                a.dispatchEvent(new Event(evt, {{bubbles:true, cancelable:true}}));
-            }});
-            return 'events:' + num;
-        }}
-    """)
-    await page.wait_for_timeout(400)
+    """指定ページ（#uma1 or #uma2）内で馬番をPlaywright tap()で選択"""
+    # URLが正しいページに遷移しているか確認してからtap
+    try:
+        # Playwright の tap() を使用（jQuery Mobile の tap イベントを正しく発火）
+        selector = f'#{page_id} a[data-value="{num}"]'
+        el = await page.query_selector(selector)
+        if el:
+            await el.tap()
+            await page.wait_for_timeout(400)
+            # 選択確認
+            selected = await page.evaluate(f"""
+                () => {{
+                    const a = document.querySelector('#{page_id} a[data-value="{num}"]');
+                    return a ? a.classList.contains('selected') : false;
+                }}
+            """)
+            result = f'tap:selected={selected}'
+        else:
+            result = f'no_element:#{page_id} a[data-value="{num}"]'
+    except Exception as e:
+        result = f'error:{e}'
     print(f"    {num}番: {result}")
-    return result and 'no_' not in result
+    return 'tap:' in result
 
 
 async def click_next(page):
     """「次へ」ボタンをクリック（#uma1内）→ #uma2に遷移"""
-    result = await page.evaluate("""
-        () => {
-            const uma1 = document.getElementById('uma1');
-            if (!uma1) return 'no_uma1';
-            const links = uma1.querySelectorAll('a');
-            for (const a of links) {
-                if (a.innerText.trim() === '次へ') {
-                    if (typeof $ !== 'undefined') { $(a).trigger('tap'); return 'tap_next'; }
-                    a.click(); return 'click_next';
-                }
-            }
-            return 'no_next_btn';
-        }
-    """)
+    try:
+        el = await page.query_selector('#uma1 a:text("次へ")')
+        if el:
+            await el.tap()
+            result = 'tap_next'
+        else:
+            await page.tap('text=次へ')
+            result = 'tap_text'
+    except Exception as e:
+        result = f'error:{e}'
     await page.wait_for_timeout(2000)
-    # jQuery Mobileのページ遷移を待つ
-    await page.evaluate("""
-        () => {
-            if (typeof $.mobile !== 'undefined') {
-                $.mobile.changePage('#uma2', {transition:'none'});
-            }
-        }
-    """)
-    await page.wait_for_timeout(800)
-    print(f"  次へ: {result}")
+    print(f"  次へ: {result} / URL: {page.url}")
     return result
 
 
 async def click_odds_screen(page):
     """「オッズ選択画面へ」ボタンをクリック（#uma2内）→ #odseに遷移"""
-    result = await page.evaluate("""
-        () => {
-            const uma2 = document.getElementById('uma2');
-            if (!uma2) return 'no_uma2';
-            const links = uma2.querySelectorAll('a');
-            for (const a of links) {
-                const t = a.innerText.trim();
-                if (t === 'オッズ選択画面へ' || t === '金額入力画面へ') {
-                    if (typeof $ !== 'undefined') { $(a).trigger('tap'); return 'tap:' + t; }
-                    a.click(); return 'click:' + t;
-                }
-            }
-            return 'no_btn';
-        }
-    """)
+    try:
+        el = await page.query_selector('#uma2 a:text("オッズ選択画面へ")')
+        if not el:
+            el = await page.query_selector('#uma2 a:text("金額入力画面へ")')
+        if el:
+            await el.tap()
+            result = 'tap_odds_screen'
+        else:
+            await page.tap('text=オッズ選択画面へ')
+            result = 'tap_text'
+    except Exception as e:
+        result = f'error:{e}'
     await page.wait_for_timeout(2000)
-    # jQuery Mobileのページ遷移を待つ
-    await page.evaluate("""
-        () => {
-            if (typeof $.mobile !== 'undefined') {
-                $.mobile.changePage('#odse', {transition:'none'});
-            }
-        }
-    """)
-    await page.wait_for_timeout(800)
-    print(f"  オッズ選択画面へ: {result}")
+    print(f"  オッズ選択画面へ: {result} / URL: {page.url}")
     return result
 
 
@@ -157,15 +124,8 @@ async def purchase(page, course_name, race_num, bets, bet_type):
     for b in bets:
         print(f"  {b['num1']}-{b['num2']}番 ¥{b['amount']:,}")
 
-    # ① オッズ投票
-    await page.evaluate("""
-        () => {
-            const links = document.querySelectorAll('a');
-            for (const a of links) {
-                if (a.innerText.trim() === 'オッズ投票') { a.click(); return; }
-            }
-        }
-    """)
+    # ① オッズ投票（Playwright click→ページ遷移を待つ）
+    await page.click('text=オッズ投票')
     await page.wait_for_timeout(2000)
     print(f"オッズ投票: {page.url}")
 
@@ -175,62 +135,27 @@ async def purchase(page, course_name, race_num, bets, bet_type):
     click_name = course_name if course_name in page_text else (course_base if course_base in page_text else course_name)
     if click_name != course_name:
         print(f"コース名変換: {course_name} → {click_name}")
-    await page.evaluate(f"""
-        () => {{
-            const links = document.querySelectorAll('a');
-            for (const a of links) {{
-                if (a.innerText.trim() === '{click_name}') {{ a.click(); return; }}
-            }}
-        }}
-    """)
+    await page.click(f'text={click_name}')
     await page.wait_for_timeout(2000)
 
     # ③ レース番号
-    await page.evaluate(f"""
-        () => {{
-            const links = document.querySelectorAll('a');
-            for (const a of links) {{
-                if (a.innerText.trim() === '{race_num}R') {{ a.click(); return; }}
-            }}
-        }}
-    """)
+    await page.click(f'text={race_num}R')
     await page.wait_for_timeout(2000)
-    print(f"レース選択: {race_num}R")
+    print(f"レース選択: {race_num}R / URL: {page.url}")
 
     # ④ 式別から選択
-    await page.evaluate("""
-        () => {
-            const links = document.querySelectorAll('a');
-            for (const a of links) {
-                if (a.innerText.trim() === '式別から選択') { a.click(); return; }
-            }
-        }
-    """)
+    await page.click('text=式別から選択')
     await page.wait_for_timeout(2000)
 
     # ⑤ 式別（馬連 or ワイド）
-    await page.evaluate(f"""
-        () => {{
-            const links = document.querySelectorAll('a');
-            for (const a of links) {{
-                if (a.innerText.trim() === '{bet_label}') {{ a.click(); return; }}
-            }}
-        }}
-    """)
+    await page.click(f'text={bet_label}')
     await page.wait_for_timeout(2000)
-    print(f"式別→{bet_label}: OK")
+    print(f"式別→{bet_label}: OK / URL: {page.url}")
 
     # ⑥ フォーメーション
-    await page.evaluate("""
-        () => {
-            const links = document.querySelectorAll('a');
-            for (const a of links) {
-                if (a.innerText.trim() === 'フォーメーション') { a.click(); return; }
-            }
-        }
-    """)
+    await page.click('text=フォーメーション')
     await page.wait_for_timeout(2000)
-    print("フォーメーション: OK")
+    print(f"フォーメーション: OK / URL: {page.url}")
 
     # ⑦ 1頭目選択（#uma1）
     axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
@@ -272,27 +197,24 @@ async def purchase(page, course_name, race_num, bets, bet_type):
     await page.screenshot(path=f"ipat_{bet_type}_odds.png")
 
     # ⑪ オッズ選択画面で全選択（ページ内全選択）
-    select_result = await page.evaluate("""
-        () => {
-            const odse = document.getElementById('odse');
-            if (!odse) return 'no_odse';
-            const btn = odse.querySelector('a[data-role="oddsselectall"]');
-            if (btn && typeof $ !== 'undefined') {
-                $(btn).trigger('tap');
-                return 'tapped_selectall';
-            }
-            if (btn) { btn.click(); return 'clicked_selectall'; }
-            return 'no_selectall_btn';
-        }
-    """)
+    try:
+        el = await page.query_selector('#odse a[data-role="oddsselectall"]')
+        if el:
+            await el.tap()
+            select_result = 'tap_selectall'
+        else:
+            await page.tap('text=ページ内全選択')
+            select_result = 'tap_text'
+    except Exception as e:
+        select_result = f'error:{e}'
     await page.wait_for_timeout(1000)
 
     # 合計件数確認
     kumi_odse = await page.evaluate("""
         () => {
             const odse = document.getElementById('odse');
-            const text = odse?.innerText || '';
-            const m = text.match(/合計件数[：:]\\s*(\\d+)/);
+            const text = odse ? odse.innerText : '';
+            const m = text.match(/[合計件数]{3}[：:].{0,2}([0-9]+)/);
             return m ? m[1] : '?';
         }
     """)
@@ -305,19 +227,14 @@ async def purchase(page, course_name, race_num, bets, bet_type):
     await page.screenshot(path=f"ipat_{bet_type}_odds_selected.png")
 
     # ⑫ 金額入力画面へ
-    await page.evaluate("""
-        () => {
-            const odse = document.getElementById('odse');
-            if (!odse) return;
-            const links = odse.querySelectorAll('a');
-            for (const a of links) {
-                if (a.innerText.trim() === '金額入力画面へ') {
-                    if (typeof $ !== 'undefined') { $(a).trigger('tap'); return; }
-                    a.click(); return;
-                }
-            }
-        }
-    """)
+    try:
+        el = await page.query_selector('#odse a:text("金額入力画面へ")')
+        if el:
+            await el.tap()
+        else:
+            await page.tap('text=金額入力画面へ')
+    except Exception as e:
+        print(f"  ⚠️ 金額入力画面へ error: {e}")
     await page.wait_for_timeout(2000)
     await page.screenshot(path=f"ipat_{bet_type}_amount.png")
 
@@ -335,14 +252,7 @@ async def purchase(page, course_name, race_num, bets, bet_type):
         print("⚠️ 金額入力欄が見つかりません")
 
     # ⑮ セット
-    await page.evaluate("""
-        () => {
-            const links = document.querySelectorAll('a');
-            for (const a of links) {
-                if (a.innerText.trim() === 'セット') { a.click(); return; }
-            }
-        }
-    """)
+    await page.tap('text=セット')
     await page.wait_for_timeout(2000)
     print("セット: OK")
 
@@ -357,14 +267,7 @@ async def purchase(page, course_name, race_num, bets, bet_type):
             pass
     page.on('dialog', handle_dialog)
 
-    await page.evaluate("""
-        () => {
-            const links = document.querySelectorAll('a');
-            for (const a of links) {
-                if (a.innerText.trim() === '投票') { a.click(); return; }
-            }
-        }
-    """)
+    await page.tap('text=投票')
     await page.wait_for_timeout(3000)
 
     # 合計金額確認画面が出た場合は再入力
@@ -375,14 +278,7 @@ async def purchase(page, course_name, race_num, bets, bet_type):
         if inp2 and await inp2.is_visible():
             await inp2.fill(str(total))
             await inp2.dispatch_event('change')
-        await page.evaluate("""
-            () => {
-                const links = document.querySelectorAll('a');
-                for (const a of links) {
-                    if (a.innerText.trim() === '投票') { a.click(); return; }
-                }
-            }
-        """)
+        await page.tap('text=投票')
         await page.wait_for_timeout(3000)
 
     await page.screenshot(path=f"ipat_{bet_type}_result.png")
