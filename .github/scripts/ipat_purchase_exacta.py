@@ -282,7 +282,7 @@ async def purchase(page, course_name, race_num, bets, bet_type):
 
     await page.screenshot(path=f"ipat_{bet_type}_confirm.png")
 
-    # ⑯ 投票（ダイアログ自動accept）
+    # ⑯ 入力終了 → 合計金額確認 → 投票
     async def handle_dialog(dialog):
         try:
             print(f"  ダイアログ: {dialog.message[:60]}")
@@ -291,19 +291,52 @@ async def purchase(page, course_name, race_num, bets, bet_type):
             pass
     page.on('dialog', handle_dialog)
 
-    await page.tap('text=投票')
-    await page.wait_for_timeout(3000)
+    # 入力終了をtap
+    try:
+        el_end = await page.query_selector('#kin a:text("入力終了")')
+        if el_end:
+            await el_end.tap()
+            print("入力終了: OK")
+        else:
+            await page.tap('text=入力終了')
+            print("入力終了(text): OK")
+    except Exception as e:
+        print(f"入力終了エラー: {e}")
+    await page.wait_for_timeout(2000)
 
-    # 合計金額確認画面が出た場合は再入力
+    # 合計金額入力画面: 合計金額を入力して投票
     page_text3 = await page.evaluate("() => document.body.innerText")
-    if '合計金額' in page_text3 and '受付番号' not in page_text3:
-        print("合計金額入力画面 → 再入力")
-        inp2 = await page.query_selector('input[type="tel"]')
-        if inp2 and await inp2.is_visible():
-            await inp2.fill(str(total))
-            await inp2.dispatch_event('change')
-        await page.tap('text=投票')
-        await page.wait_for_timeout(3000)
+    print(f"入力終了後画面（先頭100文字）: {page_text3[:100]}")
+
+    if '合計金額' in page_text3:
+        print("合計金額入力画面 → 合計金額入力")
+        inp_total = await page.query_selector('input[type="tel"]:visible, input[type="text"]:visible')
+        if inp_total:
+            await inp_total.fill(str(total))
+            await inp_total.dispatch_event('change')
+            print(f"合計金額入力: ¥{total}")
+        await page.wait_for_timeout(500)
+
+    # 投票ボタンをtap
+    try:
+        # 可視状態の投票リンクを探す
+        vote_links = await page.query_selector_all('a')
+        vote_el = None
+        for lnk in vote_links:
+            txt = (await lnk.inner_text()).strip()
+            visible = await lnk.is_visible()
+            if txt == '投票' and visible:
+                vote_el = lnk
+                break
+        if vote_el:
+            await vote_el.tap()
+            print("投票: OK")
+        else:
+            await page.tap('text=投票')
+            print("投票(text): OK")
+    except Exception as e:
+        print(f"投票エラー: {e}")
+    await page.wait_for_timeout(3000)
 
     await page.screenshot(path=f"ipat_{bet_type}_result.png")
     result_text = await page.evaluate("() => document.body.innerText")
