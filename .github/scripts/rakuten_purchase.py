@@ -313,7 +313,13 @@ async def purchase_tan(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_tan_race.png")
 
-    # カゴクリア（全削除ボタンをクリック）
+    # カゴクリア（全削除ボタンをクリック・確認ダイアログを自動accept）
+    async def _accept_clear_dialog(dialog):
+        try:
+            await dialog.accept()
+        except Exception:
+            pass
+    page.once('dialog', _accept_clear_dialog)
     del_result = await page.evaluate("""() => {
         for (const el of document.querySelectorAll('a, button, input')) {
             const t = (el.value || el.innerText || '').trim();
@@ -321,7 +327,7 @@ async def purchase_tan(page, venue, race_num, bets, today):
         }
         return 'empty';
     }""")
-    await page.wait_for_timeout(1000)
+    await page.wait_for_timeout(1500)
     print(f"  カゴクリア: {del_result}")
 
     # 式別リンク確認
@@ -533,13 +539,15 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
     kumi = await page.evaluate("() => { const m=document.body.innerText.match(/組数[：:]?\\s*(\\d+)/); return m?m[1]:'不明'; }")
     print(f"  選択組数: {kumi}")
 
-    # 金額入力
+    # 金額入力（1点あたりの金額を入力）
     unit_amount = bets[0]['amount']
+    kumi_int = int(kumi) if kumi and str(kumi).isdigit() else len(bets)
+    actual_total = unit_amount * kumi_int
     inp = await page.query_selector('input[type=text]:visible, input[type=number]:visible')
     if inp:
         await inp.fill(str(unit_amount // 100))
         await inp.dispatch_event('change')
-        print(f"  金額入力: {unit_amount//100}×100=¥{unit_amount}")
+        print(f"  金額入力: {unit_amount//100}×100=¥{unit_amount} × {kumi_int}組 = ¥{actual_total}")
     else:
         print(f"  ⚠️ 金額入力欄なし")
 
@@ -563,7 +571,7 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
         print(f"  [DRY RUN] {label}: 確認ボタン押下前で停止")
         return True
 
-    return await confirm_and_vote(page, total, bet_type)
+    return await confirm_and_vote(page, actual_total, bet_type)
 
 
 # ===== メイン =====
