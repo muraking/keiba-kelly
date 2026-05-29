@@ -313,33 +313,16 @@ async def purchase_tan(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_tan_race.png")
 
-    # カゴクリア（前のレースの残りを削除）
-    # tbl3にカゴ内容がある場合、全チェックして削除ボタンを押す
-    cart_before = await page.evaluate("""() => {
-        // カゴ内のチェックボックスを全選択
-        const checks = document.querySelectorAll('table input[type=checkbox]');
-        let cnt = 0;
-        for (const cb of checks) {
-            if (!cb.checked) { cb.click(); cnt++; }
+    # カゴクリア（全削除ボタンをクリック）
+    del_result = await page.evaluate("""() => {
+        for (const el of document.querySelectorAll('a, button, input')) {
+            const t = (el.value || el.innerText || '').trim();
+            if (t === '全削除') { el.click(); return 'deleted'; }
         }
-        return cnt;
+        return 'empty';
     }""")
-    if cart_before > 0:
-        await page.wait_for_timeout(500)
-        del_result = await page.evaluate("""() => {
-            // 削除ボタンを探してクリック
-            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
-                const t = (el.value || el.innerText || '').trim();
-                if (t === '削除' || t.includes('カゴを空')) {
-                    el.click(); return 'deleted';
-                }
-            }
-            return 'no_delete_btn';
-        }""")
-        await page.wait_for_timeout(1000)
-        print(f"  カゴクリア: {cart_before}件 → {del_result}")
-    else:
-        print(f"  カゴ: 空")
+    await page.wait_for_timeout(1000)
+    print(f"  カゴクリア: {del_result}")
 
     # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
@@ -433,30 +416,19 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
 
     await page.screenshot(path=f"rakuten_{bet_type}_race.png")
 
-    # カゴクリア（前のレースの残りを削除）
-    cart_before = await page.evaluate("""() => {
-        const checks = document.querySelectorAll('table input[type=checkbox]');
-        let cnt = 0;
-        for (const cb of checks) {
-            if (!cb.checked) { cb.click(); cnt++; }
-        }
-        return cnt;
-    }""")
-    if cart_before > 0:
-        await page.wait_for_timeout(500)
-        del_result = await page.evaluate("""() => {
-            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
-                const t = (el.value || el.innerText || '').trim();
-                if (t === '削除' || t.includes('カゴを空')) {
-                    el.click(); return 'deleted';
-                }
+    # カゴクリア（全削除ボタンをクリック）
+    del_result = await page.evaluate("""() => {
+        // 全削除ボタンを探す（btn-disabledでも強制クリック）
+        for (const el of document.querySelectorAll('a, button, input')) {
+            const t = (el.value || el.innerText || '').trim();
+            if (t === '全削除') {
+                el.click(); return 'deleted';
             }
-            return 'no_delete_btn';
-        }""")
-        await page.wait_for_timeout(1000)
-        print(f"  カゴクリア: {cart_before}件 → {del_result}")
-    else:
-        print(f"  カゴ: 空")
+        }
+        return 'empty';
+    }""")
+    await page.wait_for_timeout(1000)
+    print(f"  カゴクリア: {del_result}")
 
     # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
