@@ -12,10 +12,14 @@ on:
       bets:
         description: '買い目JSON（例: [{"num1":1,"num2":3,"amount":100}]）'
         required: true
+      bet_type:
+        description: '式別（exacta=馬連, wide=ワイド）'
+        required: false
+        default: 'exacta'
       dry_run:
         description: 'テストモード（1=投票直前で停止、0=実際に投票）'
         required: false
-        default: '0'
+        default: '1'
 
 jobs:
   purchase:
@@ -42,5 +46,13 @@ jobs:
           COURSE_NAME: ${{ github.event.inputs.course_name }}
           RACE_NUM: ${{ github.event.inputs.race_num }}
           BETS: ${{ github.event.inputs.bets }}
+          BET_TYPE: ${{ github.event.inputs.bet_type }}
           DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: python .github/scripts/ipat_purchase_exacta.py
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipat-exacta-screenshots
+          path: ipat_*.png
