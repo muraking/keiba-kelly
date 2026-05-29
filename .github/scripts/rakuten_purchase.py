@@ -322,6 +322,11 @@ async def purchase_tan(page, venue, race_num, bets, today):
     await page.wait_for_timeout(2000)
     print(f"  カゴクリア: {del_result}")
 
+    # カゴクリア後、レースページに再移動
+    ok = await navigate_to_race(page, venue, race_num, today)
+    if not ok:
+        return False
+
     # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
     print(f"  式別リンク: {shubetsu}")
@@ -421,19 +426,24 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
 
     await page.screenshot(path=f"rakuten_{bet_type}_race.png")
 
-    # カゴクリア（全削除ボタンをクリック）
+    # カゴクリア：/bet/normalに移動してから全削除
+    await page.goto('https://bet.keiba.rakuten.co.jp/bet/normal',
+                    wait_until='domcontentloaded', timeout=TIMEOUT)
+    await page.wait_for_timeout(1500)
     del_result = await page.evaluate("""() => {
-        // 全削除ボタンを探す（btn-disabledでも強制クリック）
         for (const el of document.querySelectorAll('a, button, input')) {
             const t = (el.value || el.innerText || '').trim();
-            if (t === '全削除') {
-                el.click(); return 'deleted';
-            }
+            if (t === '全削除') { el.click(); return 'deleted'; }
         }
         return 'empty';
     }""")
-    await page.wait_for_timeout(1000)
+    await page.wait_for_timeout(2000)
     print(f"  カゴクリア: {del_result}")
+
+    # カゴクリア後、レースページに再移動
+    ok = await navigate_to_race(page, venue, race_num, today)
+    if not ok:
+        return False
 
     # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
