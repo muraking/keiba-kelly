@@ -308,11 +308,10 @@ async def purchase_tan(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_tan_race.png")
 
-    # カゴクリア（投票完了ページにいる場合は通常投票ページに戻る）
-    if '/bet/complete' in page.url or '/bet/confirm' in page.url:
-        await page.goto('https://bet.keiba.rakuten.co.jp/bet/normal',
-                        wait_until='domcontentloaded', timeout=TIMEOUT)
-        await page.wait_for_timeout(2000)
+    # カゴクリア：/bet/normalに移動してから全削除
+    await page.goto('https://bet.keiba.rakuten.co.jp/bet/normal',
+                    wait_until='domcontentloaded', timeout=TIMEOUT)
+    await page.wait_for_timeout(1500)
     del_result = await page.evaluate("""() => {
         for (const el of document.querySelectorAll('a, button, input')) {
             const t = (el.value || el.innerText || '').trim();
