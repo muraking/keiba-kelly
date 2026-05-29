@@ -313,13 +313,8 @@ async def purchase_tan(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_tan_race.png")
 
-    # カゴクリア（全削除ボタンをクリック・確認ダイアログを自動accept）
-    async def _accept_clear_dialog(dialog):
-        try:
-            await dialog.accept()
-        except Exception:
-            pass
-    page.once('dialog', _accept_clear_dialog)
+    # カゴクリア（JavaScriptで確認ダイアログをwindow.confirmを上書きしてスキップ）
+    await page.evaluate("() => { window._orig_confirm = window.confirm; window.confirm = () => true; }")
     del_result = await page.evaluate("""() => {
         for (const el of document.querySelectorAll('a, button, input')) {
             const t = (el.value || el.innerText || '').trim();
@@ -328,6 +323,8 @@ async def purchase_tan(page, venue, race_num, bets, today):
         return 'empty';
     }""")
     await page.wait_for_timeout(1500)
+    # window.confirmを元に戻す
+    await page.evaluate("() => { if(window._orig_confirm) window.confirm = window._orig_confirm; }")
     print(f"  カゴクリア: {del_result}")
 
     # 式別リンク確認
