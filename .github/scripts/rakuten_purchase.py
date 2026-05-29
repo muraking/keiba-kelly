@@ -196,24 +196,37 @@ async def confirm_and_vote(page, total, label):
     await page.wait_for_timeout(3000)
     await page.screenshot(path=f"rakuten_confirm_{label}.png")
 
-    # 確認後ページを表示（デバッグ）
-    confirm_page_text = await page.evaluate("() => document.body.innerText.slice(0,400)")
-    print(f"  確認後ページ: {confirm_page_text[:300]}")
+    # 確認後ページを表示（デバッグ）- エラーテーブルの内容を重点的に取得
+    confirm_debug = await page.evaluate("""() => {
+        const tables = document.querySelectorAll('table');
+        let errorInfo = '';
+        for (const t of tables) {
+            const text = t.innerText.trim();
+            if (text.includes('エラー') || text.includes('番号')) {
+                errorInfo += '[TABLE:' + text.slice(0, 300) + '] ';
+            }
+        }
+        const inp = document.querySelector('input[type="text"], input[type="number"], input[type="tel"]');
+        const inpInfo = inp ? 'input:' + (inp.name||inp.id||inp.type) + '=' + inp.value : 'no_input';
+        const voteBtn = document.querySelector('a.voteBtn, input.voteBtn, button.voteBtn');
+        const voteBtnInfo = voteBtn ? 'voteBtn:' + voteBtn.tagName + ':' + voteBtn.className : 'no_voteBtn';
+        return errorInfo + ' | ' + inpInfo + ' | ' + voteBtnInfo;
+    }""")
+    print(f"  確認後詳細: {confirm_debug[:500]}")
 
     async def handle_dialog(dialog):
         print(f"  💬 ダイアログ: {dialog.message[:80]}")
         await dialog.accept()
     page.on('dialog', handle_dialog)
 
-    # 投票金額入力（1回だけ・旧コード方式のfill）
+    # 投票金額入力（キーボード入力でJSに確実に検知させる）
     try:
-        inp = await page.query_selector('input[type="text"]:visible, input[type="number"]:visible, input[type="tel"]:visible')
+        inp = await page.query_selector('input[name="verify"]:visible, input[type="text"]:visible, input[type="number"]:visible')
         if inp:
             await inp.click()
-            await inp.fill(str(total))
-            await inp.dispatch_event('input')
-            await inp.dispatch_event('change')
-            await page.wait_for_timeout(500)
+            await inp.fill('')  # 一旦クリア
+            await page.keyboard.type(str(total), delay=50)  # キーボード入力
+            await page.wait_for_timeout(300)
             val = await inp.input_value()
             print(f"  投票金額入力: ¥{total:,} (実際の値: {val})")
         else:
@@ -253,7 +266,7 @@ async def confirm_and_vote(page, total, label):
         await page.wait_for_timeout(4000)
 
         text = await page.evaluate("() => document.body.innerText")
-        if '受付番号' in text or '投票が完了' in text or 'ありがとうございました' in text:
+        if '/bet/complete' in page.url or '受付番号' in text or '投票完了' in text or '投票が完了' in text or 'ありがとうございました' in text:
             await page.screenshot(path=f"rakuten_done_{label}.png")
             lines = [l.strip() for l in text.split('\n') if l.strip()]
             print("  結果:")
@@ -299,6 +312,34 @@ async def purchase_tan(page, venue, race_num, bets, today):
         return False
 
     await page.screenshot(path="rakuten_tan_race.png")
+
+    # カゴクリア（前のレースの残りを削除）
+    # tbl3にカゴ内容がある場合、全チェックして削除ボタンを押す
+    cart_before = await page.evaluate("""() => {
+        // カゴ内のチェックボックスを全選択
+        const checks = document.querySelectorAll('table input[type=checkbox]');
+        let cnt = 0;
+        for (const cb of checks) {
+            if (!cb.checked) { cb.click(); cnt++; }
+        }
+        return cnt;
+    }""")
+    if cart_before > 0:
+        await page.wait_for_timeout(500)
+        del_result = await page.evaluate("""() => {
+            // 削除ボタンを探してクリック
+            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
+                const t = (el.value || el.innerText || '').trim();
+                if (t === '削除' || t.includes('カゴを空')) {
+                    el.click(); return 'deleted';
+                }
+            }
+            return 'no_delete_btn';
+        }""")
+        await page.wait_for_timeout(1000)
+        print(f"  カゴクリア: {cart_before}件 → {del_result}")
+    else:
+        print(f"  カゴ: 空")
 
     # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
@@ -391,6 +432,31 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
         return False
 
     await page.screenshot(path=f"rakuten_{bet_type}_race.png")
+
+    # カゴクリア（前のレースの残りを削除）
+    cart_before = await page.evaluate("""() => {
+        const checks = document.querySelectorAll('table input[type=checkbox]');
+        let cnt = 0;
+        for (const cb of checks) {
+            if (!cb.checked) { cb.click(); cnt++; }
+        }
+        return cnt;
+    }""")
+    if cart_before > 0:
+        await page.wait_for_timeout(500)
+        del_result = await page.evaluate("""() => {
+            for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
+                const t = (el.value || el.innerText || '').trim();
+                if (t === '削除' || t.includes('カゴを空')) {
+                    el.click(); return 'deleted';
+                }
+            }
+            return 'no_delete_btn';
+        }""")
+        await page.wait_for_timeout(1000)
+        print(f"  カゴクリア: {cart_before}件 → {del_result}")
+    else:
+        print(f"  カゴ: 空")
 
     # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
