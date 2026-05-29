@@ -214,11 +214,6 @@ async def confirm_and_vote(page, total, label):
     }""")
     print(f"  確認後詳細: {confirm_debug[:500]}")
 
-    async def handle_dialog(dialog):
-        print(f"  💬 ダイアログ: {dialog.message[:80]}")
-        await dialog.accept()
-    page.on('dialog', handle_dialog)
-
     # 投票金額入力（キーボード入力でJSに確実に検知させる）
     try:
         inp = await page.query_selector('input[name="verify"]:visible, input[type="text"]:visible, input[type="number"]:visible')
@@ -313,8 +308,7 @@ async def purchase_tan(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_tan_race.png")
 
-    # カゴクリア（JavaScriptで確認ダイアログをwindow.confirmを上書きしてスキップ）
-    await page.evaluate("() => { window._orig_confirm = window.confirm; window.confirm = () => true; }")
+    # カゴクリア（全削除ボタンをクリック・ダイアログは永続ハンドラで自動accept）
     del_result = await page.evaluate("""() => {
         for (const el of document.querySelectorAll('a, button, input')) {
             const t = (el.value || el.innerText || '').trim();
@@ -323,8 +317,6 @@ async def purchase_tan(page, venue, race_num, bets, today):
         return 'empty';
     }""")
     await page.wait_for_timeout(1500)
-    # window.confirmを元に戻す
-    await page.evaluate("() => { if(window._orig_confirm) window.confirm = window._orig_confirm; }")
     print(f"  カゴクリア: {del_result}")
 
     # 式別リンク確認
@@ -595,6 +587,14 @@ async def main():
         browser = await p.chromium.launch(headless=True, args=['--dns-prefetch-disable', '--no-sandbox'])
         page = await browser.new_page()
         page.set_default_timeout(TIMEOUT)
+
+        # 全削除確認ダイアログを常に自動accept（永続ハンドラ）
+        async def _auto_accept_dialog(dialog):
+            try:
+                await dialog.accept()
+            except Exception:
+                pass
+        page.on('dialog', _auto_accept_dialog)
 
         # ログイン（1回）
         await login(page)
