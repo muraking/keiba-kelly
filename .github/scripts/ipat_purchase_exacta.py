@@ -41,9 +41,20 @@ async def login(page):
 
 
 async def tap_horse(page, page_id, num):
-    """指定ページ（#uma1 or #uma2）内で馬番をjQuery tapイベントで選択"""
+    """指定ページ（#uma1 or #uma2）内で馬番をjQuery tapイベントで選択
+    jQuery MobileはSPAなので、display:noneでもDOM上には存在する"""
+    # まずjQuery Mobileでページ切り替えを明示的に行う
+    await page.evaluate(f"""
+        () => {{
+            if (typeof $.mobile !== 'undefined') {{
+                $.mobile.changePage('#{page_id}', {{transition:'none'}});
+            }}
+        }}
+    """)
+    await page.wait_for_timeout(800)
     result = await page.evaluate(f"""
         () => {{
+            // display:noneでもIDで取得して操作
             const pageEl = document.getElementById('{page_id}');
             if (!pageEl) return 'no_page:{page_id}';
             const a = pageEl.querySelector('a[data-value="{num}"]');
@@ -52,7 +63,6 @@ async def tap_horse(page, page_id, num):
                 $(a).trigger('tap');
                 return 'tap:' + a.getAttribute('data-value') + ':selected=' + a.classList.contains('selected');
             }}
-            // jQueryなしの場合はtouchstart/touchend/click
             ['touchstart','touchend','vclick','click'].forEach(evt => {{
                 a.dispatchEvent(new Event(evt, {{bubbles:true, cancelable:true}}));
             }});
@@ -65,7 +75,7 @@ async def tap_horse(page, page_id, num):
 
 
 async def click_next(page):
-    """「次へ」ボタンをクリック（#uma1内）"""
+    """「次へ」ボタンをクリック（#uma1内）→ #uma2に遷移"""
     result = await page.evaluate("""
         () => {
             const uma1 = document.getElementById('uma1');
@@ -80,13 +90,22 @@ async def click_next(page):
             return 'no_next_btn';
         }
     """)
-    await page.wait_for_timeout(1500)
+    await page.wait_for_timeout(2000)
+    # jQuery Mobileのページ遷移を待つ
+    await page.evaluate("""
+        () => {
+            if (typeof $.mobile !== 'undefined') {
+                $.mobile.changePage('#uma2', {transition:'none'});
+            }
+        }
+    """)
+    await page.wait_for_timeout(800)
     print(f"  次へ: {result}")
     return result
 
 
 async def click_odds_screen(page):
-    """「オッズ選択画面へ」ボタンをクリック（#uma2内）"""
+    """「オッズ選択画面へ」ボタンをクリック（#uma2内）→ #odseに遷移"""
     result = await page.evaluate("""
         () => {
             const uma2 = document.getElementById('uma2');
@@ -103,6 +122,15 @@ async def click_odds_screen(page):
         }
     """)
     await page.wait_for_timeout(2000)
+    # jQuery Mobileのページ遷移を待つ
+    await page.evaluate("""
+        () => {
+            if (typeof $.mobile !== 'undefined') {
+                $.mobile.changePage('#odse', {transition:'none'});
+            }
+        }
+    """)
+    await page.wait_for_timeout(800)
     print(f"  オッズ選択画面へ: {result}")
     return result
 
