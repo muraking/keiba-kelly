@@ -138,10 +138,34 @@ async def purchase(page, course_name, race_num, bets, bet_type):
     await page.click(f'text={click_name}')
     await page.wait_for_timeout(2000)
 
-    # ③ レース番号
-    await page.click(f'text={race_num}R')
+    # ③ レース番号（span.raceNumのテキストまたはdata-valueで選択）
+    clicked_race = await page.evaluate(f"""
+        () => {{
+            // span.raceNumのテキストで完全一致
+            const spans = document.querySelectorAll('span.raceNum');
+            for (const span of spans) {{
+                if (span.innerText.trim() === '{race_num}R') {{
+                    const a = span.closest('a');
+                    if (a) {{ a.click(); return 'span_match'; }}
+                }}
+            }}
+            // data-value=(race_num-1)で選択
+            const a = document.querySelector('a[data-value="{race_num - 1}"]');
+            if (a) {{ a.click(); return 'data_value'; }}
+            // フォールバック: innerTextに{race_num}Rを含む
+            const links = document.querySelectorAll('a');
+            for (const l of links) {{
+                if (l.innerText.includes('{race_num}R')) {{
+                    l.click(); return 'includes';
+                }}
+            }}
+            return false;
+        }}
+    """)
+    if not clicked_race:
+        raise Exception(f"{race_num}Rが見つかりません")
     await page.wait_for_timeout(2000)
-    print(f"レース選択: {race_num}R / URL: {page.url}")
+    print(f"レース選択: {race_num}R ({clicked_race}) / URL: {page.url}")
 
     # ④ 式別から選択
     await page.click('text=式別から選択')
