@@ -356,15 +356,22 @@ async def purchase_tan(page, venue, race_num, bets, today):
     tan_bets  = [b for b in bets if b.get('bet_type', 'tan') == 'tan']
     fuku_bets = [b for b in bets if b.get('bet_type') == 'fuku']
 
+    clicked_any = False
     for bet in tan_bets:
         r = await click_horse(bet['num'], 0)
         print(f"  {bet['num']}番（単勝）: {r or 'NG'}")
+        if r: clicked_any = True
         await page.wait_for_timeout(1000)
 
     for bet in fuku_bets:
         r = await click_horse(bet['num'], 1)
         print(f"  {bet['num']}番（複勝）: {r or 'NG'}")
+        if r: clicked_any = True
         await page.wait_for_timeout(1000)
+
+    if not clicked_any:
+        print(f"  ⚠️ 単勝/複勝クリック全NG → 単勝未発売の可能性 → スキップ")
+        return True
 
     # 金額入力
     inputs = await page.query_selector_all('input[type="text"]')
