@@ -293,7 +293,7 @@ async def purchase(page, course_name, race_num, bets):
         actual_total = await page.evaluate("""
             () => {
                 const text = document.body.innerText;
-                const lines = text.split('\n');
+                const lines = text.split('\\n');
                 for (let i = 0; i < lines.length; i++) {
                     const m = lines[i].match(/^([0-9,]+)円$/);
                     if (m) return parseInt(m[1].replace(/,/g, ''));
