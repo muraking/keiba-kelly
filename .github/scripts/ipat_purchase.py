@@ -278,6 +278,38 @@ async def purchase(page, course_name, race_num, bets):
         print("✅ DRY RUN完了（投票は行いませんでした）")
         return True
 
+    # ダイアログを事前に登録（投票前に登録しないとダイアログが処理されない）
+    async def handle_dialog(dialog):
+        try:
+            print(f"  ダイアログ: {dialog.message}")
+            await dialog.accept()
+        except Exception:
+            pass
+    page.on('dialog', handle_dialog)
+
+    # 合計金額確認画面: ページから実際の合計金額を取得して入力
+    page_text_before = await page.evaluate("() => document.body.innerText")
+    if '合計金額入力' in page_text_before:
+        actual_total = await page.evaluate("""
+            () => {
+                const text = document.body.innerText;
+                const lines = text.split('\n');
+                for (let i = 0; i < lines.length; i++) {
+                    const m = lines[i].match(/^([0-9,]+)円$/);
+                    if (m) return parseInt(m[1].replace(/,/g, ''));
+                }
+                return null;
+            }
+        """)
+        input_total = actual_total if actual_total and actual_total > 0 else total
+        print(f"合計金額入力: ¥{input_total}")
+        all_tels = await page.query_selector_all('input[type="tel"]')
+        for inp in all_tels:
+            if await inp.is_visible():
+                await inp.fill(str(input_total))
+                break
+        await page.wait_for_timeout(500)
+
     # 「投票」をtap()でクリック
     print("投票...")
     vote_btn = None
@@ -292,37 +324,7 @@ async def purchase(page, course_name, race_num, bets):
         print("  投票 tap() OK")
     else:
         print("  ⚠️ 投票ボタンが見つかりません")
-    await page.wait_for_timeout(2000)
-
-    # 全ダイアログを自動でOK
-    async def handle_dialog(dialog):
-        try:
-            print(f"  ダイアログ: {dialog.message}")
-            await dialog.accept()
-        except Exception:
-            pass  # 既に処理済みの場合は無視
-    page.on('dialog', handle_dialog)
-    await page.wait_for_timeout(2000)
-
-    # 「合計金額入力」画面が残っている場合は再度「投票」をtap
-    page_text = await page.evaluate("() => document.body.innerText")
-    if '合計金額入力' in page_text and '受付番号' not in page_text:
-        print("合計金額確認画面 → 再度合計金額入力して投票...")
-        all_tels3 = await page.query_selector_all('input[type="tel"]')
-        for inp in all_tels3:
-            if await inp.is_visible():
-                await inp.fill(str(total))
-                print(f"  合計金額再入力OK: ¥{total}")
-                break
-        await page.wait_for_timeout(500)
-        links2 = await page.query_selector_all('a')
-        for link in links2:
-            t = (await link.inner_text()).strip()
-            if t == '投票':
-                await link.tap()
-                print("  2回目投票 tap() OK")
-                break
-        await page.wait_for_timeout(3000)
+    await page.wait_for_timeout(4000)
 
     await page.screenshot(path="ipat_buy_result.png")
     text = await page.evaluate("() => document.body.innerText")
