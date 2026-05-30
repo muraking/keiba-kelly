@@ -273,26 +273,57 @@ async def purchase(page, course_name, race_num, bets, bet_type):
             txt = (await lnk.inner_text()).strip()
             if txt == '一括' and await lnk.is_visible():
                 await lnk.tap()
-                await page.wait_for_timeout(500)
+                await page.wait_for_timeout(800)
                 print("一括タブ: OK")
                 break
     except Exception as e:
         print(f"一括タブエラー（スキップ）: {e}")
 
-    inp = await page.query_selector('input[type="tel"]:visible, input[type="text"]:visible')
-    if not inp:
-        inp = await page.query_selector('input[type="tel"], input[type="text"]')
-    if inp:
-        await inp.fill(str(amount_100))
-        await inp.dispatch_event('change')
-        print(f"金額入力: {amount_100}×100=¥{unit_amount}")
-    else:
-        print("⚠️ 金額入力欄が見つかりません")
+    # 一括タブの入力欄はclassなしのinput[type=tel]（inputSetはclass付きで別物）
+    inp = await page.evaluate("""
+        () => {
+            const kin = document.getElementById('kin');
+            if (!kin) return null;
+            const inputs = kin.querySelectorAll('input[type=tel]');
+            for (const i of inputs) {
+                if (!i.className && i.offsetParent !== null) return true;
+            }
+            return false;
+        }
+    """)
+    # JavaScriptで直接値をセット
+    set_result = await page.evaluate(f"""
+        () => {{
+            const kin = document.getElementById('kin');
+            if (!kin) return 'no_kin';
+            const inputs = kin.querySelectorAll('input[type=tel]');
+            for (const inp of inputs) {{
+                if (!inp.className && inp.offsetParent !== null) {{
+                    inp.value = '{amount_100}';
+                    inp.dispatchEvent(new Event('input', {{bubbles:true}}));
+                    inp.dispatchEvent(new Event('change', {{bubbles:true}}));
+                    return 'set:' + inp.value;
+                }}
+            }}
+            // フォールバック: 最初のvisibleなinput
+            for (const inp of inputs) {{
+                if (inp.offsetParent !== null) {{
+                    inp.value = '{amount_100}';
+                    inp.dispatchEvent(new Event('input', {{bubbles:true}}));
+                    inp.dispatchEvent(new Event('change', {{bubbles:true}}));
+                    return 'fallback:' + inp.value;
+                }}
+            }}
+            return 'no_input';
+        }}
+    """)
+    print(f"金額入力: {amount_100}×100=¥{unit_amount} ({set_result})")
 
-    # ⑮ セット
+    # ⑮ セット（一括タブのセットボタン）
     await page.tap('text=セット')
     await page.wait_for_timeout(2000)
     print("セット: OK")
+
 
     await page.screenshot(path=f"ipat_{bet_type}_confirm.png")
 
