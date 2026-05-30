@@ -287,29 +287,6 @@ async def purchase(page, course_name, race_num, bets):
             pass
     page.on('dialog', handle_dialog)
 
-    # 合計金額確認画面: ページから実際の合計金額を取得して入力
-    page_text_before = await page.evaluate("() => document.body.innerText")
-    if '合計金額入力' in page_text_before:
-        actual_total = await page.evaluate("""
-            () => {
-                const text = document.body.innerText;
-                const lines = text.split('\\n');
-                for (let i = 0; i < lines.length; i++) {
-                    const m = lines[i].match(/^([0-9,]+)円$/);
-                    if (m) return parseInt(m[1].replace(/,/g, ''));
-                }
-                return null;
-            }
-        """)
-        input_total = actual_total if actual_total and actual_total > 0 else total
-        print(f"合計金額入力: ¥{input_total}")
-        all_tels = await page.query_selector_all('input[type="tel"]')
-        for inp in all_tels:
-            if await inp.is_visible():
-                await inp.fill(str(input_total))
-                break
-        await page.wait_for_timeout(500)
-
     # 「投票」をtap()でクリック
     print("投票...")
     vote_btn = None
