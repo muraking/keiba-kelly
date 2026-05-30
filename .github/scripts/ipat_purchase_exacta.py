@@ -370,11 +370,26 @@ async def purchase(page, course_name, race_num, bets, bet_type):
 
     if '合計金額' in page_text3:
         print("合計金額入力画面 → 合計金額入力")
+        # ページに表示されている実際の合計金額を取得
+        actual_total = await page.evaluate("""
+            () => {
+                const text = document.body.innerText;
+                // 「合計金額 NNN円」のパターンを探す
+                const m = text.match(/合計金額[^0-9]*([0-9]+)円/);
+                return m ? parseInt(m[1]) : null;
+            }
+        """)
+        if actual_total and actual_total > 0:
+            input_total = actual_total
+            print(f"合計金額（ページから取得）: ¥{actual_total}")
+        else:
+            input_total = total
+            print(f"合計金額（BETSから計算）: ¥{total}")
         inp_total = await page.query_selector('input[type="tel"]:visible, input[type="text"]:visible')
         if inp_total:
-            await inp_total.fill(str(total))
+            await inp_total.fill(str(input_total))
             await inp_total.dispatch_event('change')
-            print(f"合計金額入力: ¥{total}")
+            print(f"合計金額入力: ¥{input_total}")
         await page.wait_for_timeout(500)
 
     # 投票ボタンをtap
