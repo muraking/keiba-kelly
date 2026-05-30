@@ -319,10 +319,25 @@ async def purchase(page, course_name, race_num, bets, bet_type):
     """)
     print(f"金額入力: {amount_100}×100=¥{unit_amount} ({set_result})")
 
-    # ⑮ セット（一括タブのセットボタン）
-    await page.tap('text=セット')
+    # ⑮ セット（一括タブのセットボタンをJSで直接クリック）
+    set_result = await page.evaluate("""
+        () => {
+            const kin = document.getElementById('kin');
+            if (!kin) return 'no_kin';
+            // 一括タブが選択中の場合、その中のセットボタンを探す
+            const links = kin.querySelectorAll('a');
+            for (const a of links) {
+                const t = a.innerText.trim();
+                if (t === 'セット' && a.offsetParent !== null) {
+                    if (typeof $ !== 'undefined') { $(a).trigger('tap'); return 'tap_set'; }
+                    a.click(); return 'click_set';
+                }
+            }
+            return 'no_set_btn';
+        }
+    """)
     await page.wait_for_timeout(2000)
-    print("セット: OK")
+    print(f"セット: {set_result}")
 
 
     await page.screenshot(path=f"ipat_{bet_type}_confirm.png")
