@@ -14483,5 +14483,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:34:44.310Z"
+  },
+  {
+    "date": "5/31 高知 8R",
+    "venue": "高知",
+    "raceNum": "8R",
+    "raceClass": "C1ー3",
+    "winner": 6,
+    "winOdds": 2.2,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "フライヤートゥルー",
+        "norm": 0.3756,
+        "tanOdds": 4.9,
+        "ev": 184.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ビステル",
+        "norm": 0.312,
+        "tanOdds": 3.7,
+        "ev": 115.4,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 2.2
+      },
+      {
+        "num": 5,
+        "name": "ノーブルラン",
+        "norm": 0.0507,
+        "tanOdds": 25.3,
+        "ev": 128.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "サノノゴールド",
+        "norm": 0.026,
+        "tanOdds": 45.4,
+        "ev": 117.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ボマライン",
+        "norm": 0.0246,
+        "tanOdds": 53.6,
+        "ev": 132,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:35:30.414Z"
   }
 ]
