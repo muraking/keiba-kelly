@@ -14779,5 +14779,64 @@
       }
     ],
     "savedAt": "2026-05-31T16:37:52.359Z"
+  },
+  {
+    "date": "5/31 佐賀 1R",
+    "venue": "佐賀",
+    "raceNum": "1R",
+    "raceClass": "UMATENA賞(3歳)",
+    "winner": 2,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "テイエムカミカゼ",
+        "norm": 0.4367,
+        "tanOdds": 1.4,
+        "ev": 61.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      },
+      {
+        "num": 4,
+        "name": "スフェーンテソーロ",
+        "norm": 0.263,
+        "tanOdds": 4.5,
+        "ev": 118.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "テイエムスワーブ",
+        "norm": 0.0646,
+        "tanOdds": 22.2,
+        "ev": 143.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "コンバットパリス",
+        "norm": 0.0464,
+        "tanOdds": 39.8,
+        "ev": 184.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:38:48.314Z"
   }
 ]
