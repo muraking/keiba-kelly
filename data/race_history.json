@@ -13674,5 +13674,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:21:57.968Z"
+  },
+  {
+    "date": "5/31 金沢 8R",
+    "venue": "金沢",
+    "raceNum": "8R",
+    "raceClass": "かなパスで生活を便利にしま賞(B2特別)",
+    "winner": 3,
+    "winOdds": 3.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ソウルユニバンス",
+        "norm": 0.0996,
+        "tanOdds": 14.4,
+        "ev": 143.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "デルマスソバライ",
+        "norm": 0.0979,
+        "tanOdds": 17.7,
+        "ev": 173.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "マイラブジャック",
+        "norm": 0.0864,
+        "tanOdds": 3.4,
+        "ev": 29.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.1
+      },
+      {
+        "num": 1,
+        "name": "セキレイ",
+        "norm": 0.0751,
+        "tanOdds": 15.5,
+        "ev": 116.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ヒヤ",
+        "norm": 0.0374,
+        "tanOdds": 53.4,
+        "ev": 200,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:22:43.670Z"
   }
 ]
