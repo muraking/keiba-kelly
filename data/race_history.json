@@ -12491,5 +12491,124 @@
       }
     ],
     "savedAt": "2026-05-31T16:06:23.405Z"
+  },
+  {
+    "date": "5/31 京都 12",
+    "venue": "京都",
+    "raceNum": "12R",
+    "raceClass": "渡月橋S",
+    "winner": 8,
+    "winOdds": 3.8,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "スマートワイス",
+        "norm": 0.0993,
+        "tanOdds": 4.3,
+        "ev": 42.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.8
+      },
+      {
+        "num": 11,
+        "name": "ブルクトーア",
+        "norm": 0.0451,
+        "tanOdds": 27.1,
+        "ev": 122.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 18,
+        "name": "テーオーダヴィンチ",
+        "norm": 0.0451,
+        "tanOdds": 43.6,
+        "ev": 196.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ビップジーニー",
+        "norm": 0.0414,
+        "tanOdds": 25.5,
+        "ev": 105.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ブリックワーク",
+        "norm": 0.0385,
+        "tanOdds": 49,
+        "ev": 188.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "サクセスアイ",
+        "norm": 0.0361,
+        "tanOdds": 75.4,
+        "ev": 272.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "エスペシャリー",
+        "norm": 0.0351,
+        "tanOdds": 92.5,
+        "ev": 324.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "トラペジスト",
+        "norm": 0.0327,
+        "tanOdds": 58.9,
+        "ev": 192.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 16,
+        "name": "サヴォンリンナ",
+        "norm": 0.0311,
+        "tanOdds": 79.9,
+        "ev": 248.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ルミノメテオール",
+        "norm": 0.0294,
+        "tanOdds": 108.3,
+        "ev": 318.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:07:31.154Z"
   }
 ]
