@@ -15955,5 +15955,84 @@
       }
     ],
     "savedAt": "2026-05-31T23:24:07.418Z"
+  },
+  {
+    "date": "5/29 浦和 12",
+    "venue": "浦和",
+    "raceNum": "12R",
+    "raceClass": "薄暑特別(C1)",
+    "winner": 7,
+    "winOdds": 6.5,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "シングアウト",
+        "norm": 0.1615,
+        "tanOdds": 15.8,
+        "ev": 255.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "アンブレラダンス",
+        "norm": 0.1114,
+        "tanOdds": 7.9,
+        "ev": 88,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6.5
+      },
+      {
+        "num": 3,
+        "name": "ブルーオブウインド",
+        "norm": 0.0705,
+        "tanOdds": 16.2,
+        "ev": 114.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "サマーストーリー",
+        "norm": 0.0664,
+        "tanOdds": 24.5,
+        "ev": 162.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "フォートウィリアム",
+        "norm": 0.0569,
+        "tanOdds": 23.6,
+        "ev": 134.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ジオヴィグラス",
+        "norm": 0.0528,
+        "tanOdds": 25.4,
+        "ev": 134.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:24:36.636Z"
   }
 ]
