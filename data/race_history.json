@@ -12224,5 +12224,84 @@
       }
     ],
     "savedAt": "2026-05-31T16:03:06.473Z"
+  },
+  {
+    "date": "5/31 京都 9R",
+    "venue": "京都",
+    "raceNum": "9R",
+    "raceClass": "與杼特別",
+    "winner": 10,
+    "winOdds": 2.4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "ゴッドエスパーダ",
+        "norm": 0.3467,
+        "tanOdds": 2.3,
+        "ev": 79.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.4
+      },
+      {
+        "num": 6,
+        "name": "ジョータルマエ",
+        "norm": 0.138,
+        "tanOdds": 7.5,
+        "ev": 103.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ソウルアンドジャズ",
+        "norm": 0.0685,
+        "tanOdds": 17.2,
+        "ev": 117.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ブルックリンダンス",
+        "norm": 0.0596,
+        "tanOdds": 20.4,
+        "ev": 121.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "プラニスフェリオ",
+        "norm": 0.0286,
+        "tanOdds": 38.9,
+        "ev": 111.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "リアルスター",
+        "norm": 0.0264,
+        "tanOdds": 67.8,
+        "ev": 179,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:03:48.936Z"
   }
 ]
