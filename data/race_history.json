@@ -16251,5 +16251,104 @@
       }
     ],
     "savedAt": "2026-05-31T23:26:37.870Z"
+  },
+  {
+    "date": "5/29 笠松 5R",
+    "venue": "笠松",
+    "raceNum": "5R",
+    "raceClass": "東ファミリーメモリアルカップ(C)",
+    "winner": 7,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ジーティーパリス",
+        "norm": 0.389,
+        "tanOdds": 1.4,
+        "ev": 54.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 4,
+        "name": "シノノメ",
+        "norm": 0.2419,
+        "tanOdds": 7.1,
+        "ev": 171.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ミラクルム",
+        "norm": 0.1391,
+        "tanOdds": 12.7,
+        "ev": 176.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "リックノワール",
+        "norm": 0.0355,
+        "tanOdds": 51.9,
+        "ev": 184.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ミミコチャン",
+        "norm": 0.0343,
+        "tanOdds": 32.7,
+        "ev": 112.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "サノノダンサー",
+        "norm": 0.0241,
+        "tanOdds": 46.3,
+        "ev": 111.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "オールマイタイム",
+        "norm": 0.0241,
+        "tanOdds": 54,
+        "ev": 130.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "テーオーライラ",
+        "norm": 0.0231,
+        "tanOdds": 110.6,
+        "ev": 255.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:27:15.518Z"
   }
 ]
