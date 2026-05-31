@@ -30684,6 +30684,7 @@
     "buy_exacta_jra": true,
     "buy_exacta_local": true,
     "buy_wide_jra": false,
-    "buy_wide_local": false
+    "buy_wide_local": false,
+    "combined_kelly": true
   }
 }
