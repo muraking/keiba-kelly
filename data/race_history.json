@@ -13063,5 +13063,94 @@
       }
     ],
     "savedAt": "2026-05-31T16:15:11.245Z"
+  },
+  {
+    "date": "5/31 水沢 9R",
+    "venue": "水沢",
+    "raceNum": "9R",
+    "raceClass": "オッズパーク賞(B1)",
+    "winner": 3,
+    "winOdds": 2.8,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "グッデーサイレンス",
+        "norm": 0.2058,
+        "tanOdds": 7.9,
+        "ev": 162.6,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 2.8
+      },
+      {
+        "num": 4,
+        "name": "タイセイフェスタ",
+        "norm": 0.1842,
+        "tanOdds": 9.1,
+        "ev": 167.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "プリティキッス",
+        "norm": 0.0432,
+        "tanOdds": 34,
+        "ev": 146.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "スターライトテール",
+        "norm": 0.0353,
+        "tanOdds": 60.6,
+        "ev": 213.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "メードス",
+        "norm": 0.0298,
+        "tanOdds": 35.4,
+        "ev": 105.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "シャトーボビー",
+        "norm": 0.0262,
+        "tanOdds": 68.6,
+        "ev": 179.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "チェアリングソング",
+        "norm": 0.0256,
+        "tanOdds": 74.4,
+        "ev": 190.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:15:49.995Z"
   }
 ]
