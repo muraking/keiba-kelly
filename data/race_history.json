@@ -16448,5 +16448,44 @@
       }
     ],
     "savedAt": "2026-05-31T23:30:01.959Z"
+  },
+  {
+    "date": "5/29 笠松 10",
+    "venue": "笠松",
+    "raceNum": "10R",
+    "raceClass": "キキョウ特別(A)",
+    "winner": 12,
+    "winOdds": 9.3,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "ウインオーブ",
+        "norm": 0.1137,
+        "tanOdds": 13.7,
+        "ev": 155.8,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 9.3
+      },
+      {
+        "num": 10,
+        "name": "ミルミル",
+        "norm": 0.0351,
+        "tanOdds": 47.5,
+        "ev": 166.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:30:36.977Z"
   }
 ]
