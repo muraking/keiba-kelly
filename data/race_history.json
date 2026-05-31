@@ -11076,5 +11076,124 @@
       }
     ],
     "savedAt": "2026-05-31T15:52:47.456Z"
+  },
+  {
+    "date": "5/31 東京 9R",
+    "venue": "東京",
+    "raceNum": "9R",
+    "raceClass": "薫風S",
+    "winner": 14,
+    "winOdds": 2.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 14,
+        "name": "メイショウハチロー",
+        "norm": 0.2346,
+        "tanOdds": 3.1,
+        "ev": 72.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.9
+      },
+      {
+        "num": 10,
+        "name": "ユキノロイヤル",
+        "norm": 0.0365,
+        "tanOdds": 53.2,
+        "ev": 194.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ジョディーズマロン",
+        "norm": 0.0346,
+        "tanOdds": 41,
+        "ev": 141.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "アルゴナヴィス",
+        "norm": 0.0331,
+        "tanOdds": 47.3,
+        "ev": 156.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ダノンスウィッチ",
+        "norm": 0.0315,
+        "tanOdds": 48.6,
+        "ev": 153.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ガンウルフ",
+        "norm": 0.0301,
+        "tanOdds": 53.4,
+        "ev": 160.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "レッドラパルマ",
+        "norm": 0.0292,
+        "tanOdds": 126.3,
+        "ev": 369.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ヘルモーズ",
+        "norm": 0.0287,
+        "tanOdds": 148.7,
+        "ev": 427.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "ホルトバージ",
+        "norm": 0.0286,
+        "tanOdds": 76.6,
+        "ev": 219.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "モズマーヴェリック",
+        "norm": 0.0281,
+        "tanOdds": 132.4,
+        "ev": 372.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T15:54:02.437Z"
   }
 ]
