@@ -12837,5 +12837,54 @@
       }
     ],
     "savedAt": "2026-05-31T16:10:49.440Z"
+  },
+  {
+    "date": "5/31 水沢 5R",
+    "venue": "水沢",
+    "raceNum": "5R",
+    "raceClass": "C2",
+    "winner": 9,
+    "winOdds": 1.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "レーニス",
+        "norm": 0.3229,
+        "tanOdds": 7.5,
+        "ev": 242.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "デスロール",
+        "norm": 0.2051,
+        "tanOdds": 2.3,
+        "ev": 47.2,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.7
+      },
+      {
+        "num": 2,
+        "name": "リスクテイカー",
+        "norm": 0.0504,
+        "tanOdds": 23.9,
+        "ev": 120.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:12:00.109Z"
   }
 ]
