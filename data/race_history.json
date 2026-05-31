@@ -11839,5 +11839,54 @@
       }
     ],
     "savedAt": "2026-05-31T15:58:55.091Z"
+  },
+  {
+    "date": "5/31 京都 4R",
+    "venue": "京都",
+    "raceNum": "4R",
+    "raceClass": "4歳以上障害OP",
+    "winner": 3,
+    "winOdds": 3.5,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "コンテナワールド",
+        "norm": 0.3223,
+        "tanOdds": 4,
+        "ev": 128.9,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 3.5
+      },
+      {
+        "num": 4,
+        "name": "マホロバ",
+        "norm": 0.0821,
+        "tanOdds": 17.2,
+        "ev": 141.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ソルアマゾン",
+        "norm": 0.0365,
+        "tanOdds": 69.6,
+        "ev": 253.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T15:59:50.814Z"
   }
 ]
