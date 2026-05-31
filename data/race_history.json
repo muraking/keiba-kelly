@@ -14552,5 +14552,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:35:30.414Z"
+  },
+  {
+    "date": "5/31 高知 9R",
+    "venue": "高知",
+    "raceNum": "9R",
+    "raceClass": "C1ー2",
+    "winner": 5,
+    "winOdds": 3.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "イナズマテーラー",
+        "norm": 0.336,
+        "tanOdds": 2.4,
+        "ev": 80.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.2
+      },
+      {
+        "num": 4,
+        "name": "ツヴァイシュテルネ",
+        "norm": 0.1426,
+        "tanOdds": 53.9,
+        "ev": 768.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "サンライズラポール",
+        "norm": 0.0671,
+        "tanOdds": 33.2,
+        "ev": 222.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "スティーロポリス",
+        "norm": 0.0655,
+        "tanOdds": 18,
+        "ev": 117.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ディベルティール",
+        "norm": 0.0463,
+        "tanOdds": 23.7,
+        "ev": 109.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:36:13.023Z"
   }
 ]
