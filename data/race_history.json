@@ -15688,5 +15688,74 @@
       }
     ],
     "savedAt": "2026-05-31T23:21:21.010Z"
+  },
+  {
+    "date": "5/29 浦和 9R",
+    "venue": "浦和",
+    "raceNum": "9R",
+    "raceClass": "葉桜特別(C2)",
+    "winner": 10,
+    "winOdds": 2.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "ゴーオンパーパス",
+        "norm": 0.1664,
+        "tanOdds": 3.4,
+        "ev": 56.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.9
+      },
+      {
+        "num": 2,
+        "name": "シナモンポップ",
+        "norm": 0.0413,
+        "tanOdds": 25.7,
+        "ev": 106.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "チェスナットドレス",
+        "norm": 0.037,
+        "tanOdds": 46.3,
+        "ev": 171.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "トウヨウノマジョ",
+        "norm": 0.0366,
+        "tanOdds": 31.5,
+        "ev": 115.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ミサトレッドダイヤ",
+        "norm": 0.0308,
+        "tanOdds": 80.1,
+        "ev": 247,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:22:44.798Z"
   }
 ]
