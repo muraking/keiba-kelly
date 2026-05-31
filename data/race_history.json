@@ -11997,5 +11997,124 @@
       }
     ],
     "savedAt": "2026-05-31T16:00:40.191Z"
+  },
+  {
+    "date": "5/31 京都 6R",
+    "venue": "京都",
+    "raceNum": "6R",
+    "raceClass": "3歳1勝クラス",
+    "winner": 8,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ピカラ",
+        "norm": 0.2661,
+        "tanOdds": 1.6,
+        "ev": 42.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      },
+      {
+        "num": 3,
+        "name": "タイニーワンダー",
+        "norm": 0.0902,
+        "tanOdds": 11.8,
+        "ev": 106.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "メイショウイブキ",
+        "norm": 0.0471,
+        "tanOdds": 36.7,
+        "ev": 172.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "エコロボルト",
+        "norm": 0.0424,
+        "tanOdds": 40.5,
+        "ev": 171.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "バトゥカーダ",
+        "norm": 0.0407,
+        "tanOdds": 41.3,
+        "ev": 168,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ゲレーロアスール",
+        "norm": 0.034,
+        "tanOdds": 126.8,
+        "ev": 431.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ディープスリー",
+        "norm": 0.0327,
+        "tanOdds": 157.6,
+        "ev": 515.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "サリカリーフォリア",
+        "norm": 0.0321,
+        "tanOdds": 132.1,
+        "ev": 424.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "グランディマージュ",
+        "norm": 0.0309,
+        "tanOdds": 133.8,
+        "ev": 413.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "エルモサカスターノ",
+        "norm": 0.0295,
+        "tanOdds": 176.8,
+        "ev": 521.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:01:22.922Z"
   }
 ]
