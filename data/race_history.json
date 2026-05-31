@@ -14710,5 +14710,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:37:06.357Z"
+  },
+  {
+    "date": "5/31 高知 11",
+    "venue": "高知",
+    "raceNum": "11R",
+    "raceClass": "ファイナルレース(C3)",
+    "winner": 12,
+    "winOdds": 13.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "チャンピオンリボン",
+        "norm": 0.2612,
+        "tanOdds": 5.2,
+        "ev": 135.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "グリュースゴット",
+        "norm": 0.0546,
+        "tanOdds": 56.8,
+        "ev": 310.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ドンクロノス",
+        "norm": 0.0475,
+        "tanOdds": 12.5,
+        "ev": 59.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 13.6
+      },
+      {
+        "num": 4,
+        "name": "ノアファラオ",
+        "norm": 0.0322,
+        "tanOdds": 34.1,
+        "ev": 109.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "トワキ",
+        "norm": 0.0299,
+        "tanOdds": 49,
+        "ev": 146.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:37:52.359Z"
   }
 ]
