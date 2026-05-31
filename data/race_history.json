@@ -13950,5 +13950,104 @@
       }
     ],
     "savedAt": "2026-05-31T16:27:25.967Z"
+  },
+  {
+    "date": "5/31 高知 1R",
+    "venue": "高知",
+    "raceNum": "1R",
+    "raceClass": "C2ー7",
+    "winner": 7,
+    "winOdds": 2.3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ロイヤルダンス",
+        "norm": 0.3702,
+        "tanOdds": 5.2,
+        "ev": 192.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "スリーローズ",
+        "norm": 0.1676,
+        "tanOdds": 7,
+        "ev": 117.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "クリノバーグマン",
+        "norm": 0.1362,
+        "tanOdds": 39.5,
+        "ev": 538,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "メイショウハマギク",
+        "norm": 0.1038,
+        "tanOdds": 1.6,
+        "ev": 16.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.3
+      },
+      {
+        "num": 6,
+        "name": "エイシンギアアップ",
+        "norm": 0.0544,
+        "tanOdds": 21.6,
+        "ev": 117.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "エースオーディン",
+        "norm": 0.0473,
+        "tanOdds": 52,
+        "ev": 246.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ミヤファイター",
+        "norm": 0.0386,
+        "tanOdds": 37.5,
+        "ev": 144.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "タイガーワゴン",
+        "norm": 0.037,
+        "tanOdds": 43.8,
+        "ev": 162,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:28:39.883Z"
   }
 ]
