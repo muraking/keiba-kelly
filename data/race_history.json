@@ -13743,5 +13743,64 @@
       }
     ],
     "savedAt": "2026-05-31T16:22:43.670Z"
+  },
+  {
+    "date": "5/31 金沢 9R",
+    "venue": "金沢",
+    "raceNum": "9R",
+    "raceClass": "来週は百万石祭楽しもう特別(A1)",
+    "winner": 5,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ハクサンツキミテイ",
+        "norm": 0.3982,
+        "tanOdds": 2.4,
+        "ev": 95.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 3,
+        "name": "ドナアフロディテ",
+        "norm": 0.0554,
+        "tanOdds": 59.6,
+        "ev": 330.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "シスターアクト",
+        "norm": 0.0357,
+        "tanOdds": 75.8,
+        "ev": 270.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ハクサンアルタイル",
+        "norm": 0.0323,
+        "tanOdds": 37.4,
+        "ev": 120.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:23:49.546Z"
   }
 ]
