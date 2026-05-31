@@ -14118,5 +14118,54 @@
       }
     ],
     "savedAt": "2026-05-31T16:29:19.750Z"
+  },
+  {
+    "date": "5/31 高知 3R",
+    "venue": "高知",
+    "raceNum": "3R",
+    "raceClass": "C3ー3",
+    "winner": 10,
+    "winOdds": 2.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "ティアップマッハ",
+        "norm": 0.3248,
+        "tanOdds": 3.1,
+        "ev": 100.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.2
+      },
+      {
+        "num": 9,
+        "name": "サイモングリット",
+        "norm": 0.0699,
+        "tanOdds": 16.4,
+        "ev": 114.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "アクアマリンブルー",
+        "norm": 0.0392,
+        "tanOdds": 39.4,
+        "ev": 154.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:30:38.873Z"
   }
 ]
