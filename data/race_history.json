@@ -14226,5 +14226,84 @@
       }
     ],
     "savedAt": "2026-05-31T16:31:40.737Z"
+  },
+  {
+    "date": "5/31 高知 5R",
+    "venue": "高知",
+    "raceNum": "5R",
+    "raceClass": "ヤマボウシ特別(C3)",
+    "winner": 1,
+    "winOdds": 29.3,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "カゲマル",
+        "norm": 0.1026,
+        "tanOdds": 11,
+        "ev": 112.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "プレジール",
+        "norm": 0.0883,
+        "tanOdds": 24.2,
+        "ev": 213.6,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 29.3
+      },
+      {
+        "num": 3,
+        "name": "リライトヒストリー",
+        "norm": 0.0642,
+        "tanOdds": 17.2,
+        "ev": 110.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ギンガエクスプレス",
+        "norm": 0.0279,
+        "tanOdds": 65.2,
+        "ev": 181.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ブラウナイル",
+        "norm": 0.0234,
+        "tanOdds": 118,
+        "ev": 275.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "イカホ",
+        "norm": 0.0217,
+        "tanOdds": 64.5,
+        "ev": 139.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:32:41.757Z"
   }
 ]
