@@ -15332,5 +15332,94 @@
       }
     ],
     "savedAt": "2026-05-31T16:45:34.744Z"
+  },
+  {
+    "date": "5/31 佐賀 9R",
+    "venue": "佐賀",
+    "raceNum": "9R",
+    "raceClass": "FUJI4周年記念レース(A2)",
+    "winner": 7,
+    "winOdds": 2.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ケイアイアンタレス",
+        "norm": 0.3032,
+        "tanOdds": 2.2,
+        "ev": 66.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.1
+      },
+      {
+        "num": 9,
+        "name": "テイエムダイタカ",
+        "norm": 0.2246,
+        "tanOdds": 4.7,
+        "ev": 105.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ヴィシソワーズ",
+        "norm": 0.0531,
+        "tanOdds": 29.3,
+        "ev": 155.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "アマルフィー",
+        "norm": 0.0501,
+        "tanOdds": 24.4,
+        "ev": 122.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "エイシンチェンバー",
+        "norm": 0.0303,
+        "tanOdds": 47.7,
+        "ev": 144.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "カシノルーカス",
+        "norm": 0.0201,
+        "tanOdds": 68,
+        "ev": 136.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ホーリーバローズ",
+        "norm": 0.0195,
+        "tanOdds": 184.6,
+        "ev": 360.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:47:26.461Z"
   }
 ]
