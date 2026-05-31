@@ -14404,5 +14404,84 @@
       }
     ],
     "savedAt": "2026-05-31T16:33:48.005Z"
+  },
+  {
+    "date": "5/31 高知 7R",
+    "venue": "高知",
+    "raceNum": "7R",
+    "raceClass": "C1ー4",
+    "winner": 10,
+    "winOdds": 1.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "ダオラダオラ",
+        "norm": 0.334,
+        "tanOdds": 1.9,
+        "ev": 63.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.7
+      },
+      {
+        "num": 3,
+        "name": "メイショウシロガネ",
+        "norm": 0.1555,
+        "tanOdds": 10.6,
+        "ev": 164.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ルクスチェリー",
+        "norm": 0.0576,
+        "tanOdds": 26.8,
+        "ev": 154.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ジェンマ",
+        "norm": 0.0419,
+        "tanOdds": 66,
+        "ev": 276.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ボマイェ",
+        "norm": 0.0375,
+        "tanOdds": 38.6,
+        "ev": 144.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ダイチヴィヴァン",
+        "norm": 0.0279,
+        "tanOdds": 74.9,
+        "ev": 209,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:34:44.310Z"
   }
 ]
