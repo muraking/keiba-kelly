@@ -16123,5 +16123,74 @@
       }
     ],
     "savedAt": "2026-05-31T23:25:26.179Z"
+  },
+  {
+    "date": "5/29 笠松 2R",
+    "venue": "笠松",
+    "raceNum": "2R",
+    "raceClass": "リクユウすっちーありがとう記念(C)",
+    "winner": 6,
+    "winOdds": 5.3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "アラウズ",
+        "norm": 0.3881,
+        "tanOdds": 2.7,
+        "ev": 104.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ミスターヨッシャー",
+        "norm": 0.1873,
+        "tanOdds": 16.7,
+        "ev": 312.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "チュウワアスコット",
+        "norm": 0.086,
+        "tanOdds": 12.4,
+        "ev": 106.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "モーモーブラウン",
+        "norm": 0.0775,
+        "tanOdds": 4.4,
+        "ev": 34.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 5.3
+      },
+      {
+        "num": 4,
+        "name": "マジョリー",
+        "norm": 0.0232,
+        "tanOdds": 65.4,
+        "ev": 151.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:26:01.167Z"
   }
 ]
