@@ -12709,5 +12709,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:08:11.612Z"
+  },
+  {
+    "date": "5/31 水沢 2R",
+    "venue": "水沢",
+    "raceNum": "2R",
+    "raceClass": "C2九組",
+    "winner": 6,
+    "winOdds": 2.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "エバーアリエル",
+        "norm": 0.1549,
+        "tanOdds": 9.2,
+        "ev": 142.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "キラン",
+        "norm": 0.1402,
+        "tanOdds": 3.4,
+        "ev": 47.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.7
+      },
+      {
+        "num": 2,
+        "name": "アルフィー",
+        "norm": 0.0489,
+        "tanOdds": 21.5,
+        "ev": 105.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "イモータリティ",
+        "norm": 0.0462,
+        "tanOdds": 23.6,
+        "ev": 108.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ラストパラダイス",
+        "norm": 0.0305,
+        "tanOdds": 42.6,
+        "ev": 129.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:08:54.966Z"
   }
 ]
