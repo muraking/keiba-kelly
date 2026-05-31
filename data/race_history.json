@@ -12422,5 +12422,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:04:32.024Z"
+  },
+  {
+    "date": "5/31 京都 11",
+    "venue": "京都",
+    "raceNum": "11R",
+    "raceClass": "白百合S",
+    "winner": 1,
+    "winOdds": 4.2,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "ロサルゴサ",
+        "norm": 0.3879,
+        "tanOdds": 5.2,
+        "ev": 201.7,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 4.2
+      },
+      {
+        "num": 7,
+        "name": "ダイチノナポリ",
+        "norm": 0.1042,
+        "tanOdds": 12.5,
+        "ev": 130.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ムスクレスト",
+        "norm": 0.0753,
+        "tanOdds": 21.3,
+        "ev": 160.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "バークシャーシチー",
+        "norm": 0.0489,
+        "tanOdds": 20.8,
+        "ev": 101.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ブライトフレア",
+        "norm": 0.0308,
+        "tanOdds": 132.5,
+        "ev": 408.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:06:23.405Z"
   }
 ]
