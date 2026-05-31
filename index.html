@@ -1171,6 +1171,7 @@ async function loadSoftmaxFromGithub() {
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
       `損切り: ${stopLossEnabled ? '¥'+stopLossAmount+'未満で停止' : 'OFF'}`,
+      `掛け金計算: ${combinedKelly ? '合成ハーフケリー' : '個別ハーフケリー（従来）'}`,
       (()=>{
         const skips = [];
         if(localStorage.getItem('skip_local_maiden')==='1') skips.push('地方新馬');
