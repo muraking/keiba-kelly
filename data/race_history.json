@@ -13290,5 +13290,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:17:29.142Z"
+  },
+  {
+    "date": "5/31 金沢 1R",
+    "venue": "金沢",
+    "raceNum": "1R",
+    "raceClass": "来週は百万石祭にいきま賞(C2)",
+    "winner": 4,
+    "winOdds": 2.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "ルルーディ",
+        "norm": 0.4224,
+        "tanOdds": 2.7,
+        "ev": 114.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.2
+      },
+      {
+        "num": 10,
+        "name": "タッチザシーリング",
+        "norm": 0.0893,
+        "tanOdds": 19,
+        "ev": 169.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "マオノブリージー",
+        "norm": 0.0538,
+        "tanOdds": 29.6,
+        "ev": 159.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "グラスファイン",
+        "norm": 0.0515,
+        "tanOdds": 46.4,
+        "ev": 239.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ネムレスクイーン",
+        "norm": 0.0396,
+        "tanOdds": 29.8,
+        "ev": 117.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:18:19.835Z"
   }
 ]
