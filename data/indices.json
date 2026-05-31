@@ -27482,7 +27482,7 @@
     "auto_buy_max": 2000,
     "auto_buy_skip_fav": true,
     "norm_method": "softmax",
-    "max_bets": 4,
+    "max_bets": 2,
     "auto_buy_skip_fav_odds": 1.5,
     "sm_winrate_filter": 3,
     "stop_loss_enabled": true,
@@ -27504,7 +27504,7 @@
     "exacta_rec1": true,
     "exacta_rec2": true,
     "exacta_rec3": false,
-    "buy_wide": true,
+    "buy_wide": false,
     "wide_amount": 200,
     "wide_top1": true,
     "wide_top2": false,
@@ -27513,7 +27513,7 @@
     "wide_rec3": false,
     "buy_exacta_jra": true,
     "buy_exacta_local": true,
-    "buy_wide_jra": true,
-    "buy_wide_local": true
+    "buy_wide_jra": false,
+    "buy_wide_local": false
   }
 }
