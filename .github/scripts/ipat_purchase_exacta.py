@@ -126,12 +126,12 @@ async def purchase(page, course_name, race_num, bets, bet_type):
 
     # ① オッズ投票（Playwright click→ページ遷移を待つ）
     await page.tap('text=オッズ投票')
-    await page.wait_for_timeout(2000)
+    await page.wait_for_timeout(3000)
     print(f"オッズ投票: {page.url}")
 
     # ② 競馬場選択
     course_base = course_name.split('(')[0].strip()
-    page_text = await page.evaluate("() => document.body.innerText")
+    page_text = await page.evaluate("() => document.body ? document.body.innerText : ''")
     click_name = course_name if course_name in page_text else (course_base if course_base in page_text else course_name)
     if click_name != course_name:
         print(f"コース名変換: {course_name} → {click_name}")
