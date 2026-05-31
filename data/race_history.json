@@ -15085,5 +15085,94 @@
       }
     ],
     "savedAt": "2026-05-31T16:43:09.621Z"
+  },
+  {
+    "date": "5/31 佐賀 6R",
+    "venue": "佐賀",
+    "raceNum": "6R",
+    "raceClass": "九州優駿栄城賞重賞",
+    "winner": 12,
+    "winOdds": 10.3,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "ハクアイドゥマン",
+        "norm": 0.1471,
+        "tanOdds": 23.8,
+        "ev": 350.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "カシノアミュレット",
+        "norm": 0.0921,
+        "tanOdds": 14,
+        "ev": 129,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 10.3
+      },
+      {
+        "num": 1,
+        "name": "ワイズポーシャ",
+        "norm": 0.0618,
+        "tanOdds": 35.3,
+        "ev": 218,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ダバイシュクレ",
+        "norm": 0.0507,
+        "tanOdds": 24.9,
+        "ev": 126.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ミッジーチャンプ",
+        "norm": 0.0488,
+        "tanOdds": 89,
+        "ev": 434.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ウルトラキッド",
+        "norm": 0.0469,
+        "tanOdds": 90.6,
+        "ev": 425,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "アッシュアール",
+        "norm": 0.0384,
+        "tanOdds": 132.4,
+        "ev": 508.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:43:47.059Z"
   }
 ]
