@@ -12303,5 +12303,124 @@
       }
     ],
     "savedAt": "2026-05-31T16:03:48.936Z"
+  },
+  {
+    "date": "5/31 京都 10",
+    "venue": "京都",
+    "raceNum": "10R",
+    "raceClass": "安土城S",
+    "winner": 17,
+    "winOdds": 15.4,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "アサカラキング",
+        "norm": 0.1248,
+        "tanOdds": 15.5,
+        "ev": 193.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 17,
+        "name": "エコロブルーム",
+        "norm": 0.0861,
+        "tanOdds": 13.5,
+        "ev": 116.2,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 15.4
+      },
+      {
+        "num": 2,
+        "name": "メイショウシンタケ",
+        "norm": 0.0504,
+        "tanOdds": 36.5,
+        "ev": 183.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "スリールミニョン",
+        "norm": 0.0467,
+        "tanOdds": 24.7,
+        "ev": 115.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "カルチャーデイ",
+        "norm": 0.0446,
+        "tanOdds": 24.6,
+        "ev": 109.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "レイベリング",
+        "norm": 0.0384,
+        "tanOdds": 46.5,
+        "ev": 178.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "シンフォーエバー",
+        "norm": 0.0372,
+        "tanOdds": 56.3,
+        "ev": 209.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ムイ",
+        "norm": 0.0336,
+        "tanOdds": 30.3,
+        "ev": 101.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ソウテン",
+        "norm": 0.0333,
+        "tanOdds": 71.9,
+        "ev": 239.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ビーアストニッシド",
+        "norm": 0.03,
+        "tanOdds": 100.7,
+        "ev": 302.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:04:32.024Z"
   }
 ]
