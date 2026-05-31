@@ -16350,5 +16350,54 @@
       }
     ],
     "savedAt": "2026-05-31T23:27:15.518Z"
+  },
+  {
+    "date": "5/29 笠松 6R",
+    "venue": "笠松",
+    "raceNum": "6R",
+    "raceClass": "B5組",
+    "winner": 4,
+    "winOdds": 4,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ハルカサクソラ",
+        "norm": 0.4517,
+        "tanOdds": 2.3,
+        "ev": 103.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "カジカライズ",
+        "norm": 0.2383,
+        "tanOdds": 4.5,
+        "ev": 107.3,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 4
+      },
+      {
+        "num": 8,
+        "name": "デルミオクオーレ",
+        "norm": 0.0397,
+        "tanOdds": 56.3,
+        "ev": 223.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:28:15.413Z"
   }
 ]
