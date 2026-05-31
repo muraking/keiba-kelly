@@ -11621,5 +11621,124 @@
       }
     ],
     "savedAt": "2026-05-31T15:57:07.834Z"
+  },
+  {
+    "date": "5/31 京都 2R",
+    "venue": "京都",
+    "raceNum": "2R",
+    "raceClass": "3歳未勝利",
+    "winner": 16,
+    "winOdds": 2.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 16,
+        "name": "カーリキュー",
+        "norm": 0.3309,
+        "tanOdds": 2.4,
+        "ev": 79.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.2
+      },
+      {
+        "num": 3,
+        "name": "ルクスドリーム",
+        "norm": 0.1547,
+        "tanOdds": 8.3,
+        "ev": 128.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ナムラソラン",
+        "norm": 0.0577,
+        "tanOdds": 21.3,
+        "ev": 122.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "(競走データなし)ノボリスマイル",
+        "norm": 0.0316,
+        "tanOdds": 142.3,
+        "ev": 449.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "メモリーデイズ",
+        "norm": 0.0309,
+        "tanOdds": 111.1,
+        "ev": 343.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "クロボタン",
+        "norm": 0.0297,
+        "tanOdds": 143.4,
+        "ev": 425.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ミスジェイド",
+        "norm": 0.0288,
+        "tanOdds": 92.6,
+        "ev": 266.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "メイワキラリ",
+        "norm": 0.028,
+        "tanOdds": 72.9,
+        "ev": 203.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "メイショウゼルク",
+        "norm": 0.0269,
+        "tanOdds": 243.8,
+        "ev": 655.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "クリコイーコ",
+        "norm": 0.0257,
+        "tanOdds": 94.5,
+        "ev": 243.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T15:57:55.363Z"
   }
 ]
