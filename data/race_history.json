@@ -13152,5 +13152,104 @@
       }
     ],
     "savedAt": "2026-05-31T16:15:49.995Z"
+  },
+  {
+    "date": "5/31 水沢 10",
+    "venue": "水沢",
+    "raceNum": "10R",
+    "raceClass": "東北優駿(マインドユアビスケッツ重賞",
+    "winner": 10,
+    "winOdds": 2.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "レジェンドバローズ",
+        "norm": 0.2279,
+        "tanOdds": 2.7,
+        "ev": 61.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.7
+      },
+      {
+        "num": 6,
+        "name": "アウトザロー",
+        "norm": 0.1873,
+        "tanOdds": 5.9,
+        "ev": 110.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "バオシェテンシ",
+        "norm": 0.0714,
+        "tanOdds": 29.3,
+        "ev": 209.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "トレモロ",
+        "norm": 0.066,
+        "tanOdds": 25.6,
+        "ev": 169,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ゼウスシルエット",
+        "norm": 0.0444,
+        "tanOdds": 36.9,
+        "ev": 163.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ササキントサブロウ",
+        "norm": 0.0425,
+        "tanOdds": 104.4,
+        "ev": 444.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "アドレニコル",
+        "norm": 0.0386,
+        "tanOdds": 60.1,
+        "ev": 232.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ロジータサンライズ",
+        "norm": 0.0355,
+        "tanOdds": 75.7,
+        "ev": 268.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:16:46.449Z"
   }
 ]
