@@ -16192,5 +16192,64 @@
       }
     ],
     "savedAt": "2026-05-31T23:26:01.167Z"
+  },
+  {
+    "date": "5/29 笠松 3R",
+    "venue": "笠松",
+    "raceNum": "3R",
+    "raceClass": "みさ誕生へしこ記念(C)",
+    "winner": 6,
+    "winOdds": 1.7,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "インティパイロ",
+        "norm": 0.4199,
+        "tanOdds": 3.6,
+        "ev": 151.2,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 1.7
+      },
+      {
+        "num": 9,
+        "name": "タヤスアメリカン",
+        "norm": 0.1433,
+        "tanOdds": 16.5,
+        "ev": 236.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ミルタンドレス",
+        "norm": 0.0985,
+        "tanOdds": 18.8,
+        "ev": 185.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ムーヴオン",
+        "norm": 0.0326,
+        "tanOdds": 34.8,
+        "ev": 113.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:26:37.870Z"
   }
 ]
