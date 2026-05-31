@@ -13359,5 +13359,54 @@
       }
     ],
     "savedAt": "2026-05-31T16:18:19.835Z"
+  },
+  {
+    "date": "5/31 金沢 2R",
+    "venue": "金沢",
+    "raceNum": "2R",
+    "raceClass": "C23",
+    "winner": 8,
+    "winOdds": 5.2,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "ハットメリリー",
+        "norm": 0.3277,
+        "tanOdds": 5.8,
+        "ev": 190.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "フィエールガール",
+        "norm": 0.1099,
+        "tanOdds": 12.5,
+        "ev": 137.3,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 5.2
+      },
+      {
+        "num": 7,
+        "name": "コウエツ",
+        "norm": 0.0701,
+        "tanOdds": 38.1,
+        "ev": 266.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:19:44.817Z"
   }
 ]
