@@ -16034,5 +16034,94 @@
       }
     ],
     "savedAt": "2026-05-31T23:24:36.636Z"
+  },
+  {
+    "date": "5/29 笠松 1R",
+    "venue": "笠松",
+    "raceNum": "1R",
+    "raceClass": "C9組",
+    "winner": 1,
+    "winOdds": 16.3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "テルケンレングレー",
+        "norm": 0.0702,
+        "tanOdds": 27.1,
+        "ev": 190.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "スッサンファースト",
+        "norm": 0.0493,
+        "tanOdds": 21.6,
+        "ev": 106.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "アイヴカムバック",
+        "norm": 0.0324,
+        "tanOdds": 41.4,
+        "ev": 134,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "メイショウナナカゼ",
+        "norm": 0.032,
+        "tanOdds": 9.8,
+        "ev": 31.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 16.3
+      },
+      {
+        "num": 3,
+        "name": "ラインシュトラール",
+        "norm": 0.0197,
+        "tanOdds": 153,
+        "ev": 301.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "モリノリオン",
+        "norm": 0.0193,
+        "tanOdds": 147.1,
+        "ev": 284.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "タンバリュー",
+        "norm": 0.0176,
+        "tanOdds": 78.5,
+        "ev": 137.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:25:26.179Z"
   }
 ]
