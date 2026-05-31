@@ -13802,5 +13802,84 @@
       }
     ],
     "savedAt": "2026-05-31T16:23:49.546Z"
+  },
+  {
+    "date": "5/31 金沢 10",
+    "venue": "金沢",
+    "raceNum": "10R",
+    "raceClass": "百万石賞重賞",
+    "winner": 8,
+    "winOdds": 3.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "ナミダノキス",
+        "norm": 0.1256,
+        "tanOdds": 3.9,
+        "ev": 49,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.2
+      },
+      {
+        "num": 9,
+        "name": "ヴェルテックス",
+        "norm": 0.0836,
+        "tanOdds": 47.1,
+        "ev": 393.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ダイヤモンドライン",
+        "norm": 0.0493,
+        "tanOdds": 73.8,
+        "ev": 363.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "サヴァ",
+        "norm": 0.0437,
+        "tanOdds": 184.9,
+        "ev": 807.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "マンガン",
+        "norm": 0.0432,
+        "tanOdds": 63.5,
+        "ev": 274.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ウェザーコック",
+        "norm": 0.0417,
+        "tanOdds": 166.3,
+        "ev": 693,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:25:45.283Z"
   }
 ]
