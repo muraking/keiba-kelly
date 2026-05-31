@@ -12945,5 +12945,54 @@
       }
     ],
     "savedAt": "2026-05-31T16:13:13.973Z"
+  },
+  {
+    "date": "5/31 水沢 7R",
+    "venue": "水沢",
+    "raceNum": "7R",
+    "raceClass": "B2二組",
+    "winner": 3,
+    "winOdds": 6.8,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "フォーエリーゼ",
+        "norm": 0.3727,
+        "tanOdds": 5.3,
+        "ev": 197.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "インディーフィルム",
+        "norm": 0.0838,
+        "tanOdds": 19.3,
+        "ev": 161.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "アルファシリウス",
+        "norm": 0.0674,
+        "tanOdds": 11.2,
+        "ev": 75.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6.8
+      }
+    ],
+    "savedAt": "2026-05-31T16:13:56.602Z"
   }
 ]
