@@ -15886,5 +15886,74 @@
       }
     ],
     "savedAt": "2026-05-31T23:23:38.392Z"
+  },
+  {
+    "date": "5/29 浦和 11",
+    "venue": "浦和",
+    "raceNum": "11R",
+    "raceClass": "橘月特別(B2B3)",
+    "winner": 11,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "ストイックノア",
+        "norm": 0.4199,
+        "tanOdds": 2.7,
+        "ev": 113.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.9
+      },
+      {
+        "num": 1,
+        "name": "ローアヴァンフレア",
+        "norm": 0.0759,
+        "tanOdds": 22.3,
+        "ev": 169.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ブレイヴルーラー",
+        "norm": 0.0507,
+        "tanOdds": 21.3,
+        "ev": 108,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "エスケントバゴ",
+        "norm": 0.0391,
+        "tanOdds": 30.6,
+        "ev": 119.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ベルガラス",
+        "norm": 0.0337,
+        "tanOdds": 57.7,
+        "ev": 194.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T23:24:07.418Z"
   }
 ]
