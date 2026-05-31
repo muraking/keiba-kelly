@@ -15510,5 +15510,84 @@
       }
     ],
     "savedAt": "2026-05-31T16:48:08.315Z"
+  },
+  {
+    "date": "5/31 佐賀 11",
+    "venue": "佐賀",
+    "raceNum": "11R",
+    "raceClass": "SAGAリベンジャーズ(C2)",
+    "winner": 2,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "キリシマコトブキ",
+        "norm": 0.2789,
+        "tanOdds": 4.3,
+        "ev": 119.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ハピネスマインド",
+        "norm": 0.2333,
+        "tanOdds": 2.6,
+        "ev": 60.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 9,
+        "name": "モリブトバクカジ",
+        "norm": 0.0708,
+        "tanOdds": 25.8,
+        "ev": 182.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "サンレンブイ",
+        "norm": 0.0354,
+        "tanOdds": 117.3,
+        "ev": 415.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "メイクアストーリー",
+        "norm": 0.0344,
+        "tanOdds": 101.5,
+        "ev": 349.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "アユツリムスメ",
+        "norm": 0.0254,
+        "tanOdds": 81.2,
+        "ev": 206.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:49:08.539Z"
   }
 ]
