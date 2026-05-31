@@ -13408,5 +13408,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:19:44.817Z"
+  },
+  {
+    "date": "5/31 金沢 3R",
+    "venue": "金沢",
+    "raceNum": "3R",
+    "raceClass": "Win5愛好へそきり会招福記念(C2)",
+    "winner": 7,
+    "winOdds": 6.8,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ハクサンアンタレス",
+        "norm": 0.1247,
+        "tanOdds": 8.7,
+        "ev": 108.5,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 6.8
+      },
+      {
+        "num": 9,
+        "name": "クレイプマートル",
+        "norm": 0.1136,
+        "tanOdds": 9.4,
+        "ev": 106.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "トップタルマエ",
+        "norm": 0.0978,
+        "tanOdds": 24.3,
+        "ev": 237.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ダフニス",
+        "norm": 0.0934,
+        "tanOdds": 56.3,
+        "ev": 525.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "シャドウマッドネス",
+        "norm": 0.0495,
+        "tanOdds": 28.3,
+        "ev": 139.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:20:14.419Z"
   }
 ]
