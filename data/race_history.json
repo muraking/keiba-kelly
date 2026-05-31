@@ -12886,5 +12886,64 @@
       }
     ],
     "savedAt": "2026-05-31T16:12:00.109Z"
+  },
+  {
+    "date": "5/31 水沢 6R",
+    "venue": "水沢",
+    "raceNum": "6R",
+    "raceClass": "B2三組",
+    "winner": 5,
+    "winOdds": 2.4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "トチノヒーロー",
+        "norm": 0.4046,
+        "tanOdds": 2.8,
+        "ev": 113.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ラヴェイ",
+        "norm": 0.1151,
+        "tanOdds": 9.9,
+        "ev": 114,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "オロパタジン",
+        "norm": 0.075,
+        "tanOdds": 3.2,
+        "ev": 24,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.4
+      },
+      {
+        "num": 10,
+        "name": "マロンジェム",
+        "norm": 0.0353,
+        "tanOdds": 48.3,
+        "ev": 170.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:13:13.973Z"
   }
 ]
