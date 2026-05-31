@@ -16399,5 +16399,54 @@
       }
     ],
     "savedAt": "2026-05-31T23:28:15.413Z"
+  },
+  {
+    "date": "5/29 笠松 8R",
+    "venue": "笠松",
+    "raceNum": "8R",
+    "raceClass": "C3組",
+    "winner": 1,
+    "winOdds": 25.8,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "スマートマナリス",
+        "norm": 0.0934,
+        "tanOdds": 26.3,
+        "ev": 245.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "モーニングフジ",
+        "norm": 0.0825,
+        "tanOdds": 20.6,
+        "ev": 169.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "キョウエイウインド",
+        "norm": 0.0418,
+        "tanOdds": 12.7,
+        "ev": 53.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 25.8
+      }
+    ],
+    "savedAt": "2026-05-31T23:30:01.959Z"
   }
 ]
