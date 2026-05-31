@@ -12778,5 +12778,64 @@
       }
     ],
     "savedAt": "2026-05-31T16:08:54.966Z"
+  },
+  {
+    "date": "5/31 水沢 4R",
+    "venue": "水沢",
+    "raceNum": "4R",
+    "raceClass": "C2七組",
+    "winner": 1,
+    "winOdds": 87.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "アニマルキリシマ",
+        "norm": 0.2003,
+        "tanOdds": 12.2,
+        "ev": 244.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "エバーグリーン",
+        "norm": 0.1933,
+        "tanOdds": 7.5,
+        "ev": 145,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ドルチェヴィータ",
+        "norm": 0.0383,
+        "tanOdds": 28.9,
+        "ev": 110.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ロイエ",
+        "norm": 0.03,
+        "tanOdds": 49,
+        "ev": 146.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 87.9
+      }
+    ],
+    "savedAt": "2026-05-31T16:10:49.440Z"
   }
 ]
