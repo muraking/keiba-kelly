@@ -15016,5 +15016,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:41:41.221Z"
+  },
+  {
+    "date": "5/31 佐賀 5R",
+    "venue": "佐賀",
+    "raceNum": "5R",
+    "raceClass": "サガデーナイト競馬賞(C1)",
+    "winner": 9,
+    "winOdds": 1.8,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "ソレイケギンチャン",
+        "norm": 0.3416,
+        "tanOdds": 2.1,
+        "ev": 71.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.8
+      },
+      {
+        "num": 1,
+        "name": "フリューゲル",
+        "norm": 0.0373,
+        "tanOdds": 77.3,
+        "ev": 288.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ミナミジュウジセイ",
+        "norm": 0.0364,
+        "tanOdds": 42,
+        "ev": 152.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ファインギフト",
+        "norm": 0.0226,
+        "tanOdds": 76.5,
+        "ev": 173.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "キーナイス",
+        "norm": 0.0183,
+        "tanOdds": 73.1,
+        "ev": 133.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:43:09.621Z"
   }
 ]
