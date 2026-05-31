@@ -14838,5 +14838,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:38:48.314Z"
+  },
+  {
+    "date": "5/31 佐賀 2R",
+    "venue": "佐賀",
+    "raceNum": "2R",
+    "raceClass": "C2ー12組",
+    "winner": 4,
+    "winOdds": 5.5,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "グレースサンライズ",
+        "norm": 0.2603,
+        "tanOdds": 7.8,
+        "ev": 203,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 5.5
+      },
+      {
+        "num": 1,
+        "name": "ピュアコレクション",
+        "norm": 0.0888,
+        "tanOdds": 21.9,
+        "ev": 194.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "トラウムビルト",
+        "norm": 0.0385,
+        "tanOdds": 87.2,
+        "ev": 335.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ラブコ",
+        "norm": 0.0298,
+        "tanOdds": 43.6,
+        "ev": 129.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "タガノフレミング",
+        "norm": 0.0236,
+        "tanOdds": 126.8,
+        "ev": 299.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:39:32.250Z"
   }
 ]
