@@ -14907,5 +14907,114 @@
       }
     ],
     "savedAt": "2026-05-31T16:39:32.250Z"
+  },
+  {
+    "date": "5/31 佐賀 4R",
+    "venue": "佐賀",
+    "raceNum": "4R",
+    "raceClass": "C2ー10組",
+    "winner": 3,
+    "winOdds": 62.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "クロスアヴァンセ",
+        "norm": 0.1376,
+        "tanOdds": 16.3,
+        "ev": 224.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "セルリアンロケット",
+        "norm": 0.1091,
+        "tanOdds": 10.2,
+        "ev": 111.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "スマートアクシオン",
+        "norm": 0.1087,
+        "tanOdds": 9.6,
+        "ev": 104.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ロッピス",
+        "norm": 0.0627,
+        "tanOdds": 22.6,
+        "ev": 141.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ウェルマインド",
+        "norm": 0.0558,
+        "tanOdds": 39.2,
+        "ev": 218.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "プロデッツァ",
+        "norm": 0.0352,
+        "tanOdds": 23.2,
+        "ev": 81.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 62.6
+      },
+      {
+        "num": 9,
+        "name": "メイショウワカタケ",
+        "norm": 0.0317,
+        "tanOdds": 61.2,
+        "ev": 194.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "アルジャヒリ",
+        "norm": 0.0299,
+        "tanOdds": 40.5,
+        "ev": 121.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ナリノカサブランカ",
+        "norm": 0.0289,
+        "tanOdds": 55.8,
+        "ev": 161.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:41:41.221Z"
   }
 ]
