@@ -13251,5 +13251,44 @@
       }
     ],
     "savedAt": "2026-05-31T16:16:46.449Z"
+  },
+  {
+    "date": "5/31 水沢 11",
+    "venue": "水沢",
+    "raceNum": "11R",
+    "raceClass": "ほやこおねえさん賞(B1)",
+    "winner": 2,
+    "winOdds": 3.3,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "ナムラボス",
+        "norm": 0.3311,
+        "tanOdds": 4.8,
+        "ev": 158.9,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 3.3
+      },
+      {
+        "num": 3,
+        "name": "タカマキスリー",
+        "norm": 0.0315,
+        "tanOdds": 33.6,
+        "ev": 105.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:17:29.142Z"
   }
 ]
