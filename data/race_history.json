@@ -13881,5 +13881,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:25:45.283Z"
+  },
+  {
+    "date": "5/31 金沢 11",
+    "venue": "金沢",
+    "raceNum": "11R",
+    "raceClass": "第2回竹橋おきらく食堂スプリング杯(B2特別)",
+    "winner": 7,
+    "winOdds": 2.3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ロマンスグレー",
+        "norm": 0.2163,
+        "tanOdds": 3.6,
+        "ev": 77.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.3
+      },
+      {
+        "num": 3,
+        "name": "ウインペルセ",
+        "norm": 0.1341,
+        "tanOdds": 16,
+        "ev": 214.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "カワキタオルゴ",
+        "norm": 0.1248,
+        "tanOdds": 11.5,
+        "ev": 143.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "リプレット",
+        "norm": 0.0289,
+        "tanOdds": 61.2,
+        "ev": 176.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "リンクアームズ",
+        "norm": 0.0243,
+        "tanOdds": 91.4,
+        "ev": 222.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:27:25.967Z"
   }
 ]
