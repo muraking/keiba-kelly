@@ -15243,5 +15243,94 @@
       }
     ],
     "savedAt": "2026-05-31T16:45:00.113Z"
+  },
+  {
+    "date": "5/31 佐賀 8R",
+    "venue": "佐賀",
+    "raceNum": "8R",
+    "raceClass": "オッズパーク杯(B)",
+    "winner": 2,
+    "winOdds": 4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "セプトラム",
+        "norm": 0.2036,
+        "tanOdds": 2.7,
+        "ev": 55,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 4
+      },
+      {
+        "num": 5,
+        "name": "トライコーン",
+        "norm": 0.1183,
+        "tanOdds": 11.2,
+        "ev": 132.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ダンスインザリング",
+        "norm": 0.0692,
+        "tanOdds": 17,
+        "ev": 117.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "サンサラン",
+        "norm": 0.0371,
+        "tanOdds": 28.4,
+        "ev": 105.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ナニーピオニー",
+        "norm": 0.0308,
+        "tanOdds": 37.5,
+        "ev": 115.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "コスモコラッジョ",
+        "norm": 0.0212,
+        "tanOdds": 127.1,
+        "ev": 269.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ポケットカラキュン",
+        "norm": 0.0206,
+        "tanOdds": 100.4,
+        "ev": 206.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:45:34.744Z"
   }
 ]
