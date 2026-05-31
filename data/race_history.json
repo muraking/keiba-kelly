@@ -12185,5 +12185,44 @@
       }
     ],
     "savedAt": "2026-05-31T16:02:29.902Z"
+  },
+  {
+    "date": "5/31 京都 8R",
+    "venue": "京都",
+    "raceNum": "8R",
+    "raceClass": "4歳以上2勝クラス",
+    "winner": 1,
+    "winOdds": 5.7,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "フィオレストラーダ",
+        "norm": 0.1748,
+        "tanOdds": 7.6,
+        "ev": 132.9,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 5.7
+      },
+      {
+        "num": 6,
+        "name": "モモンウールー",
+        "norm": 0.0333,
+        "tanOdds": 44.7,
+        "ev": 149,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:03:06.473Z"
   }
 ]
