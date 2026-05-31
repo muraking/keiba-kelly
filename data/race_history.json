@@ -14049,5 +14049,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:28:39.883Z"
+  },
+  {
+    "date": "5/31 高知 2R",
+    "venue": "高知",
+    "raceNum": "2R",
+    "raceClass": "C2ー6",
+    "winner": 11,
+    "winOdds": 2.8,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "ココリハクタク",
+        "norm": 0.2834,
+        "tanOdds": 8.1,
+        "ev": 229.6,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 2.8
+      },
+      {
+        "num": 4,
+        "name": "メンヒ",
+        "norm": 0.1647,
+        "tanOdds": 15.7,
+        "ev": 258.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ダノンペドロ",
+        "norm": 0.0335,
+        "tanOdds": 52.3,
+        "ev": 175.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "サノノビスケッツ",
+        "norm": 0.0328,
+        "tanOdds": 71.9,
+        "ev": 235.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "アルスカー",
+        "norm": 0.0317,
+        "tanOdds": 50,
+        "ev": 158.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:29:19.750Z"
   }
 ]
