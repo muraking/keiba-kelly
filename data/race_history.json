@@ -10264,5 +10264,104 @@
       }
     ],
     "savedAt": "2026-05-24T12:46:00.276Z"
+  },
+  {
+    "date": "5/31 東京 1R",
+    "venue": "東京",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 9,
+    "winOdds": 3.4,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "エフハリスト",
+        "norm": 0.3264,
+        "tanOdds": 3.5,
+        "ev": 114.3,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 3.4
+      },
+      {
+        "num": 16,
+        "name": "ユーゲットミー",
+        "norm": 0.0919,
+        "tanOdds": 25.5,
+        "ev": 234.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "アーティラリー",
+        "norm": 0.0716,
+        "tanOdds": 15.8,
+        "ev": 113.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "キミガハマ",
+        "norm": 0.0698,
+        "tanOdds": 61.9,
+        "ev": 432,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "レディソフィア",
+        "norm": 0.0374,
+        "tanOdds": 46.3,
+        "ev": 172.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "トラストレガート",
+        "norm": 0.0305,
+        "tanOdds": 43.4,
+        "ev": 132.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "フローレスカラーズ",
+        "norm": 0.0301,
+        "tanOdds": 79.6,
+        "ev": 240,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "ミツカネルナ",
+        "norm": 0.0286,
+        "tanOdds": 48,
+        "ev": 137.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T15:45:06.517Z"
   }
 ]
