@@ -14167,5 +14167,64 @@
       }
     ],
     "savedAt": "2026-05-31T16:30:38.873Z"
+  },
+  {
+    "date": "5/31 高知 4R",
+    "venue": "高知",
+    "raceNum": "4R",
+    "raceClass": "C3ー2",
+    "winner": 11,
+    "winOdds": 18.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "フリューゲルホルン",
+        "norm": 0.1343,
+        "tanOdds": 17,
+        "ev": 228.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ナバロン",
+        "norm": 0.097,
+        "tanOdds": 13.5,
+        "ev": 131,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ベルヴィオレット",
+        "norm": 0.082,
+        "tanOdds": 31.2,
+        "ev": 255.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ミナトノソウタ",
+        "norm": 0.0593,
+        "tanOdds": 12.7,
+        "ev": 75.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 18.9
+      }
+    ],
+    "savedAt": "2026-05-31T16:31:40.737Z"
   }
 ]
