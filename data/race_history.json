@@ -11195,5 +11195,134 @@
       }
     ],
     "savedAt": "2026-05-31T15:54:02.437Z"
+  },
+  {
+    "date": "5/31 東京 10",
+    "venue": "東京",
+    "raceNum": "10R",
+    "raceClass": "むらさき賞",
+    "winner": 12,
+    "winOdds": 3.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 18,
+        "name": "レディーミコノス",
+        "norm": 0.0976,
+        "tanOdds": 19.4,
+        "ev": 189.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "キングメーカー",
+        "norm": 0.0816,
+        "tanOdds": 14.6,
+        "ev": 119.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "レイニング",
+        "norm": 0.0652,
+        "tanOdds": 4,
+        "ev": 26.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.9
+      },
+      {
+        "num": 15,
+        "name": "マイネルフルムーン",
+        "norm": 0.05,
+        "tanOdds": 43.4,
+        "ev": 217.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ガジュノリ",
+        "norm": 0.0416,
+        "tanOdds": 31.5,
+        "ev": 130.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ソルトブリーズ",
+        "norm": 0.0385,
+        "tanOdds": 36.4,
+        "ev": 140.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ドットクルー",
+        "norm": 0.0353,
+        "tanOdds": 52.5,
+        "ev": 185.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "クリニクラウン",
+        "norm": 0.032,
+        "tanOdds": 53.5,
+        "ev": 171.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "テウメッサ",
+        "norm": 0.0319,
+        "tanOdds": 108.8,
+        "ev": 347.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 17,
+        "name": "テーオーダグラス",
+        "norm": 0.0308,
+        "tanOdds": 129.4,
+        "ev": 398.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "スパークリシャール",
+        "norm": 0.0308,
+        "tanOdds": 124.8,
+        "ev": 384.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T15:54:59.944Z"
   }
 ]
