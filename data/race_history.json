@@ -10779,5 +10779,74 @@
       }
     ],
     "savedAt": "2026-05-31T15:48:36.840Z"
+  },
+  {
+    "date": "5/31 東京 6R",
+    "venue": "東京",
+    "raceNum": "6R",
+    "raceClass": "4歳以上1勝クラス",
+    "winner": 6,
+    "winOdds": 2.4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "シェーンシュティア",
+        "norm": 0.3976,
+        "tanOdds": 4.5,
+        "ev": 178.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "キョウエイグッド",
+        "norm": 0.1027,
+        "tanOdds": 26.5,
+        "ev": 272.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "セイロンジェムズ",
+        "norm": 0.0823,
+        "tanOdds": 2.2,
+        "ev": 18.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.4
+      },
+      {
+        "num": 5,
+        "name": "コスモグラニット",
+        "norm": 0.0641,
+        "tanOdds": 23.4,
+        "ev": 150,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "トクシージェネラル",
+        "norm": 0.0409,
+        "tanOdds": 73.4,
+        "ev": 300,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T15:50:19.890Z"
   }
 ]
