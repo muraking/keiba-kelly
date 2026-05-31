@@ -15174,5 +15174,74 @@
       }
     ],
     "savedAt": "2026-05-31T16:43:47.059Z"
+  },
+  {
+    "date": "5/31 佐賀 7R",
+    "venue": "佐賀",
+    "raceNum": "7R",
+    "raceClass": "UMATENA桜衣かれん生誕賞(C1)",
+    "winner": 2,
+    "winOdds": 2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "パームビーチ",
+        "norm": 0.3549,
+        "tanOdds": 1.8,
+        "ev": 63.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2
+      },
+      {
+        "num": 3,
+        "name": "オロブランコ",
+        "norm": 0.3098,
+        "tanOdds": 4,
+        "ev": 123.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ロイヤルデバイサー",
+        "norm": 0.0866,
+        "tanOdds": 13.7,
+        "ev": 118.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ドゥエルセーラ",
+        "norm": 0.0444,
+        "tanOdds": 28.5,
+        "ev": 126.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "タケノエイコウ",
+        "norm": 0.0363,
+        "tanOdds": 42.5,
+        "ev": 154.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:45:00.113Z"
   }
 ]
