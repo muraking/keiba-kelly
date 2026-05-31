@@ -11542,5 +11542,84 @@
       }
     ],
     "savedAt": "2026-05-31T15:56:11.336Z"
+  },
+  {
+    "date": "5/31 京都 1R",
+    "venue": "京都",
+    "raceNum": "1R",
+    "raceClass": "3歳未勝利",
+    "winner": 2,
+    "winOdds": 3.4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "グロリアス",
+        "norm": 0.2457,
+        "tanOdds": 3.4,
+        "ev": 83.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.4
+      },
+      {
+        "num": 7,
+        "name": "ルージュエピック",
+        "norm": 0.2153,
+        "tanOdds": 5.8,
+        "ev": 124.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "シャンパンスター",
+        "norm": 0.0546,
+        "tanOdds": 22.4,
+        "ev": 122.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 15,
+        "name": "(競走データなし)ワンダースアン",
+        "norm": 0.0307,
+        "tanOdds": 103.9,
+        "ev": 319.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "マリノエステーラ",
+        "norm": 0.0265,
+        "tanOdds": 138.5,
+        "ev": 366.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ワンインザスカイ",
+        "norm": 0.0253,
+        "tanOdds": 63.7,
+        "ev": 161.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T15:57:07.834Z"
   }
 ]
