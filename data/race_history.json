@@ -11888,5 +11888,114 @@
       }
     ],
     "savedAt": "2026-05-31T15:59:50.814Z"
+  },
+  {
+    "date": "5/31 京都 5R",
+    "venue": "京都",
+    "raceNum": "5R",
+    "raceClass": "3歳未勝利",
+    "winner": 1,
+    "winOdds": 6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "エイシンビーコン",
+        "norm": 0.1508,
+        "tanOdds": 6,
+        "ev": 90.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6
+      },
+      {
+        "num": 17,
+        "name": "アイルトン",
+        "norm": 0.1384,
+        "tanOdds": 13.3,
+        "ev": 184.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ビシェノ",
+        "norm": 0.0738,
+        "tanOdds": 22.9,
+        "ev": 169.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "オレンジフィールド",
+        "norm": 0.0541,
+        "tanOdds": 52,
+        "ev": 281.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "(競走データなし)トラッドロア",
+        "norm": 0.0363,
+        "tanOdds": 44.1,
+        "ev": 160,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "(競走データなし)ソルトダイヤモンド",
+        "norm": 0.0339,
+        "tanOdds": 59.9,
+        "ev": 203,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 18,
+        "name": "ムーンライトダイヤ",
+        "norm": 0.0317,
+        "tanOdds": 70.5,
+        "ev": 223.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ウインドオルフェ",
+        "norm": 0.0298,
+        "tanOdds": 150,
+        "ev": 447,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ヒロウッドテール",
+        "norm": 0.0287,
+        "tanOdds": 99.8,
+        "ev": 286,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:00:40.191Z"
   }
 ]
