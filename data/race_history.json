@@ -13536,5 +13536,64 @@
       }
     ],
     "savedAt": "2026-05-31T16:20:54.677Z"
+  },
+  {
+    "date": "5/31 金沢 6R",
+    "venue": "金沢",
+    "raceNum": "6R",
+    "raceClass": "スーパードリーム2歳新馬",
+    "winner": 3,
+    "winOdds": 1.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "(競走データなし)カロヤカ",
+        "norm": 0.221,
+        "tanOdds": 6.1,
+        "ev": 134.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "(競走データなし)ライダースーツ",
+        "norm": 0.1937,
+        "tanOdds": 1.3,
+        "ev": 25.2,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.1
+      },
+      {
+        "num": 4,
+        "name": "(競走データなし)スターワンフジサン",
+        "norm": 0.1937,
+        "tanOdds": 12.4,
+        "ev": 240.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "(競走データなし)カネトシエルド",
+        "norm": 0.193,
+        "tanOdds": 14.8,
+        "ev": 285.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-05-31T16:21:20.816Z"
   }
 ]
