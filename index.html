@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -3357,11 +3357,8 @@ async function navigateRace(dir) {
   });
   horses.sort((a,b) => b.norm - a.norm);
 
-  // デバッグ: オッズ確認
-  const oddsCount = horses.filter(h => h.tanOdds).length;
-  console.log('[navigateRace] race:', race.raceName, 'horses:', horses.length, 'withOdds:', oddsCount);
-  if(raceOdds) console.log('[navigateRace] raceOdds keys:', Object.keys(raceOdds).slice(0,5));
-  else console.log('[navigateRace] raceOdds: null (placeId=' + placeId + ' raceNumInt=' + raceNumInt + ')');
+  // オッズタブの手動入力欄をクリア（前レースの値が残らないよう）
+  document.querySelectorAll('#manual-inputs input[type="number"]').forEach(inp => { inp.value = ''; });
 
   // calcAll実行
   calcAll();
