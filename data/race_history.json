@@ -16615,5 +16615,74 @@
       }
     ],
     "savedAt": "2026-06-01T12:03:11.606Z"
+  },
+  {
+    "date": "6/1 水沢 2R",
+    "venue": "水沢",
+    "raceNum": "2R",
+    "raceClass": "C2",
+    "winner": 6,
+    "winOdds": 2.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "クリスタルテン",
+        "norm": 0.2621,
+        "tanOdds": 5.5,
+        "ev": 144.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "キタノロワーズ",
+        "norm": 0.2161,
+        "tanOdds": 2.8,
+        "ev": 60.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.7
+      },
+      {
+        "num": 2,
+        "name": "ネオアンコーラ",
+        "norm": 0.1847,
+        "tanOdds": 9.4,
+        "ev": 173.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "カレンザブーケ",
+        "norm": 0.1529,
+        "tanOdds": 13.9,
+        "ev": 212.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ポンドレイディ",
+        "norm": 0.0266,
+        "tanOdds": 51.2,
+        "ev": 136,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:04:06.325Z"
   }
 ]
