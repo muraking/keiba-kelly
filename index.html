@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -3266,25 +3266,108 @@ async function navigateRace(dir) {
   // レースセレクトを更新
   raceSelect.value = newIdx;
 
-  // onRaceChange相当の処理（馬データ更新）
-  onRaceChange();
+  // ghDataから直接レースデータを取得してhorsesを構築
+  const race = races[newIdx];
+  if(!race) return;
 
-  // 少し待ってからcalcAll実行
-  await new Promise(r => setTimeout(r, 100));
+  // onRaceChangeと同じロジックで馬データを設定
+  currentRace = race;
+  currentRaceName = race.raceName;
+  currentRaceClass = race.raceClass || '';
+  currentStartTime = race.startTime || '';
 
-  // オッズが入力済みかチェックして計算
-  const hasOdds = horses.some(h => h.tanOdds);
-  if(horses.length > 0) {
-    calcAll();
+  // オッズデータを取得（onRaceChangeと同じロジック）
+  const VENUE_TO_ID = {
+    '帯広':'03','帯広ば':'03','門別':'04','盛岡':'06','水沢':'07',
+    '浦和':'08','船橋':'09','大井':'10','川崎':'11',
+    '金沢':'12','笠松':'13','名古屋':'14','園田':'17',
+    '姫路':'18','高知':'31','佐賀':'32',
+  };
+  const JRA_VENUES = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+  const isJRA = JRA_VENUES.includes(race.venue);
+  const placeId = VENUE_TO_ID[race.venue] || null;
+  const raceNumInt = parseInt((race.raceNum || '').replace('R',''));
+
+  let raceOdds = null;
+  outer: for(const d of [date]) {
+    const dayData = ghData[d];
+    if(!dayData) continue;
+    if(isJRA) {
+      const jraOdds = dayData.jra_odds;
+      if(!jraOdds) continue;
+      for(const courseKey of Object.keys(jraOdds)) {
+        if(courseKey.includes(race.venue)) {
+          const courseOdds = jraOdds[courseKey];
+          for(const rnum of [raceNumInt, String(raceNumInt)]) {
+            const candidate = courseOdds && courseOdds[rnum];
+            if(candidate && typeof candidate === 'object' && Object.keys(candidate).length > 0) {
+              raceOdds = {};
+              for(const k of Object.keys(candidate)) {
+                const val = candidate[k];
+                if(val && typeof val === 'object') {
+                  raceOdds[parseInt(k)] = val;
+                  raceOdds[String(k)] = val;
+                }
+              }
+              break outer;
+            }
+          }
+        }
+      }
+    } else {
+      const oddsData = dayData.odds;
+      if(!oddsData) continue;
+      for(const pid of [placeId, String(placeId)]) {
+        const placeOdds = oddsData[pid];
+        if(!placeOdds) continue;
+        for(const rnum of [raceNumInt, String(raceNumInt)]) {
+          const candidate = placeOdds[rnum];
+          if(candidate && typeof candidate === 'object' && Object.keys(candidate).length > 0) {
+            raceOdds = candidate;
+            break outer;
+          }
+        }
+      }
+    }
   }
+
+  // 勝率計算
+  const _sett = ghData?._settings || {};
+  const _normMethod = (_sett.norm_method != null ? _sett.norm_method : localStorage.getItem('norm_method')) || 'softmax';
+  let normMap;
+  if(_normMethod === 'softmax') {
+    const smTemp = parseFloat(_sett.sm_temperature != null ? _sett.sm_temperature : (localStorage.getItem('sm_temperature') || '15'));
+    const smMinPct = parseFloat(_sett.sm_minpct != null ? _sett.sm_minpct : (localStorage.getItem('sm_minpct') || '3.0'));
+    normMap = softmaxNorm(race.horses, smTemp, smMinPct);
+  } else {
+    const tot = race.horses.reduce((s,h) => s+h.pct, 0);
+    normMap = {};
+    race.horses.forEach(h => { normMap[h.num] = tot > 0 ? h.pct/tot : 0; });
+  }
+
+  // horsesグローバル変数を更新
+  horses = race.horses.map(h => {
+    const o = raceOdds ? (raceOdds[h.num] || raceOdds[String(h.num)] || null) : null;
+    return {
+      num: h.num, pct: h.pct, name: h.name,
+      norm: normMap[h.num] || 0,
+      tanOdds: o ? (o.tan || null) : null,
+      fukuOdds: o ? ((o.fuku_min && o.fuku_min > 0) ? o.fuku_min : null) : null
+    };
+  });
+  horses.sort((a,b) => b.norm - a.norm);
+
+  // デバッグ: オッズ確認
+  const oddsCount = horses.filter(h => h.tanOdds).length;
+  console.log('[navigateRace] race:', race.raceName, 'horses:', horses.length, 'withOdds:', oddsCount);
+  if(raceOdds) console.log('[navigateRace] raceOdds keys:', Object.keys(raceOdds).slice(0,5));
+  else console.log('[navigateRace] raceOdds: null (placeId=' + placeId + ' raceNumInt=' + raceNumInt + ')');
+
+  // calcAll実行
+  calcAll();
 
   // ナビ更新
   updateRaceNav();
-
-  // 結果タブにいなければ移動
-  if(!document.getElementById('p-result').classList.contains('on')) {
-    sw('result');
-  }
   window.scrollTo(0, 0);
 }
 
