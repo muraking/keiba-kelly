@@ -3273,6 +3273,7 @@ async function loadTimeChangeList() {
       const [h, m] = race.startTime.split(':').map(Number);
       const raceMin = h * 60 + m;
       const isPast = raceMin < nowMin - 5;
+      if(isPast && !race._timeChanged) return; // 発走済みは非表示（変更済みは表示）
       const isChanged = race._timeChanged || false;
 
       html += `<div id="time-item-${idx}" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;border:0.5px solid ${isChanged ? 'rgba(251,191,36,.4)' : 'var(--border2)'}">
