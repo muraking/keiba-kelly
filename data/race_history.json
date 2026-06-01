@@ -17988,5 +17988,74 @@
       }
     ],
     "savedAt": "2026-06-01T12:17:03.791Z"
+  },
+  {
+    "date": "6/1 船橋 8R",
+    "venue": "船橋",
+    "raceNum": "8R",
+    "raceClass": "パールスプリント(B3)",
+    "winner": 3,
+    "winOdds": 7.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "ブルーミングヒル",
+        "norm": 0.1156,
+        "tanOdds": 13.2,
+        "ev": 152.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ビットコイン",
+        "norm": 0.1042,
+        "tanOdds": 6.1,
+        "ev": 63.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 7.7
+      },
+      {
+        "num": 6,
+        "name": "ブライティアブエナ",
+        "norm": 0.0572,
+        "tanOdds": 25.2,
+        "ev": 144.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "マルヒロナイト",
+        "norm": 0.0523,
+        "tanOdds": 20.2,
+        "ev": 105.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "クラバルバトス",
+        "norm": 0.0363,
+        "tanOdds": 78.8,
+        "ev": 286.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:17:32.990Z"
   }
 ]
