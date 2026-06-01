@@ -696,6 +696,20 @@ textarea:focus{border-color:var(--gold)}
   </div>
 
   <div id="p-result" class="page">
+    <!-- 前後レースナビゲーション -->
+    <div id="race-nav" style="display:none;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <button id="btn-prev-race" onclick="navigateRace(-1)"
+          style="flex:1;height:40px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">
+          ← 前のレース
+        </button>
+        <div id="race-nav-label" style="font-size:11px;color:var(--text3);text-align:center;min-width:60px;flex-shrink:0"></div>
+        <button id="btn-next-race" onclick="navigateRace(1)"
+          style="flex:1;height:40px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">
+          次のレース →
+        </button>
+      </div>
+    </div>
     <div id="res-content">
       <div class="msg">設定・オッズを入力して<br>計算ボタンを押してください</div>
     </div>
@@ -1757,6 +1771,7 @@ function calcAll(){
   </div>`;
   document.getElementById('res-content').innerHTML=html;
   document.getElementById('nb-result').classList.add('done');
+  updateRaceNav();
   sw('result');
 }
 
@@ -3213,6 +3228,65 @@ async function saveRaceResult() {
 }
 
 
+
+
+// ===== 前後レースナビゲーション =====
+function updateRaceNav() {
+  const navEl = document.getElementById('race-nav');
+  const labelEl = document.getElementById('race-nav-label');
+  const prevBtn = document.getElementById('btn-prev-race');
+  const nextBtn = document.getElementById('btn-next-race');
+  if(!navEl || !ghData) return;
+
+  const date = document.getElementById('date-select')?.value;
+  if(!date || !ghData[date]?.races) { navEl.style.display = 'none'; return; }
+
+  const races = ghData[date].races;
+  const idx = parseInt(document.getElementById('race-select')?.value ?? '-1');
+  if(isNaN(idx) || idx < 0) { navEl.style.display = 'none'; return; }
+
+  navEl.style.display = 'block';
+  labelEl.textContent = `${idx + 1} / ${races.length}`;
+  prevBtn.disabled = idx <= 0;
+  prevBtn.style.opacity = idx <= 0 ? '0.4' : '1';
+  nextBtn.disabled = idx >= races.length - 1;
+  nextBtn.style.opacity = idx >= races.length - 1 ? '0.4' : '1';
+}
+
+async function navigateRace(dir) {
+  const date = document.getElementById('date-select')?.value;
+  if(!date || !ghData?.[date]?.races) return;
+
+  const races = ghData[date].races;
+  const raceSelect = document.getElementById('race-select');
+  const currentIdx = parseInt(raceSelect?.value ?? '-1');
+  const newIdx = currentIdx + dir;
+  if(newIdx < 0 || newIdx >= races.length) return;
+
+  // レースセレクトを更新
+  raceSelect.value = newIdx;
+
+  // onRaceChange相当の処理（馬データ更新）
+  onRaceChange();
+
+  // 少し待ってからcalcAll実行
+  await new Promise(r => setTimeout(r, 100));
+
+  // オッズが入力済みかチェックして計算
+  const hasOdds = horses.some(h => h.tanOdds);
+  if(horses.length > 0) {
+    calcAll();
+  }
+
+  // ナビ更新
+  updateRaceNav();
+
+  // 結果タブにいなければ移動
+  if(!document.getElementById('p-result').classList.contains('on')) {
+    sw('result');
+  }
+  window.scrollTo(0, 0);
+}
 
 // ===== 共有タブ サブタブ切替 =====
 function switchSharedSubtab(tab) {
