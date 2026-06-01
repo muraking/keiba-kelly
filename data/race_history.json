@@ -16556,5 +16556,64 @@
       }
     ],
     "savedAt": "2026-06-01T03:22:58.727Z"
+  },
+  {
+    "date": "6/1 水沢 1R",
+    "venue": "水沢",
+    "raceNum": "1R",
+    "raceClass": "C2",
+    "winner": 7,
+    "winOdds": 2.8,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "フークレグルス",
+        "norm": 0.3664,
+        "tanOdds": 4.7,
+        "ev": 172.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "グレコ",
+        "norm": 0.1484,
+        "tanOdds": 2.8,
+        "ev": 41.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.8
+      },
+      {
+        "num": 6,
+        "name": "グレースレニー",
+        "norm": 0.0651,
+        "tanOdds": 17.6,
+        "ev": 114.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ゴーゴーオンリー",
+        "norm": 0.0619,
+        "tanOdds": 21.7,
+        "ev": 134.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:03:11.606Z"
   }
 ]
