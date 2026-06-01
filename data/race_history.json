@@ -18136,5 +18136,104 @@
       }
     ],
     "savedAt": "2026-06-01T12:18:25.412Z"
+  },
+  {
+    "date": "6/1 船橋 10R",
+    "venue": "船橋",
+    "raceNum": "10R",
+    "raceClass": "馬い!卵はサンサンエッグ(C1)",
+    "winner": 12,
+    "winOdds": 7.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "マルターズヴェロス",
+        "norm": 0.21,
+        "tanOdds": 5.6,
+        "ev": 117.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ダイゴホマレリュウ",
+        "norm": 0.1024,
+        "tanOdds": 12.5,
+        "ev": 128,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "シトロンヴェール",
+        "norm": 0.0947,
+        "tanOdds": 17.9,
+        "ev": 169.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 7.6
+      },
+      {
+        "num": 3,
+        "name": "ヤマニンパルフェ",
+        "norm": 0.0535,
+        "tanOdds": 24,
+        "ev": 128.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "レーヌバンケット",
+        "norm": 0.0463,
+        "tanOdds": 102.2,
+        "ev": 473.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ディセントラライズ",
+        "norm": 0.0454,
+        "tanOdds": 47.2,
+        "ev": 214.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "チンプンカンプン",
+        "norm": 0.0373,
+        "tanOdds": 71.4,
+        "ev": 266.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ハクサントップ",
+        "norm": 0.035,
+        "tanOdds": 48.7,
+        "ev": 170.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:19:29.408Z"
   }
 ]
