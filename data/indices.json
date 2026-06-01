@@ -11981,7 +11981,7 @@
         {
           "raceName": "6/1 船橋 8R",
           "raceClass": "パールスプリント(B3)",
-          "startTime": "18:30",
+          "startTime": "18:32",
           "venue": "船橋",
           "raceNum": "8R",
           "horses": [
@@ -12045,7 +12045,9 @@
               "pct": 1.3,
               "name": "クラジャンク"
             }
-          ]
+          ],
+          "_origTime": "18:30",
+          "_timeChanged": true
         },
         {
           "raceName": "6/1 船橋 9R",
