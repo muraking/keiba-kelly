@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260531.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -346,6 +346,21 @@ textarea:focus{border-color:var(--gold)}
   <!-- 結果 -->
 
   <div id="p-admin" class="page">
+
+    <!-- サブタブ -->
+    <div style="display:flex;background:var(--bg3);border-radius:var(--r);padding:3px;gap:3px;margin-bottom:16px" id="shared-subtab-bar">
+      <button id="subtab-admin-btn" onclick="switchSharedSubtab('admin')"
+        style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;transition:.15s;background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)">
+        ⚙️ 管理者設定
+      </button>
+      <button id="subtab-time-btn" onclick="switchSharedSubtab('time')"
+        style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s;background:transparent;color:var(--text3)">
+        🕐 時刻変更
+      </button>
+    </div>
+
+    <!-- 管理者設定サブタブ -->
+    <div id="subtab-admin">
     <div style="margin-bottom:16px">
       <div class="sh">GitHub共有設定</div>
       <div class="field">
@@ -543,16 +558,6 @@ textarea:focus{border-color:var(--gold)}
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">💹 掛け金計算方式</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="checkbox" id="combined-kelly" style="width:18px;height:18px;cursor:pointer"
-            onchange="localStorage.setItem('combined_kelly', this.checked?'1':'0'); document.getElementById('combined-kelly-label').textContent=this.checked?'ON':'OFF'">
-          <span style="font-size:13px;color:var(--text)">合成ケリー <span id="combined-kelly-label">OFF</span></span>
-        </label>
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">ON: 複数馬を1グループとして合成ハーフケリーで合計投資額を計算し配分<br>OFF: 各馬個別にハーフケリー計算（従来）</div>
-      </div>
-
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
         <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔗 馬連購入設定</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 8px">
@@ -670,6 +675,24 @@ textarea:focus{border-color:var(--gold)}
       </button>
       <div id="date-list-area"></div>
     </div>
+    </div><!-- /subtab-admin -->
+
+    <!-- 時刻変更サブタブ -->
+    <div id="subtab-time" style="display:none">
+      <div class="sh">本日の未実行レース一覧</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.7">
+        発走遅延が発生した場合、該当レースの時刻を変更してください。<br>
+        スケジューラーは30分以内に自動反映します。
+      </div>
+      <button class="btn btn-outline" onclick="loadTimeChangeList()" style="height:38px;font-size:13px;margin-bottom:10px">
+        🔄 レース一覧を読み込む
+      </button>
+      <div id="time-change-list"></div>
+      <div style="margin-top:12px;padding:10px 12px;background:var(--amber-bg);border-radius:var(--r);border:0.5px solid rgba(251,191,36,.3);font-size:11px;color:var(--amber);text-align:center;line-height:1.6">
+        ⚠️ 変更はGitHubに即時保存されます<br>スケジューラーは30分以内に自動反映されます
+      </div>
+    </div><!-- /subtab-time -->
+
   </div>
 
   <div id="p-result" class="page">
@@ -889,7 +912,6 @@ async function saveSoftmaxSettings() {
   const skipJra3yo      = document.getElementById('skip-jra-3yo')?.checked || false;
   const skipJraHurdle   = document.getElementById('skip-jra-hurdle')?.checked || false;
   const buyPlaceBet = document.getElementById('buy-place-bet')?.checked || false;
-  const combinedKelly = document.getElementById('combined-kelly')?.checked || false;
   const buyExactaJra   = document.getElementById('buy-exacta-jra')?.checked || false;
   const buyExactaLocal = document.getElementById('buy-exacta-local')?.checked || false;
   const buyExacta      = buyExactaJra || buyExactaLocal; // 後方互換
@@ -953,7 +975,6 @@ async function saveSoftmaxSettings() {
       data._settings.skip_jra_3yo      = skipJra3yo;
       data._settings.skip_jra_hurdle   = skipJraHurdle;
       data._settings.buy_place_bet  = buyPlaceBet;
-      data._settings.combined_kelly  = combinedKelly;
       data._settings.buy_exacta_jra   = buyExactaJra;
       data._settings.buy_exacta_local = buyExactaLocal;
       data._settings.buy_exacta      = buyExacta;
@@ -1061,7 +1082,6 @@ async function loadSoftmaxFromGithub() {
     const skipJra3yo      = s.skip_jra_3yo      || false;
     const skipJraHurdle   = s.skip_jra_hurdle   || false;
     const buyPlaceBet   = s.buy_place_bet  || false;
-    const combinedKelly  = s.combined_kelly  || false;
     const buyExactaJra   = s.buy_exacta_jra   || false;
     const buyExactaLocal = s.buy_exacta_local || false;
     const buyExacta      = s.buy_exacta      || buyExactaJra || buyExactaLocal;
@@ -1097,7 +1117,6 @@ async function loadSoftmaxFromGithub() {
   localStorage.setItem('skip_jra_3yo',      skipJra3yo      ? '1' : '0');
   localStorage.setItem('skip_jra_hurdle',   skipJraHurdle   ? '1' : '0');
     localStorage.setItem('buy_place_bet',  buyPlaceBet  ? '1' : '0');
-    localStorage.setItem('combined_kelly',  combinedKelly  ? '1' : '0');
     localStorage.setItem('buy_exacta_jra',   buyExactaJra   ? '1' : '0');
     localStorage.setItem('buy_exacta_local', buyExactaLocal ? '1' : '0');
     localStorage.setItem('buy_exacta',       buyExacta      ? '1' : '0');
@@ -1139,8 +1158,6 @@ async function loadSoftmaxFromGithub() {
     skipIds.forEach((id,i) => { const el=document.getElementById(id); if(el) el.checked=skipVals[i]; });
     const bpbEl = document.getElementById('buy-place-bet');
     if(bpbEl){ bpbEl.checked = buyPlaceBet; document.getElementById('buy-place-bet-label').textContent = buyPlaceBet ? 'ON' : 'OFF'; }
-    const ckEl = document.getElementById('combined-kelly');
-    if(ckEl){ ckEl.checked = combinedKelly; document.getElementById('combined-kelly-label').textContent = combinedKelly ? 'ON' : 'OFF'; }
     const exactaJraEl = document.getElementById('buy-exacta-jra');
     if(exactaJraEl){ exactaJraEl.checked = buyExactaJra; document.getElementById('buy-exacta-jra-label').textContent = buyExactaJra ? 'ON' : 'OFF'; }
     const exactaLocalEl = document.getElementById('buy-exacta-local');
@@ -1171,7 +1188,6 @@ async function loadSoftmaxFromGithub() {
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
       `損切り: ${stopLossEnabled ? '¥'+stopLossAmount+'未満で停止' : 'OFF'}`,
-      `掛け金計算: ${combinedKelly ? '合成ハーフケリー' : '個別ハーフケリー（従来）'}`,
       (()=>{
         const skips = [];
         if(localStorage.getItem('skip_local_maiden')==='1') skips.push('地方新馬');
@@ -1295,9 +1311,6 @@ function loadSoftmaxSettings() {
   const bpbEl2 = document.getElementById('buy-place-bet');
   const bpbVal = localStorage.getItem('buy_place_bet') === '1';
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
-  const ckEl2 = document.getElementById('combined-kelly');
-  const ckVal = localStorage.getItem('combined_kelly') === '1';
-  if(ckEl2){ ckEl2.checked = ckVal; document.getElementById('combined-kelly-label').textContent = ckVal ? 'ON' : 'OFF'; }
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -3199,6 +3212,208 @@ async function saveRaceResult() {
   }
 }
 
+
+
+// ===== 共有タブ サブタブ切替 =====
+function switchSharedSubtab(tab) {
+  const adminDiv = document.getElementById('subtab-admin');
+  const timeDiv  = document.getElementById('subtab-time');
+  const adminBtn = document.getElementById('subtab-admin-btn');
+  const timeBtn  = document.getElementById('subtab-time-btn');
+  if(!adminDiv || !timeDiv) return;
+
+  const isAdmin = tab === 'admin';
+  adminDiv.style.display = isAdmin ? '' : 'none';
+  timeDiv.style.display  = isAdmin ? 'none' : '';
+
+  const activeStyle   = 'flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;transition:.15s;background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)';
+  const inactiveStyle = 'flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s;background:transparent;color:var(--text3)';
+  if(adminBtn) adminBtn.style.cssText = isAdmin ? activeStyle : inactiveStyle;
+  if(timeBtn)  timeBtn.style.cssText  = isAdmin ? inactiveStyle : activeStyle;
+
+  if(!isAdmin) loadTimeChangeList();
+}
+
+// ===== 時刻変更 =====
+async function loadTimeChangeList() {
+  const listEl = document.getElementById('time-change-list');
+  if(!listEl) return;
+  listEl.innerHTML = '<div style="font-size:12px;color:var(--amber);padding:8px">🔄 読み込み中...</div>';
+
+  try {
+    const token = loadToken();
+    const headers = token ? {'Authorization': `token ${token}`} : {};
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
+      {headers, cache: 'no-store'}
+    );
+    if(!res.ok) throw new Error('取得失敗');
+    const meta = await res.json();
+    const raw = atob(meta.content.replace(/\n/g,''));
+    const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+    const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+
+    // 今日のレースのみ表示
+    const todayStr = getTodayJST();
+    const dayData = (data.dates || {})[todayStr];
+    if(!dayData || !dayData.races || !dayData.races.length) {
+      listEl.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px">本日（' + todayStr + '）のレースデータがありません</div>';
+      return;
+    }
+
+    // JST現在時刻
+    const now = new Date();
+    const jstNow = new Date(now.getTime() + 9*60*60*1000);
+    const nowMin = jstNow.getUTCHours() * 60 + jstNow.getUTCMinutes();
+
+    const races = dayData.races;
+    let html = '';
+    races.forEach((race, idx) => {
+      if(!race.startTime) return;
+      const [h, m] = race.startTime.split(':').map(Number);
+      const raceMin = h * 60 + m;
+      const isPast = raceMin < nowMin - 5;
+      const isChanged = race._timeChanged || false;
+
+      html += `<div id="time-item-${idx}" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;border:0.5px solid ${isChanged ? 'rgba(251,191,36,.4)' : 'var(--border2)'}">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:${isPast ? 'var(--text3)' : 'var(--text)'}">${race.raceName}</div>
+            <div style="font-size:12px;margin-top:2px">
+              ${isChanged
+                ? `<span style="text-decoration:line-through;color:var(--text3)">${race._origTime}</span>
+                   <span style="color:var(--amber);margin-left:6px">→ ${race.startTime} ⚠️変更済</span>`
+                : `<span style="color:${isPast ? 'var(--text3)' : 'var(--text2)'}">発走 ${race.startTime}</span>`
+              }
+            </div>
+          </div>
+          <div style="display:flex;gap:6px">
+            ${isChanged ? `<button onclick="revertTime(${idx})" style="background:var(--bg3);border:0.5px solid var(--border2);color:var(--text3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit">元に戻す</button>` : ''}
+            ${!isPast ? `<button onclick="editTime(${idx})" style="background:transparent;border:none;color:var(--gold);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;padding:5px 8px">時刻変更</button>` : ''}
+          </div>
+        </div>
+        <div id="time-edit-${idx}" style="display:none;margin-top:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="time" id="time-input-${idx}" value="${race.startTime}"
+              style="flex:1;height:38px;padding:0 10px;background:var(--bg);border:1px solid var(--gold);border-radius:8px;color:var(--text);font-size:15px;font-family:inherit">
+            <button onclick="saveTimeChange(${idx})" style="padding:8px 14px;background:var(--gold);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">保存</button>
+            <button onclick="cancelTimeEdit(${idx})" style="padding:8px 10px;background:var(--bg3);border:0.5px solid var(--border2);color:var(--text3);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap">キャンセル</button>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    listEl.innerHTML = html || '<div style="font-size:12px;color:var(--text3);padding:8px">表示できるレースがありません</div>';
+    listEl._races = races;
+    listEl._todayStr = todayStr;
+    listEl._sha = meta.sha;
+    listEl._data = data;
+  } catch(e) {
+    listEl.innerHTML = `<div style="font-size:12px;color:var(--red);padding:8px">エラー: ${e.message}</div>`;
+  }
+}
+
+function editTime(idx) {
+  document.getElementById(`time-edit-${idx}`).style.display = 'block';
+  document.getElementById(`time-input-${idx}`)?.focus();
+}
+
+function cancelTimeEdit(idx) {
+  document.getElementById(`time-edit-${idx}`).style.display = 'none';
+}
+
+async function saveTimeChange(idx) {
+  const listEl = document.getElementById('time-change-list');
+  const newTime = document.getElementById(`time-input-${idx}`)?.value;
+  if(!newTime) { alert('時刻を入力してください'); return; }
+
+  const races = listEl._races;
+  const todayStr = listEl._todayStr;
+  const data = listEl._data;
+  if(!races || !data) { alert('データを再読み込みしてください'); return; }
+
+  const race = races[idx];
+  const origTime = race.startTime;
+  if(newTime === origTime) { cancelTimeEdit(idx); return; }
+
+  // _origTimeを保存して変更フラグを立てる
+  if(!race._origTime) race._origTime = origTime;
+  race._timeChanged = true;
+  race.startTime = newTime;
+
+  // fetchの分数を再計算（6分前）
+  const [h, m] = newTime.split(':').map(Number);
+  const fetchMin = h * 60 + m - 6;
+  const fh = Math.floor(fetchMin / 60).toString().padStart(2,'0');
+  const fm = (fetchMin % 60).toString().padStart(2,'0');
+  race._fetchAt = `${fh}:${fm}`;
+
+  // GitHubに保存
+  try {
+    const token = loadToken();
+    if(!token) { alert('GitHubトークンを設定してください'); return; }
+    const jsonStr = JSON.stringify(data, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
+      {
+        method: 'PUT',
+        headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+        body: JSON.stringify({message: `time change ${race.raceName} ${origTime}→${newTime}`, content: encoded, sha: listEl._sha, branch: GH_BRANCH})
+      }
+    );
+    if(res.ok) {
+      const saved = await res.json();
+      listEl._sha = saved.content?.sha || listEl._sha;
+      showToast(`✓ ${race.raceName} ${origTime}→${newTime} 保存しました`);
+      await loadTimeChangeList();
+    } else {
+      alert('保存失敗: ' + res.status);
+      race.startTime = origTime;
+      race._timeChanged = false;
+    }
+  } catch(e) {
+    alert('エラー: ' + e.message);
+    race.startTime = origTime;
+    race._timeChanged = false;
+  }
+}
+
+async function revertTime(idx) {
+  const listEl = document.getElementById('time-change-list');
+  const races = listEl._races;
+  const data = listEl._data;
+  const race = races[idx];
+  if(!race?._origTime) return;
+
+  race.startTime = race._origTime;
+  race._timeChanged = false;
+  delete race._origTime;
+  delete race._fetchAt;
+
+  try {
+    const token = loadToken();
+    if(!token) { alert('GitHubトークンを設定してください'); return; }
+    const jsonStr = JSON.stringify(data, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
+      {
+        method: 'PUT',
+        headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+        body: JSON.stringify({message: `revert time ${race.raceName}`, content: encoded, sha: listEl._sha, branch: GH_BRANCH})
+      }
+    );
+    if(res.ok) {
+      showToast(`✓ ${race.raceName} 元の時刻に戻しました`);
+      await loadTimeChangeList();
+    } else {
+      alert('保存失敗: ' + res.status);
+    }
+  } catch(e) {
+    alert('エラー: ' + e.message);
+  }
+}
 
 // 初期化時にソフトマックス設定を読み込む
 loadSoftmaxSettings();
