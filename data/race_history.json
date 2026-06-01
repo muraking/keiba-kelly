@@ -16832,5 +16832,54 @@
       }
     ],
     "savedAt": "2026-06-01T12:05:58.185Z"
+  },
+  {
+    "date": "6/1 水沢 5R",
+    "venue": "水沢",
+    "raceNum": "5R",
+    "raceClass": "C2四組",
+    "winner": 6,
+    "winOdds": 21.3,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "エスカペード",
+        "norm": 0.1707,
+        "tanOdds": 18.2,
+        "ev": 310.6,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 21.3
+      },
+      {
+        "num": 4,
+        "name": "キタノクーヴェル",
+        "norm": 0.0917,
+        "tanOdds": 11,
+        "ev": 100.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "バイオレットモーヴ",
+        "norm": 0.046,
+        "tanOdds": 94.3,
+        "ev": 433.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:06:52.138Z"
   }
 ]
