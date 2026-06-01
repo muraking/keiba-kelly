@@ -18235,5 +18235,74 @@
       }
     ],
     "savedAt": "2026-06-01T12:19:29.408Z"
+  },
+  {
+    "date": "6/1 船橋 11R",
+    "venue": "船橋",
+    "raceNum": "11R",
+    "raceClass": "富里特別(B3)",
+    "winner": 6,
+    "winOdds": 6.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "サドル",
+        "norm": 0.138,
+        "tanOdds": 5.6,
+        "ev": 77.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6.6
+      },
+      {
+        "num": 2,
+        "name": "ジョセフィーナ",
+        "norm": 0.0928,
+        "tanOdds": 35.4,
+        "ev": 328.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ミッドナイトホーク",
+        "norm": 0.0822,
+        "tanOdds": 14.3,
+        "ev": 117.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "テディージュエリー",
+        "norm": 0.0478,
+        "tanOdds": 26.7,
+        "ev": 127.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ツインビスケッツ",
+        "norm": 0.0373,
+        "tanOdds": 59.4,
+        "ev": 221.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:20:17.572Z"
   }
 ]
