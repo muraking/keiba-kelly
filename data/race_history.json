@@ -17523,5 +17523,84 @@
       }
     ],
     "savedAt": "2026-06-01T12:13:25.819Z"
+  },
+  {
+    "date": "6/1 船橋 3R",
+    "venue": "船橋",
+    "raceNum": "3R",
+    "raceClass": "C3二組下選抜馬",
+    "winner": 11,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "ジャルダンデュロワ",
+        "norm": 0.2497,
+        "tanOdds": 2.1,
+        "ev": 52.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      },
+      {
+        "num": 5,
+        "name": "ビクエスト",
+        "norm": 0.1361,
+        "tanOdds": 8.3,
+        "ev": 112.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "アルファウィンザー",
+        "norm": 0.0739,
+        "tanOdds": 14,
+        "ev": 103.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "プロンプトノア",
+        "norm": 0.0404,
+        "tanOdds": 33.2,
+        "ev": 134.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "エイシンペリドット",
+        "norm": 0.0349,
+        "tanOdds": 32.4,
+        "ev": 113.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ジーティーケリー",
+        "norm": 0.0348,
+        "tanOdds": 40.6,
+        "ev": 141.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:13:57.542Z"
   }
 ]
