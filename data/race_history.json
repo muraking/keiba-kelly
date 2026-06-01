@@ -17276,5 +17276,64 @@
       }
     ],
     "savedAt": "2026-06-01T12:10:50.744Z"
+  },
+  {
+    "date": "6/1 水沢 12R",
+    "venue": "水沢",
+    "raceNum": "12R",
+    "raceClass": "朝顔賞(B1)",
+    "winner": 7,
+    "winOdds": 8.8,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "ビクトリーサイト",
+        "norm": 0.1476,
+        "tanOdds": 36.8,
+        "ev": 543.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "サンエイコンドル",
+        "norm": 0.1196,
+        "tanOdds": 10.3,
+        "ev": 123.2,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 8.8
+      },
+      {
+        "num": 9,
+        "name": "プレジャー",
+        "norm": 0.0802,
+        "tanOdds": 17.9,
+        "ev": 143.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "スノーパトロール",
+        "norm": 0.0618,
+        "tanOdds": 16.8,
+        "ev": 103.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:11:40.445Z"
   }
 ]
