@@ -17691,5 +17691,114 @@
       }
     ],
     "savedAt": "2026-06-01T12:14:49.699Z"
+  },
+  {
+    "date": "6/1 船橋 5R",
+    "venue": "船橋",
+    "raceNum": "5R",
+    "raceClass": "3歳二",
+    "winner": 9,
+    "winOdds": 1.3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "エピジェネティクス",
+        "norm": 0.1891,
+        "tanOdds": 9.9,
+        "ev": 187.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "アースブルー",
+        "norm": 0.1633,
+        "tanOdds": 1.6,
+        "ev": 26.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.3
+      },
+      {
+        "num": 4,
+        "name": "テカポ",
+        "norm": 0.084,
+        "tanOdds": 20.7,
+        "ev": 174,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "キングスケヨー",
+        "norm": 0.0831,
+        "tanOdds": 44.4,
+        "ev": 369.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "キャッスルプライド",
+        "norm": 0.0592,
+        "tanOdds": 69.5,
+        "ev": 411.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "キャッスルロイド",
+        "norm": 0.0555,
+        "tanOdds": 74.9,
+        "ev": 416,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "マッドスピード",
+        "norm": 0.0495,
+        "tanOdds": 129,
+        "ev": 639.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "キチョウ",
+        "norm": 0.0483,
+        "tanOdds": 32.5,
+        "ev": 157,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ゴールドトピアリー",
+        "norm": 0.0461,
+        "tanOdds": 67.5,
+        "ev": 311.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:15:17.995Z"
   }
 ]
