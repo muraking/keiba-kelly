@@ -16881,5 +16881,124 @@
       }
     ],
     "savedAt": "2026-06-01T12:06:52.138Z"
+  },
+  {
+    "date": "6/1 水沢 6R",
+    "venue": "水沢",
+    "raceNum": "6R",
+    "raceClass": "3歳B1",
+    "winner": 5,
+    "winOdds": 1.4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ベアコルム",
+        "norm": 0.2617,
+        "tanOdds": 1.4,
+        "ev": 36.6,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.4
+      },
+      {
+        "num": 2,
+        "name": "リフレララ",
+        "norm": 0.1323,
+        "tanOdds": 13.4,
+        "ev": 177.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "サンエイウォリアー",
+        "norm": 0.0556,
+        "tanOdds": 28.4,
+        "ev": 157.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "トゥーナスタディ",
+        "norm": 0.0527,
+        "tanOdds": 47.1,
+        "ev": 248,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "シェリー",
+        "norm": 0.051,
+        "tanOdds": 97.9,
+        "ev": 499.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "キララカ",
+        "norm": 0.051,
+        "tanOdds": 78.5,
+        "ev": 400.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ピコデオリサバ",
+        "norm": 0.0393,
+        "tanOdds": 69.6,
+        "ev": 273.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "マルケイロック",
+        "norm": 0.039,
+        "tanOdds": 63.8,
+        "ev": 248.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ポデローサ",
+        "norm": 0.0341,
+        "tanOdds": 104.1,
+        "ev": 354.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "デンコウセッカ",
+        "norm": 0.033,
+        "tanOdds": 116.4,
+        "ev": 383.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:07:31.252Z"
   }
 ]
