@@ -16743,5 +16743,94 @@
       }
     ],
     "savedAt": "2026-06-01T12:05:23.836Z"
+  },
+  {
+    "date": "6/1 水沢 4R",
+    "venue": "水沢",
+    "raceNum": "4R",
+    "raceClass": "C2五組",
+    "winner": 8,
+    "winOdds": 1.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 8,
+        "name": "アイビースピネル",
+        "norm": 0.5168,
+        "tanOdds": 1.3,
+        "ev": 67.2,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.1
+      },
+      {
+        "num": 5,
+        "name": "バスターショット",
+        "norm": 0.0944,
+        "tanOdds": 21.9,
+        "ev": 206.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "フジサンワイシーシ",
+        "norm": 0.0921,
+        "tanOdds": 14.4,
+        "ev": 132.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "コスモヴェレッド",
+        "norm": 0.0604,
+        "tanOdds": 31.8,
+        "ev": 192.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "コウノノシラトリ",
+        "norm": 0.0549,
+        "tanOdds": 28.9,
+        "ev": 158.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "タギマサダス",
+        "norm": 0.0435,
+        "tanOdds": 46.4,
+        "ev": 201.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ウィンクルティアラ",
+        "norm": 0.0336,
+        "tanOdds": 60.5,
+        "ev": 203.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:05:58.185Z"
   }
 ]
