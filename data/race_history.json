@@ -17118,5 +17118,84 @@
       }
     ],
     "savedAt": "2026-06-01T12:09:13.447Z"
+  },
+  {
+    "date": "6/1 水沢 9R",
+    "venue": "水沢",
+    "raceNum": "9R",
+    "raceClass": "B1B2混合",
+    "winner": 5,
+    "winOdds": 15.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "マナホクラニ",
+        "norm": 0.2289,
+        "tanOdds": 4.5,
+        "ev": 103,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ハーツケリー",
+        "norm": 0.1434,
+        "tanOdds": 16.2,
+        "ev": 232.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "フェズカズマ",
+        "norm": 0.123,
+        "tanOdds": 16.2,
+        "ev": 199.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ニューウォーク",
+        "norm": 0.074,
+        "tanOdds": 11.3,
+        "ev": 83.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 15.2
+      },
+      {
+        "num": 1,
+        "name": "フェスティヴメノコ",
+        "norm": 0.0554,
+        "tanOdds": 30.4,
+        "ev": 168.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "スターカナザワ",
+        "norm": 0.0346,
+        "tanOdds": 118.1,
+        "ev": 408.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:09:49.219Z"
   }
 ]
