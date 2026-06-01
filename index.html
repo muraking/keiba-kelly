@@ -3352,19 +3352,34 @@ async function saveTimeChange(idx) {
   try {
     const token = loadToken();
     if(!token) { alert('GitHubトークンを設定してください'); return; }
-    const jsonStr = JSON.stringify(data, null, 2);
+
+    // 最新のSHAを取得してから保存（409対策）
+    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+    const latestRes = await fetch(apiUrl, {headers: {'Authorization': `token ${token}`}, cache: 'no-store'});
+    if(!latestRes.ok) throw new Error('最新データ取得失敗: ' + latestRes.status);
+    const latestMeta = await latestRes.json();
+    const latestSha = latestMeta.sha;
+
+    // 最新データにstartTimeを適用
+    const latestRaw = atob(latestMeta.content.replace(/\n/g,''));
+    const latestBytes = Uint8Array.from(latestRaw, c => c.charCodeAt(0));
+    const latestData = JSON.parse(new TextDecoder('utf-8').decode(latestBytes));
+    const todayStr = listEl._todayStr;
+    if(latestData.dates?.[todayStr]?.races?.[idx]) {
+      latestData.dates[todayStr].races[idx].startTime = newTime;
+      if(!latestData.dates[todayStr].races[idx]._origTime)
+        latestData.dates[todayStr].races[idx]._origTime = origTime;
+      latestData.dates[todayStr].races[idx]._timeChanged = true;
+    }
+
+    const jsonStr = JSON.stringify(latestData, null, 2);
     const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-    const res = await fetch(
-      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
-      {
-        method: 'PUT',
-        headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify({message: `time change ${race.raceName} ${origTime}→${newTime}`, content: encoded, sha: listEl._sha, branch: GH_BRANCH})
-      }
-    );
+    const res = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+      body: JSON.stringify({message: `time change ${race.raceName} ${origTime}→${newTime}`, content: encoded, sha: latestSha, branch: GH_BRANCH})
+    });
     if(res.ok) {
-      const saved = await res.json();
-      listEl._sha = saved.content?.sha || listEl._sha;
       showToast(`✓ ${race.raceName} ${origTime}→${newTime} 保存しました`);
       await loadTimeChangeList();
     } else {
@@ -3382,28 +3397,40 @@ async function saveTimeChange(idx) {
 async function revertTime(idx) {
   const listEl = document.getElementById('time-change-list');
   const races = listEl._races;
-  const data = listEl._data;
   const race = races[idx];
   if(!race?._origTime) return;
 
-  race.startTime = race._origTime;
-  race._timeChanged = false;
-  delete race._origTime;
-  delete race._fetchAt;
+  const origTime = race._origTime;
 
   try {
     const token = loadToken();
     if(!token) { alert('GitHubトークンを設定してください'); return; }
-    const jsonStr = JSON.stringify(data, null, 2);
+
+    // 最新のSHAを取得してから保存（409対策）
+    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+    const latestRes = await fetch(apiUrl, {headers: {'Authorization': `token ${token}`}, cache: 'no-store'});
+    if(!latestRes.ok) throw new Error('最新データ取得失敗: ' + latestRes.status);
+    const latestMeta = await latestRes.json();
+    const latestSha = latestMeta.sha;
+
+    const latestRaw = atob(latestMeta.content.replace(/\n/g,''));
+    const latestBytes = Uint8Array.from(latestRaw, c => c.charCodeAt(0));
+    const latestData = JSON.parse(new TextDecoder('utf-8').decode(latestBytes));
+    const todayStr = listEl._todayStr;
+    if(latestData.dates?.[todayStr]?.races?.[idx]) {
+      latestData.dates[todayStr].races[idx].startTime = origTime;
+      latestData.dates[todayStr].races[idx]._timeChanged = false;
+      delete latestData.dates[todayStr].races[idx]._origTime;
+      delete latestData.dates[todayStr].races[idx]._fetchAt;
+    }
+
+    const jsonStr = JSON.stringify(latestData, null, 2);
     const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-    const res = await fetch(
-      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
-      {
-        method: 'PUT',
-        headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify({message: `revert time ${race.raceName}`, content: encoded, sha: listEl._sha, branch: GH_BRANCH})
-      }
-    );
+    const res = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+      body: JSON.stringify({message: `revert time ${race.raceName}`, content: encoded, sha: latestSha, branch: GH_BRANCH})
+    });
     if(res.ok) {
       showToast(`✓ ${race.raceName} 元の時刻に戻しました`);
       await loadTimeChangeList();
