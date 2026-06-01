@@ -17059,5 +17059,64 @@
       }
     ],
     "savedAt": "2026-06-01T12:08:25.291Z"
+  },
+  {
+    "date": "6/1 水沢 8R",
+    "venue": "水沢",
+    "raceNum": "8R",
+    "raceClass": "B2",
+    "winner": 2,
+    "winOdds": 8.4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "マコトダイトウレン",
+        "norm": 0.2737,
+        "tanOdds": 3.9,
+        "ev": 106.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "コンバットグランデ",
+        "norm": 0.1044,
+        "tanOdds": 16.5,
+        "ev": 172.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ファルーク",
+        "norm": 0.0986,
+        "tanOdds": 6.1,
+        "ev": 60.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 8.4
+      },
+      {
+        "num": 1,
+        "name": "マルケイヴェスパー",
+        "norm": 0.077,
+        "tanOdds": 23.6,
+        "ev": 181.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:09:13.447Z"
   }
 ]
