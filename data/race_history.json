@@ -17197,5 +17197,84 @@
       }
     ],
     "savedAt": "2026-06-01T12:09:49.219Z"
+  },
+  {
+    "date": "6/1 水沢 10R",
+    "venue": "水沢",
+    "raceNum": "10R",
+    "raceClass": "シベリアンアイリス賞(B1B2)",
+    "winner": 1,
+    "winOdds": 2.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "ウィンターサン",
+        "norm": 0.1853,
+        "tanOdds": 3.1,
+        "ev": 57.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.9
+      },
+      {
+        "num": 3,
+        "name": "ブローヴェイス",
+        "norm": 0.1583,
+        "tanOdds": 7.8,
+        "ev": 123.5,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "サムズアップ",
+        "norm": 0.0342,
+        "tanOdds": 39.8,
+        "ev": 136.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "タイキクラージュ",
+        "norm": 0.033,
+        "tanOdds": 33.3,
+        "ev": 109.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ファリア",
+        "norm": 0.0266,
+        "tanOdds": 44.5,
+        "ev": 118.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "モダンフリンジ",
+        "norm": 0.0238,
+        "tanOdds": 165.9,
+        "ev": 394.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:10:50.744Z"
   }
 ]
