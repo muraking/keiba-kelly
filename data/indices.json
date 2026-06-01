@@ -13871,6 +13871,55 @@
       ],
       "updated": "2026-05-31T16:51:35.567Z",
       "odds": {
+        "32": {
+          "1": {
+            "1": {
+              "tan": 171.4,
+              "fuku_min": 11.3,
+              "fuku_max": 99.9
+            },
+            "2": {
+              "tan": 38,
+              "fuku_min": 1.2,
+              "fuku_max": 14.6
+            },
+            "3": {
+              "tan": 31.4,
+              "fuku_min": 1.4,
+              "fuku_max": 20.2
+            },
+            "4": {
+              "tan": 1,
+              "fuku_min": 1,
+              "fuku_max": 1
+            },
+            "5": {
+              "tan": 19.4,
+              "fuku_min": 1.4,
+              "fuku_max": 20.7
+            },
+            "6": {
+              "tan": 70.3,
+              "fuku_min": 2.3,
+              "fuku_max": 41.9
+            },
+            "7": {
+              "tan": 229.4,
+              "fuku_min": 13,
+              "fuku_max": 99.9
+            },
+            "8": {
+              "tan": 201.5,
+              "fuku_min": 18.3,
+              "fuku_max": 99.9
+            },
+            "9": {
+              "tan": 59.4,
+              "fuku_min": 1.9,
+              "fuku_max": 33.4
+            }
+          }
+        },
         "07": {
           "1": {
             "1": {
@@ -14413,55 +14462,6 @@
               "fuku_max": 1.7
             }
           }
-        },
-        "32": {
-          "1": {
-            "1": {
-              "tan": 171.4,
-              "fuku_min": 11.3,
-              "fuku_max": 99.9
-            },
-            "2": {
-              "tan": 38,
-              "fuku_min": 1.2,
-              "fuku_max": 14.6
-            },
-            "3": {
-              "tan": 31.4,
-              "fuku_min": 1.4,
-              "fuku_max": 20.2
-            },
-            "4": {
-              "tan": 1,
-              "fuku_min": 1,
-              "fuku_max": 1
-            },
-            "5": {
-              "tan": 19.4,
-              "fuku_min": 1.4,
-              "fuku_max": 20.7
-            },
-            "6": {
-              "tan": 70.3,
-              "fuku_min": 2.3,
-              "fuku_max": 41.9
-            },
-            "7": {
-              "tan": 229.4,
-              "fuku_min": 13,
-              "fuku_max": 99.9
-            },
-            "8": {
-              "tan": 201.5,
-              "fuku_min": 18.3,
-              "fuku_max": 99.9
-            },
-            "9": {
-              "tan": 59.4,
-              "fuku_min": 1.9,
-              "fuku_max": 33.4
-            }
-          }
         }
       },
       "odds_updated": "2026-06-01T15:14:09.419112+09:00"
@@ -14486,7 +14486,7 @@
     "stop_loss_pct": 70,
     "skip_young_race": true,
     "buy_place_bet": false,
-    "stop_loss_amount": 3000,
+    "stop_loss_amount": 50000,
     "skip_local_maiden": true,
     "skip_local_2yo": true,
     "skip_local_3yo": false,
