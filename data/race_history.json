@@ -18304,5 +18304,94 @@
       }
     ],
     "savedAt": "2026-06-01T12:20:17.572Z"
+  },
+  {
+    "date": "6/1 船橋 12R",
+    "venue": "船橋",
+    "raceNum": "12R",
+    "raceClass": "タマシギ特別(C2)",
+    "winner": 6,
+    "winOdds": 3.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "ゴールドブリーダー",
+        "norm": 0.1621,
+        "tanOdds": 3.5,
+        "ev": 56.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.1
+      },
+      {
+        "num": 7,
+        "name": "ハクシンダンス",
+        "norm": 0.1564,
+        "tanOdds": 19.5,
+        "ev": 304.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "エントジアスタ",
+        "norm": 0.0922,
+        "tanOdds": 12.9,
+        "ev": 118.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ブレイブルイーズ",
+        "norm": 0.0413,
+        "tanOdds": 145.1,
+        "ev": 598.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ヴァッツマン",
+        "norm": 0.0397,
+        "tanOdds": 120.1,
+        "ev": 476.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ツガノムサシ",
+        "norm": 0.0348,
+        "tanOdds": 114.4,
+        "ev": 397.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "マロガレ",
+        "norm": 0.0333,
+        "tanOdds": 156.8,
+        "ev": 522.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:20:57.888Z"
   }
 ]
