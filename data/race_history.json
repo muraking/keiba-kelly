@@ -17444,5 +17444,84 @@
       }
     ],
     "savedAt": "2026-06-01T12:12:40.245Z"
+  },
+  {
+    "date": "6/1 船橋 2R",
+    "venue": "船橋",
+    "raceNum": "2R",
+    "raceClass": "3歳三",
+    "winner": 11,
+    "winOdds": 4.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 11,
+        "name": "モリリオンショコラ",
+        "norm": 0.1738,
+        "tanOdds": 3,
+        "ev": 52.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 4.2
+      },
+      {
+        "num": 5,
+        "name": "ルリモハリモ",
+        "norm": 0.1485,
+        "tanOdds": 12,
+        "ev": 178.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "レフレール",
+        "norm": 0.0879,
+        "tanOdds": 13.7,
+        "ev": 120.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ディーズメソッド",
+        "norm": 0.034,
+        "tanOdds": 38.3,
+        "ev": 130.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "アイリーナ",
+        "norm": 0.0301,
+        "tanOdds": 42.2,
+        "ev": 127,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "グリンネル",
+        "norm": 0.0272,
+        "tanOdds": 108.9,
+        "ev": 296.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:13:25.819Z"
   }
 ]
