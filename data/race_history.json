@@ -17800,5 +17800,94 @@
       }
     ],
     "savedAt": "2026-06-01T12:15:17.995Z"
+  },
+  {
+    "date": "6/1 船橋 6R",
+    "venue": "船橋",
+    "raceNum": "6R",
+    "raceClass": "3歳447〜214P選抜馬",
+    "winner": 8,
+    "winOdds": 3.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 3,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 4,
+        "name": "マサノカトレア",
+        "norm": 0.1922,
+        "tanOdds": 6.1,
+        "ev": 117.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ダイセンシリウス",
+        "norm": 0.1573,
+        "tanOdds": 10.1,
+        "ev": 158.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "グリオット",
+        "norm": 0.1562,
+        "tanOdds": 4.1,
+        "ev": 64,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.1
+      },
+      {
+        "num": 1,
+        "name": "マダヤルカイ",
+        "norm": 0.1283,
+        "tanOdds": 30.7,
+        "ev": 394,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "トリケトラ",
+        "norm": 0.0941,
+        "tanOdds": 14.1,
+        "ev": 132.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "リプサリス",
+        "norm": 0.0866,
+        "tanOdds": 37.7,
+        "ev": 326.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "マサッキー",
+        "norm": 0.0479,
+        "tanOdds": 72.3,
+        "ev": 346.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-01T12:16:25.876Z"
   }
 ]
