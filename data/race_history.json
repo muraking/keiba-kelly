@@ -19212,5 +19212,64 @@
       }
     ],
     "savedAt": "2026-06-02T23:45:13.999Z"
+  },
+  {
+    "date": "6/2 水沢 11R",
+    "venue": "水沢",
+    "raceNum": "11R",
+    "raceClass": "B2",
+    "winner": 2,
+    "winOdds": 5,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 2,
+        "name": "グレイソニック",
+        "norm": 0.1719,
+        "tanOdds": 7.9,
+        "ev": 135.8,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 5
+      },
+      {
+        "num": 4,
+        "name": "スーパーリベロ",
+        "norm": 0.1177,
+        "tanOdds": 13.3,
+        "ev": 156.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ディフューズ",
+        "norm": 0.0284,
+        "tanOdds": 53.8,
+        "ev": 152.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ドナマギー",
+        "norm": 0.0271,
+        "tanOdds": 39.5,
+        "ev": 107.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:45:32.216Z"
   }
 ]
