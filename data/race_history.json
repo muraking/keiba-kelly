@@ -20360,5 +20360,124 @@
       }
     ],
     "savedAt": "2026-06-02T23:49:38.796Z"
+  },
+  {
+    "date": "6/2 船橋 11R",
+    "venue": "船橋",
+    "raceNum": "11R",
+    "raceClass": "ジョッキーズチャンピオンシップ第3戦(C1)",
+    "winner": 9,
+    "winOdds": 6.4,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 10,
+        "name": "ラファエラエンゼル",
+        "norm": 0.0983,
+        "tanOdds": 11.7,
+        "ev": 115,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ラップランド",
+        "norm": 0.0702,
+        "tanOdds": 5.2,
+        "ev": 36.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6.4
+      },
+      {
+        "num": 8,
+        "name": "ロードアスタリスク",
+        "norm": 0.0532,
+        "tanOdds": 36.1,
+        "ev": 191.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ビービーシャーンス",
+        "norm": 0.0524,
+        "tanOdds": 40,
+        "ev": 209.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "セントレガーロ",
+        "norm": 0.0379,
+        "tanOdds": 27.1,
+        "ev": 102.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ティナバローズ",
+        "norm": 0.0376,
+        "tanOdds": 152.6,
+        "ev": 573.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "キミオモウハナ",
+        "norm": 0.0375,
+        "tanOdds": 27.2,
+        "ev": 101.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ボルドーダゲール",
+        "norm": 0.0338,
+        "tanOdds": 65.2,
+        "ev": 220.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ラブシックボッサ",
+        "norm": 0.0334,
+        "tanOdds": 83,
+        "ev": 277.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ファイアーサイン",
+        "norm": 0.0334,
+        "tanOdds": 59.5,
+        "ev": 198.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:49:57.817Z"
   }
 ]
