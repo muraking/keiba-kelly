@@ -19271,5 +19271,104 @@
       }
     ],
     "savedAt": "2026-06-02T23:45:32.216Z"
+  },
+  {
+    "date": "6/2 水沢 12R",
+    "venue": "水沢",
+    "raceNum": "12R",
+    "raceClass": "夢・希望 未来へ前進(B2)",
+    "winner": 5,
+    "winOdds": 3.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ウインチャチャ",
+        "norm": 0.1661,
+        "tanOdds": 3.4,
+        "ev": 56.5,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.1
+      },
+      {
+        "num": 3,
+        "name": "スリーヘリオス",
+        "norm": 0.136,
+        "tanOdds": 8.6,
+        "ev": 117,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ヒロシゲウェーブ",
+        "norm": 0.1253,
+        "tanOdds": 22.6,
+        "ev": 283.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "サトノアヴァロン",
+        "norm": 0.0945,
+        "tanOdds": 36.4,
+        "ev": 343.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ヴィグルズマン",
+        "norm": 0.0622,
+        "tanOdds": 37,
+        "ev": 230.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "オオサキワンダー",
+        "norm": 0.0469,
+        "tanOdds": 40,
+        "ev": 187.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ビッグシシールーフ",
+        "norm": 0.0401,
+        "tanOdds": 44.1,
+        "ev": 176.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ラスダシャン",
+        "norm": 0.0375,
+        "tanOdds": 32.8,
+        "ev": 122.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:45:51.180Z"
   }
 ]
