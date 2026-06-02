@@ -18560,5 +18560,64 @@
       }
     ],
     "savedAt": "2026-06-02T23:25:50.175Z"
+  },
+  {
+    "date": "6/2 水沢 4R",
+    "venue": "水沢",
+    "raceNum": "4R",
+    "raceClass": "C2二組",
+    "winner": 3,
+    "winOdds": 11.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 1,
+        "name": "グレイスショコラ",
+        "norm": 0.0846,
+        "tanOdds": 14.3,
+        "ev": 121,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "パラジウムリボン",
+        "norm": 0.0713,
+        "tanOdds": 27.5,
+        "ev": 196.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "フリムカナイデヨ",
+        "norm": 0.069,
+        "tanOdds": 19.1,
+        "ev": 131.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 11.9
+      },
+      {
+        "num": 7,
+        "name": "セラトーン",
+        "norm": 0.0383,
+        "tanOdds": 32.2,
+        "ev": 123.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:27:05.704Z"
   }
 ]
