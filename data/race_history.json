@@ -19786,5 +19786,94 @@
       }
     ],
     "savedAt": "2026-06-02T23:47:15.154Z"
+  },
+  {
+    "date": "6/2 船橋 5R",
+    "venue": "船橋",
+    "raceNum": "5R",
+    "raceClass": "C2二三",
+    "winner": 12,
+    "winOdds": 2.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "ゴールドパートナー",
+        "norm": 0.2073,
+        "tanOdds": 4.7,
+        "ev": 97.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.2
+      },
+      {
+        "num": 5,
+        "name": "ジャガンナート",
+        "norm": 0.07,
+        "tanOdds": 14.9,
+        "ev": 104.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ファイアスター",
+        "norm": 0.0504,
+        "tanOdds": 39.3,
+        "ev": 198,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ボールドトップ",
+        "norm": 0.0337,
+        "tanOdds": 78.1,
+        "ev": 262.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "クラフトキング",
+        "norm": 0.0296,
+        "tanOdds": 62.2,
+        "ev": 184.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "オリエンタルマック",
+        "norm": 0.0285,
+        "tanOdds": 123.8,
+        "ev": 352.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ムゾラシカ",
+        "norm": 0.0271,
+        "tanOdds": 108,
+        "ev": 292.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:47:30.679Z"
   }
 ]
