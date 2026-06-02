@@ -20261,5 +20261,104 @@
       }
     ],
     "savedAt": "2026-06-02T23:49:12.221Z"
+  },
+  {
+    "date": "6/2 船橋 10R",
+    "venue": "船橋",
+    "raceNum": "10R",
+    "raceClass": "麦秋特別(B2B3)",
+    "winner": 7,
+    "winOdds": 1.2,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ジーティーファラオ",
+        "norm": 0.2925,
+        "tanOdds": 1.4,
+        "ev": 41,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.2
+      },
+      {
+        "num": 2,
+        "name": "アレスエルピーダ",
+        "norm": 0.2303,
+        "tanOdds": 6.7,
+        "ev": 154.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "セレクティオ",
+        "norm": 0.0623,
+        "tanOdds": 29.6,
+        "ev": 184.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "アルアインオアシス",
+        "norm": 0.0496,
+        "tanOdds": 42.3,
+        "ev": 209.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "チャチャハツゴウ",
+        "norm": 0.0473,
+        "tanOdds": 39.1,
+        "ev": 185.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "マクト",
+        "norm": 0.0465,
+        "tanOdds": 96.7,
+        "ev": 449.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "エーヴベリー",
+        "norm": 0.0378,
+        "tanOdds": 170.8,
+        "ev": 645.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ブレイヴアウト",
+        "norm": 0.0291,
+        "tanOdds": 247,
+        "ev": 719.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:49:38.796Z"
   }
 ]
