@@ -18491,5 +18491,74 @@
       }
     ],
     "savedAt": "2026-06-02T23:25:31.170Z"
+  },
+  {
+    "date": "6/2 水沢 3R",
+    "venue": "水沢",
+    "raceNum": "3R",
+    "raceClass": "C2三組",
+    "winner": 7,
+    "winOdds": 1.9,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "ワイドマルガリータ",
+        "norm": 0.2962,
+        "tanOdds": 2.7,
+        "ev": 80,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.9
+      },
+      {
+        "num": 6,
+        "name": "キッカケ",
+        "norm": 0.1608,
+        "tanOdds": 7.9,
+        "ev": 127,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ニシノタマユラ",
+        "norm": 0.0968,
+        "tanOdds": 12.2,
+        "ev": 118.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "クレーンパーディタ",
+        "norm": 0.0895,
+        "tanOdds": 17.1,
+        "ev": 153.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "メイショウユフイン",
+        "norm": 0.0892,
+        "tanOdds": 14.4,
+        "ev": 128.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:25:50.175Z"
   }
 ]
