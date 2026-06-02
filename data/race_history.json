@@ -19153,5 +19153,64 @@
       }
     ],
     "savedAt": "2026-06-02T23:30:21.237Z"
+  },
+  {
+    "date": "6/2 水沢 10R",
+    "venue": "水沢",
+    "raceNum": "10R",
+    "raceClass": "3歳B2一組",
+    "winner": 3,
+    "winOdds": 6,
+    "hit": true,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "メタルレイヴァー",
+        "norm": 0.123,
+        "tanOdds": 9.6,
+        "ev": 118.1,
+        "isWinner": true,
+        "isBet": true,
+        "payout": 6
+      },
+      {
+        "num": 7,
+        "name": "ミクリ",
+        "norm": 0.0265,
+        "tanOdds": 52.1,
+        "ev": 138,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "シンメアスター",
+        "norm": 0.0219,
+        "tanOdds": 144.8,
+        "ev": 317.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "コンチナッツ",
+        "norm": 0.0212,
+        "tanOdds": 237,
+        "ev": 503,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:45:13.999Z"
   }
 ]
