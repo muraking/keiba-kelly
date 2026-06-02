@@ -19578,5 +19578,114 @@
       }
     ],
     "savedAt": "2026-06-02T23:46:40.865Z"
+  },
+  {
+    "date": "6/2 船橋 3R",
+    "venue": "船橋",
+    "raceNum": "3R",
+    "raceClass": "C2二三",
+    "winner": 7,
+    "winOdds": 1.8,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "オオデンタ",
+        "norm": 0.3605,
+        "tanOdds": 1.3,
+        "ev": 46.9,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.8
+      },
+      {
+        "num": 3,
+        "name": "アベリアフェイス",
+        "norm": 0.1429,
+        "tanOdds": 11.6,
+        "ev": 165.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "オールニッポン",
+        "norm": 0.0478,
+        "tanOdds": 46.7,
+        "ev": 223,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ヒロイックバイオ",
+        "norm": 0.0407,
+        "tanOdds": 61.1,
+        "ev": 248.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ナムラミック",
+        "norm": 0.0375,
+        "tanOdds": 50.2,
+        "ev": 188,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ママアリガトー",
+        "norm": 0.0372,
+        "tanOdds": 37.3,
+        "ev": 138.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "イーオレイ",
+        "norm": 0.0363,
+        "tanOdds": 94,
+        "ev": 340.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ミスターアルデ",
+        "norm": 0.0307,
+        "tanOdds": 99.5,
+        "ev": 305.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "クロスダイヤ",
+        "norm": 0.0248,
+        "tanOdds": 45.3,
+        "ev": 112.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:46:58.034Z"
   }
 ]
