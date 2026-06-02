@@ -18866,5 +18866,114 @@
       }
     ],
     "savedAt": "2026-06-02T23:29:08.970Z"
+  },
+  {
+    "date": "6/2 水沢 7R",
+    "venue": "水沢",
+    "raceNum": "7R",
+    "raceClass": "B1",
+    "winner": 5,
+    "winOdds": 1.5,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "ゴレイジョウ",
+        "norm": 0.2517,
+        "tanOdds": 1.3,
+        "ev": 32.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.5
+      },
+      {
+        "num": 9,
+        "name": "テングクラブ",
+        "norm": 0.2151,
+        "tanOdds": 9.3,
+        "ev": 200,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ヴァンダービルト",
+        "norm": 0.1168,
+        "tanOdds": 35.3,
+        "ev": 412.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "コスモタラゴン",
+        "norm": 0.1135,
+        "tanOdds": 9.9,
+        "ev": 112.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "ストームサージ",
+        "norm": 0.1057,
+        "tanOdds": 24.7,
+        "ev": 261,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ウインラグラス",
+        "norm": 0.0496,
+        "tanOdds": 68.2,
+        "ev": 338,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "クインズプリーズ",
+        "norm": 0.0378,
+        "tanOdds": 29.5,
+        "ev": 111.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "シゲルアレグリア",
+        "norm": 0.0376,
+        "tanOdds": 28.9,
+        "ev": 108.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "フラメンタ",
+        "norm": 0.0331,
+        "tanOdds": 32.4,
+        "ev": 107.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:29:26.713Z"
   }
 ]
