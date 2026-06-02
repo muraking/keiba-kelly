@@ -20746,5 +20746,74 @@
       }
     ],
     "savedAt": "2026-06-02T23:51:28.120Z"
+  },
+  {
+    "date": "6/2 金沢 3R",
+    "venue": "金沢",
+    "raceNum": "3R",
+    "raceClass": "C211",
+    "winner": 9,
+    "winOdds": 3.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 7,
+        "name": "フェスティヴイリス",
+        "norm": 0.0839,
+        "tanOdds": 20.6,
+        "ev": 172.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ムーンライトアリア",
+        "norm": 0.0447,
+        "tanOdds": 57.3,
+        "ev": 256.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "マジックスクロール",
+        "norm": 0.0412,
+        "tanOdds": 57.1,
+        "ev": 235.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "クリノヒビキ",
+        "norm": 0.0336,
+        "tanOdds": 46.3,
+        "ev": 155.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "オーデンアクア",
+        "norm": 0.0268,
+        "tanOdds": 81.1,
+        "ev": 217.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:52:44.475Z"
   }
 ]
