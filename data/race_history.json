@@ -19687,5 +19687,104 @@
       }
     ],
     "savedAt": "2026-06-02T23:46:58.034Z"
+  },
+  {
+    "date": "6/2 船橋 4R",
+    "venue": "船橋",
+    "raceNum": "4R",
+    "raceClass": "スイカズラ特別(2歳)",
+    "winner": 6,
+    "winOdds": 3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "モリケン",
+        "norm": 0.2374,
+        "tanOdds": 2.5,
+        "ev": 59.4,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3
+      },
+      {
+        "num": 2,
+        "name": "コパノハクシュウ",
+        "norm": 0.1574,
+        "tanOdds": 9.6,
+        "ev": 151.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ラモンパンサー",
+        "norm": 0.0392,
+        "tanOdds": 47.4,
+        "ev": 186,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "パミール",
+        "norm": 0.0298,
+        "tanOdds": 40.6,
+        "ev": 121,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ヨルノカガヤキ",
+        "norm": 0.0281,
+        "tanOdds": 58.4,
+        "ev": 163.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "シャムホロイムア",
+        "norm": 0.0248,
+        "tanOdds": 176.9,
+        "ev": 439.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "ドラゴンライト",
+        "norm": 0.0248,
+        "tanOdds": 96.2,
+        "ev": 239,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "サンダーミキチャン",
+        "norm": 0.0248,
+        "tanOdds": 104.7,
+        "ev": 259.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:47:15.154Z"
   }
 ]
