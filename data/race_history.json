@@ -20132,5 +20132,134 @@
       }
     ],
     "savedAt": "2026-06-02T23:48:50.794Z"
+  },
+  {
+    "date": "6/2 船橋 9R",
+    "venue": "船橋",
+    "raceNum": "9R",
+    "raceClass": "ジョッキーズチャンピオンシップ第2戦(C2)",
+    "winner": 12,
+    "winOdds": 2.3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 12,
+        "name": "バルクヘッド",
+        "norm": 0.2005,
+        "tanOdds": 2.5,
+        "ev": 50.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.3
+      },
+      {
+        "num": 5,
+        "name": "タカオスマイル",
+        "norm": 0.1174,
+        "tanOdds": 9.1,
+        "ev": 106.8,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 14,
+        "name": "ピースウォリアー",
+        "norm": 0.0682,
+        "tanOdds": 45.7,
+        "ev": 311.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "タツノキセキ",
+        "norm": 0.0653,
+        "tanOdds": 27.1,
+        "ev": 177.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 13,
+        "name": "ニシノシャイニング",
+        "norm": 0.0496,
+        "tanOdds": 22.5,
+        "ev": 111.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "コウジンキンキ",
+        "norm": 0.0446,
+        "tanOdds": 85.7,
+        "ev": 382.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ネオシャングリラ",
+        "norm": 0.0421,
+        "tanOdds": 37.6,
+        "ev": 158.3,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ロジドレフォン",
+        "norm": 0.038,
+        "tanOdds": 60.7,
+        "ev": 230.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "フレッシュルーキー",
+        "norm": 0.038,
+        "tanOdds": 34.3,
+        "ev": 130.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "ボニファシオ",
+        "norm": 0.0319,
+        "tanOdds": 57.8,
+        "ev": 184.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "シェルヴァレイ",
+        "norm": 0.0311,
+        "tanOdds": 92.8,
+        "ev": 288.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:49:12.221Z"
   }
 ]
