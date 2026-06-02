@@ -18975,5 +18975,84 @@
       }
     ],
     "savedAt": "2026-06-02T23:29:26.713Z"
+  },
+  {
+    "date": "6/2 水沢 8R",
+    "venue": "水沢",
+    "raceNum": "8R",
+    "raceClass": "3歳B2三組",
+    "winner": 9,
+    "winOdds": 6.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "ウチュウノハナ",
+        "norm": 0.2505,
+        "tanOdds": 4.4,
+        "ev": 110.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ディオスデルマール",
+        "norm": 0.0896,
+        "tanOdds": 8.6,
+        "ev": 77,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 6.1
+      },
+      {
+        "num": 2,
+        "name": "ヤマショウセブン",
+        "norm": 0.0423,
+        "tanOdds": 24.1,
+        "ev": 102,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "クラージュクリール",
+        "norm": 0.0417,
+        "tanOdds": 76.1,
+        "ev": 317.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "マムティタイム",
+        "norm": 0.0312,
+        "tanOdds": 70,
+        "ev": 218.6,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "コンバットジゴロ",
+        "norm": 0.0304,
+        "tanOdds": 155,
+        "ev": 470.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:29:49.105Z"
   }
 ]
