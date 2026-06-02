@@ -20578,5 +20578,94 @@
       }
     ],
     "savedAt": "2026-06-02T23:50:20.120Z"
+  },
+  {
+    "date": "6/2 金沢 1R",
+    "venue": "金沢",
+    "raceNum": "1R",
+    "raceClass": "第1回江崎記念(C2)",
+    "winner": 4,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "ジーティーユウビ",
+        "norm": 0.3172,
+        "tanOdds": 3.7,
+        "ev": 117.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "ファーストフラワー",
+        "norm": 0.2881,
+        "tanOdds": 1.7,
+        "ev": 49,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      },
+      {
+        "num": 6,
+        "name": "ユリオプスイエロー",
+        "norm": 0.2251,
+        "tanOdds": 5,
+        "ev": 112.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "マイネルライゼン",
+        "norm": 0.0375,
+        "tanOdds": 33.8,
+        "ev": 126.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ヴェリーヌ",
+        "norm": 0.029,
+        "tanOdds": 36.1,
+        "ev": 104.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ジャスミンガール",
+        "norm": 0.0226,
+        "tanOdds": 82.3,
+        "ev": 185.8,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "アンザンタカヒロ",
+        "norm": 0.021,
+        "tanOdds": 58.5,
+        "ev": 122.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:51:04.363Z"
   }
 ]
