@@ -18442,5 +18442,54 @@
       }
     ],
     "savedAt": "2026-06-02T23:25:05.464Z"
+  },
+  {
+    "date": "6/2 水沢 2R",
+    "venue": "水沢",
+    "raceNum": "2R",
+    "raceClass": "2歳",
+    "winner": 3,
+    "winOdds": 1.6,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "サザンオーヴィル",
+        "norm": 0.2831,
+        "tanOdds": 6.9,
+        "ev": 195.3,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "マナホクレア",
+        "norm": 0.2376,
+        "tanOdds": 5.3,
+        "ev": 125.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "リュウゴイーグル",
+        "norm": 0.2326,
+        "tanOdds": 1.9,
+        "ev": 44.2,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 1.6
+      }
+    ],
+    "savedAt": "2026-06-02T23:25:31.170Z"
   }
 ]
