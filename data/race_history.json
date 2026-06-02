@@ -20667,5 +20667,84 @@
       }
     ],
     "savedAt": "2026-06-02T23:51:04.363Z"
+  },
+  {
+    "date": "6/2 金沢 2R",
+    "venue": "金沢",
+    "raceNum": "2R",
+    "raceClass": "C212",
+    "winner": 9,
+    "winOdds": 3.7,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 9,
+        "name": "アリーワーク",
+        "norm": 0.1373,
+        "tanOdds": 4.3,
+        "ev": 59,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 3.7
+      },
+      {
+        "num": 3,
+        "name": "シックスレター",
+        "norm": 0.114,
+        "tanOdds": 9,
+        "ev": 102.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "コロラマ",
+        "norm": 0.0351,
+        "tanOdds": 61.3,
+        "ev": 215.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "チアフルマノン",
+        "norm": 0.0256,
+        "tanOdds": 89.9,
+        "ev": 230.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "ランフォーリリーズ",
+        "norm": 0.0252,
+        "tanOdds": 98.4,
+        "ev": 247.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ウチョウテン",
+        "norm": 0.025,
+        "tanOdds": 61.7,
+        "ev": 154.2,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:51:28.120Z"
   }
 ]
