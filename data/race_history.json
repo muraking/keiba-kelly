@@ -20043,5 +20043,94 @@
       }
     ],
     "savedAt": "2026-06-02T23:48:12.225Z"
+  },
+  {
+    "date": "6/2 船橋 8R",
+    "venue": "船橋",
+    "raceNum": "8R",
+    "raceClass": "ムササビダッシュ(C2C3)",
+    "winner": 5,
+    "winOdds": 35.1,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 6,
+        "name": "リーサイェイ",
+        "norm": 0.0641,
+        "tanOdds": 34.8,
+        "ev": 223.1,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "マオノボルケーノ",
+        "norm": 0.0632,
+        "tanOdds": 16.8,
+        "ev": 106.2,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "キャストライトオン",
+        "norm": 0.0457,
+        "tanOdds": 28.5,
+        "ev": 130.1,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 35.1
+      },
+      {
+        "num": 13,
+        "name": "ヒョイザブロー",
+        "norm": 0.0447,
+        "tanOdds": 36.8,
+        "ev": 164.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "レガシーオブエリザ",
+        "norm": 0.0363,
+        "tanOdds": 159.5,
+        "ev": 579.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 11,
+        "name": "カウニスミエリ",
+        "norm": 0.0338,
+        "tanOdds": 62.8,
+        "ev": 212.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "インファンタ",
+        "norm": 0.0331,
+        "tanOdds": 64.8,
+        "ev": 214.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:48:50.794Z"
   }
 ]
