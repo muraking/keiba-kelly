@@ -19206,7 +19206,7 @@
         {
           "raceName": "6/2 名古屋 7R",
           "raceClass": "C12組",
-          "startTime": "17:25",
+          "startTime": "17:30",
           "venue": "名古屋",
           "raceNum": "7R",
           "horses": [
@@ -19282,7 +19282,9 @@
               "pct": 1,
               "name": "ナムラアダム"
             }
-          ]
+          ],
+          "_origTime": "17:25",
+          "_timeChanged": true
         },
         {
           "raceName": "6/2 名古屋 8R",
