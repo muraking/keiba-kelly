@@ -19459,5 +19459,124 @@
       }
     ],
     "savedAt": "2026-06-02T23:46:22.241Z"
+  },
+  {
+    "date": "6/2 船橋 2R",
+    "venue": "船橋",
+    "raceNum": "2R",
+    "raceClass": "3歳五",
+    "winner": 12,
+    "winOdds": 4.3,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "コマサ",
+        "norm": 0.4068,
+        "tanOdds": 2.5,
+        "ev": 101.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 12,
+        "name": "ゴールドステージ",
+        "norm": 0.0654,
+        "tanOdds": 3.8,
+        "ev": 24.8,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 4.3
+      },
+      {
+        "num": 11,
+        "name": "トーヤマノゴールド",
+        "norm": 0.0541,
+        "tanOdds": 33.6,
+        "ev": 181.7,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "エイシンジンジャー",
+        "norm": 0.0522,
+        "tanOdds": 24.6,
+        "ev": 128.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 6,
+        "name": "ドジッコ",
+        "norm": 0.0504,
+        "tanOdds": 57.1,
+        "ev": 287.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "クツシタオトシタ",
+        "norm": 0.0472,
+        "tanOdds": 23.1,
+        "ev": 109.1,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 2,
+        "name": "ゴーレム",
+        "norm": 0.0408,
+        "tanOdds": 33.1,
+        "ev": 135,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "マオノハイジ",
+        "norm": 0.0385,
+        "tanOdds": 59.6,
+        "ev": 229.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "ティンガティンガ",
+        "norm": 0.0297,
+        "tanOdds": 103.3,
+        "ev": 306.6,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "セザンヴィーナス",
+        "norm": 0.0288,
+        "tanOdds": 71.6,
+        "ev": 206.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:46:40.865Z"
   }
 ]
