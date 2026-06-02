@@ -18619,5 +18619,74 @@
       }
     ],
     "savedAt": "2026-06-02T23:27:05.704Z"
+  },
+  {
+    "date": "6/2 水沢 5R",
+    "venue": "水沢",
+    "raceNum": "5R",
+    "raceClass": "C2一組",
+    "winner": 5,
+    "winOdds": 2.8,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 5,
+        "name": "テーオーカバリエ",
+        "norm": 0.2395,
+        "tanOdds": 4.9,
+        "ev": 117.3,
+        "isWinner": true,
+        "isBet": false,
+        "payout": 2.8
+      },
+      {
+        "num": 7,
+        "name": "エイシンヌチマシヌ",
+        "norm": 0.15,
+        "tanOdds": 8.2,
+        "ev": 123,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "カールルイコ",
+        "norm": 0.1382,
+        "tanOdds": 11.1,
+        "ev": 153.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 4,
+        "name": "サクラカゼ",
+        "norm": 0.0943,
+        "tanOdds": 12.3,
+        "ev": 116,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 3,
+        "name": "グランクロワ",
+        "norm": 0.0943,
+        "tanOdds": 17.6,
+        "ev": 165.9,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:27:37.280Z"
   }
 ]
