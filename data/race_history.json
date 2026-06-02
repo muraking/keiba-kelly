@@ -18688,5 +18688,94 @@
       }
     ],
     "savedAt": "2026-06-02T23:27:37.280Z"
+  },
+  {
+    "date": "6/2 水沢 6R",
+    "venue": "水沢",
+    "raceNum": "6R",
+    "raceClass": "B1",
+    "winner": 10,
+    "winOdds": null,
+    "hit": false,
+    "sm_temperature": 28,
+    "sm_minpct": 3,
+    "ev_min": 105,
+    "ev_max": 350,
+    "odds_min": 6,
+    "odds_max": 80,
+    "kelly_fraction": 0.5,
+    "records": [
+      {
+        "num": 3,
+        "name": "スピードスター",
+        "norm": 0.1571,
+        "tanOdds": 7.6,
+        "ev": 119.4,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 7,
+        "name": "ピンクノバラ",
+        "norm": 0.1318,
+        "tanOdds": 9.4,
+        "ev": 123.9,
+        "isWinner": false,
+        "isBet": true,
+        "payout": null
+      },
+      {
+        "num": 9,
+        "name": "ナナドリーム",
+        "norm": 0.0959,
+        "tanOdds": 10.7,
+        "ev": 102.7,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 10,
+        "name": "イキザマ",
+        "norm": 0.0919,
+        "tanOdds": 2.8,
+        "ev": 25.7,
+        "isWinner": true,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 1,
+        "name": "エッシャー",
+        "norm": 0.065,
+        "tanOdds": 31.9,
+        "ev": 207.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 5,
+        "name": "ノーダブルディップ",
+        "norm": 0.0639,
+        "tanOdds": 20.6,
+        "ev": 131.5,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      },
+      {
+        "num": 8,
+        "name": "タニマサベーカ",
+        "norm": 0.0391,
+        "tanOdds": 70.6,
+        "ev": 276.4,
+        "isWinner": false,
+        "isBet": false,
+        "payout": null
+      }
+    ],
+    "savedAt": "2026-06-02T23:29:06.171Z"
   }
 ]
