@@ -166,7 +166,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -558,6 +558,16 @@ textarea:focus{border-color:var(--gold)}
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">💹 掛け金計算方式</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="combined-kelly" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('combined_kelly', this.checked?'1':'0'); document.getElementById('combined-kelly-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">合成ケリー <span id="combined-kelly-label">OFF</span></span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ON: 複数馬を1グループとして合成ハーフケリーで合計投資額を計算し配分<br>OFF: 各馬個別にハーフケリー計算（従来）</div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
         <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔗 馬連購入設定</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 8px">
@@ -926,6 +936,7 @@ async function saveSoftmaxSettings() {
   const skipJra3yo      = document.getElementById('skip-jra-3yo')?.checked || false;
   const skipJraHurdle   = document.getElementById('skip-jra-hurdle')?.checked || false;
   const buyPlaceBet = document.getElementById('buy-place-bet')?.checked || false;
+  const combinedKelly = document.getElementById('combined-kelly')?.checked || false;
   const buyExactaJra   = document.getElementById('buy-exacta-jra')?.checked || false;
   const buyExactaLocal = document.getElementById('buy-exacta-local')?.checked || false;
   const buyExacta      = buyExactaJra || buyExactaLocal; // 後方互換
@@ -989,6 +1000,7 @@ async function saveSoftmaxSettings() {
       data._settings.skip_jra_3yo      = skipJra3yo;
       data._settings.skip_jra_hurdle   = skipJraHurdle;
       data._settings.buy_place_bet  = buyPlaceBet;
+      data._settings.combined_kelly  = combinedKelly;
       data._settings.buy_exacta_jra   = buyExactaJra;
       data._settings.buy_exacta_local = buyExactaLocal;
       data._settings.buy_exacta      = buyExacta;
@@ -1096,6 +1108,7 @@ async function loadSoftmaxFromGithub() {
     const skipJra3yo      = s.skip_jra_3yo      || false;
     const skipJraHurdle   = s.skip_jra_hurdle   || false;
     const buyPlaceBet   = s.buy_place_bet  || false;
+    const combinedKelly  = s.combined_kelly  || false;
     const buyExactaJra   = s.buy_exacta_jra   || false;
     const buyExactaLocal = s.buy_exacta_local || false;
     const buyExacta      = s.buy_exacta      || buyExactaJra || buyExactaLocal;
@@ -1131,6 +1144,7 @@ async function loadSoftmaxFromGithub() {
   localStorage.setItem('skip_jra_3yo',      skipJra3yo      ? '1' : '0');
   localStorage.setItem('skip_jra_hurdle',   skipJraHurdle   ? '1' : '0');
     localStorage.setItem('buy_place_bet',  buyPlaceBet  ? '1' : '0');
+    localStorage.setItem('combined_kelly',  combinedKelly  ? '1' : '0');
     localStorage.setItem('buy_exacta_jra',   buyExactaJra   ? '1' : '0');
     localStorage.setItem('buy_exacta_local', buyExactaLocal ? '1' : '0');
     localStorage.setItem('buy_exacta',       buyExacta      ? '1' : '0');
@@ -1172,6 +1186,8 @@ async function loadSoftmaxFromGithub() {
     skipIds.forEach((id,i) => { const el=document.getElementById(id); if(el) el.checked=skipVals[i]; });
     const bpbEl = document.getElementById('buy-place-bet');
     if(bpbEl){ bpbEl.checked = buyPlaceBet; document.getElementById('buy-place-bet-label').textContent = buyPlaceBet ? 'ON' : 'OFF'; }
+    const ckEl = document.getElementById('combined-kelly');
+    if(ckEl){ ckEl.checked = combinedKelly; document.getElementById('combined-kelly-label').textContent = combinedKelly ? 'ON' : 'OFF'; }
     const exactaJraEl = document.getElementById('buy-exacta-jra');
     if(exactaJraEl){ exactaJraEl.checked = buyExactaJra; document.getElementById('buy-exacta-jra-label').textContent = buyExactaJra ? 'ON' : 'OFF'; }
     const exactaLocalEl = document.getElementById('buy-exacta-local');
@@ -1202,6 +1218,7 @@ async function loadSoftmaxFromGithub() {
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
       `損切り: ${stopLossEnabled ? '¥'+stopLossAmount+'未満で停止' : 'OFF'}`,
+      `掛け金計算: ${combinedKelly ? '合成ハーフケリー' : '個別ハーフケリー（従来）'}`,
       (()=>{
         const skips = [];
         if(localStorage.getItem('skip_local_maiden')==='1') skips.push('地方新馬');
@@ -1325,6 +1342,9 @@ function loadSoftmaxSettings() {
   const bpbEl2 = document.getElementById('buy-place-bet');
   const bpbVal = localStorage.getItem('buy_place_bet') === '1';
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
+  const ckEl2 = document.getElementById('combined-kelly');
+  const ckVal = localStorage.getItem('combined_kelly') === '1';
+  if(ckEl2){ ckEl2.checked = ckVal; document.getElementById('combined-kelly-label').textContent = ckVal ? 'ON' : 'OFF'; }
 }
 
 function softmaxNorm(horses, temperature, minPct) {
