@@ -178,7 +178,6 @@ async def confirm_and_vote(page, total, label):
     cart_text = await page.evaluate("() => document.body.innerText.slice(0,300)")
     print(f"  確認前ページ: {cart_text[:200]}")
 
-    # 確認ボタンをクリック（旧コード方式: btn-disabledチェックなしでシンプルに）
     confirm_result = await page.evaluate("""() => {
         for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
             const t = (el.value || el.innerText || '').trim();
@@ -196,7 +195,6 @@ async def confirm_and_vote(page, total, label):
     await page.wait_for_timeout(3000)
     await page.screenshot(path=f"rakuten_confirm_{label}.png")
 
-    # 確認後ページを表示（デバッグ）- エラーテーブルの内容を重点的に取得
     confirm_debug = await page.evaluate("""() => {
         const tables = document.querySelectorAll('table');
         let errorInfo = '';
@@ -214,13 +212,12 @@ async def confirm_and_vote(page, total, label):
     }""")
     print(f"  確認後詳細: {confirm_debug[:500]}")
 
-    # 投票金額入力（キーボード入力でJSに確実に検知させる）
     try:
         inp = await page.query_selector('input[name="verify"]:visible, input[type="text"]:visible, input[type="number"]:visible')
         if inp:
             await inp.click()
-            await inp.fill('')  # 一旦クリア
-            await page.keyboard.type(str(total), delay=50)  # キーボード入力
+            await inp.fill('')
+            await page.keyboard.type(str(total), delay=50)
             await page.wait_for_timeout(300)
             val = await inp.input_value()
             print(f"  投票金額入力: ¥{total:,} (実際の値: {val})")
@@ -229,7 +226,6 @@ async def confirm_and_vote(page, total, label):
     except Exception as e:
         print(f"  投票金額入力エラー: {e}")
 
-    # 「投票する」ボタン（旧コード: range(2)、確認画面ならステップ2へそのまま再クリック）
     for step in range(2):
         print(f"  投票する（ステップ{step+1}）...")
 
@@ -247,7 +243,6 @@ async def confirm_and_vote(page, total, label):
                     return '投票する:' + el.tagName;
                 }
             }
-            // デバッグ: ボタン一覧
             const all = [];
             for (const el of document.querySelectorAll('input[type=submit],input[type=button],button,a')) {
                 const t = (el.value||el.innerText||'').trim().slice(0,20);
@@ -278,7 +273,6 @@ async def confirm_and_vote(page, total, label):
             print(f"  ✅ 投票完了！")
             return True
         if '投票内容確認' in text:
-            # 旧コード: 確認画面ならそのままステップ2へ（金額再入力なし）
             print(f"  → 投票内容確認画面。ステップ2へ...")
             continue
         break
@@ -308,7 +302,6 @@ async def purchase_tan(page, venue, race_num, bets, today):
 
     await page.screenshot(path="rakuten_tan_race.png")
 
-    # カゴクリア：/bet/normalに移動してから全削除
     await page.goto('https://bet.keiba.rakuten.co.jp/bet/normal',
                     wait_until='domcontentloaded', timeout=TIMEOUT)
     await page.wait_for_timeout(1500)
@@ -322,16 +315,13 @@ async def purchase_tan(page, venue, race_num, bets, today):
     await page.wait_for_timeout(2000)
     print(f"  カゴクリア: {del_result}")
 
-    # カゴクリア後、レースページに再移動
     ok = await navigate_to_race(page, venue, race_num, today)
     if not ok:
         return False
 
-    # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
     print(f"  式別リンク: {shubetsu}")
 
-    # 馬番クリック
     async def click_horse(num, col_offset):
         return await page.evaluate(f"""() => {{
             for (const table of document.querySelectorAll('table')) {{
@@ -378,7 +368,7 @@ async def purchase_tan(page, venue, race_num, bets, today):
         print(f"  ⚠️ 単勝/複勝クリック全NG → 単勝未発売の可能性 → スキップ")
         return True
 
-    # 金額入力
+    # 金額入力（スケジューラーから渡されたamountをそのまま使用）
     inputs = await page.query_selector_all('input[type="text"]')
     for inp in inputs:
         if not await inp.is_visible():
@@ -426,7 +416,6 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
 
     await page.screenshot(path=f"rakuten_{bet_type}_race.png")
 
-    # カゴクリア：/bet/normalに移動してから全削除
     await page.goto('https://bet.keiba.rakuten.co.jp/bet/normal',
                     wait_until='domcontentloaded', timeout=TIMEOUT)
     await page.wait_for_timeout(1500)
@@ -440,16 +429,13 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
     await page.wait_for_timeout(2000)
     print(f"  カゴクリア: {del_result}")
 
-    # カゴクリア後、レースページに再移動
     ok = await navigate_to_race(page, venue, race_num, today)
     if not ok:
         return False
 
-    # 式別リンク確認
     shubetsu = await page.evaluate("() => { var r=''; for(const a of document.querySelectorAll('a')){const t=a.innerText.trim(); if(['単勝','複勝','馬連','ワイド','馬単','三連複','三連単'].includes(t))r+=t+'['+a.className+'] ';} return r||'not found'; }")
     print(f"  式別リンク: {shubetsu}")
 
-    # 通常タブ
     for try_normal in ['通常', '通常投票']:
         try:
             await page.click(f'text={try_normal}', timeout=3000)
@@ -459,7 +445,6 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
         except:
             pass
 
-    # 式別タブ
     tab_candidates = ['馬連', '馬複'] if bet_type == 'exacta' else ['ワイド']
     for try_label in tab_candidates:
         try:
@@ -472,7 +457,6 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
         except Exception as e:
             print(f"  式別タブ '{try_label}' 失敗: {e}")
 
-    # フォーメーション（ポーリング最大10秒）
     fmt_clicked = False
     for _retry in range(10):
         await page.wait_for_timeout(1000)
@@ -501,11 +485,9 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
 
     await page.wait_for_timeout(1000)
 
-    # テーブル構造確認
     page_info = await page.evaluate("() => { var t=document.querySelectorAll('table'); var r='tables:'+t.length; for(var i=0;i<Math.min(5,t.length);i++){var rows=t[i].querySelectorAll('tr');r+=' tbl'+i+'('+rows.length+'rows)';for(var j=0;j<Math.min(3,rows.length);j++){var cs=rows[j].querySelectorAll('td,th');r+=' R'+j+'['+Array.from(cs).map(function(c){return (c.innerText.trim()||c.innerHTML.trim()).slice(0,20);}).join('|')+']';}} return r; }")
     print(f"  テーブル構造: {page_info}")
 
-    # 軸・相手
     axis_nums    = list(dict.fromkeys([b['num1'] for b in bets]))
     partner_nums = list(dict.fromkeys([b['num2'] for b in bets]))
     print(f"  馬1（軸）: {axis_nums}")
@@ -548,7 +530,6 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
     kumi = await page.evaluate("() => { const m=document.body.innerText.match(/組数[：:]?\\s*(\\d+)/); return m?m[1]:'不明'; }")
     print(f"  選択組数: {kumi}")
 
-    # 金額入力（1点あたりの金額を入力）
     unit_amount = bets[0]['amount']
     kumi_int = int(kumi) if kumi and str(kumi).isdigit() else len(bets)
     actual_total = unit_amount * kumi_int
@@ -560,7 +541,6 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
     else:
         print(f"  ⚠️ 金額入力欄なし")
 
-    # セット
     try:
         await page.click('text=セット', timeout=5000)
         await page.wait_for_timeout(1000)
@@ -568,7 +548,6 @@ async def purchase_combo(page, venue, race_num, bets, bet_type, today):
     except Exception as e:
         print(f"  セット失敗: {e}")
 
-    # セット後カゴ確認
     cart_text = await page.evaluate("() => document.body.innerText.slice(0,400)")
     print(f"  [セット後カゴ]: {cart_text[:300]}")
     cart = await page.evaluate("() => { const m=document.body.innerText.match(/件数[：:]?\\s*(\\d+)/); return m?m[1]:'不明'; }")
@@ -602,13 +581,13 @@ async def main():
     print(f"DRY_RUN: {DRY_RUN}")
     print(f"会場: {COURSE_NAME} {RACE_NUM}R / 日付: {TODAY}")
     print(f"単勝/複勝: {len(tan_bets)}点 / 馬連: {len(exacta_bets)}点 / ワイド: {len(wide_bets)}点")
+    print(f"受け取ったbets: {json.dumps(BETS, ensure_ascii=False)}")
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True, args=['--dns-prefetch-disable', '--no-sandbox'])
         page = await browser.new_page()
         page.set_default_timeout(TIMEOUT)
 
-        # 全削除確認ダイアログを常に自動accept（永続ハンドラ）
         async def _auto_accept_dialog(dialog):
             try:
                 await dialog.accept()
@@ -619,35 +598,16 @@ async def main():
         # ログイン（1回）
         await login(page)
         balance = await get_balance(page)
-
-        # 残高ベースで単勝のケリー再計算
-        bets_tan = tan_bets[:]
-        if balance and balance > 0 and bets_tan:
-            print(f"\n残高ベースでハーフケリー再計算: 資金¥{balance:,}")
-            recalc = []
-            for b in bets_tan:
-                norm = b.get('norm', 0)
-                odds = b.get('odds', 0)
-                if not norm or not odds or odds <= 1:
-                    recalc.append(b)
-                    continue
-                kf = max(0, (norm * odds - 1) / (odds - 1)) * 0.5
-                amount = max(100, int(balance * kf / 100) * 100) if kf > 0 else 100
-                print(f"  {b['num']}番: norm={norm:.3f} odds={odds} kelly={kf:.3f} → ¥{amount:,}")
-                recalc.append({**b, 'amount': amount})
-            bets_tan = recalc
-            total = sum(b['amount'] for b in bets_tan)
-            print(f"  合計: ¥{total:,} / 残高: ¥{balance:,} ({total/balance*100:.1f}%)")
-        elif not balance:
-            print("⚠️ 残高取得失敗 → 元の金額で投票")
+        if balance:
+            print(f"現在の残高: ¥{balance:,}（金額はスケジューラー計算値をそのまま使用）")
 
         results = {}
 
         # ① 単勝・複勝
-        if bets_tan:
+        if tan_bets:
             print(f"\n{'#'*40}")
             print(f"# STEP 1: 単勝/複勝")
-            results['tan'] = await purchase_tan(page, COURSE_NAME, RACE_NUM, bets_tan, TODAY)
+            results['tan'] = await purchase_tan(page, COURSE_NAME, RACE_NUM, tan_bets, TODAY)
             print(f"単勝結果: {'✅ OK' if results['tan'] else '❌ NG'}")
         else:
             print(f"\n# STEP 1: 単勝/複勝 → スキップ（買い目なし）")
@@ -672,13 +632,11 @@ async def main():
 
         await browser.close()
 
-    # サマリー
     print(f"\n{'='*40}")
     print(f"=== 購入結果サマリー ===")
     for k, v in results.items():
         print(f"  {k}: {'✅ OK' if v else '❌ NG'}")
 
-    # 1つでも失敗したらexit 1
     if results and not all(results.values()):
         print("❌ 一部失敗")
         raise SystemExit(1)
