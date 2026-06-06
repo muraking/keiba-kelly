@@ -379,7 +379,9 @@ async def main():
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+        context = await browser.new_context(has_touch=True, viewport={'width': 390, 'height': 844})
+        page = await context.new_page()
+
         page.set_default_timeout(TIMEOUT)
 
         await login(page)
