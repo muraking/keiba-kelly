@@ -353,6 +353,10 @@ async def main():
         RACE_NUM = 1
         BETS = [{"num": 3, "amount": 100, "bet_type": "tan"}]
 
+    # BETSがリストでない場合（辞書1個など）はリストに変換
+    if isinstance(BETS, dict):
+        BETS = [BETS]
+
     print(f"=== IPAT自動購入 ===")
     print(f"会場: {COURSE_NAME} {RACE_NUM}R")
     print(f"買い目: {BETS}")
