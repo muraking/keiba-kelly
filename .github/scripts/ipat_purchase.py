@@ -213,8 +213,18 @@ async def purchase(page, course_name, race_num, bets):
         print(f"  {b['num']}番 {label} ¥{b['amount']:,}")
 
     # 共通: 会場→レース選択
-    await page.click('text=オッズ投票')
+    # トップメニューのオッズ投票アイコンをクリック
+    # オッズ投票アイコンをクリック（innerTextまたはhrefで探す）
+    await page.evaluate("""() => {
+        const links = document.querySelectorAll('a');
+        for(const a of links){
+            if(a.innerText?.includes('オッズ投票') || (a.href && a.href.includes('770'))){
+                a.click(); return;
+            }
+        }
+    }""")
     await page.wait_for_timeout(2000)
+
     page_text = await page.evaluate("() => document.body.innerText")
     print(f"会場ページ内容（先頭300文字）: {page_text[:300]}")
     course_base = course_name.split('(')[0].strip()
@@ -283,10 +293,23 @@ async def purchase(page, course_name, race_num, bets):
 
         # 単勝購入後は必ずログイン後トップから辿り直す
         if tan_bets:
-            print("  単勝後のナビゲーション: トップから辿り直します")
-            await page.goto('https://www.ipat.jra.go.jp/sp/pw_732_i.cgi', wait_until='domcontentloaded', timeout=15000)
-            await page.wait_for_timeout(2000)
-            await page.click('text=オッズ投票')
+            print("  単勝後のナビゲーション: トップメニューから辿り直します")
+            # トップメニューボタンでトップに戻る
+            try:
+                await page.click('text=トップメニュー', timeout=5000)
+                await page.wait_for_timeout(2000)
+            except:
+                await page.goto('https://www.ipat.jra.go.jp/sp/pw_732_i.cgi', wait_until='domcontentloaded', timeout=15000)
+                await page.wait_for_timeout(2000)
+            # オッズ投票アイコンをクリック
+            await page.evaluate("""() => {
+                const links = document.querySelectorAll('a');
+                for(const a of links){
+                    if(a.innerText?.includes('オッズ投票') || a.href?.includes('770')){
+                        a.click(); return;
+                    }
+                }
+            }""")
             await page.wait_for_timeout(2000)
             await page.click(f'text={click_name}')
             await page.wait_for_timeout(2000)
