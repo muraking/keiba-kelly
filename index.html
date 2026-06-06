@@ -237,6 +237,19 @@ textarea:focus{border-color:var(--gold)}
           </select>
         </div>
         <div class="field" style="margin-bottom:0">
+          <label>通知頭数（Discord）</label>
+          <select id="notify-bets" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit"
+            onchange="localStorage.setItem('notify_bets', this.value)">
+            <option value="1">1頭</option>
+            <option value="2">2頭</option>
+            <option value="3" selected>3頭</option>
+            <option value="4">4頭</option>
+            <option value="5">5頭</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+        <div class="field" style="margin-bottom:0">
           <label>最大投資額（円）</label>
           <input type="number" id="max-invest" placeholder="制限なし" inputmode="numeric" style="height:40px">
         </div>
@@ -554,7 +567,7 @@ textarea:focus{border-color:var(--gold)}
             onchange="localStorage.setItem('buy_place_bet', this.checked?'1':'0'); document.getElementById('buy-place-bet-label').textContent=this.checked?'ON':'OFF'">
           <span style="font-size:13px;color:var(--text)" id="buy-place-bet-label">OFF</span>
         </label>
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると買い目対象馬の複勝もハーヴィル公式で計算して購入</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると買い目対象馬の複勝も購入（単勝金額×2倍で購入）</div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -936,6 +949,7 @@ async function saveSoftmaxSettings() {
   const skipJra3yo      = document.getElementById('skip-jra-3yo')?.checked || false;
   const skipJraHurdle   = document.getElementById('skip-jra-hurdle')?.checked || false;
   const buyPlaceBet = document.getElementById('buy-place-bet')?.checked || false;
+  const notifyBets = parseInt(document.getElementById('notify-bets')?.value || '3') || 3;
   const combinedKelly = document.getElementById('combined-kelly')?.checked || false;
   const buyExactaJra   = document.getElementById('buy-exacta-jra')?.checked || false;
   const buyExactaLocal = document.getElementById('buy-exacta-local')?.checked || false;
@@ -960,6 +974,7 @@ async function saveSoftmaxSettings() {
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
   localStorage.setItem('auto_buy_skip_fav', autoBuySkipFav ? '1' : '0');
   localStorage.setItem('max_bets', String(maxBetsSave));
+  localStorage.setItem('notify_bets', String(notifyBets));
   localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
   localStorage.setItem('sm_winrate_filter', String(winrateFilter));
 
@@ -990,6 +1005,7 @@ async function saveSoftmaxSettings() {
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
       data._settings.max_bets = maxBetsSave;
+      data._settings.notify_bets = notifyBets;
       data._settings.stop_loss_enabled = stopLossEnabled;
       data._settings.stop_loss_amount = stopLossAmount;
       data._settings.skip_local_maiden = skipLocalMaiden;
@@ -1020,6 +1036,7 @@ async function saveSoftmaxSettings() {
       data._settings.wide_rec2       = wideRec2;
       data._settings.wide_rec3       = wideRec3;
       data._settings.max_bets = maxBetsSave;
+      data._settings.notify_bets = notifyBets;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
       const jsonStr = JSON.stringify(data, null, 2);
@@ -1108,6 +1125,7 @@ async function loadSoftmaxFromGithub() {
     const skipJra3yo      = s.skip_jra_3yo      || false;
     const skipJraHurdle   = s.skip_jra_hurdle   || false;
     const buyPlaceBet   = s.buy_place_bet  || false;
+    const notifyBets     = s.notify_bets     ?? 3;
     const combinedKelly  = s.combined_kelly  || false;
     const buyExactaJra   = s.buy_exacta_jra   || false;
     const buyExactaLocal = s.buy_exacta_local || false;
@@ -1144,6 +1162,7 @@ async function loadSoftmaxFromGithub() {
   localStorage.setItem('skip_jra_3yo',      skipJra3yo      ? '1' : '0');
   localStorage.setItem('skip_jra_hurdle',   skipJraHurdle   ? '1' : '0');
     localStorage.setItem('buy_place_bet',  buyPlaceBet  ? '1' : '0');
+    localStorage.setItem('notify_bets', String(notifyBets));
     localStorage.setItem('combined_kelly',  combinedKelly  ? '1' : '0');
     localStorage.setItem('buy_exacta_jra',   buyExactaJra   ? '1' : '0');
     localStorage.setItem('buy_exacta_local', buyExactaLocal ? '1' : '0');
@@ -1177,6 +1196,8 @@ async function loadSoftmaxFromGithub() {
     if(wfEl2) wfEl2.value = winrateFilter;
     const maxBetsElGh = document.getElementById('max-bets');
     if(maxBetsElGh) maxBetsElGh.value = String(s.max_bets ?? 4);
+    const notifyBetsElGh = document.getElementById('notify-bets');
+    if(notifyBetsElGh) notifyBetsElGh.value = String(s.notify_bets ?? 3);
     const slEnabledEl = document.getElementById('stop-loss-enabled');
     if(slEnabledEl){ slEnabledEl.checked = stopLossEnabled; document.getElementById('stop-loss-enabled-label').textContent = stopLossEnabled ? 'ON' : 'OFF'; }
     const slPctEl = document.getElementById('stop-loss-amount');
@@ -1301,6 +1322,8 @@ function loadSoftmaxSettings() {
   if(sfOddsEl) sfOddsEl.value = localStorage.getItem('auto_buy_skip_fav_odds') || '2.0';
   const mbEl = document.getElementById('max-bets');
   if(mbEl) mbEl.value = localStorage.getItem('max_bets') || '4';
+  const nbEl = document.getElementById('notify-bets');
+  if(nbEl) nbEl.value = localStorage.getItem('notify_bets') || '3';
   const slEnabledEl = document.getElementById('stop-loss-enabled');
   const slEnabledVal = localStorage.getItem('stop_loss_enabled') === '1';
   if(slEnabledEl){ slEnabledEl.checked = slEnabledVal; document.getElementById('stop-loss-enabled-label').textContent = slEnabledVal ? 'ON' : 'OFF'; }
@@ -1342,6 +1365,8 @@ function loadSoftmaxSettings() {
   const bpbEl2 = document.getElementById('buy-place-bet');
   const bpbVal = localStorage.getItem('buy_place_bet') === '1';
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
+  const nbEl2 = document.getElementById('notify-bets');
+  if(nbEl2) nbEl2.value = localStorage.getItem('notify_bets') || '3';
   const ckEl2 = document.getElementById('combined-kelly');
   const ckVal = localStorage.getItem('combined_kelly') === '1';
   if(ckEl2){ ckEl2.checked = ckVal; document.getElementById('combined-kelly-label').textContent = ckVal ? 'ON' : 'OFF'; }
