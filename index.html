@@ -2083,7 +2083,13 @@ async function fetchRaceList(){
     // 新旧フォーマット対応
     if(data.dates){
       ghData = data.dates;
-      ghData._settings = data._settings || {};
+      // _settingsはObject.keys()に含まれないよう非列挙プロパティとして定義
+      Object.defineProperty(ghData, '_settings', {
+        value: data._settings || {},
+        enumerable: false,
+        writable: true,
+        configurable: true
+      });
     } else if(data.races && data.races.length){
       ghData = {};
       ghData[data.date || '不明'] = { races: data.races };
@@ -2180,7 +2186,7 @@ function onRaceChange(){
 
   // 選択中のレースの日付のオッズのみ使用（他の日付のオッズは使わない）
   const raceDate = document.getElementById('date-select')?.value;
-  const allDates = raceDate && ghData[raceDate] ? [raceDate] : Object.keys(ghData).sort().reverse().slice(0,1);
+  const allDates = raceDate && ghData[raceDate] ? [raceDate] : Object.keys(ghData).filter(k => k !== '_settings' && ghData[k]?.races).sort().reverse().slice(0,1);
   outer: for(const d of allDates){
     const dayData = ghData[d];
     if(!dayData) continue;
@@ -2266,7 +2272,7 @@ function onRaceChange(){
   const oddsUpdatedStr = (() => {
     // 選択中の日付のオッズのみ参照
     const _raceDate = document.getElementById('date-select')?.value;
-    const allD = _raceDate && ghData[_raceDate] ? [_raceDate] : Object.keys(ghData).sort().reverse().slice(0,1);
+    const allD = _raceDate && ghData[_raceDate] ? [_raceDate] : Object.keys(ghData).filter(k => k !== '_settings' && ghData[k]?.races).sort().reverse().slice(0,1);
     for(const d of allD){
       const dayData = ghData[d];
       if(!dayData) continue;
