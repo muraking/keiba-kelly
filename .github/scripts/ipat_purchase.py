@@ -214,16 +214,11 @@ async def purchase(page, course_name, race_num, bets):
 
     # 共通: 会場→レース選択
     # トップメニューのオッズ投票アイコンをクリック
-    # オッズ投票アイコンをクリック（innerTextまたはhrefで探す）
-    await page.evaluate("""() => {
-        const links = document.querySelectorAll('a');
-        for(const a of links){
-            if(a.innerText?.includes('オッズ投票') || (a.href && a.href.includes('770'))){
-                a.click(); return;
-            }
-        }
-    }""")
-    await page.wait_for_timeout(2000)
+    # オッズ投票をクリック→会場選択画面へ遷移待ち
+    await page.click('text=オッズ投票')
+    # 「オッズ・競馬場名」が表示されるまで待機
+    await page.wait_for_selector('text=オッズ・競馬場名', timeout=15000)
+    await page.wait_for_timeout(500)
 
     page_text = await page.evaluate("() => document.body.innerText")
     print(f"会場ページ内容（先頭300文字）: {page_text[:300]}")
@@ -232,9 +227,11 @@ async def purchase(page, course_name, race_num, bets):
     if click_name != course_name:
         print(f"コース名変換: {course_name} → {click_name}")
     await page.click(f'text={click_name}')
-    await page.wait_for_timeout(2000)
+    await page.wait_for_selector('text=オッズ・レース', timeout=10000)
+    await page.wait_for_timeout(500)
     await page.click(f'text={race_num}R')
-    await page.wait_for_timeout(2000)
+    await page.wait_for_selector('text=式別から選択', timeout=10000)
+    await page.wait_for_timeout(500)
 
     # ===== 単勝購入 =====
     if tan_bets:
@@ -301,20 +298,16 @@ async def purchase(page, course_name, race_num, bets):
             except:
                 await page.goto('https://www.ipat.jra.go.jp/sp/pw_732_i.cgi', wait_until='domcontentloaded', timeout=15000)
                 await page.wait_for_timeout(2000)
-            # オッズ投票アイコンをクリック
-            await page.evaluate("""() => {
-                const links = document.querySelectorAll('a');
-                for(const a of links){
-                    if(a.innerText?.includes('オッズ投票') || a.href?.includes('770')){
-                        a.click(); return;
-                    }
-                }
-            }""")
-            await page.wait_for_timeout(2000)
+            # オッズ投票をクリック→遷移待ち
+            await page.click('text=オッズ投票')
+            await page.wait_for_selector('text=オッズ・競馬場名', timeout=15000)
+            await page.wait_for_timeout(500)
             await page.click(f'text={click_name}')
-            await page.wait_for_timeout(2000)
+            await page.wait_for_selector('text=オッズ・レース', timeout=10000)
+            await page.wait_for_timeout(500)
             await page.click(f'text={race_num}R')
-            await page.wait_for_timeout(2000)
+            await page.wait_for_selector('text=式別から選択', timeout=10000)
+            await page.wait_for_timeout(500)
 
         await page.click('text=式別から選択')
         await page.wait_for_timeout(2000)
