@@ -1,5 +1,5 @@
 """
-IPAT SP版 自動購入スクリプト（単勝専用）
+IPAT SP版 自動購入スクリプト（複勝専用）
 """
 import asyncio
 import os
@@ -68,14 +68,14 @@ async def login(page):
 
 async def purchase(page, course_name, race_num, bets):
     # bet_typeがtanのもののみ（fukuは別スクリプトで処理）
-    tan_bets = [b for b in bets if b.get('bet_type', 'tan') != 'fuku']
-    if not tan_bets:
+    fuku_bets = [b for b in bets if b.get('bet_type') == 'fuku']
+    if not fuku_bets:
         print("単勝買い目なし → スキップ")
         return True
 
-    total = sum(b['amount'] for b in tan_bets)
-    print(f"\n購入: {course_name} {race_num}R 単勝合計¥{total:,}")
-    for b in tan_bets:
+    total = sum(b['amount'] for b in fuku_bets)
+    print(f"\n購入: {course_name} {race_num}R 複勝合計¥{total:,}")
+    for b in fuku_bets:
         print(f"  {b['num']}番 ¥{b['amount']:,}")
 
     await page.click('text=オッズ投票')
@@ -95,13 +95,13 @@ async def purchase(page, course_name, race_num, bets):
     await page.wait_for_timeout(2000)
     await page.click('text=式別から選択')
     await page.wait_for_timeout(2000)
-    await page.click('text=単勝')
+    await page.click('text=複勝')
     await page.wait_for_timeout(2000)
     print("単勝オッズ画面 OK")
 
     # 馬番選択
     print("馬番選択...")
-    for bet in tan_bets:
+    for bet in fuku_bets:
         num = bet['num']
         data_val = 1000 + (num - 1)
         result = await page.evaluate(f"""
@@ -128,7 +128,7 @@ async def purchase(page, course_name, race_num, bets):
 
     if count == '0' or count == '不明':
         print("  フォールバック: tap()で選択...")
-        for bet in tan_bets:
+        for bet in fuku_bets:
             num = bet['num']
             data_val = 1000 + (num - 1)
             try:
@@ -177,7 +177,7 @@ async def purchase(page, course_name, race_num, bets):
             horse_nums.append(int(m.group(1)))
     print(f"  馬番順: {horse_nums}")
 
-    bet_map = {b['num']: b['amount'] for b in tan_bets}
+    bet_map = {b['num']: b['amount'] for b in fuku_bets}
     if len(horse_nums) == len(tel_inputs):
         for num, inp in zip(horse_nums, tel_inputs):
             amount_100 = bet_map.get(num, 0) // 100
@@ -186,7 +186,7 @@ async def purchase(page, course_name, race_num, bets):
             print(f"  {num}番: {amount_100}×100=¥{amount_100*100:,}")
             await page.wait_for_timeout(200)
     else:
-        for bet, inp in zip(sorted(tan_bets, key=lambda b: b['num']), tel_inputs):
+        for bet, inp in zip(sorted(fuku_bets, key=lambda b: b['num']), tel_inputs):
             amount_100 = bet['amount'] // 100
             await inp.fill(str(amount_100))
             await inp.dispatch_event('change')
@@ -211,12 +211,12 @@ async def purchase(page, course_name, race_num, bets):
             print(f"合計金額入力: ¥{total:,}")
             break
 
-    await page.screenshot(path="ipat_confirm.png")
+    await page.screenshot(path="ipat_fuku_confirm.png")
 
     if DRY_RUN:
         print(f"\n===== DRY RUN =====")
-        for b in tan_bets:
-            print(f"  {b['num']}番 単勝 ¥{b['amount']:,}")
+        for b in fuku_bets:
+            print(f"  {b['num']}番 複勝 ¥{b['amount']:,}")
         print(f"  合計: ¥{total:,}")
         print("✅ DRY RUN完了（投票しませんでした）")
         return True
@@ -238,7 +238,7 @@ async def purchase(page, course_name, race_num, bets):
         print("投票 tap() OK")
     await page.wait_for_timeout(4000)
 
-    await page.screenshot(path="ipat_result.png")
+    await page.screenshot(path="ipat_fuku_result.png")
     text = await page.evaluate("() => document.body.innerText")
     for line in [l.strip() for l in text.split('\n') if l.strip()][:15]:
         print(f"  {line}")
@@ -253,7 +253,7 @@ async def main():
     if isinstance(BETS, dict):
         BETS = [BETS]
 
-    print(f"=== IPAT自動購入（単勝）===")
+    print(f"=== IPAT自動購入（複勝）===")
     print(f"会場: {COURSE_NAME} {RACE_NUM}R")
     print(f"買い目: {BETS}")
 
