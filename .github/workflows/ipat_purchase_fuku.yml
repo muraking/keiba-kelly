@@ -1,0 +1,61 @@
+name: IPAT Purchase Fuku
+
+on:
+  workflow_dispatch:
+    inputs:
+      course_name:
+        description: '会場名（例: 東京(日)）'
+        required: true
+      race_num:
+        description: 'レース番号'
+        required: true
+      bets:
+        description: '買い目JSON（例: [{"num":3,"amount":1000,"bet_type":"fuku"}]）'
+        required: true
+      auto_buy_max:
+        description: '1レース最大投資額（0=無制限）'
+        required: false
+        default: '0'
+      auto_buy_mode:
+        description: '自動購入モード（1=残高ベースケリー計算、0=PWA金額固定）'
+        required: false
+        default: '0'
+      dry_run:
+        description: 'テストモード（1=投票直前で停止、0=実際に投票）'
+        required: false
+        default: '0'
+
+jobs:
+  purchase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run IPAT Purchase Fuku
+        env:
+          IPAT_ID: ${{ secrets.IPAT_ID }}
+          IPAT_PIN: ${{ secrets.IPAT_PIN }}
+          IPAT_PARS: ${{ secrets.IPAT_PARS }}
+          COURSE_NAME: ${{ github.event.inputs.course_name }}
+          RACE_NUM: ${{ github.event.inputs.race_num }}
+          BETS: ${{ github.event.inputs.bets }}
+          AUTO_BUY_MAX: ${{ github.event.inputs.auto_buy_max }}
+          AUTO_BUY_MODE: ${{ github.event.inputs.auto_buy_mode }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_USER: muraking
+          GH_REPO: keiba-kelly
+          GH_BRANCH: main
+          GH_FILE: data/indices.json
+        run: python .github/scripts/ipat_purchase_fuku.py
