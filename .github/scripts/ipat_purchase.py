@@ -252,6 +252,18 @@ async def purchase(page, course_name, race_num, bets):
                 print(f"  {b['num']}番 単勝 ¥{b['amount']:,}")
             print(f"  合計: ¥{tan_total:,}")
             print("==========================================")
+            # DRY RUNでも複勝に進めるようトップへ戻る
+            if fuku_bets:
+                try:
+                    await page.click('text=オッズ投票', timeout=5000)
+                    await page.wait_for_timeout(2000)
+                    await page.click(f'text={click_name}', timeout=5000)
+                    await page.wait_for_timeout(2000)
+                    await page.click(f'text={race_num}R', timeout=5000)
+                    await page.wait_for_timeout(2000)
+                    print("  複勝テストのためレース画面に戻りました")
+                except Exception as e:
+                    print(f"  ⚠️ レース画面に戻れませんでした: {e}")
         else:
             async def handle_dialog(dialog):
                 try:
