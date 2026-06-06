@@ -107,14 +107,29 @@ async def login(page):
         print("  ログインボタン Enter OK")
     await page.wait_for_timeout(4000)
 
+    # ★修正: sessionAlign中間ページを素通りするまで最大15秒待機
+    for _i in range(15):
+        if 'sessionAlign' in page.url or 'session_align' in page.url:
+            print(f"  sessionAlign通過待機中... ({_i+1}秒)")
+            await page.wait_for_timeout(1000)
+        else:
+            break
+
     await page.screenshot(path="rakuten_login_3.png")
     print(f"ログイン完了: {page.url}")
     text = await page.evaluate("() => document.body.innerText")
-    if "ログアウト" in text or "マイページ" in text:
+    if "ログアウト" in text or "マイページ" in text or "投票" in text or "精算" in text:
         print("✅ ログイン成功")
     else:
-        print("⚠️ ログイン状態が確認できません")
-        await page.screenshot(path="rakuten_login_check.png")
+        # まだ遷移中の可能性があるので5秒追加待機
+        await page.wait_for_timeout(5000)
+        text = await page.evaluate("() => document.body.innerText")
+        print(f"  追加待機後URL: {page.url}")
+        if "ログアウト" in text or "マイページ" in text or "投票" in text or "精算" in text:
+            print("✅ ログイン成功（追加待機後）")
+        else:
+            print("⚠️ ログイン状態が確認できません")
+            await page.screenshot(path="rakuten_login_check.png")
 
 
 # ===== 残高取得 =====
@@ -368,7 +383,6 @@ async def purchase_tan(page, venue, race_num, bets, today):
         print(f"  ⚠️ 単勝/複勝クリック全NG → 単勝未発売の可能性 → スキップ")
         return True
 
-    # 金額入力（スケジューラーから渡されたamountをそのまま使用）
     inputs = await page.query_selector_all('input[type="text"]')
     for inp in inputs:
         if not await inp.is_visible():
@@ -572,7 +586,6 @@ async def main():
         print("❌ COURSE_NAME が設定されていません")
         return
 
-    # bet_typeでグループ分け
     tan_bets    = [b for b in BETS if b.get('bet_type', 'tan') in ('tan', 'fuku') or 'num' in b and 'num1' not in b]
     exacta_bets = [b for b in BETS if b.get('bet_type') == 'exacta']
     wide_bets   = [b for b in BETS if b.get('bet_type') == 'wide']
@@ -595,7 +608,6 @@ async def main():
                 pass
         page.on('dialog', _auto_accept_dialog)
 
-        # ログイン（1回）
         await login(page)
         balance = await get_balance(page)
         if balance:
@@ -603,7 +615,6 @@ async def main():
 
         results = {}
 
-        # ① 単勝・複勝
         if tan_bets:
             print(f"\n{'#'*40}")
             print(f"# STEP 1: 単勝/複勝")
@@ -612,7 +623,6 @@ async def main():
         else:
             print(f"\n# STEP 1: 単勝/複勝 → スキップ（買い目なし）")
 
-        # ② 馬連
         if exacta_bets:
             print(f"\n{'#'*40}")
             print(f"# STEP 2: 馬連")
@@ -621,7 +631,6 @@ async def main():
         else:
             print(f"\n# STEP 2: 馬連 → スキップ（買い目なし）")
 
-        # ③ ワイド
         if wide_bets:
             print(f"\n{'#'*40}")
             print(f"# STEP 3: ワイド")
