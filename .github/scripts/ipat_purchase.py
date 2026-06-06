@@ -252,18 +252,7 @@ async def purchase(page, course_name, race_num, bets):
                 print(f"  {b['num']}番 単勝 ¥{b['amount']:,}")
             print(f"  合計: ¥{tan_total:,}")
             print("==========================================")
-            # DRY RUNでも複勝に進めるようトップへ戻る
-            if fuku_bets:
-                try:
-                    await page.click('text=オッズ投票', timeout=5000)
-                    await page.wait_for_timeout(2000)
-                    await page.click(f'text={click_name}', timeout=5000)
-                    await page.wait_for_timeout(2000)
-                    await page.click(f'text={race_num}R', timeout=5000)
-                    await page.wait_for_timeout(2000)
-                    print("  複勝テストのためレース画面に戻りました")
-                except Exception as e:
-                    print(f"  ⚠️ レース画面に戻れませんでした: {e}")
+
         else:
             async def handle_dialog(dialog):
                 try:
@@ -292,8 +281,11 @@ async def purchase(page, course_name, race_num, bets):
     if fuku_bets:
         print(f"\n----- 複勝 {len(fuku_bets)}頭 -----")
 
-        # 単勝購入後は再度「オッズ投票→会場→レース→式別から選択」に戻る
-        if tan_bets and not DRY_RUN:
+        # 単勝購入後は必ずログイン後トップから辿り直す
+        if tan_bets:
+            print("  単勝後のナビゲーション: トップから辿り直します")
+            await page.goto('https://www.ipat.jra.go.jp/sp/pw_732_i.cgi', wait_until='domcontentloaded', timeout=15000)
+            await page.wait_for_timeout(2000)
             await page.click('text=オッズ投票')
             await page.wait_for_timeout(2000)
             await page.click(f'text={click_name}')
