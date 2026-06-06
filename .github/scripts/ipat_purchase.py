@@ -214,8 +214,12 @@ async def purchase(page, course_name, race_num, bets):
 
     # 共通: 会場→レース選択
     # トップメニューのオッズ投票アイコンをクリック
-    # オッズ投票をクリック→会場選択画面へ遷移待ち
-    await page.click('text=オッズ投票')
+    # オッズ投票をtap()でクリック→会場選択画面へ遷移待ち
+    odds_btn = await page.query_selector('a.ico_ods')
+    if odds_btn:
+        await odds_btn.tap()
+    else:
+        await page.tap('text=オッズ投票')
     # 「オッズ・競馬場名」が表示されるまで待機
     await page.wait_for_selector('text=オッズ・競馬場名', timeout=15000)
     await page.wait_for_timeout(500)
@@ -299,7 +303,11 @@ async def purchase(page, course_name, race_num, bets):
                 await page.goto('https://www.ipat.jra.go.jp/sp/pw_732_i.cgi', wait_until='domcontentloaded', timeout=15000)
                 await page.wait_for_timeout(2000)
             # オッズ投票をクリック→遷移待ち
-            await page.click('text=オッズ投票')
+            odds_btn2 = await page.query_selector('a.ico_ods')
+            if odds_btn2:
+                await odds_btn2.tap()
+            else:
+                await page.tap('text=オッズ投票')
             await page.wait_for_selector('text=オッズ・競馬場名', timeout=15000)
             await page.wait_for_timeout(500)
             await page.click(f'text={click_name}')
