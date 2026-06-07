@@ -118,6 +118,14 @@ async def purchase(page, course_name, race_num, bets):
     await page.wait_for_timeout(2000)
     print("複勝オッズ画面 OK")
 
+    # 複勝画面のdata-value一覧をデバッグ出力
+    debug_vals = await page.evaluate("""() => {
+        return Array.from(document.querySelectorAll('a[data-value]'))
+                    .map(a => a.getAttribute('data-value'))
+                    .slice(0, 5);
+    }""")
+    print(f"  複勝画面 data-value一覧（先頭5件）: {debug_vals}")
+
     print("馬番選択...")
     for bet in bets:
         num = bet['num']
