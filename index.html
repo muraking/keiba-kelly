@@ -717,14 +717,26 @@ textarea:focus{border-color:var(--gold)}
 
     <!-- 時刻変更サブタブ -->
     <div id="subtab-time" style="display:none">
-      <div class="sh">本日の未実行レース一覧</div>
+      <div class="sh">レース一覧</div>
       <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.7">
         発走遅延が発生した場合、該当レースの時刻を変更してください。<br>
         スケジューラーは30分以内に自動反映します。
       </div>
-      <button class="btn btn-outline" onclick="loadTimeChangeList()" style="height:38px;font-size:13px;margin-bottom:10px">
-        🔄 レース一覧を読み込む
-      </button>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button id="tc-btn-today" onclick="loadTimeChangeList('today')"
+          style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">
+          今日
+        </button>
+        <button id="tc-btn-tomorrow" onclick="loadTimeChangeList('tomorrow')"
+          style="flex:1;padding:8px;border-radius:8px;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">
+          明日
+        </button>
+        <button class="btn btn-outline" onclick="loadTimeChangeList(document.getElementById('tc-active-date')?.dataset.date)"
+          style="height:38px;font-size:12px;padding:0 12px">
+          🔄 再読込
+        </button>
+      </div>
+      <div id="tc-active-date" data-date="today" style="display:none"></div>
       <div id="time-change-list"></div>
       <div style="margin-top:12px;padding:10px 12px;background:var(--amber-bg);border-radius:var(--r);border:0.5px solid rgba(251,191,36,.3);font-size:11px;color:var(--amber);text-align:center;line-height:1.6">
         ⚠️ 変更はGitHubに即時保存されます<br>スケジューラーは30分以内に自動反映されます
@@ -3455,7 +3467,7 @@ function switchSharedSubtab(tab) {
 }
 
 // ===== 時刻変更 =====
-async function loadTimeChangeList() {
+async function loadTimeChangeList(dateMode) {
   const listEl = document.getElementById('time-change-list');
   if(!listEl) return;
   listEl.innerHTML = '<div style="font-size:12px;color:var(--amber);padding:8px">🔄 読み込み中...</div>';
@@ -3473,11 +3485,24 @@ async function loadTimeChangeList() {
     const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
     const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
 
-    // 今日のレースのみ表示
-    const todayStr = getTodayJST();
+    // 日付モードに応じて対象日を決定
+    const _today = getTodayJST();
+    const _tomorrowDate = new Date(new Date(_today).getTime() + 24*60*60*1000);
+    const _tomorrow = _tomorrowDate.toISOString().split('T')[0];
+    const mode = dateMode || 'today';
+    const todayStr = mode === 'tomorrow' ? _tomorrow : _today;
+
+    // 日付ボタンのスタイル更新
+    const btnToday = document.getElementById('tc-btn-today');
+    const btnTomorrow = document.getElementById('tc-btn-tomorrow');
+    const activeDateEl = document.getElementById('tc-active-date');
+    if(activeDateEl) activeDateEl.dataset.date = mode;
+    if(btnToday) { btnToday.style.background = mode==='today' ? 'var(--gold)' : 'var(--bg3)'; btnToday.style.color = mode==='today' ? '#fff' : 'var(--text2)'; btnToday.style.border = mode==='today' ? '1px solid var(--gold)' : '0.5px solid var(--border2)'; btnToday.style.fontWeight = mode==='today' ? '700' : '600'; }
+    if(btnTomorrow) { btnTomorrow.style.background = mode==='tomorrow' ? 'var(--gold)' : 'var(--bg3)'; btnTomorrow.style.color = mode==='tomorrow' ? '#fff' : 'var(--text2)'; btnTomorrow.style.border = mode==='tomorrow' ? '1px solid var(--gold)' : '0.5px solid var(--border2)'; btnTomorrow.style.fontWeight = mode==='tomorrow' ? '700' : '600'; }
+
     const dayData = (data.dates || {})[todayStr];
     if(!dayData || !dayData.races || !dayData.races.length) {
-      listEl.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px">本日（' + todayStr + '）のレースデータがありません</div>';
+      listEl.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px">（' + todayStr + '）のレースデータがありません</div>';
       return;
     }
 
@@ -3492,8 +3517,8 @@ async function loadTimeChangeList() {
       if(!race.startTime) return;
       const [h, m] = race.startTime.split(':').map(Number);
       const raceMin = h * 60 + m;
-      const isPast = raceMin < nowMin - 5;
-      if(isPast && !race._timeChanged) return; // 発走済みは非表示（変更済みは表示）
+      const isPast = mode !== 'tomorrow' && raceMin < nowMin - 5;
+      if(isPast && !race._timeChanged) return; // 発走済みは非表示（変更済みは表示、明日は全表示）
       const isChanged = race._timeChanged || false;
       const isBuySkip = race._buySkip || false;
 
