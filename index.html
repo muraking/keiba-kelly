@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.06.1
+  v2026.06.07.1
 
   変更履歴:
+    v2026.06.07.1 - 時刻変更UIにレースごと購入スキップ機能追加
     v2026.06.06.1 - 管理者設定に通知頭数（Discord）セレクトを追加
                     複勝購入設定の説明文を「単勝金額×2倍」に更新
                     notify_bets を save/load/GitHub同期に対応
@@ -710,7 +711,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.06.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.07.1</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -3494,6 +3495,7 @@ async function loadTimeChangeList() {
       const isPast = raceMin < nowMin - 5;
       if(isPast && !race._timeChanged) return; // 発走済みは非表示（変更済みは表示）
       const isChanged = race._timeChanged || false;
+      const isBuySkip = race._buySkip || false;
 
       html += `<div id="time-item-${idx}" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;border:0.5px solid ${isChanged ? 'rgba(251,191,36,.4)' : 'var(--border2)'}">
         <div style="display:flex;align-items:center;justify-content:space-between">
@@ -3507,9 +3509,10 @@ async function loadTimeChangeList() {
               }
             </div>
           </div>
-          <div style="display:flex;gap:6px">
+          <div style="display:flex;gap:6px;align-items:center">
             ${isChanged ? `<button onclick="revertTime(${idx})" style="background:var(--bg3);border:0.5px solid var(--border2);color:var(--text3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit">元に戻す</button>` : ''}
             ${!isPast ? `<button onclick="editTime(${idx})" style="background:transparent;border:none;color:var(--gold);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;padding:5px 8px">時刻変更</button>` : ''}
+            <button onclick="toggleBuySkip(${idx})" id="skip-btn-${idx}" style="background:${isBuySkip ? 'rgba(239,68,68,.15)' : 'var(--bg3)'};border:0.5px solid ${isBuySkip ? 'rgba(239,68,68,.4)' : 'var(--border2)'};color:${isBuySkip ? 'var(--red)' : 'var(--text3)'};border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit">${isBuySkip ? '🚫購入スキップ中' : '購入スキップ'}</button>
           </div>
         </div>
         <div id="time-edit-${idx}" style="display:none;margin-top:8px">
@@ -3611,6 +3614,51 @@ async function saveTimeChange(idx) {
     alert('エラー: ' + e.message);
     race.startTime = origTime;
     race._timeChanged = false;
+  }
+}
+
+async function toggleBuySkip(idx) {
+  const listEl = document.getElementById('time-change-list');
+  const races = listEl._races;
+  const race = races[idx];
+  if(!race) return;
+
+  const newSkip = !race._buySkip;
+  race._buySkip = newSkip;
+
+  try {
+    const token = loadToken();
+    if(!token) { alert('GitHubトークンを設定してください'); return; }
+
+    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+    const latestRes = await fetch(apiUrl, {headers: {'Authorization': `token ${token}`}, cache: 'no-store'});
+    if(!latestRes.ok) throw new Error('最新データ取得失敗: ' + latestRes.status);
+    const latestMeta = await latestRes.json();
+    const latestSha = latestMeta.sha;
+    const latestRaw = atob(latestMeta.content.replace(/\n/g,''));
+    const latestBytes = Uint8Array.from(latestRaw, c => c.charCodeAt(0));
+    const latestData = JSON.parse(new TextDecoder('utf-8').decode(latestBytes));
+    const todayStr = listEl._todayStr;
+    if(latestData.dates?.[todayStr]?.races?.[idx]) {
+      latestData.dates[todayStr].races[idx]._buySkip = newSkip;
+    }
+    const jsonStr = JSON.stringify(latestData, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+    const res = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+      body: JSON.stringify({message: `buy skip ${race.raceName} ${newSkip}`, content: encoded, sha: latestSha, branch: GH_BRANCH})
+    });
+    if(res.ok) {
+      showToast(newSkip ? `🚫 ${race.raceName} 購入スキップON` : `✓ ${race.raceName} 購入スキップOFF`);
+      await loadTimeChangeList();
+    } else {
+      alert('保存失敗: ' + res.status);
+      race._buySkip = !newSkip;
+    }
+  } catch(e) {
+    alert('エラー: ' + e.message);
+    race._buySkip = !newSkip;
   }
 }
 
