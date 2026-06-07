@@ -135,45 +135,8 @@ async def purchase(page, course_name, race_num, bets):
         print(f"  {num}番（data-value={data_val}）: {'OK' if result else 'NG'}")
         await page.wait_for_timeout(800)
 
-    count = await page.evaluate(r"""
-        () => {
-            const text = document.querySelector('#odse')?.innerText || '';
-            const m = text.match(/合計件数：(\d+)/);
-            return m ? m[1] : '不明';
-        }
-    """)
-    print(f"  選択件数確認: {count}")
-
-    if count == '0' or count == '不明':
-        print("  フォールバック: tap()で選択...")
-        for bet in bets:
-            num = bet['num']
-            data_val = 2000 + (num - 1)  # 複勝は2000番台
-            try:
-                result2 = await page.evaluate(f"""
-                    () => {{
-                        const a = document.querySelector('a[data-value="{data_val}"]');
-                        if(!a) return false;
-                        ['touchstart','touchend','vclick','click'].forEach(evt => {{
-                            a.dispatchEvent(new Event(evt, {{bubbles:true, cancelable:true}}));
-                        }});
-                        return true;
-                    }}
-                """)
-                if result2:
-                    print(f"    {num}番 dispatchEvent OK")
-                    await page.wait_for_timeout(500)
-            except Exception as e:
-                print(f"    {num}番 NG: {e}")
-
-        count2 = await page.evaluate(r"""
-            () => {
-                const text = document.querySelector('#odse')?.innerText || '';
-                const m = text.match(/合計件数：(\d+)/);
-                return m ? m[1] : '不明';
-            }
-        """)
-        print(f"  再確認件数: {count2}")
+    # 件数カウントは複勝画面では動作しない場合があるためスキップして進む
+    await page.wait_for_timeout(1000)
 
     print("金額入力画面へ...")
     kin_btn = await page.query_selector('#odse a:has-text("金額入力画面へ")')
