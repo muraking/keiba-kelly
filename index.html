@@ -365,7 +365,7 @@ textarea:focus{border-color:var(--gold)}
       </button>
       <button id="subtab-time-btn" onclick="switchSharedSubtab('time')"
         style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s;background:transparent;color:var(--text3)">
-        🕐 時刻変更
+        🕐 時刻変更・スキップ設定
       </button>
     </div>
 
@@ -3536,7 +3536,7 @@ async function loadTimeChangeList() {
 
     // 一括スキップボタンをリスト末尾に追加
     html += `<div id="bulk-skip-bar" style="margin-top:12px;display:none">
-      <button onclick="bulkSaveSkip()" style="width:100%;padding:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🚫 チェックしたレースの購入スキップを一括保存</button>
+      <button onclick="bulkSaveSkip()" style="width:100%;padding:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">購入スキップ設定を一括保存（☑=スキップON / □=スキップOFF）</button>
     </div>`;
     listEl.innerHTML = html || '<div style="font-size:12px;color:var(--text3);padding:8px">表示できるレースがありません</div>';
     onSkipCheck(); // 初期表示時にボタン状態を更新
