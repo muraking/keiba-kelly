@@ -3679,7 +3679,6 @@ async function bulkSaveSkip() {
   try {
     const token = loadToken();
     if(!token) { alert('GitHubトークンを設定してください'); return; }
-    alert(`保存開始: ${races.length}レース todayStr=${todayStr}`);
 
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
     const latestRes = await fetch(apiUrl, {headers: {'Authorization': `token ${token}`}, cache: 'no-store'});
@@ -3741,7 +3740,8 @@ async function bulkSaveSkip() {
     if(saved) {
       const msg = [skipOn > 0 ? `🚫 ${skipOn}レースをスキップON` : '', skipOff > 0 ? `✓ ${skipOff}レースをスキップOFF` : ''].filter(Boolean).join(' / ');
       showToast(msg || '保存しました');
-      await loadTimeChangeList();
+      const currentMode = document.getElementById('tc-active-date')?.dataset.date || 'today';
+      await loadTimeChangeList(currentMode);
     } else {
       alert('保存失敗（リトライ3回）。もう一度お試しください');
     }
