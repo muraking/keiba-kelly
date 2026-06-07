@@ -150,13 +150,21 @@ async def purchase(page, course_name, race_num, bets):
             num = bet['num']
             data_val = 2000 + (num - 1)  # 複勝は2000番台
             try:
-                el = await page.query_selector(f'a[data-value="{data_val}"]')
-                if el:
-                    await el.tap()
-                    print(f"    {num}番 tap() OK")
+                result2 = await page.evaluate(f"""
+                    () => {{
+                        const a = document.querySelector('a[data-value="{data_val}"]');
+                        if(!a) return false;
+                        ['touchstart','touchend','vclick','click'].forEach(evt => {{
+                            a.dispatchEvent(new Event(evt, {{bubbles:true, cancelable:true}}));
+                        }});
+                        return true;
+                    }}
+                """)
+                if result2:
+                    print(f"    {num}番 dispatchEvent OK")
                     await page.wait_for_timeout(500)
             except Exception as e:
-                print(f"    {num}番 tap() NG: {e}")
+                print(f"    {num}番 NG: {e}")
 
         count2 = await page.evaluate(r"""
             () => {
@@ -306,8 +314,7 @@ async def main():
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context(has_touch=True, viewport={'width': 390, 'height': 844})
-        page = await context.new_page()
+        page = await browser.new_page()
         page.set_default_timeout(TIMEOUT)
 
         await login(page)
