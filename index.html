@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.07.1
+  v2026.06.08.1
 
   変更履歴:
+    v2026.06.08.1 - onSkipCheck()のbulk-skip-bar参照をbulk-skip-btnに修正
     v2026.06.07.1 - 時刻変更UIにレースごと購入スキップ機能追加
     v2026.06.06.1 - 管理者設定に通知頭数（Discord）セレクトを追加
                     複勝購入設定の説明文を「単勝金額×2倍」に更新
@@ -176,7 +177,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.07.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.08.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -739,7 +740,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="tc-active-date" data-date="today" style="display:none"></div>
       <div id="time-change-list"></div>
       <div style="margin-top:12px">
-        <button id="bulk-skip-btn" onclick="bulkSaveSkip()" style="width:100%;padding:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">購入スキップ設定を一括保存（☑=スキップON / □=スキップOFF）</button>
+        <button id="bulk-skip-btn" onclick="bulkSaveSkip()" style="display:none;width:100%;padding:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">購入スキップ設定を一括保存（☑=スキップON / □=スキップOFF）</button>
       </div>
       <div style="margin-top:12px;padding:10px 12px;background:var(--amber-bg);border-radius:var(--r);border:0.5px solid rgba(251,191,36,.3);font-size:11px;color:var(--amber);text-align:center;line-height:1.6">
         ⚠️ 変更はGitHubに即時保存されます<br>スケジューラーは30分以内に自動反映されます
@@ -3568,6 +3569,7 @@ async function loadTimeChangeList(dateMode) {
     listEl._todayStr = todayStr;
     listEl._sha = meta.sha;
     listEl._data = data;
+    onSkipCheck();
   } catch(e) {
     listEl.innerHTML = `<div style="font-size:12px;color:var(--red);padding:8px">エラー: ${e.message}</div>`;
   }
@@ -3666,7 +3668,7 @@ function onSkipCheck() {
     if(!cb) return;
     if(cb.checked !== (race._buySkip || false)) hasChange = true;
   });
-  const bar = document.getElementById('bulk-skip-bar');
+  const bar = document.getElementById('bulk-skip-btn');
   if(bar) bar.style.display = hasChange ? 'block' : 'none';
 }
 
