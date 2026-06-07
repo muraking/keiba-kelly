@@ -176,7 +176,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2.0.20260601.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.07.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -738,6 +738,9 @@ textarea:focus{border-color:var(--gold)}
       </div>
       <div id="tc-active-date" data-date="today" style="display:none"></div>
       <div id="time-change-list"></div>
+      <div style="margin-top:12px">
+        <button id="bulk-skip-btn" onclick="bulkSaveSkip()" style="width:100%;padding:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">購入スキップ設定を一括保存（☑=スキップON / □=スキップOFF）</button>
+      </div>
       <div style="margin-top:12px;padding:10px 12px;background:var(--amber-bg);border-radius:var(--r);border:0.5px solid rgba(251,191,36,.3);font-size:11px;color:var(--amber);text-align:center;line-height:1.6">
         ⚠️ 変更はGitHubに即時保存されます<br>スケジューラーは30分以内に自動反映されます
       </div>
@@ -3560,11 +3563,7 @@ async function loadTimeChangeList(dateMode) {
     });
 
     // 一括スキップボタンをリスト末尾に追加
-    html += `<div id="bulk-skip-bar" style="margin-top:12px;display:none">
-      <button onclick="bulkSaveSkip()" style="width:100%;padding:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">購入スキップ設定を一括保存（☑=スキップON / □=スキップOFF）</button>
-    </div>`;
     listEl.innerHTML = html || '<div style="font-size:12px;color:var(--text3);padding:8px">表示できるレースがありません</div>';
-    onSkipCheck(); // 初期表示時にボタン状態を更新
     listEl._races = races;
     listEl._todayStr = todayStr;
     listEl._sha = meta.sha;
@@ -3675,11 +3674,12 @@ async function bulkSaveSkip() {
   const listEl = document.getElementById('time-change-list');
   const races = listEl._races;
   const todayStr = listEl._todayStr;
-  if(!races) return;
+  if(!races) { alert('races未取得。再読込してください'); return; }
 
   try {
     const token = loadToken();
     if(!token) { alert('GitHubトークンを設定してください'); return; }
+    alert(`保存開始: ${races.length}レース todayStr=${todayStr}`);
 
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
     const latestRes = await fetch(apiUrl, {headers: {'Authorization': `token ${token}`}, cache: 'no-store'});
