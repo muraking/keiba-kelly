@@ -3702,19 +3702,48 @@ async function bulkSaveSkip() {
       }
     });
 
-    const jsonStr = JSON.stringify(latestData, null, 2);
-    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-    const res = await fetch(apiUrl, {
-      method: 'PUT',
-      headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
-      body: JSON.stringify({message: `bulk buy skip update`, content: encoded, sha: latestSha, branch: GH_BRANCH})
-    });
-    if(res.ok) {
+    // 最大3回リトライ
+    let saved = false;
+    for(let attempt = 0; attempt < 3; attempt++) {
+      // 最新SHAを毎回取得
+      const retryRes = await fetch(apiUrl, {headers: {'Authorization': `token ${token}`}, cache: 'no-store'});
+      if(!retryRes.ok) throw new Error('SHA取得失敗: ' + retryRes.status);
+      const retryMeta = await retryRes.json();
+      const retrySha = retryMeta.sha;
+      // 最新データに再適用
+      const retryRaw = atob(retryMeta.content.replace(/\n/g,''));
+      const retryBytes = Uint8Array.from(retryRaw, c => c.charCodeAt(0));
+      const retryData = JSON.parse(new TextDecoder('utf-8').decode(retryBytes));
+      races.forEach((race, idx) => {
+        const cb = document.getElementById(`skip-cb-${idx}`);
+        if(!cb) return;
+        if(retryData.dates?.[todayStr]?.races?.[idx]) {
+          retryData.dates[todayStr].races[idx]._buySkip = cb.checked;
+        }
+      });
+      const jsonStr = JSON.stringify(retryData, null, 2);
+      const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+      const res = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+        body: JSON.stringify({message: `bulk buy skip update`, content: encoded, sha: retrySha, branch: GH_BRANCH})
+      });
+      if(res.ok) {
+        saved = true;
+        break;
+      } else if(res.status === 409) {
+        console.warn(`bulkSaveSkip 409 リトライ ${attempt+1}/3`);
+        await new Promise(r => setTimeout(r, 1000));
+      } else {
+        throw new Error('保存失敗: ' + res.status);
+      }
+    }
+    if(saved) {
       const msg = [skipOn > 0 ? `🚫 ${skipOn}レースをスキップON` : '', skipOff > 0 ? `✓ ${skipOff}レースをスキップOFF` : ''].filter(Boolean).join(' / ');
       showToast(msg || '保存しました');
       await loadTimeChangeList();
     } else {
-      alert('保存失敗: ' + res.status);
+      alert('保存失敗（リトライ3回）。もう一度お試しください');
     }
   } catch(e) {
     alert('エラー: ' + e.message);
