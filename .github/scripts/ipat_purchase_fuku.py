@@ -148,7 +148,7 @@ async def purchase(page, course_name, race_num, bets):
         print("  フォールバック: tap()で選択...")
         for bet in bets:
             num = bet['num']
-            data_val = 1000 + (num - 1)
+            data_val = 2000 + (num - 1)  # 複勝は2000番台
             try:
                 el = await page.query_selector(f'a[data-value="{data_val}"]')
                 if el:
@@ -306,7 +306,8 @@ async def main():
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+        context = await browser.new_context(has_touch=True, viewport={'width': 390, 'height': 844})
+        page = await context.new_page()
         page.set_default_timeout(TIMEOUT)
 
         await login(page)
