@@ -3497,10 +3497,19 @@ async function loadTimeChangeList() {
       const isChanged = race._timeChanged || false;
       const isBuySkip = race._buySkip || false;
 
-      html += `<div id="time-item-${idx}" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;border:0.5px solid ${isChanged ? 'rgba(251,191,36,.4)' : 'var(--border2)'}">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
-            <div style="font-size:14px;font-weight:600;color:${isPast ? 'var(--text3)' : 'var(--text)'}">${race.raceName}</div>
+      const horseCount = race.horses ? race.horses.length : '';
+      const horseLabel = horseCount ? `${horseCount}頭` : '';
+      const raceClassStr = race.raceClass ? ` ${race.raceClass}` : '';
+      html += `<div id="time-item-${idx}" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;border:0.5px solid ${isChanged ? 'rgba(251,191,36,.4)' : isBuySkip ? 'rgba(239,68,68,.3)' : 'var(--border2)'}">
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="checkbox" id="skip-cb-${idx}" ${isBuySkip ? 'checked' : ''} onchange="onSkipCheck()"
+            style="width:18px;height:18px;cursor:pointer;flex-shrink:0;accent-color:var(--red)">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
+              <span style="font-size:14px;font-weight:600;color:${isPast ? 'var(--text3)' : isBuySkip ? 'var(--red)' : 'var(--text)'}">${race.raceName}${raceClassStr}</span>
+              ${horseLabel ? `<span style="font-size:11px;color:var(--text3)">${horseLabel}</span>` : ''}
+              ${isBuySkip ? `<span style="font-size:11px;color:var(--red)">🚫スキップ</span>` : ''}
+            </div>
             <div style="font-size:12px;margin-top:2px">
               ${isChanged
                 ? `<span style="text-decoration:line-through;color:var(--text3)">${race._origTime}</span>
@@ -3509,10 +3518,9 @@ async function loadTimeChangeList() {
               }
             </div>
           </div>
-          <div style="display:flex;gap:6px;align-items:center">
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
             ${isChanged ? `<button onclick="revertTime(${idx})" style="background:var(--bg3);border:0.5px solid var(--border2);color:var(--text3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit">元に戻す</button>` : ''}
             ${!isPast ? `<button onclick="editTime(${idx})" style="background:transparent;border:none;color:var(--gold);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;padding:5px 8px">時刻変更</button>` : ''}
-            <button onclick="toggleBuySkip(${idx})" id="skip-btn-${idx}" style="background:${isBuySkip ? 'rgba(239,68,68,.15)' : 'var(--bg3)'};border:0.5px solid ${isBuySkip ? 'rgba(239,68,68,.4)' : 'var(--border2)'};color:${isBuySkip ? 'var(--red)' : 'var(--text3)'};border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit">${isBuySkip ? '🚫購入スキップ中' : '購入スキップ'}</button>
           </div>
         </div>
         <div id="time-edit-${idx}" style="display:none;margin-top:8px">
@@ -3526,7 +3534,12 @@ async function loadTimeChangeList() {
       </div>`;
     });
 
+    // 一括スキップボタンをリスト末尾に追加
+    html += `<div id="bulk-skip-bar" style="margin-top:12px;display:none">
+      <button onclick="bulkSaveSkip()" style="width:100%;padding:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🚫 チェックしたレースの購入スキップを一括保存</button>
+    </div>`;
     listEl.innerHTML = html || '<div style="font-size:12px;color:var(--text3);padding:8px">表示できるレースがありません</div>';
+    onSkipCheck(); // 初期表示時にボタン状態を更新
     listEl._races = races;
     listEl._todayStr = todayStr;
     listEl._sha = meta.sha;
@@ -3617,14 +3630,27 @@ async function saveTimeChange(idx) {
   }
 }
 
-async function toggleBuySkip(idx) {
+function onSkipCheck() {
+  const listEl = document.getElementById('time-change-list');
+  if(!listEl) return;
+  const races = listEl._races;
+  if(!races) return;
+  // チェック状態が初期値から変化しているか確認
+  let hasChange = false;
+  races.forEach((race, idx) => {
+    const cb = document.getElementById(`skip-cb-${idx}`);
+    if(!cb) return;
+    if(cb.checked !== (race._buySkip || false)) hasChange = true;
+  });
+  const bar = document.getElementById('bulk-skip-bar');
+  if(bar) bar.style.display = hasChange ? 'block' : 'none';
+}
+
+async function bulkSaveSkip() {
   const listEl = document.getElementById('time-change-list');
   const races = listEl._races;
-  const race = races[idx];
-  if(!race) return;
-
-  const newSkip = !race._buySkip;
-  race._buySkip = newSkip;
+  const todayStr = listEl._todayStr;
+  if(!races) return;
 
   try {
     const token = loadToken();
@@ -3638,27 +3664,35 @@ async function toggleBuySkip(idx) {
     const latestRaw = atob(latestMeta.content.replace(/\n/g,''));
     const latestBytes = Uint8Array.from(latestRaw, c => c.charCodeAt(0));
     const latestData = JSON.parse(new TextDecoder('utf-8').decode(latestBytes));
-    const todayStr = listEl._todayStr;
-    if(latestData.dates?.[todayStr]?.races?.[idx]) {
-      latestData.dates[todayStr].races[idx]._buySkip = newSkip;
-    }
+
+    let skipOn = 0, skipOff = 0;
+    races.forEach((race, idx) => {
+      const cb = document.getElementById(`skip-cb-${idx}`);
+      if(!cb) return;
+      const newSkip = cb.checked;
+      if(latestData.dates?.[todayStr]?.races?.[idx]) {
+        latestData.dates[todayStr].races[idx]._buySkip = newSkip;
+        if(newSkip && !race._buySkip) skipOn++;
+        if(!newSkip && race._buySkip) skipOff++;
+      }
+    });
+
     const jsonStr = JSON.stringify(latestData, null, 2);
     const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
     const res = await fetch(apiUrl, {
       method: 'PUT',
       headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
-      body: JSON.stringify({message: `buy skip ${race.raceName} ${newSkip}`, content: encoded, sha: latestSha, branch: GH_BRANCH})
+      body: JSON.stringify({message: `bulk buy skip update`, content: encoded, sha: latestSha, branch: GH_BRANCH})
     });
     if(res.ok) {
-      showToast(newSkip ? `🚫 ${race.raceName} 購入スキップON` : `✓ ${race.raceName} 購入スキップOFF`);
+      const msg = [skipOn > 0 ? `🚫 ${skipOn}レースをスキップON` : '', skipOff > 0 ? `✓ ${skipOff}レースをスキップOFF` : ''].filter(Boolean).join(' / ');
+      showToast(msg || '保存しました');
       await loadTimeChangeList();
     } else {
       alert('保存失敗: ' + res.status);
-      race._buySkip = !newSkip;
     }
   } catch(e) {
     alert('エラー: ' + e.message);
-    race._buySkip = !newSkip;
   }
 }
 
