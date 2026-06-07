@@ -90,9 +90,9 @@ async def purchase(page, course_name, race_num, bets):
         print(f"コース名変換: {course_name} → {click_name}")
 
     await page.click(f'text={click_name}')
-    await page.wait_for_timeout(2000)
+    await page.wait_for_timeout(3000)  # レース一覧読み込み待ち
     await page.click(f'text={race_num}R')
-    await page.wait_for_timeout(2000)
+    await page.wait_for_timeout(3000)  # 式別画面読み込み待ち
     await page.click('text=式別から選択')
     await page.wait_for_timeout(2000)
     await page.click('text=単勝')
