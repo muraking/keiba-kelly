@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.09.4
+  v2026.06.09.5
 
   変更履歴:
+    v2026.06.09.5 - JRA/地方個別設定をlocalStorageで永続化（再読み込み時クリア修正）
     v2026.06.09.4 - GitHubから読込後の設定サマリーに中央/地方個別設定（EV・オッズ上限・勝率・点数）を表示
     v2026.06.09.3 - 旧共通フィルター（期待値/オッズ/勝率フィルター）をhiddenに変更（JRA/地方個別設定に統合）
     v2026.06.09.2 - 結果取込済みバッジ追加: レースセレクタに✅表示、レース情報ヘッダーに取込済み表示
@@ -183,7 +184,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -752,7 +753,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.4</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.5</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1056,6 +1057,14 @@ async function saveSoftmaxSettings() {
   localStorage.setItem('notify_bets', String(notifyBets));
   localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
   localStorage.setItem('sm_winrate_filter', String(winrateFilter));
+  if(jraEvMin != null) localStorage.setItem('jra_ev_min', String(jraEvMin)); else localStorage.removeItem('jra_ev_min');
+  if(jraOddsMax != null) localStorage.setItem('jra_odds_max', String(jraOddsMax)); else localStorage.removeItem('jra_odds_max');
+  localStorage.setItem('jra_winrate_filter', String(jraWinrateFilter));
+  localStorage.setItem('jra_max_bets', String(jraMaxBets));
+  if(localEvMin != null) localStorage.setItem('local_ev_min', String(localEvMin)); else localStorage.removeItem('local_ev_min');
+  if(localOddsMax != null) localStorage.setItem('local_odds_max', String(localOddsMax)); else localStorage.removeItem('local_odds_max');
+  localStorage.setItem('local_winrate_filter', String(localWinrateFilter));
+  localStorage.setItem('local_max_bets', String(localMaxBets));
 
   // GitHubにも保存（管理者のみ）
   const token = loadToken();
@@ -1331,6 +1340,14 @@ async function loadSoftmaxFromGithub() {
     setField('local-winrate-filter', slocal.sm_winrate_filter ?? 0);
     const localMaxBetsEl = document.getElementById('local-max-bets');
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
+    if(sjra.ev_min != null) localStorage.setItem('jra_ev_min', String(sjra.ev_min)); else localStorage.removeItem('jra_ev_min');
+    if(sjra.odds_max != null) localStorage.setItem('jra_odds_max', String(sjra.odds_max)); else localStorage.removeItem('jra_odds_max');
+    localStorage.setItem('jra_winrate_filter', String(sjra.sm_winrate_filter ?? 0));
+    localStorage.setItem('jra_max_bets', String(sjra.max_bets ?? 0));
+    if(slocal.ev_min != null) localStorage.setItem('local_ev_min', String(slocal.ev_min)); else localStorage.removeItem('local_ev_min');
+    if(slocal.odds_max != null) localStorage.setItem('local_odds_max', String(slocal.odds_max)); else localStorage.removeItem('local_odds_max');
+    localStorage.setItem('local_winrate_filter', String(slocal.sm_winrate_filter ?? 0));
+    localStorage.setItem('local_max_bets', String(slocal.max_bets ?? 0));
 
     const lines = [
       `温度T: ${T}　最小指数: ${minP}%`,
@@ -1472,6 +1489,22 @@ function loadSoftmaxSettings() {
   const ckEl2 = document.getElementById('combined-kelly');
   const ckVal = localStorage.getItem('combined_kelly') === '1';
   if(ckEl2){ ckEl2.checked = ckVal; document.getElementById('combined-kelly-label').textContent = ckVal ? 'ON' : 'OFF'; }
+  const jraEvMinEl2 = document.getElementById('jra-ev-min');
+  if(jraEvMinEl2) jraEvMinEl2.value = localStorage.getItem('jra_ev_min') || '';
+  const jraOddsMaxEl2 = document.getElementById('jra-odds-max');
+  if(jraOddsMaxEl2) jraOddsMaxEl2.value = localStorage.getItem('jra_odds_max') || '';
+  const jraWinrateEl2 = document.getElementById('jra-winrate-filter');
+  if(jraWinrateEl2) jraWinrateEl2.value = localStorage.getItem('jra_winrate_filter') || '0';
+  const jraMaxBetsEl2 = document.getElementById('jra-max-bets');
+  if(jraMaxBetsEl2) jraMaxBetsEl2.value = localStorage.getItem('jra_max_bets') || '0';
+  const localEvMinEl2 = document.getElementById('local-ev-min');
+  if(localEvMinEl2) localEvMinEl2.value = localStorage.getItem('local_ev_min') || '';
+  const localOddsMaxEl2 = document.getElementById('local-odds-max');
+  if(localOddsMaxEl2) localOddsMaxEl2.value = localStorage.getItem('local_odds_max') || '';
+  const localWinrateEl2 = document.getElementById('local-winrate-filter');
+  if(localWinrateEl2) localWinrateEl2.value = localStorage.getItem('local_winrate_filter') || '0';
+  const localMaxBetsEl2 = document.getElementById('local-max-bets');
+  if(localMaxBetsEl2) localMaxBetsEl2.value = localStorage.getItem('local_max_bets') || '0';
 }
 
 function softmaxNorm(horses, temperature, minPct) {
