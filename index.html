@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.08.1
+  v2026.06.09.1
 
   変更履歴:
+    v2026.06.09.1 - 中央/地方個別設定UI追加（JRA/ローカル別のev_min/odds_max/sm_winrate_filter/max_bets）
+                    saveSoftmaxSettings()で_settings_jra/_settings_local保存、loadSoftmaxFromGithub()で読込対応
     v2026.06.08.1 - onSkipCheck()のbulk-skip-bar参照をbulk-skip-btnに修正
     v2026.06.07.1 - 時刻変更UIにレースごと購入スキップ機能追加
     v2026.06.06.1 - 管理者設定に通知頭数（Discord）セレクトを追加
@@ -177,7 +179,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.08.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -478,6 +480,66 @@ textarea:focus{border-color:var(--gold)}
             style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
         </div>
       </div>
+      <div class="sh" style="margin-top:12px">🏇 中央競馬（JRA）個別設定 <span style="font-weight:400;font-size:10px;color:var(--text3)">※共通設定を上書き</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最小</div>
+          <input id="jra-ev-min" type="number" min="100" max="200" step="1" placeholder="共通値使用"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div>
+          <input id="jra-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div>
+          <input id="jra-winrate-filter" type="number" min="0" max="50" step="1" value="0"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
+          <select id="jra-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            <option value="0">共通値使用</option>
+            <option value="1">1点</option>
+            <option value="2">2点</option>
+            <option value="3" selected>3点</option>
+            <option value="4">4点</option>
+            <option value="5">5点</option>
+            <option value="99">制限なし</option>
+          </select>
+        </div>
+      </div>
+      <div class="sh" style="margin-top:12px">🏟 地方競馬 個別設定 <span style="font-weight:400;font-size:10px;color:var(--text3)">※共通設定を上書き</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最小</div>
+          <input id="local-ev-min" type="number" min="100" max="200" step="1" placeholder="共通値使用"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div>
+          <input id="local-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div>
+          <input id="local-winrate-filter" type="number" min="0" max="50" step="1" value="0"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
+          <select id="local-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            <option value="0">共通値使用</option>
+            <option value="1">1点</option>
+            <option value="2">2点</option>
+            <option value="3" selected>3点</option>
+            <option value="4">4点</option>
+            <option value="5">5点</option>
+            <option value="99">制限なし</option>
+          </select>
+        </div>
+      </div>
       <div class="sh" style="margin-top:12px">自動購入設定</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
         <div style="background:var(--bg3);border-radius:var(--r);padding:8px">
@@ -712,7 +774,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.07.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.1</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1000,6 +1062,14 @@ async function saveSoftmaxSettings() {
   const wideRec1      = document.getElementById('wide-rec1')?.checked || false;
   const wideRec2      = document.getElementById('wide-rec2')?.checked || false;
   const wideRec3      = document.getElementById('wide-rec3')?.checked || false;
+  const jraEvMin        = parseFloat(document.getElementById('jra-ev-min')?.value || '') || null;
+  const jraOddsMax      = parseFloat(document.getElementById('jra-odds-max')?.value || '') || null;
+  const jraWinrateFilter = parseFloat(document.getElementById('jra-winrate-filter')?.value || '0') || 0;
+  const jraMaxBets      = parseInt(document.getElementById('jra-max-bets')?.value || '0') || 0;
+  const localEvMin       = parseFloat(document.getElementById('local-ev-min')?.value || '') || null;
+  const localOddsMax     = parseFloat(document.getElementById('local-odds-max')?.value || '') || null;
+  const localWinrateFilter = parseFloat(document.getElementById('local-winrate-filter')?.value || '0') || 0;
+  const localMaxBets     = parseInt(document.getElementById('local-max-bets')?.value || '0') || 0;
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -1070,6 +1140,16 @@ async function saveSoftmaxSettings() {
       data._settings.notify_bets = notifyBets;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
+      if (!data._settings_jra) data._settings_jra = {};
+      if (jraEvMin !== null) data._settings_jra.ev_min = jraEvMin;
+      if (jraOddsMax !== null) data._settings_jra.odds_max = jraOddsMax;
+      data._settings_jra.sm_winrate_filter = jraWinrateFilter;
+      if (jraMaxBets > 0) data._settings_jra.max_bets = jraMaxBets;
+      if (!data._settings_local) data._settings_local = {};
+      if (localEvMin !== null) data._settings_local.ev_min = localEvMin;
+      if (localOddsMax !== null) data._settings_local.odds_max = localOddsMax;
+      data._settings_local.sm_winrate_filter = localWinrateFilter;
+      if (localMaxBets > 0) data._settings_local.max_bets = localMaxBets;
       const jsonStr = JSON.stringify(data, null, 2);
       const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
       const r2 = await fetch(apiUrl, {
@@ -1110,6 +1190,8 @@ async function loadSoftmaxFromGithub() {
     const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
     const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
     const s = data._settings || {};
+    const sjra = data._settings_jra || {};
+    const slocal = data._settings_local || {};
 
     // フォームに反映
     const T = s.sm_temperature ?? 15;
@@ -1260,6 +1342,17 @@ async function loadSoftmaxFromGithub() {
       const el = document.getElementById(id);
       if(el) el.checked = [wideTop1,wideTop2,wideRec1,wideRec2,wideRec3][i];
     });
+    const setField = (id, val) => { const el = document.getElementById(id); if(el && val != null && val !== '') el.value = val; else if(el) el.value = ''; };
+    setField('jra-ev-min', sjra.ev_min ?? '');
+    setField('jra-odds-max', sjra.odds_max ?? '');
+    setField('jra-winrate-filter', sjra.sm_winrate_filter ?? 0);
+    const jraMaxBetsEl = document.getElementById('jra-max-bets');
+    if(jraMaxBetsEl) jraMaxBetsEl.value = String(sjra.max_bets ?? 0);
+    setField('local-ev-min', slocal.ev_min ?? '');
+    setField('local-odds-max', slocal.odds_max ?? '');
+    setField('local-winrate-filter', slocal.sm_winrate_filter ?? 0);
+    const localMaxBetsEl = document.getElementById('local-max-bets');
+    if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
 
     const lines = [
       `温度T: ${T}　最小指数: ${minP}%　勝率フィルター: ${winrateFilter > 0 ? winrateFilter+'%以上' : 'なし'}`,
