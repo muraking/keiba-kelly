@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.09.3
+  v2026.06.09.4
 
   変更履歴:
+    v2026.06.09.4 - GitHubから読込後の設定サマリーに中央/地方個別設定（EV・オッズ上限・勝率・点数）を表示
     v2026.06.09.3 - 旧共通フィルター（期待値/オッズ/勝率フィルター）をhiddenに変更（JRA/地方個別設定に統合）
     v2026.06.09.2 - 結果取込済みバッジ追加: レースセレクタに✅表示、レース情報ヘッダーに取込済み表示
                     fetchRaceList()でrace_history.jsonを並行取得、saveRaceResult()後に即時反映
@@ -182,7 +183,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -751,7 +752,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.3</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.4</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1332,10 +1333,10 @@ async function loadSoftmaxFromGithub() {
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
 
     const lines = [
-      `温度T: ${T}　最小指数: ${minP}%　勝率フィルター: ${winrateFilter > 0 ? winrateFilter+'%以上' : 'なし'}`,
-      `期待値: ${evMin}以上${evMax ? '～'+evMax+'以下' : '（上限なし）'}`,
-      `オッズ: ${oddsMin || '無制限'}〜${oddsMax || '無制限'}倍`,
-      `最大点数: ${s.max_bets ?? 4}点`,
+      `温度T: ${T}　最小指数: ${minP}%`,
+      `🏇 中央(JRA): EV${sjra.ev_min ?? evMin}以上 / オッズ上限${sjra.odds_max != null ? sjra.odds_max+'倍' : '無制限'} / 勝率${sjra.sm_winrate_filter > 0 ? sjra.sm_winrate_filter+'%以上' : 'なし'} / ${sjra.max_bets ?? s.max_bets ?? 4}点`,
+      `🏟 地方: EV${slocal.ev_min ?? evMin}以上 / オッズ上限${slocal.odds_max != null ? slocal.odds_max+'倍' : '無制限'} / 勝率${slocal.sm_winrate_filter > 0 ? slocal.sm_winrate_filter+'%以上' : 'なし'} / ${slocal.max_bets ?? s.max_bets ?? 4}点`,
+      `最大点数(共通): ${s.max_bets ?? 4}点`,
       `勝率計算: ${normMethodGh==='softmax'?'ソフトマックス':'単純正規化'}`,
       `自動購入: 地方=${autoBuyLocal?'ON':'OFF'} 中央=${autoBuyJra?'ON':'OFF'}${autoBuyMax ? ' 最大¥'+autoBuyMax.toLocaleString() : ''}`,
       `1番人気スキップ: ${autoBuySkipFav ? autoBuySkipFavOdds+'倍以下でスキップ' : 'OFF'}`,
