@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.09.1
+  v2026.06.09.3
 
   変更履歴:
+    v2026.06.09.3 - 旧共通フィルター（期待値/オッズ/勝率フィルター）をhiddenに変更（JRA/地方個別設定に統合）
+    v2026.06.09.2 - 結果取込済みバッジ追加: レースセレクタに✅表示、レース情報ヘッダーに取込済み表示
+                    fetchRaceList()でrace_history.jsonを並行取得、saveRaceResult()後に即時反映
     v2026.06.09.1 - 中央/地方個別設定UI追加（JRA/ローカル別のev_min/odds_max/sm_winrate_filter/max_bets）
                     saveSoftmaxSettings()で_settings_jra/_settings_local保存、loadSoftmaxFromGithub()で読込対応
     v2026.06.08.1 - onSkipCheck()のbulk-skip-bar参照をbulk-skip-btnに修正
@@ -179,7 +182,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -434,13 +437,8 @@ textarea:focus{border-color:var(--gold)}
           <input id="sm-minpct" type="number" min="0" max="20" step="0.5" value="3.0"
             style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
         </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター（%以上の馬のみ対象）</div>
-          <input id="sm-winrate-filter" type="number" min="0" max="50" step="1" value="0"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-          <div style="font-size:10px;color:var(--text3);margin-top:2px">0=フィルターなし（全馬対象）</div>
-        </div>
       </div>
+      <input type="hidden" id="sm-winrate-filter" value="0">
       <div class="sh" style="margin-top:12px">勝率計算方式</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
         <div style="background:var(--bg3);border-radius:var(--r);padding:8px;cursor:pointer" id="norm-btn-softmax" onclick="setNormMethod('softmax')">
@@ -454,32 +452,11 @@ textarea:focus{border-color:var(--gold)}
       </div>
       <div style="font-size:10px;color:var(--text3);margin-bottom:8px" id="norm-method-desc">現在: ソフトマックス変換</div>
 
-      <div class="sh" style="margin-top:12px">期待値フィルター</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値 最小（デフォルト105）</div>
-          <input id="ev-min" type="number" min="100" max="200" step="1" value="105"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値 最大（空白=無制限）</div>
-          <input id="ev-max" type="number" min="100" max="9999" step="1" placeholder="無制限"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-      </div>
-      <div class="sh" style="margin-top:12px">オッズフィルター</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空白=無制限）</div>
-          <input id="odds-min" type="number" min="1" max="999" step="0.1" placeholder="無制限"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空白=無制限）</div>
-          <input id="odds-max" type="number" min="1" max="9999" step="0.1" placeholder="無制限"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-      </div>
+      <!-- 旧共通フィルター項目: JS互換のため hidden で保持 -->
+      <input type="hidden" id="ev-min" value="105">
+      <input type="hidden" id="ev-max" value="">
+      <input type="hidden" id="odds-min" value="">
+      <input type="hidden" id="odds-max" value="">
       <div class="sh" style="margin-top:12px">🏇 中央競馬（JRA）個別設定 <span style="font-weight:400;font-size:10px;color:var(--text3)">※共通設定を上書き</span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
         <div>
@@ -774,7 +751,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.3</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2168,9 +2145,16 @@ async function loadDateList(){
 
 // ---- GitHub レース選択（設定タブ）----
 let ghData = null;
+let ghHistory = [];
 let currentRaceName = '';
 let currentRaceClass = '';
 let currentStartTime = '';
+
+function isInHistory(race) {
+  if (!race || !ghHistory.length) return false;
+  const dateKey = (race.raceName || '').substring(0, 10);
+  return ghHistory.some(h => h.date === dateKey && h.raceNum === (race.raceNum || ''));
+}
 
 async function fetchRaceList(){
   const btn = document.getElementById('fetch-btn');
@@ -2225,6 +2209,20 @@ async function fetchRaceList(){
 
     document.getElementById('date-area').style.display = 'block';
     st.innerHTML = `<div class="status st-ok">✓ ${dates.length}日分のデータを取得しました</div>`;
+
+    // race_historyをバックグラウンドで取得してセレクタに取込済みバッジを表示
+    const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/race_history.json`;
+    fetch(histUrl, {headers: fetchHeaders, cache: 'no-store'})
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if(!j) return;
+        const raw2 = atob(j.content.replace(/\n/g,''));
+        const bytes2 = Uint8Array.from(raw2, c => c.charCodeAt(0));
+        ghHistory = JSON.parse(new TextDecoder('utf-8').decode(bytes2)) || [];
+        const ds2 = document.getElementById('date-select');
+        if(ds2 && ds2.value) onDateChange();
+      })
+      .catch(() => {});
   } catch(e){
     st.innerHTML = `<div class="status st-err">${e.message}</div>`;
   }
@@ -2240,14 +2238,19 @@ function onDateChange(){
 
   const rs = document.getElementById('race-select');
   rs.innerHTML = '<option value="">-- レースを選択 --</option>';
+  const savedIdx = document.getElementById('race-select')?.value;
   ghData[date].races.forEach((race, i) => {
     const opt = document.createElement('option');
     opt.value = i;
     const timeStr = race.startTime ? ` ${race.startTime}` : '';
     const classStr = race.raceClass ? ` ${race.raceClass}` : '';
-    opt.textContent = `${race.raceName}${timeStr}${classStr}`;
+    const histTag = isInHistory(race) ? '✅ ' : '';
+    opt.textContent = `${histTag}${race.raceName}${timeStr}${classStr}`;
     rs.appendChild(opt);
   });
+  if(savedIdx !== '' && savedIdx !== undefined && rs.querySelector(`option[value="${savedIdx}"]`)) {
+    rs.value = savedIdx;
+  }
   document.getElementById('race-select-area').style.display = 'block';
 }
 
@@ -2405,7 +2408,10 @@ function onRaceChange(){
   })();
 
   hl.innerHTML = `<div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;margin-bottom:10px">
-    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${race.raceName}</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+      <div style="font-size:15px;font-weight:700;color:var(--text)">${race.raceName}</div>
+      ${isInHistory(race) ? '<span style="font-size:11px;background:rgba(0,200,100,0.15);color:var(--green);padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap">✅ 結果取込済み</span>' : ''}
+    </div>
     ${classStr ? `<div style="font-size:12px;color:var(--gold);margin-bottom:2px">${classStr}</div>` : ''}
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:2px">
       ${timeStr ? `<div style="font-size:12px;color:var(--text2)">発走 ${timeStr}</div>` : ''}
@@ -3391,6 +3397,14 @@ async function saveRaceResult() {
         ? (isMyHit ? `✅ 的中: ${hitNum}番 ${winOdds}倍` : `❌ 外れ（1着: ${hitNum}番 ${winOdds}倍）`)
         : '📝 保存（1着不明）';
       statusEl.innerHTML = `<span style="color:var(--green)">${hitMsg} 保存完了（累計${history.length}件）</span>`;
+      // ローカルhistoryキャッシュ更新 → ドロップダウンに✅即時反映
+      ghHistory.push(entry);
+      const _saveDate = document.getElementById('date-select')?.value;
+      const _saveIdx = document.getElementById('race-select')?.value;
+      if(_saveDate) onDateChange();
+      const _rs = document.getElementById('race-select');
+      if(_rs && _saveIdx !== undefined && _saveIdx !== '') _rs.value = _saveIdx;
+      onRaceChange();
       // 入力欄クリア
       document.getElementById('rec-horse-num').value = '';
       document.getElementById('rec-win-odds').value = '';
