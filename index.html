@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.09.5
+  v2026.06.09.8
 
   変更履歴:
+    v2026.06.09.8 - 非管理者向け共有トークン入力欄追加: トークンなし時に入力フォーム表示、localStorageに保存
+    v2026.06.09.7 - 非管理者の一覧読み込み: GH_PUBLIC_REPO追加、fetchRaceListをパブリックリポジトリ参照方式に変更
+    v2026.06.09.6 - 読み取り専用トークン埋め込み（GitHub secret scanningにより撤回）
     v2026.06.09.5 - JRA/地方個別設定をlocalStorageで永続化（再読み込み時クリア修正）
     v2026.06.09.4 - GitHubから読込後の設定サマリーに中央/地方個別設定（EV・オッズ上限・勝率・点数）を表示
     v2026.06.09.3 - 旧共通フィルター（期待値/オッズ/勝率フィルター）をhiddenに変更（JRA/地方個別設定に統合）
@@ -184,7 +187,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.5</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.8</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -279,6 +282,16 @@ textarea:focus{border-color:var(--gold)}
           </button>
         </div>
       </div>
+    </div>
+
+    <div id="read-token-area" style="display:none;margin-bottom:14px;padding:12px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r)">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">🔑 アクセストークンを入力してください（管理者から共有されたトークン）</div>
+      <div style="display:flex;gap:8px">
+        <input id="read-token-input" type="password" placeholder="github_pat_..." autocomplete="off"
+          style="flex:1;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:8px 10px;color:var(--text);font-size:13px;font-family:monospace">
+        <button class="btn btn-outline" onclick="saveReadToken()" style="white-space:nowrap;font-size:13px">保存</button>
+      </div>
+      <div id="read-token-status" style="font-size:11px;margin-top:6px;color:var(--text3)"></div>
     </div>
 
     <div style="margin-bottom:20px">
@@ -753,7 +766,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.5</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.8</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2023,6 +2036,7 @@ async function hashStr(str){
 
 const GH_USER = 'muraking';
 const GH_REPO = 'keiba-kelly-private';
+const GH_PUBLIC_REPO = 'keiba-kelly';
 const GH_BRANCH = 'main';
 const GH_FILE = 'data/indices.json';
 const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
@@ -2051,6 +2065,26 @@ function saveToken(){
 
 function loadToken(){
   return localStorage.getItem('kk_gh_token') || '';
+}
+
+function loadReadToken(){
+  return localStorage.getItem('kk_read_token') || '';
+}
+
+function saveReadToken(){
+  const val = (document.getElementById('read-token-input')?.value || '').trim();
+  if(!val){ document.getElementById('read-token-status').textContent = 'トークンを入力してください'; return; }
+  localStorage.setItem('kk_read_token', val);
+  document.getElementById('read-token-status').innerHTML = '<span style="color:var(--green)">✓ 保存しました</span>';
+  document.getElementById('read-token-input').value = '';
+  setTimeout(() => { document.getElementById('read-token-area').style.display = 'none'; }, 800);
+}
+
+function initReadTokenUI(){
+  if(!loadToken() && !loadReadToken()){
+    const area = document.getElementById('read-token-area');
+    if(area) area.style.display = 'block';
+  }
 }
 
 // 現在のJSONをGitHubから取得（SHA付き）
@@ -2197,16 +2231,30 @@ async function fetchRaceList(){
   st.innerHTML = '<div class="status st-warn">読み込み中...</div>';
 
   try {
-    // GitHub API経由で取得（キャッシュなし）
     const token = loadToken();
-    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-    const fetchHeaders = token ? {'Authorization': `token ${token}`} : {};
-    const res = await fetch(apiUrl, {headers: fetchHeaders, cache: 'no-store'});
-    if(!res.ok) throw new Error('データが見つかりません。共有タブから保存してください。');
-    const json = await res.json();
-    const raw = atob(json.content.replace(/\n/g, ''));
+    const readToken = loadReadToken();
+    const effectiveToken = token || readToken;
+    let data;
+    if(effectiveToken) {
+      // 管理者/共有トークンあり: プライベートリポジトリからGitHub API経由で取得
+      const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+      const res = await fetch(apiUrl, {headers: {'Authorization': `token ${effectiveToken}`}, cache: 'no-store'});
+      if(!res.ok) {
+        if(!token && !readToken) {
+          document.getElementById('read-token-area').style.display = 'block';
+          throw new Error('トークンが必要です。上のフォームから入力してください。');
+        }
+        throw new Error('データが見つかりません。');
+      }
+      const json = await res.json();
+      const raw = atob(json.content.replace(/\n/g, ''));
       const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-      const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    } else {
+      // トークンなし: トークン入力欄を表示
+      document.getElementById('read-token-area').style.display = 'block';
+      throw new Error('トークンが必要です。上のフォームから入力してください。');
+    }
 
     // 新旧フォーマット対応
     if(data.dates){
@@ -2245,18 +2293,15 @@ async function fetchRaceList(){
     st.innerHTML = `<div class="status st-ok">✓ ${dates.length}日分のデータを取得しました</div>`;
 
     // race_historyをバックグラウンドで取得してセレクタに取込済みバッジを表示
-    const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/race_history.json`;
-    fetch(histUrl, {headers: fetchHeaders, cache: 'no-store'})
-      .then(r => r.ok ? r.json() : null)
-      .then(j => {
-        if(!j) return;
-        const raw2 = atob(j.content.replace(/\n/g,''));
-        const bytes2 = Uint8Array.from(raw2, c => c.charCodeAt(0));
-        ghHistory = JSON.parse(new TextDecoder('utf-8').decode(bytes2)) || [];
+    const histFetch = fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/race_history.json`, {headers: {'Authorization': `token ${effectiveToken}`}, cache: 'no-store'})
+          .then(r => r.ok ? r.json() : null)
+          .then(j => j ? JSON.parse(new TextDecoder('utf-8').decode(Uint8Array.from(atob(j.content.replace(/\n/g,'')), c => c.charCodeAt(0)))) : null);
+    histFetch.then(arr => {
+        if(!arr) return;
+        ghHistory = arr || [];
         const ds2 = document.getElementById('date-select');
         if(ds2 && ds2.value) onDateChange();
-      })
-      .catch(() => {});
+      }).catch(() => {});
   } catch(e){
     st.innerHTML = `<div class="status st-err">${e.message}</div>`;
   }
@@ -3943,6 +3988,7 @@ async function revertTime(idx) {
 
 // 初期化時にソフトマックス設定を読み込む
 loadSoftmaxSettings();
+initReadTokenUI();
 // 共有タブのアクティブ化を検知して自動読み込み
 const _origSwFn = window.sw;
 window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='share') { loadSoftmaxSettings(); setTimeout(loadSoftmaxFromGithub, 100); } };
