@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.09.8
+  v2026.06.09.9
 
   変更履歴:
+    v2026.06.09.9 - fetchRaceList: トークン判定バグ修正（API失敗時に必ずフォーム表示、無効トークン自動削除）
     v2026.06.09.8 - 非管理者向け共有トークン入力欄追加: トークンなし時に入力フォーム表示、localStorageに保存
     v2026.06.09.7 - 非管理者の一覧読み込み: GH_PUBLIC_REPO追加、fetchRaceListをパブリックリポジトリ参照方式に変更
     v2026.06.09.6 - 読み取り専用トークン埋め込み（GitHub secret scanningにより撤回）
@@ -187,7 +188,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.8</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.09.9</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -766,7 +767,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.8</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.09.9</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2235,26 +2236,24 @@ async function fetchRaceList(){
     const readToken = loadReadToken();
     const effectiveToken = token || readToken;
     let data;
-    if(effectiveToken) {
-      // 管理者/共有トークンあり: プライベートリポジトリからGitHub API経由で取得
-      const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-      const res = await fetch(apiUrl, {headers: {'Authorization': `token ${effectiveToken}`}, cache: 'no-store'});
-      if(!res.ok) {
-        if(!token && !readToken) {
-          document.getElementById('read-token-area').style.display = 'block';
-          throw new Error('トークンが必要です。上のフォームから入力してください。');
-        }
-        throw new Error('データが見つかりません。');
-      }
-      const json = await res.json();
-      const raw = atob(json.content.replace(/\n/g, ''));
-      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-      data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
-    } else {
-      // トークンなし: トークン入力欄を表示
+    if(!effectiveToken) {
       document.getElementById('read-token-area').style.display = 'block';
-      throw new Error('トークンが必要です。上のフォームから入力してください。');
+      throw new Error('アクセストークンを上のフォームから入力してください。');
     }
+    // GitHub API経由で取得
+    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+    const res = await fetch(apiUrl, {headers: {'Authorization': `token ${effectiveToken}`}, cache: 'no-store'});
+    if(!res.ok) {
+      if(!token) localStorage.removeItem('kk_read_token'); // 無効なread tokenを削除
+      document.getElementById('read-token-area').style.display = 'block';
+      throw new Error(res.status === 401 || res.status === 403
+        ? 'トークンが無効または期限切れです。再入力してください。'
+        : 'データが見つかりません。共有タブから保存してください。');
+    }
+    const json = await res.json();
+    const raw = atob(json.content.replace(/\n/g, ''));
+    const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+    data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
 
     // 新旧フォーマット対応
     if(data.dates){
