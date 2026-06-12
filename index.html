@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.12.3
+  v2026.06.12.4
 
   変更履歴:
+    v2026.06.12.4 - fetchRaceList: fetchHeaders未定義エラー修正（race_history取得部分）
     v2026.06.12.3 - fetchGHContent(): download_url→Git Blob APIに変更（privateリポジトリのCORSエラー対策）
     v2026.06.12.2 - fetchGHContent()追加: indices.json 1MB超でもdownload_url経由で取得可能に（JSON Parse error対策）
     v2026.06.12.1 - 購入履歴: atob()→TextDecoderに変更し日本語会場名の文字化けを修正
@@ -186,7 +187,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -781,7 +782,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.3</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.4</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2270,7 +2271,8 @@ async function fetchRaceList(){
 
     // race_historyをバックグラウンドで取得してセレクタに取込済みバッジを表示
     const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/race_history.json`;
-    fetch(histUrl, {headers: fetchHeaders, cache: 'no-store'})
+    const _hdrs = token ? {'Authorization': `token ${token}`} : {};
+    fetch(histUrl, {headers: _hdrs, cache: 'no-store'})
       .then(r => r.ok ? r.json() : null)
       .then(j => {
         if(!j) return;
