@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.11.1
+  v2026.06.12.1
 
   変更履歴:
+    v2026.06.12.1 - 購入履歴: atob()→TextDecoderに変更し日本語会場名の文字化けを修正
     v2026.06.11.1 - 結果タブに「購入履歴」サブタブ追加: purchase_log_YYYY_MM.jsonを読み込み
                     race_historyと照合して本日の購入結果一覧・ROI表示
     v2026.06.09.2 - 結果取込済みバッジ追加: レースセレクタに✅表示、レース情報ヘッダーに取込済み表示
@@ -183,7 +184,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.11.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -778,7 +779,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.11.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.1</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -3654,7 +3655,8 @@ async function loadPurchaseHistory() {
       return;
     }
     const logJson = await logRes.json();
-    const allPurchases = JSON.parse(atob(logJson.content.replace(/\n/g, '')));
+    const _dec = s => { const b = Uint8Array.from(atob(s.replace(/\n/g,'')),c=>c.charCodeAt(0)); return new TextDecoder().decode(b); };
+    const allPurchases = JSON.parse(_dec(logJson.content));
     const todayPurchases = allPurchases.filter(p => p.date === today);
     if (!todayPurchases.length) {
       el.innerHTML = '<div class="msg">本日の購入なし</div>';
@@ -3666,7 +3668,7 @@ async function loadPurchaseHistory() {
     const resultsMap = {};
     if (histRes.ok) {
       const histJson = await histRes.json();
-      const hist = JSON.parse(atob(histJson.content.replace(/\n/g, '')));
+      const hist = JSON.parse(_dec(histJson.content));
       hist.filter(r => r.date === today).forEach(r => {
         resultsMap[`${r.venue}_${r.raceNum}`] = r;
       });
