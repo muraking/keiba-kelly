@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.12.6
+  v2026.06.12.7
 
   変更履歴:
+    v2026.06.12.7 - saveToGitHub: レース保存時にjra_odds/oddsを上書き消去するバグを修正（スプレッド構文でマージ）
     v2026.06.12.6 - 購入履歴タブに地方/中央サブタブ追加: purchase_log_jra・race_history_jraに対応
     v2026.06.12.5 - fetchGHContent: withShaオプション追加、saveSoftmaxSettings/getCurrentDataのjson.sha未定義バグ修正
     v2026.06.12.4 - fetchRaceList: fetchHeaders未定義エラー修正（race_history取得部分）
@@ -189,7 +190,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.6</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.7</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -784,7 +785,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.6</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.7</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2140,8 +2141,12 @@ async function saveToGitHub(){
 
   try {
     const { sha, data } = await getCurrentData(token);
-    // 指定日付のデータを追記・上書き
-    data.dates[targetDate] = { races: allRaces, updated: new Date().toISOString() };
+    // 指定日付のデータを追記・上書き（既存のjra_odds/oddsなどを保持）
+    data.dates[targetDate] = {
+      ...(data.dates[targetDate] || {}),
+      races: allRaces,
+      updated: new Date().toISOString()
+    };
 
     const json = JSON.stringify(data, null, 2);
     const encoded = btoa(unescape(encodeURIComponent(json)));
