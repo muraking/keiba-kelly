@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.12.4
+  v2026.06.12.6
 
   変更履歴:
+    v2026.06.12.6 - 購入履歴タブに地方/中央サブタブ追加: purchase_log_jra・race_history_jraに対応
+    v2026.06.12.5 - fetchGHContent: withShaオプション追加、saveSoftmaxSettings/getCurrentDataのjson.sha未定義バグ修正
     v2026.06.12.4 - fetchRaceList: fetchHeaders未定義エラー修正（race_history取得部分）
     v2026.06.12.3 - fetchGHContent(): download_url→Git Blob APIに変更（privateリポジトリのCORSエラー対策）
     v2026.06.12.2 - fetchGHContent()追加: indices.json 1MB超でもdownload_url経由で取得可能に（JSON Parse error対策）
@@ -187,7 +189,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.6</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -782,7 +784,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.4</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.6</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -855,6 +857,16 @@ textarea:focus{border-color:var(--gold)}
 
     <!-- 購入履歴パネル -->
     <div id="result-subtab-purchase-panel" style="display:none">
+      <div style="display:flex;background:var(--bg3);border-radius:var(--r);padding:2px;gap:2px;margin-bottom:10px">
+        <button id="ph-local-btn" onclick="switchPurchaseType('local')"
+          style="flex:1;padding:5px;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:600;background:var(--bg2);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.1)">
+          🏟 地方
+        </button>
+        <button id="ph-jra-btn" onclick="switchPurchaseType('jra')"
+          style="flex:1;padding:5px;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;background:transparent;color:var(--text3)">
+          🏆 中央
+        </button>
+      </div>
       <div id="purchase-history-content">
         <div class="msg">「購入履歴」タブを選択すると読み込みます</div>
       </div>
@@ -1114,7 +1126,7 @@ async function saveSoftmaxSettings() {
   if (token) {
     try {
       const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-      const data = await fetchGHContent(apiUrl, token);
+      const { sha: fileSha, data } = await fetchGHContent(apiUrl, token, true);
       if (!data._settings) data._settings = {};
       data._settings.sm_temperature = T;
       data._settings.sm_minpct = isNaN(minP) ? 3.0 : minP;
@@ -1179,7 +1191,7 @@ async function saveSoftmaxSettings() {
       const r2 = await fetch(apiUrl, {
         method: 'PUT',
         headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify({message: 'update softmax settings', content: encoded, sha: json.sha, branch: GH_BRANCH})
+        body: JSON.stringify({message: 'update softmax settings', content: encoded, sha: fileSha, branch: GH_BRANCH})
       });
       if (r2.status === 200 || r2.status === 201) {
         statusEl.innerHTML = '<span style="color:var(--green)">✓ 保存しました</span>';
@@ -2047,28 +2059,31 @@ function getTodayJST(){
   return jst.toISOString().split('T')[0];
 }
 
-async function fetchGHContent(url, token) {
+async function fetchGHContent(url, token, withSha = false) {
   const headers = token ? {'Authorization': `token ${token}`} : {};
   const res = await fetch(url, {headers, cache: 'no-store'});
   if (!res.ok) throw new Error(`GitHub取得失敗: ${res.status}`);
   const json = await res.json();
+  const sha = json.sha || null;
   const _decode = b64 => {
     const raw = atob(b64.replace(/\n/g, ''));
     const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
     return JSON.parse(new TextDecoder().decode(bytes));
   };
+  let data;
   if (json.content) {
-    return _decode(json.content);
+    data = _decode(json.content);
   } else if (json.sha) {
     // 1MB超: Git Blob APIで取得（CORSや認証の問題なし）
     const blobUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/git/blobs/${json.sha}`;
     const blobRes = await fetch(blobUrl, {headers, cache: 'no-store'});
     if (!blobRes.ok) throw new Error(`Blob取得失敗: ${blobRes.status}`);
     const blob = await blobRes.json();
-    return _decode(blob.content);
+    data = _decode(blob.content);
   } else {
     throw new Error('コンテンツが取得できません');
   }
+  return withSha ? { sha, data } : data;
 }
 
 function saveToken(){
@@ -2087,19 +2102,16 @@ function loadToken(){
 // 現在のJSONをGitHubから取得（SHA付き）
 async function getCurrentData(token){
   try {
-    const r = await fetch(GH_API, { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }});
-    if(!r.ok) return { sha: null, data: { dates: {} } };
-    const meta = await r.json();
-    const content = JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+    const { sha, data: content } = await fetchGHContent(GH_API, token, true);
     // 旧フォーマット（単一日付）を新フォーマットに変換
     if(!content.dates){
       const dates = {};
       if(content.date && content.races && content.races.length){
         dates[content.date] = { races: content.races, updated: content.updated };
       }
-      return { sha: meta.sha, data: { dates } };
+      return { sha, data: { dates } };
     }
-    return { sha: meta.sha, data: content };
+    return { sha, data: content };
   } catch(e){
     return { sha: null, data: { dates: {} } };
   }
@@ -3610,6 +3622,8 @@ async function navigateRace(dir) {
 
 // ===== 共有タブ サブタブ切替 =====
 // ===== 購入履歴サブタブ =====
+let _purchaseType = 'local';
+
 function switchResultSubtab(tab) {
   const racePanel = document.getElementById('result-subtab-race-panel');
   const purchPanel = document.getElementById('result-subtab-purchase-panel');
@@ -3630,11 +3644,24 @@ function switchResultSubtab(tab) {
     purchPanel.style.display = '';
     if (raceBtn) raceBtn.style.cssText = inactiveStyle;
     if (purchBtn) purchBtn.style.cssText = activeStyle;
-    loadPurchaseHistory();
+    loadPurchaseHistory(_purchaseType);
   }
 }
 
-async function loadPurchaseHistory() {
+function switchPurchaseType(type) {
+  _purchaseType = type;
+  const phActiveStyle   = 'flex:1;padding:5px;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:600;background:var(--bg2);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.1)';
+  const phInactiveStyle = 'flex:1;padding:5px;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;background:transparent;color:var(--text3)';
+  const localBtn = document.getElementById('ph-local-btn');
+  const jraBtn = document.getElementById('ph-jra-btn');
+  if (localBtn) localBtn.style.cssText = type === 'local' ? phActiveStyle : phInactiveStyle;
+  if (jraBtn) jraBtn.style.cssText = type === 'jra' ? phActiveStyle : phInactiveStyle;
+  loadPurchaseHistory(type);
+}
+
+async function loadPurchaseHistory(type) {
+  if (!type) type = _purchaseType || 'local';
+  _purchaseType = type;
   const el = document.getElementById('purchase-history-content');
   if (!el) return;
   const token = localStorage.getItem('kk_gh_token') || '';
@@ -3647,12 +3674,16 @@ async function loadPurchaseHistory() {
   const today = getTodayJST();
   const ym = today.slice(0, 7).replace('-', '_');
   const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+  const isJra = type === 'jra';
+  const logFile = isJra ? `purchase_log_jra_${ym}.json` : `purchase_log_${ym}.json`;
+  const histFile = isJra ? `race_history_jra_${ym}.json` : `race_history_${ym}.json`;
+  const label = isJra ? '中央（IPAT）' : '地方';
 
   try {
-    const logUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/purchase_log_${ym}.json`;
+    const logUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${logFile}`;
     const logRes = await fetch(logUrl, { headers });
     if (!logRes.ok) {
-      el.innerHTML = '<div class="msg">本日の購入データなし</div>';
+      el.innerHTML = `<div class="msg">${label}の購入データなし</div>`;
       return;
     }
     const logJson = await logRes.json();
@@ -3660,11 +3691,11 @@ async function loadPurchaseHistory() {
     const allPurchases = JSON.parse(_dec(logJson.content));
     const todayPurchases = allPurchases.filter(p => p.date === today);
     if (!todayPurchases.length) {
-      el.innerHTML = '<div class="msg">本日の購入なし</div>';
+      el.innerHTML = `<div class="msg">${label}：本日の購入なし</div>`;
       return;
     }
 
-    const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/race_history_${ym}.json`;
+    const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${histFile}`;
     const histRes = await fetch(histUrl, { headers });
     const resultsMap = {};
     if (histRes.ok) {
@@ -3705,7 +3736,7 @@ async function loadPurchaseHistory() {
 
     let html = `
       <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:14px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${today} の購入結果${pendingCount ? ` <span style="color:var(--amber)">（⏳${pendingCount}R 結果待ち）</span>` : ''}</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${today} ${label} の購入結果${pendingCount ? ` <span style="color:var(--amber)">（⏳${pendingCount}R 結果待ち）</span>` : ''}</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:10px">
           <div><div style="font-size:10px;color:var(--text3)">購入</div><div style="font-size:20px;font-weight:700">${rows.length}R</div></div>
           <div><div style="font-size:10px;color:var(--text3)">的中</div><div style="font-size:20px;font-weight:700;color:var(--green)">${hitCount}R</div></div>
@@ -3735,7 +3766,7 @@ async function loadPurchaseHistory() {
         </div>`;
     }
     html += `</div>
-      <button onclick="loadPurchaseHistory()" style="width:100%;height:38px;margin-top:14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:12px;font-family:inherit;cursor:pointer">🔄 再読み込み</button>`;
+      <button onclick="loadPurchaseHistory('${type}')" style="width:100%;height:38px;margin-top:14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:12px;font-family:inherit;cursor:pointer">🔄 再読み込み</button>`;
     el.innerHTML = html;
   } catch (e) {
     el.innerHTML = `<div class="msg">エラー: ${e.message}</div>`;
