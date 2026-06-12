@@ -1,10 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.12.8
+  v2026.06.12.9
 
   変更履歴:
-    v2026.06.12.8 - nowJSTIso()追加: updated/savedAtタイムスタンプをJST形式に統一
-    v2026.06.12.8 - saveToGitHub: レース保存時にjra_odds/oddsを上書き消去するバグを修正（スプレッド構文でマージ）
+    v2026.06.12.9 - startAutoRefresh: raw.githubusercontent.com→GitHub API+トークン認証に変更（privateリポジトリ対応）
+    v2026.06.12.9 - nowJSTIso()追加: updated/savedAtタイムスタンプをJST形式に統一
+    v2026.06.12.9 - saveToGitHub: レース保存時にjra_odds/oddsを上書き消去するバグを修正（スプレッド構文でマージ）
     v2026.06.12.6 - 購入履歴タブに地方/中央サブタブ追加: purchase_log_jra・race_history_jraに対応
     v2026.06.12.5 - fetchGHContent: withShaオプション追加、saveSoftmaxSettings/getCurrentDataのjson.sha未定義バグ修正
     v2026.06.12.4 - fetchRaceList: fetchHeaders未定義エラー修正（race_history取得部分）
@@ -191,7 +192,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.8</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.9</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -786,7 +787,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.8</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.9</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2872,10 +2873,9 @@ function startAutoRefresh(){
     const idx = document.getElementById('race-select')?.value;
     if(!date || idx === '') return;
     try {
-      const url = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
-      const res = await fetch(url);
-      if(!res.ok) return;
-      const data = await res.json();
+      const token = loadToken();
+      const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+      const data = await fetchGHContent(apiUrl, token);
       if(data.dates){ ghData = data.dates; ghData._settings = data._settings || {}; }
       // オッズ更新時刻を比較して変化を検知
       const prevUpdated = ghData[date]?.odds_updated;
