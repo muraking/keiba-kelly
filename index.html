@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.12.1
+  v2026.06.12.2
 
   変更履歴:
+    v2026.06.12.2 - fetchGHContent()追加: indices.json 1MB超でもdownload_url経由で取得可能に（JSON Parse error対策）
     v2026.06.12.1 - 購入履歴: atob()→TextDecoderに変更し日本語会場名の文字化けを修正
     v2026.06.11.1 - 結果タブに「購入履歴」サブタブ追加: purchase_log_YYYY_MM.jsonを読み込み
                     race_historyと照合して本日の購入結果一覧・ROI表示
@@ -184,7 +185,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -779,7 +780,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.2</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1111,13 +1112,7 @@ async function saveSoftmaxSettings() {
   if (token) {
     try {
       const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-      const res = await fetch(apiUrl, {
-        headers: {'Authorization': `token ${token}`}, cache: 'no-store'
-      });
-      const json = await res.json();
-      const raw = atob(json.content.replace(/\n/g,''));
-      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-      const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      const data = await fetchGHContent(apiUrl, token);
       if (!data._settings) data._settings = {};
       data._settings.sm_temperature = T;
       data._settings.sm_minpct = isNaN(minP) ? 3.0 : minP;
@@ -1209,13 +1204,7 @@ async function loadSoftmaxFromGithub() {
   try {
     const token = loadToken();
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-    const headers = token ? {'Authorization': `token ${token}`} : {};
-    const res = await fetch(apiUrl, {headers, cache: 'no-store'});
-    if(!res.ok) throw new Error('取得失敗');
-    const json = await res.json();
-    const raw = atob(json.content.replace(/\n/g,''));
-    const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-    const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    const data = await fetchGHContent(apiUrl, token);
     const s = data._settings || {};
     const sjra = data._settings_jra || {};
     const slocal = data._settings_local || {};
@@ -2056,6 +2045,24 @@ function getTodayJST(){
   return jst.toISOString().split('T')[0];
 }
 
+async function fetchGHContent(url, token) {
+  const headers = token ? {'Authorization': `token ${token}`} : {};
+  const res = await fetch(url, {headers, cache: 'no-store'});
+  if (!res.ok) throw new Error(`GitHub取得失敗: ${res.status}`);
+  const json = await res.json();
+  if (json.content) {
+    const raw = atob(json.content.replace(/\n/g, ''));
+    const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } else if (json.download_url) {
+    const dlRes = await fetch(json.download_url, {headers, cache: 'no-store'});
+    if (!dlRes.ok) throw new Error('ダウンロード失敗');
+    return await dlRes.json();
+  } else {
+    throw new Error('コンテンツが取得できません（ファイルが空か非対応形式）');
+  }
+}
+
 function saveToken(){
   const t = document.getElementById('gh-token').value.trim();
   if(!t){alert('トークンを入力してください');return;}
@@ -2216,13 +2223,7 @@ async function fetchRaceList(){
     // GitHub API経由で取得（キャッシュなし）
     const token = loadToken();
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-    const fetchHeaders = token ? {'Authorization': `token ${token}`} : {};
-    const res = await fetch(apiUrl, {headers: fetchHeaders, cache: 'no-store'});
-    if(!res.ok) throw new Error('データが見つかりません。共有タブから保存してください。');
-    const json = await res.json();
-    const raw = atob(json.content.replace(/\n/g, ''));
-      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-      const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    const data = await fetchGHContent(apiUrl, token);
 
     // 新旧フォーマット対応
     if(data.dates){
@@ -2643,13 +2644,7 @@ async function refreshOdds(){
       // GitHub API経由で最新データを取得（キャッシュなし）
       const token = loadToken();
       const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-      const headers = token ? {'Authorization': `token ${token}`} : {};
-      const res = await fetch(apiUrl, {headers, cache: 'no-store'});
-      if(!res.ok) throw new Error('取得失敗');
-      const json = await res.json();
-      const raw = atob(json.content.replace(/\n/g, ''));
-      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-      const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      const data = await fetchGHContent(apiUrl, token);
 
       // ghDataを更新
       if(data.dates){
@@ -3415,10 +3410,7 @@ async function saveRaceResult() {
       const json = await res.json();
       sha = json.sha;
       try {
-        const raw = atob(json.content.replace(/\n/g,''));
-        const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-        const decoded = new TextDecoder('utf-8').decode(bytes).trim();
-        history = decoded ? JSON.parse(decoded) : [];
+        history = await fetchGHContent(apiUrl, token);
       } catch(e) {
         console.warn('race_history.json parse error, starting fresh:', e);
         history = [];
@@ -3768,16 +3760,8 @@ async function loadTimeChangeList(dateMode) {
 
   try {
     const token = loadToken();
-    const headers = token ? {'Authorization': `token ${token}`} : {};
-    const res = await fetch(
-      `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
-      {headers, cache: 'no-store'}
-    );
-    if(!res.ok) throw new Error('取得失敗');
-    const meta = await res.json();
-    const raw = atob(meta.content.replace(/\n/g,''));
-    const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
-    const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+    const data = await fetchGHContent(apiUrl, token);
 
     // 日付モードに応じて対象日を決定
     const _today = getTodayJST();
