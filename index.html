@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.12.2
+  v2026.06.12.3
 
   変更履歴:
+    v2026.06.12.3 - fetchGHContent(): download_url→Git Blob APIに変更（privateリポジトリのCORSエラー対策）
     v2026.06.12.2 - fetchGHContent()追加: indices.json 1MB超でもdownload_url経由で取得可能に（JSON Parse error対策）
     v2026.06.12.1 - 購入履歴: atob()→TextDecoderに変更し日本語会場名の文字化けを修正
     v2026.06.11.1 - 結果タブに「購入履歴」サブタブ追加: purchase_log_YYYY_MM.jsonを読み込み
@@ -185,7 +186,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.12.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -780,7 +781,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.12.3</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2050,16 +2051,22 @@ async function fetchGHContent(url, token) {
   const res = await fetch(url, {headers, cache: 'no-store'});
   if (!res.ok) throw new Error(`GitHub取得失敗: ${res.status}`);
   const json = await res.json();
-  if (json.content) {
-    const raw = atob(json.content.replace(/\n/g, ''));
+  const _decode = b64 => {
+    const raw = atob(b64.replace(/\n/g, ''));
     const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
     return JSON.parse(new TextDecoder().decode(bytes));
-  } else if (json.download_url) {
-    const dlRes = await fetch(json.download_url, {headers, cache: 'no-store'});
-    if (!dlRes.ok) throw new Error('ダウンロード失敗');
-    return await dlRes.json();
+  };
+  if (json.content) {
+    return _decode(json.content);
+  } else if (json.sha) {
+    // 1MB超: Git Blob APIで取得（CORSや認証の問題なし）
+    const blobUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/git/blobs/${json.sha}`;
+    const blobRes = await fetch(blobUrl, {headers, cache: 'no-store'});
+    if (!blobRes.ok) throw new Error(`Blob取得失敗: ${blobRes.status}`);
+    const blob = await blobRes.json();
+    return _decode(blob.content);
   } else {
-    throw new Error('コンテンツが取得できません（ファイルが空か非対応形式）');
+    throw new Error('コンテンツが取得できません');
   }
 }
 
