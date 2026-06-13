@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.14.4
+  v2026.06.14.5
 
   変更履歴:
+    v2026.06.14.5 - 購入履歴のワイド・馬連表示を修正: num1-num2番表示、的中判定をrec.wide/umarenで行い
+                    正しいペア払戻を計算するよう修正（従来は単勝専用ロジックでundefined番・誤判定だった）。
     v2026.06.14.4 - ワイド勝率ボックスに専用フィルタ（wide_odds_min/max・wide_winrate_filter）UI追加。
                     バグ修正: 直近レース自動選択後に出走表が表示されない問題（race_history取得後onRaceChange追加）、
                     オッズ反映・結果表示後にオッズタブが空になる問題（buildManualで事前入力し微調整可能に）。
@@ -208,7 +210,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -859,7 +861,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.4</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.5</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -3919,15 +3921,38 @@ function _renderPhData(el, today, ymLabel) {
     for (const b of (p.bets || [])) {
       const amount = b.amount || 0;
       totalBet += amount;
+      const betType = b.bet_type || 'tan';
       let status = 'pending', payout = 0;
       if (rec) {
-        const rank1 = typeof rec.rank1 === 'object' ? rec.rank1.num : rec.rank1;
-        if (b.num === rank1) {
-          payout = Math.floor((rec.tan_payout || 0) * amount / 100);
-          totalReturn += payout; hitCount++; status = 'hit';
-        } else { status = 'miss'; }
+        if (betType === 'wide') {
+          const match = (rec.wide || []).find(w => {
+            const ns = w.nums || [];
+            return ns.includes(b.num1) && ns.includes(b.num2);
+          });
+          if (match) {
+            payout = Math.floor((match.payout || 0) * amount / 100);
+            totalReturn += payout; hitCount++; status = 'hit';
+          } else { status = 'miss'; }
+        } else if (betType === 'exacta') {
+          const match = (rec.umaren || []).find(u => {
+            const ns = u.nums || [];
+            return ns.includes(b.num1) && ns.includes(b.num2);
+          });
+          if (match) {
+            payout = Math.floor((match.payout || 0) * amount / 100);
+            totalReturn += payout; hitCount++; status = 'hit';
+          } else { status = 'miss'; }
+        } else {
+          const rank1 = typeof rec.rank1 === 'object' ? rec.rank1.num : rec.rank1;
+          if (b.num === rank1) {
+            payout = Math.floor((rec.tan_payout || 0) * amount / 100);
+            totalReturn += payout; hitCount++; status = 'hit';
+          } else { status = 'miss'; }
+        }
       }
-      rows.push({ date: p.date, venue: p.venue, raceNum: p.raceNum, num: b.num, ev: b.ev, odds: b.odds, amount, status, payout });
+      rows.push({ date: p.date, venue: p.venue, raceNum: p.raceNum,
+        betType, num: b.num, num1: b.num1, num2: b.num2,
+        ev: b.ev, odds: b.odds, amount, status, payout });
     }
   }
 
@@ -3955,12 +3980,18 @@ function _renderPhData(el, today, ymLabel) {
     const icon = r.status === 'hit' ? '✅' : r.status === 'miss' ? '✗' : '⏳';
     const iconColor = r.status === 'hit' ? 'var(--green)' : r.status === 'pending' ? 'var(--amber)' : 'var(--text3)';
     const payoutHtml = r.status === 'hit' ? `<div style="font-size:13px;font-weight:700;color:var(--green)">+${r.payout.toLocaleString()}円</div>` : '';
+    const isCombo = r.betType === 'wide' || r.betType === 'exacta';
+    const betLabel = r.betType === 'wide' ? 'ワイド' : r.betType === 'exacta' ? '馬連' : '';
+    const numStr = isCombo ? `${r.num1}-${r.num2}番 <span style="font-size:11px;color:var(--text3)">${betLabel}</span>` : `${r.num}番`;
+    const subStr = isCombo
+      ? `${betLabel} / ${r.amount.toLocaleString()}円`
+      : `EV${r.ev} / 推定${r.odds}倍 / ${r.amount.toLocaleString()}円`;
     html += `
       <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)">
         <div style="font-size:18px;width:22px;text-align:center;flex-shrink:0;color:${iconColor}">${icon}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:13px;font-weight:600">${showDate && r.date ? r.date.slice(5) + ' ' : ''}${r.venue} ${r.raceNum} <span style="font-family:'DM Mono',monospace;color:var(--gold);font-size:14px">${r.num}番</span></div>
-          <div style="font-size:11px;color:var(--text3)">EV${r.ev} / 推定${r.odds}倍 / ${r.amount.toLocaleString()}円</div>
+          <div style="font-size:13px;font-weight:600">${showDate && r.date ? r.date.slice(5) + ' ' : ''}${r.venue} ${r.raceNum} <span style="font-family:'DM Mono',monospace;color:var(--gold);font-size:14px">${numStr}</span></div>
+          <div style="font-size:11px;color:var(--text3)">${subStr}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">${payoutHtml}</div>
       </div>`;
