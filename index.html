@@ -1,8 +1,12 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.14.2
+  v2026.06.14.3
 
   変更履歴:
+    v2026.06.14.3 - バグ修正4件: 直近レース自動選択後に選択がクリアされる問題修正（race_history取得後に選択維持）、
+                    オッズ反映・結果表示ボタンがオッズタブに飛ぶ問題修正（直接calcAll→結果タブへ遷移）、
+                    購入履歴に日付セレクタ追加（当月の過去日も閲覧可能に）、
+                    パフォーマンス指標をfetchRaceList時に自動更新（GitHubから読込不要に）。
     v2026.06.14.2 - 8項目PWA改修: 設定タブ読込時自動レース選択、ケリー基準UI削除、オッズ反映ボタン統合、
                     コピーボタン削除、結果保存セクション削除、購入履歴月選択UI追加、単複推奨削除、
                     JRA/地方個別設定をlocalStorageに保存・読込するよう修正。
@@ -201,7 +205,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -832,7 +836,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.3</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -915,10 +919,16 @@ textarea:focus{border-color:var(--gold)}
           🏆 中央
         </button>
       </div>
-      <div style="margin-bottom:10px">
+      <div style="margin-bottom:8px">
         <select id="ph-month-select" onchange="loadPurchaseHistory(_purchaseType)"
           style="width:100%;height:36px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:13px;font-family:inherit">
           <option value="">読み込み中...</option>
+        </select>
+      </div>
+      <div id="ph-date-wrap" style="margin-bottom:10px;display:none">
+        <select id="ph-date-select" onchange="reRenderPhData()"
+          style="width:100%;height:36px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:13px;font-family:inherit">
+          <option value="">全日付</option>
         </select>
       </div>
       <div id="purchase-history-content">
@@ -1293,6 +1303,32 @@ async function saveSoftmaxSettings() {
   onRaceChange(); // 再計算
 }
 
+function updatePerfPanel(perfLocal, perfJra) {
+  const fmtOos = (p) => {
+    if(p.oos_roi == null) return 'OOS: データ不足';
+    const c = p.oos_roi >= 100 ? '#4caf50' : '#e57373';
+    return `<span style="color:${c}">OOS: ${p.oos_roi}%</span> (${p.oos_bets ?? '--'}R/${p.oos_days ?? '--'}日)`;
+  };
+  const fmtDD = (p) => p.max_drawdown != null ? `MaxDD: ${p.max_drawdown}%` : 'MaxDD: --';
+  const fmtStreak = (p) => p.max_consecutive_loss != null ? `最大連敗: ${p.max_consecutive_loss}回` : '最大連敗: --';
+  const roiColor = (v) => v >= 150 ? '#4caf50' : v >= 100 ? '#8bc34a' : '#e57373';
+  const setText = (id, html) => { const el=document.getElementById(id); if(el) el.innerHTML=html; };
+  if(perfLocal.is_roi != null) {
+    setText('perf-local-is-roi', `<span style="color:${roiColor(perfLocal.is_roi)}">IS-ROI: ${perfLocal.is_roi}%</span> (${perfLocal.bets ?? '--'}R)`);
+    setText('perf-local-oos-roi', fmtOos(perfLocal));
+    setText('perf-local-dd', fmtDD(perfLocal));
+    setText('perf-local-streak', fmtStreak(perfLocal));
+    setText('perf-local-updated', perfLocal.updated_at ? `更新: ${perfLocal.updated_at}` : '');
+  }
+  if(perfJra.is_roi != null) {
+    setText('perf-jra-is-roi', `<span style="color:${roiColor(perfJra.is_roi)}">IS-ROI: ${perfJra.is_roi}%</span> (${perfJra.bets ?? '--'}R)`);
+    setText('perf-jra-oos-roi', fmtOos(perfJra));
+    setText('perf-jra-dd', fmtDD(perfJra));
+    setText('perf-jra-streak', fmtStreak(perfJra));
+    setText('perf-jra-updated', perfJra.updated_at ? `更新: ${perfJra.updated_at}` : '');
+  }
+}
+
 async function loadSoftmaxFromGithub() {
   const statusEl = document.getElementById('sm-save-status');
   const currentEl = document.getElementById('sm-current');
@@ -1492,32 +1528,7 @@ async function loadSoftmaxFromGithub() {
     if((slocal.max_bets ?? 0) > 0) localStorage.setItem('local_max_bets', String(slocal.max_bets)); else localStorage.removeItem('local_max_bets');
 
     // 投資指標パネル更新
-    const perfLocal = data._perf_local || {};
-    const perfJra   = data._perf_jra   || {};
-    const fmtRoi = (v) => v != null ? `${v}%` : '--';
-    const fmtOos = (p) => {
-      if(p.oos_roi == null) return 'OOS: データ不足';
-      const c = p.oos_roi >= 100 ? '#4caf50' : '#e57373';
-      return `<span style="color:${c}">OOS: ${p.oos_roi}%</span> (${p.oos_bets ?? '--'}R/${p.oos_days ?? '--'}日)`;
-    };
-    const fmtDD = (p) => p.max_drawdown != null ? `MaxDD: ${p.max_drawdown}%` : 'MaxDD: --';
-    const fmtStreak = (p) => p.max_consecutive_loss != null ? `最大連敗: ${p.max_consecutive_loss}回` : '最大連敗: --';
-    const roiColor = (v) => v >= 150 ? '#4caf50' : v >= 100 ? '#8bc34a' : '#e57373';
-    const setText = (id, html) => { const el=document.getElementById(id); if(el) el.innerHTML=html; };
-    if(perfLocal.is_roi != null) {
-      setText('perf-local-is-roi', `<span style="color:${roiColor(perfLocal.is_roi)}">IS-ROI: ${perfLocal.is_roi}%</span> (${perfLocal.bets ?? '--'}R)`);
-      setText('perf-local-oos-roi', fmtOos(perfLocal));
-      setText('perf-local-dd', fmtDD(perfLocal));
-      setText('perf-local-streak', fmtStreak(perfLocal));
-      setText('perf-local-updated', perfLocal.updated_at ? `更新: ${perfLocal.updated_at}` : '');
-    }
-    if(perfJra.is_roi != null) {
-      setText('perf-jra-is-roi', `<span style="color:${roiColor(perfJra.is_roi)}">IS-ROI: ${perfJra.is_roi}%</span> (${perfJra.bets ?? '--'}R)`);
-      setText('perf-jra-oos-roi', fmtOos(perfJra));
-      setText('perf-jra-dd', fmtDD(perfJra));
-      setText('perf-jra-streak', fmtStreak(perfJra));
-      setText('perf-jra-updated', perfJra.updated_at ? `更新: ${perfJra.updated_at}` : '');
-    }
+    updatePerfPanel(data._perf_local || {}, data._perf_jra || {});
 
     const lines = [
       `温度T: ${T}　最小指数: ${minP}%　勝率フィルター: ${winrateFilter > 0 ? winrateFilter+'%以上' : 'なし'}`,
@@ -2374,6 +2385,9 @@ async function fetchRaceList(){
     document.getElementById('date-area').style.display = 'block';
     st.innerHTML = `<div class="status st-ok">✓ ${dates.length}日分のデータを取得しました</div>`;
 
+    // パフォーマンス指標パネルを自動更新
+    updatePerfPanel(data._perf_local || {}, data._perf_jra || {});
+
     // 読み込み後に直近レースを自動選択
     selectNearestRace(true);
 
@@ -2388,7 +2402,15 @@ async function fetchRaceList(){
         const bytes2 = Uint8Array.from(raw2, c => c.charCodeAt(0));
         ghHistory = JSON.parse(new TextDecoder('utf-8').decode(bytes2)) || [];
         const ds2 = document.getElementById('date-select');
-        if(ds2 && ds2.value) onDateChange();
+        if(ds2 && ds2.value) {
+          const savedRaceIdx = document.getElementById('race-select')?.value || '';
+          onDateChange();
+          // バッジ更新後も選択済みレースを維持
+          if(savedRaceIdx) setTimeout(() => {
+            const rs = document.getElementById('race-select');
+            if(rs) rs.value = savedRaceIdx;
+          }, 50);
+        }
       })
       .catch(() => {});
   } catch(e){
@@ -3068,12 +3090,12 @@ function clearOdds(){
 }
 
 
-// オッズ反映・結果表示：オッズ取得済みなら結果表示、なければオッズ入力へ
+// オッズ反映・結果表示：オッズ取得済みなら直接計算して結果タブへ、なければオッズ入力へ
 function goToOddsOrResult(){
   if(horses && horses.some(h => h.tanOdds)){
-    goToOddsWithData();
+    calcAll(); // 直接計算→結果タブへ自動遷移
   } else {
-    goToOddsClear();
+    goToOddsClear(); // オッズ未取得→オッズ入力タブへ
   }
 }
 
@@ -3744,6 +3766,8 @@ function switchPurchaseType(type) {
   loadPurchaseHistory(type);
 }
 
+let _phCachedPurchases = [], _phCachedResultsMap = {}, _phCachedType = '', _phCachedYm = '';
+
 async function loadPurchaseHistory(type) {
   if (!type) type = _purchaseType || 'local';
   _purchaseType = type;
@@ -3754,113 +3778,146 @@ async function loadPurchaseHistory(type) {
     el.innerHTML = '<div class="msg">GitHubトークンが未設定です<br><small>設定タブ→管理者設定でトークンを保存してください</small></div>';
     return;
   }
-  el.innerHTML = '<div class="msg">🔄 読み込み中...</div>';
 
   const today = getTodayJST();
   const sel = document.getElementById('ph-month-select');
   const ym = (sel && sel.value) ? sel.value : today.slice(0, 7).replace('-', '_');
-  const curYm = today.slice(0, 7).replace('-', '_');
-  const isCurMonth = ym === curYm;
-  const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
   const isJra = type === 'jra';
+  const ymLabel = ym.replace('_', '年') + '月';
+
+  // キャッシュ済みなら再フェッチ不要
+  if (_phCachedType === type && _phCachedYm === ym) {
+    _renderPhData(el, today, ymLabel);
+    return;
+  }
+
+  el.innerHTML = '<div class="msg">🔄 読み込み中...</div>';
+  const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
   const logFile = isJra ? `purchase_log_jra_${ym}.json` : `purchase_log_${ym}.json`;
   const histFile = isJra ? `race_history_jra_${ym}.json` : `race_history_${ym}.json`;
   const label = isJra ? '中央（IPAT）' : '地方';
-  const ymLabel = ym.replace('_', '年') + '月';
 
   try {
-    const logUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${logFile}`;
-    const logRes = await fetch(logUrl, { headers });
-    if (!logRes.ok) {
-      el.innerHTML = `<div class="msg">${label}の購入データなし（${ymLabel}）</div>`;
-      return;
-    }
-    const logJson = await logRes.json();
+    const logRes = await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${logFile}`, { headers });
+    if (!logRes.ok) { el.innerHTML = `<div class="msg">${label}の購入データなし（${ymLabel}）</div>`; return; }
     const _dec = s => { const b = Uint8Array.from(atob(s.replace(/\n/g,'')),c=>c.charCodeAt(0)); return new TextDecoder().decode(b); };
-    const allPurchases = JSON.parse(_dec(logJson.content));
-    const todayPurchases = isCurMonth ? allPurchases.filter(p => p.date === today) : allPurchases;
-    if (!todayPurchases.length) {
-      el.innerHTML = `<div class="msg">${label}：${isCurMonth ? '本日の' : ymLabel + 'の'}購入なし</div>`;
-      return;
-    }
+    const allPurchases = JSON.parse(_dec((await logRes.json()).content));
 
-    const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${histFile}`;
-    const histRes = await fetch(histUrl, { headers });
+    const histRes = await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${histFile}`, { headers });
     const resultsMap = {};
     if (histRes.ok) {
-      const histJson = await histRes.json();
-      const hist = JSON.parse(_dec(histJson.content));
-      const relevantHist = isCurMonth ? hist.filter(r => r.date === today) : hist;
-      relevantHist.forEach(r => {
+      JSON.parse(_dec((await histRes.json()).content)).forEach(r => {
         resultsMap[`${r.date}_${r.venue}_${r.raceNum}`] = r;
       });
     }
 
-    let totalBet = 0, totalReturn = 0, hitCount = 0;
-    const rows = [];
-    todayPurchases.sort((a, b) => (a.date||'').localeCompare(b.date||'') || a.venue.localeCompare(b.venue) || a.raceNum.localeCompare(b.raceNum));
-    for (const p of todayPurchases) {
-      const rec = resultsMap[`${p.date}_${p.venue}_${p.raceNum}`];
-      for (const b of (p.bets || [])) {
-        const amount = b.amount || 0;
-        totalBet += amount;
-        let status = 'pending', payout = 0;
-        if (rec) {
-          const rank1 = typeof rec.rank1 === 'object' ? rec.rank1.num : rec.rank1;
-          if (b.num === rank1) {
-            payout = Math.floor((rec.tan_payout || 0) * amount / 100);
-            totalReturn += payout;
-            hitCount++;
-            status = 'hit';
-          } else {
-            status = 'miss';
-          }
-        }
-        rows.push({ date: p.date, venue: p.venue, raceNum: p.raceNum, num: b.num, ev: b.ev, odds: b.odds, amount, status, payout });
-      }
+    _phCachedPurchases = allPurchases;
+    _phCachedResultsMap = resultsMap;
+    _phCachedType = type;
+    _phCachedYm = ym;
+
+    // 日付セレクタを日付ごとに更新
+    const dates = [...new Set(allPurchases.map(p => p.date).filter(Boolean))].sort().reverse();
+    const dateSel = document.getElementById('ph-date-select');
+    const dateWrap = document.getElementById('ph-date-wrap');
+    if (dateSel && dateWrap) {
+      dateWrap.style.display = '';
+      const prevVal = dateSel.value;
+      dateSel.innerHTML = `<option value="">全日付（${dates.length}日分）</option>`;
+      dates.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d; opt.textContent = d;
+        if (d === prevVal || (!prevVal && d === today)) opt.selected = true;
+        dateSel.appendChild(opt);
+      });
     }
 
-    const roi = totalBet > 0 ? (totalReturn / totalBet * 100).toFixed(1) : '0.0';
-    const roiColor = parseFloat(roi) >= 100 ? 'var(--green)' : '#ef4444';
-    const pendingCount = rows.filter(r => r.status === 'pending').length;
-
-    let html = `
-      <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:14px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${isCurMonth ? today : ymLabel} ${label} の購入結果${pendingCount ? ` <span style="color:var(--amber)">（⏳${pendingCount}R 結果待ち）</span>` : ''}</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:10px">
-          <div><div style="font-size:10px;color:var(--text3)">購入</div><div style="font-size:20px;font-weight:700">${rows.length}R</div></div>
-          <div><div style="font-size:10px;color:var(--text3)">的中</div><div style="font-size:20px;font-weight:700;color:var(--green)">${hitCount}R</div></div>
-          <div><div style="font-size:10px;color:var(--text3)">ROI</div><div style="font-size:20px;font-weight:700;color:${roiColor}">${roi}%</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;text-align:center">
-          <div style="background:var(--bg3);border-radius:6px;padding:6px"><div style="color:var(--text3)">投資</div><div style="font-weight:600">${totalBet.toLocaleString()}円</div></div>
-          <div style="background:var(--bg3);border-radius:6px;padding:6px"><div style="color:var(--text3)">回収</div><div style="font-weight:600">${totalReturn.toLocaleString()}円</div></div>
-        </div>
-      </div>
-      <div>`;
-
-    for (const r of rows) {
-      const icon = r.status === 'hit' ? '✅' : r.status === 'miss' ? '✗' : '⏳';
-      const iconColor = r.status === 'hit' ? 'var(--green)' : r.status === 'pending' ? 'var(--amber)' : 'var(--text3)';
-      const payoutHtml = r.status === 'hit'
-        ? `<div style="font-size:13px;font-weight:700;color:var(--green)">+${r.payout.toLocaleString()}円</div>`
-        : '';
-      html += `
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)">
-          <div style="font-size:18px;width:22px;text-align:center;flex-shrink:0;color:${iconColor}">${icon}</div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:600">${!isCurMonth && r.date ? r.date.slice(5) + ' ' : ''}${r.venue} ${r.raceNum} <span style="font-family:'DM Mono',monospace;color:var(--gold);font-size:14px">${r.num}番</span></div>
-            <div style="font-size:11px;color:var(--text3)">EV${r.ev} / 推定${r.odds}倍 / ${r.amount.toLocaleString()}円</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0">${payoutHtml}</div>
-        </div>`;
-    }
-    html += `</div>
-      <button onclick="loadPurchaseHistory('${type}')" style="width:100%;height:38px;margin-top:14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:12px;font-family:inherit;cursor:pointer">🔄 再読み込み</button>`;
-    el.innerHTML = html;
+    _renderPhData(el, today, ymLabel);
   } catch (e) {
     el.innerHTML = `<div class="msg">エラー: ${e.message}</div>`;
   }
+}
+
+function reRenderPhData() {
+  const el = document.getElementById('purchase-history-content');
+  if (!el) return;
+  const today = getTodayJST();
+  const sel = document.getElementById('ph-month-select');
+  const ym = (sel && sel.value) ? sel.value : today.slice(0, 7).replace('-', '_');
+  _renderPhData(el, today, ym.replace('_', '年') + '月');
+}
+
+function _renderPhData(el, today, ymLabel) {
+  const dateSel = document.getElementById('ph-date-select');
+  const filterDate = dateSel ? dateSel.value : '';
+  const label = _phCachedType === 'jra' ? '中央（IPAT）' : '地方';
+  const purchases = filterDate
+    ? _phCachedPurchases.filter(p => p.date === filterDate)
+    : _phCachedPurchases;
+
+  if (!purchases.length) {
+    el.innerHTML = `<div class="msg">${label}：${filterDate || ymLabel}の購入なし</div>`;
+    return;
+  }
+
+  let totalBet = 0, totalReturn = 0, hitCount = 0;
+  const rows = [];
+  purchases.sort((a, b) => (a.date||'').localeCompare(b.date||'') || a.venue.localeCompare(b.venue) || a.raceNum.localeCompare(b.raceNum));
+  const showDate = !filterDate;
+  for (const p of purchases) {
+    const rec = _phCachedResultsMap[`${p.date}_${p.venue}_${p.raceNum}`];
+    for (const b of (p.bets || [])) {
+      const amount = b.amount || 0;
+      totalBet += amount;
+      let status = 'pending', payout = 0;
+      if (rec) {
+        const rank1 = typeof rec.rank1 === 'object' ? rec.rank1.num : rec.rank1;
+        if (b.num === rank1) {
+          payout = Math.floor((rec.tan_payout || 0) * amount / 100);
+          totalReturn += payout; hitCount++; status = 'hit';
+        } else { status = 'miss'; }
+      }
+      rows.push({ date: p.date, venue: p.venue, raceNum: p.raceNum, num: b.num, ev: b.ev, odds: b.odds, amount, status, payout });
+    }
+  }
+
+  const roi = totalBet > 0 ? (totalReturn / totalBet * 100).toFixed(1) : '0.0';
+  const roiColor = parseFloat(roi) >= 100 ? 'var(--green)' : '#ef4444';
+  const pendingCount = rows.filter(r => r.status === 'pending').length;
+  const dispLabel = filterDate || ymLabel;
+
+  let html = `
+    <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${dispLabel} ${label} の購入結果${pendingCount ? ` <span style="color:var(--amber)">（⏳${pendingCount}R 結果待ち）</span>` : ''}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:10px">
+        <div><div style="font-size:10px;color:var(--text3)">購入</div><div style="font-size:20px;font-weight:700">${rows.length}R</div></div>
+        <div><div style="font-size:10px;color:var(--text3)">的中</div><div style="font-size:20px;font-weight:700;color:var(--green)">${hitCount}R</div></div>
+        <div><div style="font-size:10px;color:var(--text3)">ROI</div><div style="font-size:20px;font-weight:700;color:${roiColor}">${roi}%</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;text-align:center">
+        <div style="background:var(--bg3);border-radius:6px;padding:6px"><div style="color:var(--text3)">投資</div><div style="font-weight:600">${totalBet.toLocaleString()}円</div></div>
+        <div style="background:var(--bg3);border-radius:6px;padding:6px"><div style="color:var(--text3)">回収</div><div style="font-weight:600">${totalReturn.toLocaleString()}円</div></div>
+      </div>
+    </div>
+    <div>`;
+
+  for (const r of rows) {
+    const icon = r.status === 'hit' ? '✅' : r.status === 'miss' ? '✗' : '⏳';
+    const iconColor = r.status === 'hit' ? 'var(--green)' : r.status === 'pending' ? 'var(--amber)' : 'var(--text3)';
+    const payoutHtml = r.status === 'hit' ? `<div style="font-size:13px;font-weight:700;color:var(--green)">+${r.payout.toLocaleString()}円</div>` : '';
+    html += `
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)">
+        <div style="font-size:18px;width:22px;text-align:center;flex-shrink:0;color:${iconColor}">${icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600">${showDate && r.date ? r.date.slice(5) + ' ' : ''}${r.venue} ${r.raceNum} <span style="font-family:'DM Mono',monospace;color:var(--gold);font-size:14px">${r.num}番</span></div>
+          <div style="font-size:11px;color:var(--text3)">EV${r.ev} / 推定${r.odds}倍 / ${r.amount.toLocaleString()}円</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">${payoutHtml}</div>
+      </div>`;
+  }
+  html += `</div>
+    <button onclick="_phCachedYm='';loadPurchaseHistory(_purchaseType)" style="width:100%;height:38px;margin-top:14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:12px;font-family:inherit;cursor:pointer">🔄 再読み込み</button>`;
+  el.innerHTML = html;
 }
 
 function switchSharedSubtab(tab) {
