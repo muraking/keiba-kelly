@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.13.3
+  v2026.06.13.4
 
   変更履歴:
+    v2026.06.13.4 - fetchRaceList: privateリポジトリ失敗時に公開リポジトリへフォールバック（非管理者対応）
+                    saveToGitHub: 保存後にkeiba-kelly（公開）へ自動同期（syncToPublicRepo追加）
     v2026.06.13.3 - loadTimeChangeList: meta未定義によるエラー修正（fetchGHContent withSha=trueに変更）
     v2026.06.13.2 - startAutoRefresh: raw.githubusercontent.com→GitHub API+トークン認証に変更（privateリポジトリ対応）
     v2026.06.13.1 - nowJSTIso()追加: updated/savedAtタイムスタンプをJST形式に統一
@@ -193,7 +195,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.13.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.13.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -788,7 +790,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.13.3</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.13.4</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2046,6 +2048,7 @@ async function hashStr(str){
 
 const GH_USER = 'muraking';
 const GH_REPO = 'keiba-kelly-private';
+const GH_REPO_PUBLIC = 'keiba-kelly';
 const GH_BRANCH = 'main';
 const GH_FILE = 'data/indices.json';
 const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
@@ -2107,6 +2110,22 @@ function saveToken(){
 
 function loadToken(){
   return localStorage.getItem('kk_gh_token') || '';
+}
+
+// indices.json を keiba-kelly（公開）へ同期
+async function syncToPublicRepo(jsonStr, token) {
+  const pubApi = `https://api.github.com/repos/${GH_USER}/${GH_REPO_PUBLIC}/contents/${GH_FILE}`;
+  const headers = { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+  try {
+    const r = await fetch(pubApi, { headers, cache: 'no-store' });
+    const sha = r.ok ? (await r.json()).sha : null;
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+    const body = { message: `sync indices`, content: encoded, branch: GH_BRANCH };
+    if (sha) body.sha = sha;
+    await fetch(pubApi, { method: 'PUT', headers, body: JSON.stringify(body) });
+  } catch (e) {
+    console.warn('公開リポジトリへの同期失敗:', e);
+  }
 }
 
 // 現在のJSONをGitHubから取得（SHA付き）
@@ -2172,6 +2191,8 @@ async function saveToGitHub(){
       const dateCount = Object.keys(data.dates).length;
       st.innerHTML = `<div class="status st-ok">✓ ${targetDate} に ${allRaces.length}レースを保存しました（計${dateCount}日分）</div>`;
       document.getElementById('admin-raw').value = '';
+      // 公開リポジトリへ同期（非管理者が参照できるよう）
+      syncToPublicRepo(json, token).catch(() => {});
     } else {
       const err = await res.json();
       st.innerHTML = `<div class="status st-err">エラー: ${err.message}</div>`;
@@ -2256,8 +2277,16 @@ async function fetchRaceList(){
   try {
     // GitHub API経由で取得（キャッシュなし）
     const token = loadToken();
-    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-    const data = await fetchGHContent(apiUrl, token);
+    let data;
+    try {
+      const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+      data = await fetchGHContent(apiUrl, token);
+    } catch(prErr) {
+      // プライベートリポジトリ取得失敗 → 公開リポジトリへフォールバック
+      console.warn('プライベートリポジトリ取得失敗、公開リポジトリに切り替え:', prErr.message);
+      const pubUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO_PUBLIC}/contents/${GH_FILE}`;
+      data = await fetchGHContent(pubUrl, null);
+    }
 
     // 新旧フォーマット対応
     if(data.dates){
