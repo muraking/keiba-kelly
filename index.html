@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.14.1
+  v2026.06.14.2
 
   変更履歴:
+    v2026.06.14.2 - 8項目PWA改修: 設定タブ読込時自動レース選択、ケリー基準UI削除、オッズ反映ボタン統合、
+                    コピーボタン削除、結果保存セクション削除、購入履歴月選択UI追加、単複推奨削除、
+                    JRA/地方個別設定をlocalStorageに保存・読込するよう修正。
     v2026.06.14.1 - 馬連/ワイド購入方式を拡張: フォーメーション（従来）に加え推奨ボックス・勝率ボックスを追加。
                     updateComboMethodUI()でセレクト切り替えUI、exacta_method/exacta_box_n等をGitHub設定に保存。
     v2026.06.13.5 - 投資指標パネル追加: OOS-ROI/MaxDD/最大連敗を設定画面に表示（_perf_local/_perf_jra から読込）
@@ -198,7 +201,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -273,26 +276,6 @@ textarea:focus{border-color:var(--gold)}
           <input type="number" id="max-invest" placeholder="制限なし" inputmode="numeric" style="height:40px">
         </div>
       </div>
-      <div class="field" style="margin-top:10px;margin-bottom:0">
-        <label>ケリー基準</label>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px">
-          <button id="kelly-half" class="kelly-btn kelly-on" onclick="setKelly('half')">
-            <div style="font-size:13px">ハーフ</div>
-            <div style="font-size:10px;margin-top:2px">×1/2</div>
-            <div id="ki-half" style="font-size:11px;margin-top:2px">✓</div>
-          </button>
-          <button id="kelly-quarter" class="kelly-btn" onclick="setKelly('quarter')">
-            <div style="font-size:13px">クォーター</div>
-            <div style="font-size:10px;margin-top:2px">×1/4</div>
-            <div id="ki-quarter" style="font-size:11px;margin-top:2px;visibility:hidden">✓</div>
-          </button>
-          <button id="kelly-full" class="kelly-btn" onclick="setKelly('full')">
-            <div style="font-size:13px">フル</div>
-            <div style="font-size:10px;margin-top:2px">×1/1</div>
-            <div id="ki-full" style="font-size:11px;margin-top:2px;visibility:hidden">✓</div>
-          </button>
-        </div>
-      </div>
     </div>
 
     <div style="margin-bottom:20px">
@@ -334,12 +317,9 @@ textarea:focus{border-color:var(--gold)}
         </button>
         <div id="fetch-odds-status" style="margin-top:6px;font-size:11px"></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <button class="btn btn-green" onclick="goToOddsWithData()">
-          📊 オッズ反映
-        </button>
-        <button class="btn btn-outline" onclick="goToOddsClear()">
-          ✏️ オッズ入力
+      <div style="margin-bottom:12px">
+        <button class="btn btn-green" style="width:100%" onclick="goToOddsOrResult()">
+          📊 オッズ反映・結果表示
         </button>
       </div>
       <div id="horse-list"></div>
@@ -852,7 +832,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.2</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -925,7 +905,7 @@ textarea:focus{border-color:var(--gold)}
 
     <!-- 購入履歴パネル -->
     <div id="result-subtab-purchase-panel" style="display:none">
-      <div style="display:flex;background:var(--bg3);border-radius:var(--r);padding:2px;gap:2px;margin-bottom:10px">
+      <div style="display:flex;background:var(--bg3);border-radius:var(--r);padding:2px;gap:2px;margin-bottom:8px">
         <button id="ph-local-btn" onclick="switchPurchaseType('local')"
           style="flex:1;padding:5px;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:600;background:var(--bg2);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.1)">
           🏟 地方
@@ -934,6 +914,12 @@ textarea:focus{border-color:var(--gold)}
           style="flex:1;padding:5px;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;background:transparent;color:var(--text3)">
           🏆 中央
         </button>
+      </div>
+      <div style="margin-bottom:10px">
+        <select id="ph-month-select" onchange="loadPurchaseHistory(_purchaseType)"
+          style="width:100%;height:36px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:13px;font-family:inherit">
+          <option value="">読み込み中...</option>
+        </select>
       </div>
       <div id="purchase-history-content">
         <div class="msg">「購入履歴」タブを選択すると読み込みます</div>
@@ -1203,6 +1189,15 @@ async function saveSoftmaxSettings() {
   localStorage.setItem('notify_bets', String(notifyBets));
   localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
   localStorage.setItem('sm_winrate_filter', String(winrateFilter));
+  // JRA/地方個別設定をlocalStorageにも保存
+  if(jraEvMin !== null) localStorage.setItem('jra_ev_min', String(jraEvMin)); else localStorage.removeItem('jra_ev_min');
+  if(jraOddsMax !== null) localStorage.setItem('jra_odds_max', String(jraOddsMax)); else localStorage.removeItem('jra_odds_max');
+  localStorage.setItem('jra_winrate_filter', String(jraWinrateFilter));
+  if(jraMaxBets > 0) localStorage.setItem('jra_max_bets', String(jraMaxBets)); else localStorage.removeItem('jra_max_bets');
+  if(localEvMin !== null) localStorage.setItem('local_ev_min', String(localEvMin)); else localStorage.removeItem('local_ev_min');
+  if(localOddsMax !== null) localStorage.setItem('local_odds_max', String(localOddsMax)); else localStorage.removeItem('local_odds_max');
+  localStorage.setItem('local_winrate_filter', String(localWinrateFilter));
+  if(localMaxBets > 0) localStorage.setItem('local_max_bets', String(localMaxBets)); else localStorage.removeItem('local_max_bets');
 
   // GitHubにも保存（管理者のみ）
   const token = loadToken();
@@ -1486,6 +1481,15 @@ async function loadSoftmaxFromGithub() {
     setField('local-winrate-filter', slocal.sm_winrate_filter ?? 0);
     const localMaxBetsEl = document.getElementById('local-max-bets');
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
+    // GitHubから読み込んだJRA/地方個別設定をlocalStorageにも反映
+    if(sjra.ev_min != null) localStorage.setItem('jra_ev_min', String(sjra.ev_min)); else localStorage.removeItem('jra_ev_min');
+    if(sjra.odds_max != null) localStorage.setItem('jra_odds_max', String(sjra.odds_max)); else localStorage.removeItem('jra_odds_max');
+    localStorage.setItem('jra_winrate_filter', String(sjra.sm_winrate_filter ?? 0));
+    if((sjra.max_bets ?? 0) > 0) localStorage.setItem('jra_max_bets', String(sjra.max_bets)); else localStorage.removeItem('jra_max_bets');
+    if(slocal.ev_min != null) localStorage.setItem('local_ev_min', String(slocal.ev_min)); else localStorage.removeItem('local_ev_min');
+    if(slocal.odds_max != null) localStorage.setItem('local_odds_max', String(slocal.odds_max)); else localStorage.removeItem('local_odds_max');
+    localStorage.setItem('local_winrate_filter', String(slocal.sm_winrate_filter ?? 0));
+    if((slocal.max_bets ?? 0) > 0) localStorage.setItem('local_max_bets', String(slocal.max_bets)); else localStorage.removeItem('local_max_bets');
 
     // 投資指標パネル更新
     const perfLocal = data._perf_local || {};
@@ -1668,6 +1672,16 @@ function loadSoftmaxSettings() {
   const ckEl2 = document.getElementById('combined-kelly');
   const ckVal = localStorage.getItem('combined_kelly') === '1';
   if(ckEl2){ ckEl2.checked = ckVal; document.getElementById('combined-kelly-label').textContent = ckVal ? 'ON' : 'OFF'; }
+  // JRA/地方個別設定をlocalStorageから読込
+  const _sf = (id, key) => { const el = document.getElementById(id); if(el) el.value = localStorage.getItem(key) ?? ''; };
+  _sf('jra-ev-min', 'jra_ev_min');
+  _sf('jra-odds-max', 'jra_odds_max');
+  const jraWfEl = document.getElementById('jra-winrate-filter'); if(jraWfEl) jraWfEl.value = localStorage.getItem('jra_winrate_filter') || '0';
+  const jraMbEl = document.getElementById('jra-max-bets'); if(jraMbEl) jraMbEl.value = localStorage.getItem('jra_max_bets') || '0';
+  _sf('local-ev-min', 'local_ev_min');
+  _sf('local-odds-max', 'local_odds_max');
+  const localWfEl = document.getElementById('local-winrate-filter'); if(localWfEl) localWfEl.value = localStorage.getItem('local_winrate_filter') || '0';
+  const localMbEl = document.getElementById('local-max-bets'); if(localMbEl) localMbEl.value = localStorage.getItem('local_max_bets') || '0';
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -1776,81 +1790,7 @@ function calcAll(){
   const raceClassLabel = (typeof currentRaceClass!=='undefined'&&currentRaceClass)?` ${currentRaceClass}`:'';
   const startTimeLabel = (typeof currentStartTime!=='undefined'&&currentStartTime)?` 発走${currentStartTime}`:'';
 
-  // 単複推奨パターンを計算（勝率上位5頭から期待値最高の1頭）
-  const top5byNorm = [...horses].filter(h=>h.tanOdds).sort((a,b)=>b.norm-a.norm).slice(0,5);
-  const tanfukuPick = top5byNorm.filter(h=>h.tanEV&&h.tanEV>100).sort((a,b)=>b.tanEV-a.tanEV)[0]||null;
-  let tanfukuHtml = '';
-  if(tanfukuPick){
-    const tf = tanfukuPick;
-    const tfKf = halfKelly(tf.norm, tf.tanOdds);
-    const tfBet = tfKf>0?Math.max(100,Math.floor(fund*tfKf/100)*100):0;
-    const tfPayout = tfBet>0?Math.round(tfBet*tf.tanOdds):0;
-    // 複勝オッズがある場合
-    const tfFukuOdds = tf.fukuOdds||null;
-    const tfFukuKf = tfFukuOdds?halfKelly(tf.norm*1.5, tfFukuOdds):0;
-    const tfFukuBet = tfFukuKf>0?Math.max(100,Math.floor(fund*tfFukuKf/100)*100):0;
-    const tfTotal = tfBet + tfFukuBet;
-    tanfukuHtml = `
-      <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:12px">
-        <div style="padding:12px 14px;border-bottom:0.5px solid var(--border2)">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text3);margin-bottom:8px">単複推奨（勝率上位5頭中 期待値最高）</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:30px;height:30px;border-radius:50%;background:var(--bg3);color:var(--gold);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0">${tf.num}</div>
-            <div style="flex:1">
-              <div style="font-size:15px;font-weight:700;color:var(--text)">${tf.name}</div>
-              <div style="font-size:11px;color:var(--text2);margin-top:1px">正規化勝率 ${(tf.norm*100).toFixed(1)}%　単勝期待値 ${tf.tanEV.toFixed(0)}</div>
-            </div>
-          </div>
-        </div>
-        <table style="width:100%;border-collapse:collapse">
-          <thead>
-            <tr style="background:var(--bg3)">
-              <th style="padding:7px 14px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">券種</th>
-              <th style="padding:7px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">オッズ</th>
-              <th style="padding:7px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">掛け金</th>
-              <th style="padding:7px 14px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">払戻</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:0.5px solid var(--border)">
-              <td style="padding:10px 14px;font-size:13px;color:var(--text);font-weight:500">単勝</td>
-              <td style="padding:10px 10px;text-align:right;font-size:13px;color:var(--text2);font-family:'DM Mono',monospace">${tf.tanOdds}倍</td>
-              <td style="padding:10px 10px;text-align:right;font-size:14px;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">¥${tfBet.toLocaleString()}</td>
-              <td style="padding:10px 14px;text-align:right;font-size:13px;color:var(--text2);font-family:'DM Mono',monospace">¥${tfPayout.toLocaleString()}</td>
-            </tr>
-            <tr style="border-bottom:0.5px solid var(--border)">
-              <td style="padding:10px 14px;font-size:13px;color:var(--text);font-weight:500">複勝</td>
-              <td style="padding:8px 10px;text-align:right">
-                <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px">
-                  <input id="tf-fuku-input" type="number" step="0.1" min="1"
-                    value="${tfFukuOdds||''}"
-                    placeholder="入力"
-                    inputmode="decimal"
-                    style="width:64px;height:32px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:6px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;text-align:right;padding:0 6px"
-                    onchange="recalcTanfuku()" oninput="recalcTanfuku()">
-                  <span style="font-size:12px;color:var(--text3)">倍</span>
-                </div>
-              </td>
-              <td id="tf-fuku-bet" style="padding:10px 10px;text-align:right;font-size:14px;font-weight:700;color:var(--blue);font-family:'DM Mono',monospace">${tfFukuBet>0?'¥'+tfFukuBet.toLocaleString():'−'}</td>
-              <td id="tf-fuku-payout" style="padding:10px 14px;text-align:right;font-size:13px;color:var(--text2);font-family:'DM Mono',monospace">${tfFukuBet>0?'¥'+Math.round(tfFukuBet*tfFukuOdds).toLocaleString():'−'}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div style="padding:10px 14px;background:var(--bg3);display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:12px;color:var(--text2)">合計投資額</span>
-          <span id="tf-total" style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text)">¥${tfTotal.toLocaleString()}</span>
-        </div>
-      </div>`;
-  }
-
   let html=`<div class="race-tag" style="margin-bottom:10px">◎ ${rname}${raceClassLabel}${startTimeLabel}</div>`;
-
-  // モード切替タブ
-  html+=`<div class="seg" style="margin-bottom:14px">
-    <button class="seg-btn on" id="mode-kelly" onclick="switchResultMode('kelly')">ケリー買い目</button>
-    <button class="seg-btn" id="mode-tanfuku" onclick="switchResultMode('tanfuku')">単複推奨</button>
-  </div>
-  <div id="result-kelly">`;
 
   // ===== 賭け額計算（正確な順序で実行）=====
   // Step1: ケリー基準で初期賭け額を計算
@@ -2081,37 +2021,9 @@ function calcAll(){
     </tr>`;
   }
   html+=`</tbody></table></div>`;
-  html+=`<button onclick="copyResultText()" style="width:100%;margin-top:10px;padding:12px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><span>📋</span><span id="copy-btn-label">買い目＋期待値一覧をコピー</span></button>`;
-  html+=`</div>`; // close result-kelly
 
-  // 単複推奨セクション
-  html+=`<div id="result-tanfuku" style="display:none">`;
-  if(tanfukuPick){
-    html+=tanfukuHtml;
-  } else {
-    html+=`<div class="msg">勝率上位5頭に期待値100超の馬がありません</div>`;
-  }
-  html+=`</div>`;
-
-  // レース結果記録セクション
-  html += `<div style="margin-top:20px;padding:14px;background:var(--bg2);border-radius:var(--r2);border:0.5px solid var(--border2)">
-    <div class="sh" style="margin-bottom:10px">📊 レース結果を記録</div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">レース終了後に1着馬番とオッズを入力して保存（的中・外れ問わず記録推奨）</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1着馬番</div>
-        <input id="rec-horse-num" type="number" min="1" max="18" placeholder="1着の馬番"
-          style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">単勝払戻オッズ（1着）</div>
-        <input id="rec-win-odds" type="number" min="1" step="0.1" placeholder="例: 12.5"
-          style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-      </div>
-    </div>
-    <button onclick="saveRaceResult()" class="btn btn-outline" style="width:100%">💾 結果を保存</button>
-    <div id="rec-status" style="font-size:12px;text-align:center;margin-top:6px;min-height:16px"></div>
-  </div>`;
+  // レース結果記録（自動化済み）
+  html += `<div id="rec-status" style="font-size:12px;text-align:center;margin-top:6px;min-height:16px"></div>`;
   document.getElementById('res-content').innerHTML=html;
   document.getElementById('nb-result').classList.add('done');
   updateRaceNav();
@@ -2462,6 +2374,9 @@ async function fetchRaceList(){
     document.getElementById('date-area').style.display = 'block';
     st.innerHTML = `<div class="status st-ok">✓ ${dates.length}日分のデータを取得しました</div>`;
 
+    // 読み込み後に直近レースを自動選択
+    selectNearestRace(true);
+
     // race_historyをバックグラウンドで取得してセレクタに取込済みバッジを表示
     const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/race_history.json`;
     const _hdrs = token ? {'Authorization': `token ${token}`} : {};
@@ -2752,13 +2667,18 @@ window.addEventListener('load', ()=>{
   const saved = localStorage.getItem('kk_gh_token');
   const field = document.getElementById('gh-token');
   if(field && saved) field.placeholder = 'トークン保存済み（変更する場合のみ入力）';
+  // 設定タブ表示時に当日直近レースを自動読み込み
+  fetchRaceList();
 });
 
 
-// 直近レースを自動選択
-function selectNearestRace(){
+// 直近レースを自動選択（silent=trueのときアラート非表示）
+function selectNearestRace(silent=false){
+  const _st = document.getElementById('fetch-status');
+  const _warn = msg => { if(!silent) alert(msg); else if(_st) _st.innerHTML = `<div class="status st-warn">${msg}</div>`; };
+
   if(!ghData){
-    alert('先に「一覧を読み込む」を押してください');
+    _warn('先に「一覧を読み込む」を押してください');
     return;
   }
 
@@ -2775,12 +2695,12 @@ function selectNearestRace(){
     || dateKeys.find(d => d > todayStr)                // 今日以降
     || null;                                           // 今日のデータがなければ選択しない
   if(!targetDate){
-    alert('今日（' + todayStr + '）のレースデータが見つかりません。共有タブから今日の日付でレースを保存してください。');
+    _warn('今日（' + todayStr + '）のレースデータが見つかりません。共有タブから今日の日付でレースを保存してください。');
     return;
   }
 
   const races = ghData[targetDate].races || [];
-  if(!races.length){ alert('レースが見つかりません'); return; }
+  if(!races.length){ _warn('レースが見つかりません'); return; }
 
   // 各レースに発走分数を付与してソート
   const raceWithTime = races.map((race, originalIdx) => {
@@ -2791,7 +2711,7 @@ function selectNearestRace(){
     return { race, originalIdx, raceMin, diff };
   }).filter(Boolean);
 
-  if(!raceWithTime.length){ alert('発走時刻が設定されたレースがありません'); return; }
+  if(!raceWithTime.length){ _warn('発走時刻が設定されたレースがありません'); return; }
 
   // 選択優先順位:
   // 1. 現在時刻以降（未発走）のレースで最も近いもの
@@ -3076,14 +2996,6 @@ function stopAutoRefresh(){
 }
 
 
-function switchResultMode(mode){
-  document.getElementById('result-kelly').style.display = mode==='kelly'?'block':'none';
-  document.getElementById('result-tanfuku').style.display = mode==='tanfuku'?'block':'none';
-  document.getElementById('mode-kelly').classList.toggle('on', mode==='kelly');
-  document.getElementById('mode-tanfuku').classList.toggle('on', mode==='tanfuku');
-}
-
-
 // トースト通知
 let toastTimer = null;
 function showToast(msg, duration=3000){
@@ -3156,6 +3068,15 @@ function clearOdds(){
 }
 
 
+// オッズ反映・結果表示：オッズ取得済みなら結果表示、なければオッズ入力へ
+function goToOddsOrResult(){
+  if(horses && horses.some(h => h.tanOdds)){
+    goToOddsWithData();
+  } else {
+    goToOddsClear();
+  }
+}
+
 // オッズ反映：取得済みオッズをそのままタブへ
 function goToOddsWithData(){
   buildManual(); // 現在のhorsesデータ（オッズ含む）で入力欄を構築
@@ -3177,41 +3098,6 @@ function goToOddsClear(){
 
 
 // 単複タブの複勝オッズ変更時に再計算
-function recalcTanfuku(){
-  const inp = document.getElementById('tf-fuku-input');
-  if(!inp) return;
-  const fukuOdds = parseFloat(inp.value) || 0;
-  const betEl  = document.getElementById('tf-fuku-bet');
-  const payEl  = document.getElementById('tf-fuku-payout');
-  const totEl  = document.getElementById('tf-total');
-  if(!betEl || !payEl || !totEl) return;
-
-  // tanfukuPickの情報を再取得
-  const top5 = [...horses].filter(h=>h.tanOdds).sort((a,b)=>b.norm-a.norm).slice(0,5);
-  const tf = top5.filter(h=>h.tanEV&&h.tanEV>100).sort((a,b)=>b.tanEV-a.tanEV)[0];
-  if(!tf) return;
-
-  const fund = parseInt(document.getElementById('fund').value) || 0;
-
-  // 単勝賭け額（変わらない）
-  const tanKf  = halfKelly(tf.norm, tf.tanOdds);
-  const tanBet = tanKf > 0 ? Math.max(100, Math.floor(fund * tanKf / 100) * 100) : 0;
-
-  // 複勝再計算
-  let fukuBet = 0;
-  if(fukuOdds >= 1.0){
-    const fukuKf = halfKelly(tf.norm * 1.5, fukuOdds);
-    fukuBet = fukuKf > 0 ? Math.max(100, Math.floor(fund * fukuKf / 100) * 100) : 0;
-  }
-
-  const total = tanBet + fukuBet;
-
-  betEl.textContent  = fukuBet > 0 ? '¥' + fukuBet.toLocaleString() : '−';
-  payEl.textContent  = fukuBet > 0 ? '¥' + Math.round(fukuBet * fukuOdds).toLocaleString() : '−';
-  totEl.textContent  = '¥' + total.toLocaleString();
-}
-
-
 // 地方競馬購入モーダル（楽天/SPAT4自動判定）
 let _purchaseData = null;
 
@@ -3824,7 +3710,26 @@ function switchResultSubtab(tab) {
     purchPanel.style.display = '';
     if (raceBtn) raceBtn.style.cssText = inactiveStyle;
     if (purchBtn) purchBtn.style.cssText = activeStyle;
+    initPhMonthSelect();
     loadPurchaseHistory(_purchaseType);
+  }
+}
+
+function initPhMonthSelect() {
+  const sel = document.getElementById('ph-month-select');
+  if (!sel || sel.options.length > 1) return;
+  const today = getTodayJST();
+  sel.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(today.slice(0, 8) + '01');
+    d.setMonth(d.getMonth() - i);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const opt = document.createElement('option');
+    opt.value = `${y}_${m}`;
+    opt.textContent = `${y}年${m}月${i === 0 ? '（今月）' : ''}`;
+    if (i === 0) opt.selected = true;
+    sel.appendChild(opt);
   }
 }
 
@@ -3852,26 +3757,30 @@ async function loadPurchaseHistory(type) {
   el.innerHTML = '<div class="msg">🔄 読み込み中...</div>';
 
   const today = getTodayJST();
-  const ym = today.slice(0, 7).replace('-', '_');
+  const sel = document.getElementById('ph-month-select');
+  const ym = (sel && sel.value) ? sel.value : today.slice(0, 7).replace('-', '_');
+  const curYm = today.slice(0, 7).replace('-', '_');
+  const isCurMonth = ym === curYm;
   const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
   const isJra = type === 'jra';
   const logFile = isJra ? `purchase_log_jra_${ym}.json` : `purchase_log_${ym}.json`;
   const histFile = isJra ? `race_history_jra_${ym}.json` : `race_history_${ym}.json`;
   const label = isJra ? '中央（IPAT）' : '地方';
+  const ymLabel = ym.replace('_', '年') + '月';
 
   try {
     const logUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${logFile}`;
     const logRes = await fetch(logUrl, { headers });
     if (!logRes.ok) {
-      el.innerHTML = `<div class="msg">${label}の購入データなし</div>`;
+      el.innerHTML = `<div class="msg">${label}の購入データなし（${ymLabel}）</div>`;
       return;
     }
     const logJson = await logRes.json();
     const _dec = s => { const b = Uint8Array.from(atob(s.replace(/\n/g,'')),c=>c.charCodeAt(0)); return new TextDecoder().decode(b); };
     const allPurchases = JSON.parse(_dec(logJson.content));
-    const todayPurchases = allPurchases.filter(p => p.date === today);
+    const todayPurchases = isCurMonth ? allPurchases.filter(p => p.date === today) : allPurchases;
     if (!todayPurchases.length) {
-      el.innerHTML = `<div class="msg">${label}：本日の購入なし</div>`;
+      el.innerHTML = `<div class="msg">${label}：${isCurMonth ? '本日の' : ymLabel + 'の'}購入なし</div>`;
       return;
     }
 
@@ -3881,16 +3790,17 @@ async function loadPurchaseHistory(type) {
     if (histRes.ok) {
       const histJson = await histRes.json();
       const hist = JSON.parse(_dec(histJson.content));
-      hist.filter(r => r.date === today).forEach(r => {
-        resultsMap[`${r.venue}_${r.raceNum}`] = r;
+      const relevantHist = isCurMonth ? hist.filter(r => r.date === today) : hist;
+      relevantHist.forEach(r => {
+        resultsMap[`${r.date}_${r.venue}_${r.raceNum}`] = r;
       });
     }
 
     let totalBet = 0, totalReturn = 0, hitCount = 0;
     const rows = [];
-    todayPurchases.sort((a, b) => a.venue.localeCompare(b.venue) || a.raceNum.localeCompare(b.raceNum));
+    todayPurchases.sort((a, b) => (a.date||'').localeCompare(b.date||'') || a.venue.localeCompare(b.venue) || a.raceNum.localeCompare(b.raceNum));
     for (const p of todayPurchases) {
-      const rec = resultsMap[`${p.venue}_${p.raceNum}`];
+      const rec = resultsMap[`${p.date}_${p.venue}_${p.raceNum}`];
       for (const b of (p.bets || [])) {
         const amount = b.amount || 0;
         totalBet += amount;
@@ -3906,7 +3816,7 @@ async function loadPurchaseHistory(type) {
             status = 'miss';
           }
         }
-        rows.push({ venue: p.venue, raceNum: p.raceNum, num: b.num, ev: b.ev, odds: b.odds, amount, status, payout });
+        rows.push({ date: p.date, venue: p.venue, raceNum: p.raceNum, num: b.num, ev: b.ev, odds: b.odds, amount, status, payout });
       }
     }
 
@@ -3916,7 +3826,7 @@ async function loadPurchaseHistory(type) {
 
     let html = `
       <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:14px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${today} ${label} の購入結果${pendingCount ? ` <span style="color:var(--amber)">（⏳${pendingCount}R 結果待ち）</span>` : ''}</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${isCurMonth ? today : ymLabel} ${label} の購入結果${pendingCount ? ` <span style="color:var(--amber)">（⏳${pendingCount}R 結果待ち）</span>` : ''}</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:10px">
           <div><div style="font-size:10px;color:var(--text3)">購入</div><div style="font-size:20px;font-weight:700">${rows.length}R</div></div>
           <div><div style="font-size:10px;color:var(--text3)">的中</div><div style="font-size:20px;font-weight:700;color:var(--green)">${hitCount}R</div></div>
@@ -3939,7 +3849,7 @@ async function loadPurchaseHistory(type) {
         <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)">
           <div style="font-size:18px;width:22px;text-align:center;flex-shrink:0;color:${iconColor}">${icon}</div>
           <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:600">${r.venue} ${r.raceNum} <span style="font-family:'DM Mono',monospace;color:var(--gold);font-size:14px">${r.num}番</span></div>
+            <div style="font-size:13px;font-weight:600">${!isCurMonth && r.date ? r.date.slice(5) + ' ' : ''}${r.venue} ${r.raceNum} <span style="font-family:'DM Mono',monospace;color:var(--gold);font-size:14px">${r.num}番</span></div>
             <div style="font-size:11px;color:var(--text3)">EV${r.ev} / 推定${r.odds}倍 / ${r.amount.toLocaleString()}円</div>
           </div>
           <div style="text-align:right;flex-shrink:0">${payoutHtml}</div>
