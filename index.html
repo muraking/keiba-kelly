@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.13.2
+  v2026.06.13.3
 
   変更履歴:
+    v2026.06.13.3 - loadTimeChangeList: meta未定義によるエラー修正（fetchGHContent withSha=trueに変更）
     v2026.06.13.2 - startAutoRefresh: raw.githubusercontent.com→GitHub API+トークン認証に変更（privateリポジトリ対応）
     v2026.06.13.1 - nowJSTIso()追加: updated/savedAtタイムスタンプをJST形式に統一
     v2026.06.13.1 - saveToGitHub: レース保存時にjra_odds/oddsを上書き消去するバグを修正（スプレッド構文でマージ）
@@ -192,7 +193,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.13.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.13.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -787,7 +788,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.13.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.13.3</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -3813,7 +3814,7 @@ async function loadTimeChangeList(dateMode) {
   try {
     const token = loadToken();
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-    const data = await fetchGHContent(apiUrl, token);
+    const { sha: tcSha, data } = await fetchGHContent(apiUrl, token, true);
 
     // 日付モードに応じて対象日を決定
     const _today = getTodayJST();
@@ -3893,7 +3894,7 @@ async function loadTimeChangeList(dateMode) {
     listEl.innerHTML = html || '<div style="font-size:12px;color:var(--text3);padding:8px">表示できるレースがありません</div>';
     listEl._races = races;
     listEl._todayStr = todayStr;
-    listEl._sha = meta.sha;
+    listEl._sha = tcSha;
     listEl._data = data;
     onSkipCheck();
   } catch(e) {
