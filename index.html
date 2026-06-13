@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.14.3
+  v2026.06.14.4
 
   変更履歴:
+    v2026.06.14.4 - ワイド勝率ボックスに専用フィルタ（wide_odds_min/max・wide_winrate_filter）UI追加。
+                    バグ修正: 直近レース自動選択後に出走表が表示されない問題（race_history取得後onRaceChange追加）、
+                    オッズ反映・結果表示後にオッズタブが空になる問題（buildManualで事前入力し微調整可能に）。
     v2026.06.14.3 - バグ修正4件: 直近レース自動選択後に選択がクリアされる問題修正（race_history取得後に選択維持）、
                     オッズ反映・結果表示ボタンがオッズタブに飛ぶ問題修正（直接calcAll→結果タブへ遷移）、
                     購入履歴に日付セレクタ追加（当月の過去日も閲覧可能に）、
@@ -205,7 +208,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -817,7 +820,27 @@ textarea:focus{border-color:var(--gold)}
           <input id="wide-box-n" type="number" min="2" max="6" step="1" value="3"
             style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
             onchange="localStorage.setItem('wide_box_n', this.value)" oninput="localStorage.setItem('wide_box_n', this.value)">
-          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭（EVフィルターなし）</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭（下記フィルタで絞り込み）</div>
+        </div>
+        <div id="wide-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+            <div>
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div>
+              <input id="wide-odds-min" type="number" min="1" step="0.5" placeholder="例:5"
+                style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div>
+              <input id="wide-odds-max" type="number" min="1" step="0.5" placeholder="例:15"
+                style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div>
+            <input id="wide-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          </div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -836,7 +859,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.3</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.4</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1121,6 +1144,9 @@ function updateComboMethodUI(prefix) {
   const boxEl  = document.getElementById(`${prefix}-box-settings`);
   if(formEl) formEl.style.display = method === 'formation' ? '' : 'none';
   if(boxEl)  boxEl.style.display  = method !== 'formation' ? '' : 'none';
+  // 勝率ボックス専用フィルタUI（ワイドのみ）
+  const filterEl = document.getElementById(`${prefix}-topbox-filter`);
+  if(filterEl) filterEl.style.display = method === 'top_box' ? '' : 'none';
 }
 
 async function saveSoftmaxSettings() {
@@ -1183,6 +1209,9 @@ async function saveSoftmaxSettings() {
   const exactaBoxN    = parseInt(document.getElementById('exacta-box-n')?.value || '3') || 3;
   const wideMethod    = document.getElementById('wide-method')?.value || 'formation';
   const wideBoxN      = parseInt(document.getElementById('wide-box-n')?.value || '3') || 3;
+  const wideOddsMin   = parseFloat(document.getElementById('wide-odds-min')?.value || '') || null;
+  const wideOddsMax   = parseFloat(document.getElementById('wide-odds-max')?.value || '') || null;
+  const wideWinrateFilter = parseFloat(document.getElementById('wide-winrate-filter')?.value || '') || null;
   const jraEvMin        = parseFloat(document.getElementById('jra-ev-min')?.value || '') || null;
   const jraOddsMax      = parseFloat(document.getElementById('jra-odds-max')?.value || '') || null;
   const jraWinrateFilter = parseFloat(document.getElementById('jra-winrate-filter')?.value || '0') || 0;
@@ -1208,6 +1237,10 @@ async function saveSoftmaxSettings() {
   if(localOddsMax !== null) localStorage.setItem('local_odds_max', String(localOddsMax)); else localStorage.removeItem('local_odds_max');
   localStorage.setItem('local_winrate_filter', String(localWinrateFilter));
   if(localMaxBets > 0) localStorage.setItem('local_max_bets', String(localMaxBets)); else localStorage.removeItem('local_max_bets');
+  // ワイド勝率ボックス専用フィルタをlocalStorageにも保存
+  if(wideOddsMin !== null) localStorage.setItem('wide_odds_min', String(wideOddsMin)); else localStorage.removeItem('wide_odds_min');
+  if(wideOddsMax !== null) localStorage.setItem('wide_odds_max', String(wideOddsMax)); else localStorage.removeItem('wide_odds_max');
+  if(wideWinrateFilter !== null) localStorage.setItem('wide_winrate_filter', String(wideWinrateFilter)); else localStorage.removeItem('wide_winrate_filter');
 
   // GitHubにも保存（管理者のみ）
   const token = loadToken();
@@ -1264,6 +1297,9 @@ async function saveSoftmaxSettings() {
       data._settings.exacta_box_n    = exactaBoxN;
       data._settings.wide_method     = wideMethod;
       data._settings.wide_box_n      = wideBoxN;
+      if(wideOddsMin !== null) data._settings.wide_odds_min = wideOddsMin; else delete data._settings.wide_odds_min;
+      if(wideOddsMax !== null) data._settings.wide_odds_max = wideOddsMax; else delete data._settings.wide_odds_max;
+      if(wideWinrateFilter !== null) data._settings.wide_winrate_filter = wideWinrateFilter; else delete data._settings.wide_winrate_filter;
       data._settings.max_bets = maxBetsSave;
       data._settings.notify_bets = notifyBets;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
@@ -1517,6 +1553,13 @@ async function loadSoftmaxFromGithub() {
     setField('local-winrate-filter', slocal.sm_winrate_filter ?? 0);
     const localMaxBetsEl = document.getElementById('local-max-bets');
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
+    // ワイド勝率ボックス専用フィルタ
+    setField('wide-odds-min', s.wide_odds_min ?? '');
+    setField('wide-odds-max', s.wide_odds_max ?? '');
+    setField('wide-winrate-filter', s.wide_winrate_filter ?? '');
+    if(s.wide_odds_min != null) localStorage.setItem('wide_odds_min', String(s.wide_odds_min)); else localStorage.removeItem('wide_odds_min');
+    if(s.wide_odds_max != null) localStorage.setItem('wide_odds_max', String(s.wide_odds_max)); else localStorage.removeItem('wide_odds_max');
+    if(s.wide_winrate_filter != null) localStorage.setItem('wide_winrate_filter', String(s.wide_winrate_filter)); else localStorage.removeItem('wide_winrate_filter');
     // GitHubから読み込んだJRA/地方個別設定をlocalStorageにも反映
     if(sjra.ev_min != null) localStorage.setItem('jra_ev_min', String(sjra.ev_min)); else localStorage.removeItem('jra_ev_min');
     if(sjra.odds_max != null) localStorage.setItem('jra_odds_max', String(sjra.odds_max)); else localStorage.removeItem('jra_odds_max');
@@ -1564,7 +1607,7 @@ async function loadSoftmaxFromGithub() {
         if(!buyWideLocal && !buyWideJra) return null;
         const where = [buyWideLocal && '地方', buyWideJra && '中央'].filter(Boolean).join('/');
         if(wideMethod === 'rec_box') return `ワイド(${where}): 推奨ボックス ${wideBoxN}頭 ¥${wideAmount}/点`;
-        if(wideMethod === 'top_box') return `ワイド(${where}): 勝率ボックス ${wideBoxN}頭 ¥${wideAmount}/点`;
+        if(wideMethod === 'top_box') { const wf = []; if(s.wide_odds_min!=null||s.wide_odds_max!=null) wf.push(`odds${s.wide_odds_min??'-'}〜${s.wide_odds_max??'-'}`); if(s.wide_winrate_filter!=null) wf.push(`勝率${s.wide_winrate_filter}%+`); return `ワイド(${where}): 勝率ボックス ${wideBoxN}頭 ¥${wideAmount}/点${wf.length?' ['+wf.join(' ')+']':''}`; }
         const tops = [wideTop1 && '勝率1', wideTop2 && '勝率2'].filter(Boolean).join('・') || '-';
         const recs = [wideRec1 && '推奨1', wideRec2 && '推奨2', wideRec3 && '推奨3'].filter(Boolean).join('・') || '-';
         return `ワイド(${where}): 軸=${tops} 相手=${recs} ¥${wideAmount}/点`;
@@ -1675,6 +1718,12 @@ function loadSoftmaxSettings() {
   if(wideMethodEl2){ wideMethodEl2.value = localStorage.getItem('wide_method') || 'formation'; updateComboMethodUI('wide'); }
   const wideBoxNEl2 = document.getElementById('wide-box-n');
   if(wideBoxNEl2) wideBoxNEl2.value = localStorage.getItem('wide_box_n') || '3';
+  const woMinEl = document.getElementById('wide-odds-min');
+  if(woMinEl) woMinEl.value = localStorage.getItem('wide_odds_min') || '';
+  const woMaxEl = document.getElementById('wide-odds-max');
+  if(woMaxEl) woMaxEl.value = localStorage.getItem('wide_odds_max') || '';
+  const wwfEl = document.getElementById('wide-winrate-filter');
+  if(wwfEl) wwfEl.value = localStorage.getItem('wide_winrate_filter') || '';
   const bpbEl2 = document.getElementById('buy-place-bet');
   const bpbVal = localStorage.getItem('buy_place_bet') === '1';
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
@@ -2405,10 +2454,10 @@ async function fetchRaceList(){
         if(ds2 && ds2.value) {
           const savedRaceIdx = document.getElementById('race-select')?.value || '';
           onDateChange();
-          // バッジ更新後も選択済みレースを維持
+          // バッジ更新後も選択済みレースを維持し、出走表を再描画
           if(savedRaceIdx) setTimeout(() => {
             const rs = document.getElementById('race-select');
-            if(rs) rs.value = savedRaceIdx;
+            if(rs && rs.value !== savedRaceIdx) { rs.value = savedRaceIdx; onRaceChange(); }
           }, 50);
         }
       })
@@ -3090,10 +3139,11 @@ function clearOdds(){
 }
 
 
-// オッズ反映・結果表示：オッズ取得済みなら直接計算して結果タブへ、なければオッズ入力へ
+// オッズ反映・結果表示：オッズ取得済みなら計算して結果タブへ、なければオッズ入力へ
 function goToOddsOrResult(){
   if(horses && horses.some(h => h.tanOdds)){
-    calcAll(); // 直接計算→結果タブへ自動遷移
+    buildManual(); // オッズタブを取得済みオッズで埋める（後から微調整できるように）
+    calcAll();     // 計算して結果タブへ自動遷移
   } else {
     goToOddsClear(); // オッズ未取得→オッズ入力タブへ
   }
