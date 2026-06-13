@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.13.4
+  v2026.06.13.5
 
   変更履歴:
+    v2026.06.13.5 - 投資指標パネル追加: OOS-ROI/MaxDD/最大連敗を設定画面に表示（_perf_local/_perf_jra から読込）
     v2026.06.13.4 - fetchRaceList: privateリポジトリ失敗時に公開リポジトリへフォールバック（非管理者対応）
                     saveToGitHub: 保存後にkeiba-kelly（公開）へ自動同期（syncToPublicRepo追加）
     v2026.06.13.3 - loadTimeChangeList: meta未定義によるエラー修正（fetchGHContent withSha=trueに変更）
@@ -195,7 +196,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.13.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.13.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -556,6 +557,31 @@ textarea:focus{border-color:var(--gold)}
           </select>
         </div>
       </div>
+      <div class="sh" style="margin-top:12px">📈 投資パフォーマンス指標 <span style="font-weight:400;font-size:10px;color:var(--text3)">自動最適化後に更新</span></div>
+      <div id="perf-panel" style="font-size:12px;margin-bottom:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+          <div style="background:var(--bg3);border-radius:var(--r);padding:8px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:4px">🏟 地方競馬</div>
+            <div id="perf-local-is-roi" style="font-size:13px;font-weight:bold;color:var(--text)">--</div>
+            <div id="perf-local-oos-roi" style="font-size:11px;color:var(--text3);margin-top:2px">OOS: --</div>
+            <div id="perf-local-dd" style="font-size:10px;color:var(--text3);margin-top:2px">MaxDD: --</div>
+            <div id="perf-local-streak" style="font-size:10px;color:var(--text3);margin-top:2px">最大連敗: --</div>
+            <div id="perf-local-updated" style="font-size:9px;color:var(--text3);margin-top:4px">--</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:var(--r);padding:8px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:4px">🏇 中央競馬（JRA）</div>
+            <div id="perf-jra-is-roi" style="font-size:13px;font-weight:bold;color:var(--text)">--</div>
+            <div id="perf-jra-oos-roi" style="font-size:11px;color:var(--text3);margin-top:2px">OOS: --</div>
+            <div id="perf-jra-dd" style="font-size:10px;color:var(--text3);margin-top:2px">MaxDD: --</div>
+            <div id="perf-jra-streak" style="font-size:10px;color:var(--text3);margin-top:2px">最大連敗: --</div>
+            <div id="perf-jra-updated" style="font-size:9px;color:var(--text3);margin-top:4px">--</div>
+          </div>
+        </div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:8px;font-size:10px;color:var(--text3);line-height:1.6">
+          <b>IS-ROI</b>: 学習期間の回収率（過学習あり）　<b>OOS-ROI</b>: テスト期間（未来データ）の回収率 ← 実力値<br>
+          <b>MaxDD</b>: 最大ドローダウン（資金ピークからの最大下落率）　<b>最大連敗</b>: 連続不的中の最大回数
+        </div>
+      </div>
       <div class="sh" style="margin-top:12px">自動購入設定</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
         <div style="background:var(--bg3);border-radius:var(--r);padding:8px">
@@ -790,7 +816,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.13.4</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.13.5</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1389,6 +1415,34 @@ async function loadSoftmaxFromGithub() {
     setField('local-winrate-filter', slocal.sm_winrate_filter ?? 0);
     const localMaxBetsEl = document.getElementById('local-max-bets');
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
+
+    // 投資指標パネル更新
+    const perfLocal = data._perf_local || {};
+    const perfJra   = data._perf_jra   || {};
+    const fmtRoi = (v) => v != null ? `${v}%` : '--';
+    const fmtOos = (p) => {
+      if(p.oos_roi == null) return 'OOS: データ不足';
+      const c = p.oos_roi >= 100 ? '#4caf50' : '#e57373';
+      return `<span style="color:${c}">OOS: ${p.oos_roi}%</span> (${p.oos_bets ?? '--'}R/${p.oos_days ?? '--'}日)`;
+    };
+    const fmtDD = (p) => p.max_drawdown != null ? `MaxDD: ${p.max_drawdown}%` : 'MaxDD: --';
+    const fmtStreak = (p) => p.max_consecutive_loss != null ? `最大連敗: ${p.max_consecutive_loss}回` : '最大連敗: --';
+    const roiColor = (v) => v >= 150 ? '#4caf50' : v >= 100 ? '#8bc34a' : '#e57373';
+    const setText = (id, html) => { const el=document.getElementById(id); if(el) el.innerHTML=html; };
+    if(perfLocal.is_roi != null) {
+      setText('perf-local-is-roi', `<span style="color:${roiColor(perfLocal.is_roi)}">IS-ROI: ${perfLocal.is_roi}%</span> (${perfLocal.bets ?? '--'}R)`);
+      setText('perf-local-oos-roi', fmtOos(perfLocal));
+      setText('perf-local-dd', fmtDD(perfLocal));
+      setText('perf-local-streak', fmtStreak(perfLocal));
+      setText('perf-local-updated', perfLocal.updated_at ? `更新: ${perfLocal.updated_at}` : '');
+    }
+    if(perfJra.is_roi != null) {
+      setText('perf-jra-is-roi', `<span style="color:${roiColor(perfJra.is_roi)}">IS-ROI: ${perfJra.is_roi}%</span> (${perfJra.bets ?? '--'}R)`);
+      setText('perf-jra-oos-roi', fmtOos(perfJra));
+      setText('perf-jra-dd', fmtDD(perfJra));
+      setText('perf-jra-streak', fmtStreak(perfJra));
+      setText('perf-jra-updated', perfJra.updated_at ? `更新: ${perfJra.updated_at}` : '');
+    }
 
     const lines = [
       `温度T: ${T}　最小指数: ${minP}%　勝率フィルター: ${winrateFilter > 0 ? winrateFilter+'%以上' : 'なし'}`,
