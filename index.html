@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.13.5
+  v2026.06.14.1
 
   変更履歴:
+    v2026.06.14.1 - 馬連/ワイド購入方式を拡張: フォーメーション（従来）に加え推奨ボックス・勝率ボックスを追加。
+                    updateComboMethodUI()でセレクト切り替えUI、exacta_method/exacta_box_n等をGitHub設定に保存。
     v2026.06.13.5 - 投資指標パネル追加: OOS-ROI/MaxDD/最大連敗を設定画面に表示（_perf_local/_perf_jra から読込）
     v2026.06.13.4 - fetchRaceList: privateリポジトリ失敗時に公開リポジトリへフォールバック（非管理者対応）
                     saveToGitHub: 保存後にkeiba-kelly（公開）へ自動同期（syncToPublicRepo追加）
@@ -196,7 +198,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.13.5</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -716,36 +718,53 @@ textarea:focus{border-color:var(--gold)}
         <input id="exacta-amount" type="number" min="100" max="100000" step="100" value="100"
           style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
           onchange="localStorage.setItem('exacta_amount', this.value)" oninput="localStorage.setItem('exacta_amount', this.value)">
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="exacta-top1" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('exacta_top1', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">勝率1位</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="exacta-top2" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('exacta_top2', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">勝率2位</span>
-          </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
+        <select id="exacta-method"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="updateComboMethodUI('exacta')">
+          <option value="formation">フォーメーション（軸×相手）</option>
+          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
+          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+        </select>
+        <div id="exacta-formation-settings">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-top1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_top1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">勝率1位</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-top2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_top2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">勝率2位</span>
+            </label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-rec1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_rec1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">推奨1</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-rec2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_rec2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">推奨2</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-rec3" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_rec3', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">推奨3</span>
+            </label>
+          </div>
         </div>
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="exacta-rec1" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('exacta_rec1', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">推奨1</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="exacta-rec2" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('exacta_rec2', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">推奨2</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="exacta-rec3" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('exacta_rec3', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">推奨3</span>
-          </label>
+        <div id="exacta-box-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
+          <input id="exacta-box-n" type="number" min="2" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('exacta_box_n', this.value)" oninput="localStorage.setItem('exacta_box_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭（EVフィルターなし）</div>
         </div>
       </div>
 
@@ -768,36 +787,53 @@ textarea:focus{border-color:var(--gold)}
         <input id="wide-amount" type="number" min="100" max="100000" step="100" value="100"
           style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
           onchange="localStorage.setItem('wide_amount', this.value)" oninput="localStorage.setItem('wide_amount', this.value)">
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="wide-top1" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('wide_top1', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">勝率1位</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="wide-top2" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('wide_top2', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">勝率2位</span>
-          </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
+        <select id="wide-method"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="updateComboMethodUI('wide')">
+          <option value="formation">フォーメーション（軸×相手）</option>
+          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
+          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+        </select>
+        <div id="wide-formation-settings">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-top1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_top1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">勝率1位</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-top2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_top2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">勝率2位</span>
+            </label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-rec1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_rec1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">推奨1</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-rec2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_rec2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">推奨2</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-rec3" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_rec3', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">推奨3</span>
+            </label>
+          </div>
         </div>
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="wide-rec1" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('wide_rec1', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">推奨1</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="wide-rec2" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('wide_rec2', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">推奨2</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="wide-rec3" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('wide_rec3', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">推奨3</span>
-          </label>
+        <div id="wide-box-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
+          <input id="wide-box-n" type="number" min="2" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('wide_box_n', this.value)" oninput="localStorage.setItem('wide_box_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭（EVフィルターなし）</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -816,7 +852,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.13.5</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.1</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1080,6 +1116,17 @@ function updateNormMethodUI(method) {
   }
 }
 
+function updateComboMethodUI(prefix) {
+  const sel = document.getElementById(`${prefix}-method`);
+  if(!sel) return;
+  const method = sel.value;
+  localStorage.setItem(`${prefix}_method`, method);
+  const formEl = document.getElementById(`${prefix}-formation-settings`);
+  const boxEl  = document.getElementById(`${prefix}-box-settings`);
+  if(formEl) formEl.style.display = method === 'formation' ? '' : 'none';
+  if(boxEl)  boxEl.style.display  = method !== 'formation' ? '' : 'none';
+}
+
 async function saveSoftmaxSettings() {
   const T = parseFloat(document.getElementById('sm-temperature').value) || 15;
   const minP = parseFloat(document.getElementById('sm-minpct').value);
@@ -1136,6 +1183,10 @@ async function saveSoftmaxSettings() {
   const wideRec1      = document.getElementById('wide-rec1')?.checked || false;
   const wideRec2      = document.getElementById('wide-rec2')?.checked || false;
   const wideRec3      = document.getElementById('wide-rec3')?.checked || false;
+  const exactaMethod  = document.getElementById('exacta-method')?.value || 'formation';
+  const exactaBoxN    = parseInt(document.getElementById('exacta-box-n')?.value || '3') || 3;
+  const wideMethod    = document.getElementById('wide-method')?.value || 'formation';
+  const wideBoxN      = parseInt(document.getElementById('wide-box-n')?.value || '3') || 3;
   const jraEvMin        = parseFloat(document.getElementById('jra-ev-min')?.value || '') || null;
   const jraOddsMax      = parseFloat(document.getElementById('jra-odds-max')?.value || '') || null;
   const jraWinrateFilter = parseFloat(document.getElementById('jra-winrate-filter')?.value || '0') || 0;
@@ -1204,6 +1255,10 @@ async function saveSoftmaxSettings() {
       data._settings.wide_rec1       = wideRec1;
       data._settings.wide_rec2       = wideRec2;
       data._settings.wide_rec3       = wideRec3;
+      data._settings.exacta_method   = exactaMethod;
+      data._settings.exacta_box_n    = exactaBoxN;
+      data._settings.wide_method     = wideMethod;
+      data._settings.wide_box_n      = wideBoxN;
       data._settings.max_bets = maxBetsSave;
       data._settings.notify_bets = notifyBets;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
@@ -1320,6 +1375,10 @@ async function loadSoftmaxFromGithub() {
     const wideRec1      = s.wide_rec1      || false;
     const wideRec2      = s.wide_rec2      || false;
     const wideRec3      = s.wide_rec3      || false;
+    const exactaMethod  = s.exacta_method  || 'formation';
+    const exactaBoxN    = s.exacta_box_n   ?? 3;
+    const wideMethod    = s.wide_method    || 'formation';
+    const wideBoxN      = s.wide_box_n     ?? 3;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -1357,6 +1416,10 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('wide_rec1',      wideRec1     ? '1' : '0');
     localStorage.setItem('wide_rec2',      wideRec2     ? '1' : '0');
     localStorage.setItem('wide_rec3',      wideRec3     ? '1' : '0');
+    localStorage.setItem('exacta_method', exactaMethod);
+    localStorage.setItem('exacta_box_n',  String(exactaBoxN));
+    localStorage.setItem('wide_method',   wideMethod);
+    localStorage.setItem('wide_box_n',    String(wideBoxN));
     const ablEl2 = document.getElementById('auto-buy-local');
     const abjEl2 = document.getElementById('auto-buy-jra');
     const abmEl2 = document.getElementById('auto-buy-max');
@@ -1404,6 +1467,14 @@ async function loadSoftmaxFromGithub() {
       const el = document.getElementById(id);
       if(el) el.checked = [wideTop1,wideTop2,wideRec1,wideRec2,wideRec3][i];
     });
+    const exactaMethodEl = document.getElementById('exacta-method');
+    if(exactaMethodEl){ exactaMethodEl.value = exactaMethod; updateComboMethodUI('exacta'); }
+    const exactaBoxNEl = document.getElementById('exacta-box-n');
+    if(exactaBoxNEl) exactaBoxNEl.value = String(exactaBoxN);
+    const wideMethodEl = document.getElementById('wide-method');
+    if(wideMethodEl){ wideMethodEl.value = wideMethod; updateComboMethodUI('wide'); }
+    const wideBoxNEl = document.getElementById('wide-box-n');
+    if(wideBoxNEl) wideBoxNEl.value = String(wideBoxN);
     const setField = (id, val) => { const el = document.getElementById(id); if(el && val != null && val !== '') el.value = val; else if(el) el.value = ''; };
     setField('jra-ev-min', sjra.ev_min ?? '');
     setField('jra-odds-max', sjra.odds_max ?? '');
@@ -1467,16 +1538,20 @@ async function loadSoftmaxFromGithub() {
       })(),
       (()=>{
         if(!buyExactaLocal && !buyExactaJra) return null;
+        const where = [buyExactaLocal && '地方', buyExactaJra && '中央'].filter(Boolean).join('/');
+        if(exactaMethod === 'rec_box') return `馬連(${where}): 推奨ボックス ${exactaBoxN}頭 ¥${exactaAmount}/点`;
+        if(exactaMethod === 'top_box') return `馬連(${where}): 勝率ボックス ${exactaBoxN}頭 ¥${exactaAmount}/点`;
         const tops = [exactaTop1 && '勝率1', exactaTop2 && '勝率2'].filter(Boolean).join('・') || '-';
         const recs = [exactaRec1 && '推奨1', exactaRec2 && '推奨2', exactaRec3 && '推奨3'].filter(Boolean).join('・') || '-';
-        const where = [buyExactaLocal && '地方', buyExactaJra && '中央'].filter(Boolean).join('/');
         return `馬連(${where}): 軸=${tops} 相手=${recs} ¥${exactaAmount}/点`;
       })(),
       (()=>{
         if(!buyWideLocal && !buyWideJra) return null;
+        const where = [buyWideLocal && '地方', buyWideJra && '中央'].filter(Boolean).join('/');
+        if(wideMethod === 'rec_box') return `ワイド(${where}): 推奨ボックス ${wideBoxN}頭 ¥${wideAmount}/点`;
+        if(wideMethod === 'top_box') return `ワイド(${where}): 勝率ボックス ${wideBoxN}頭 ¥${wideAmount}/点`;
         const tops = [wideTop1 && '勝率1', wideTop2 && '勝率2'].filter(Boolean).join('・') || '-';
         const recs = [wideRec1 && '推奨1', wideRec2 && '推奨2', wideRec3 && '推奨3'].filter(Boolean).join('・') || '-';
-        const where = [buyWideLocal && '地方', buyWideJra && '中央'].filter(Boolean).join('/');
         return `ワイド(${where}): 軸=${tops} 相手=${recs} ¥${wideAmount}/点`;
       })(),
     ].filter(v => v !== null);
@@ -1576,6 +1651,15 @@ function loadSoftmaxSettings() {
     const key = id.replace(/-/g,'_');
     if(el) el.checked = localStorage.getItem(key) === '1';
   });
+  // 購入方式セレクト初期化
+  const exactaMethodEl2 = document.getElementById('exacta-method');
+  if(exactaMethodEl2){ exactaMethodEl2.value = localStorage.getItem('exacta_method') || 'formation'; updateComboMethodUI('exacta'); }
+  const exactaBoxNEl2 = document.getElementById('exacta-box-n');
+  if(exactaBoxNEl2) exactaBoxNEl2.value = localStorage.getItem('exacta_box_n') || '3';
+  const wideMethodEl2 = document.getElementById('wide-method');
+  if(wideMethodEl2){ wideMethodEl2.value = localStorage.getItem('wide_method') || 'formation'; updateComboMethodUI('wide'); }
+  const wideBoxNEl2 = document.getElementById('wide-box-n');
+  if(wideBoxNEl2) wideBoxNEl2.value = localStorage.getItem('wide_box_n') || '3';
   const bpbEl2 = document.getElementById('buy-place-bet');
   const bpbVal = localStorage.getItem('buy_place_bet') === '1';
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
