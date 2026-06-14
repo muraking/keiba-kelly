@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.14.6
+  v2026.06.14.7
 
   変更履歴:
+    v2026.06.14.7 - 管理画面を開いてもGitHubから個別設定が自動読込されず、最適化が書いたev_max等が
+                    空欄表示になるバグを修正。自動読込トリガーのタブ判定を存在しない'share'→'admin'に修正。
     v2026.06.14.6 - JRA/地方個別設定に「期待値最大」「最小オッズ」入力欄を追加。従来は最適化が書いた
                     ev_max/odds_minがPWAに表示・編集できなかった。読込/保存/localStorage同期も対応。
     v2026.06.14.5 - 購入履歴のワイド・馬連表示を修正: num1-num2番表示、的中判定をrec.wide/umarenで行い
@@ -212,7 +214,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.6</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.7</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -883,7 +885,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.6</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.7</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -4392,7 +4394,7 @@ async function revertTime(idx) {
 loadSoftmaxSettings();
 // 共有タブのアクティブ化を検知して自動読み込み
 const _origSwFn = window.sw;
-window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='share') { loadSoftmaxSettings(); setTimeout(loadSoftmaxFromGithub, 100); } };
+window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='admin') { loadSoftmaxSettings(); setTimeout(loadSoftmaxFromGithub, 100); } };
 
 </script>
 
