@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.2
+  v2026.06.15.3
 
   変更履歴:
+    v2026.06.15.3 - calcAll: 本/穴カードの黒抜き数字（❶）を白抜き（アウトライン）に変更。本/穴の下に
+                   「単勝推奨」テーブル（白抜き馬番＋馬名・勝率・オッズ・期待値、賭け額カラムなし）を追加。
+                   単勝購入予定の馬（bet>0）がいる時のみ表示。
     v2026.06.15.2 - calcAll: v2026.06.15.1で本/穴カード追加時にelseブロックを閉じる`}`を誤削除し、
                    スクリプト全体が構文エラー（updatePerfPanel is not defined・一覧読込不可）になっていた不具合を修正。
                    合わせて本/穴・見送り推奨をelseブロック外へ移動し、買い目なし（スキップ対象）レースでも表示されるようにした。
@@ -219,7 +222,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -968,7 +971,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.3</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2182,7 +2185,7 @@ function calcAll(){
       }
       function _fmtGrp(lst){
         const s=[...lst].sort((a,b)=>(b.norm||0)-(a.norm||0));
-        return s.map(h=>_circ2(h.num,buyNums2.has(h.num))).join('')+'('+s.map(h=>Math.round(h.tanEV||0)).join('/')+')';
+        return s.map(h=>_circ2(h.num,false)).join('')+'('+s.map(h=>Math.round(h.tanEV||0)).join('/')+')';
       }
       if(skipReason2){
         html+=`<div style="background:rgba(239,68,68,.08);border:0.5px solid rgba(239,68,68,.3);border-radius:var(--r);padding:8px 12px;margin-bottom:12px;font-size:13px;color:#ef4444">🚫 見送り推奨（${skipReason2}）</div>`;
@@ -2196,6 +2199,43 @@ function calcAll(){
           <span style="font-family:'DM Mono',monospace;font-size:16px;color:var(--text);letter-spacing:0.5px">${_fmtGrp(ls2)}</span>
         </div>
       </div>`;
+
+      // 単勝推奨（実際に単勝購入予定の馬がいる時のみ表示・賭け額カラムなし）
+      const buyList = renders.filter(h=>betMap[h.num]>0).sort((a,b)=>a.num-b.num);
+      if(buyList.length){
+        html+=`<div class="sh">単勝推奨</div>
+        <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead>
+              <tr style="border-bottom:0.5px solid var(--border2)">
+                <th style="padding:8px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">馬番・馬名</th>
+                <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">勝率</th>
+                <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">オッズ</th>
+                <th style="padding:8px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">期待値</th>
+              </tr>
+            </thead>
+            <tbody>`;
+        for(const h of buyList){
+          const ev=h.tanEV,evC=ev>=150?'var(--green)':ev>=100?'var(--amber)':'var(--text2)';
+          const label=h._t==='main'?`推奨${h._r}`:'サブ';
+          const labelColor=h._t==='main'?'var(--green)':'var(--blue)';
+          html+=`<tr style="border-bottom:0.5px solid var(--border)">
+            <td style="padding:10px 10px">
+              <div style="display:flex;align-items:center;gap:6px">
+                <div style="width:22px;height:22px;border-radius:50%;background:#fff;border:1.5px solid var(--text2);color:var(--text);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0">${h.num}</div>
+                <div>
+                  <div style="font-size:12px;color:var(--text)">${h.name}</div>
+                  <div style="font-size:10px;color:${labelColor}">${label}</div>
+                </div>
+              </div>
+            </td>
+            <td style="padding:10px 6px;text-align:right;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</td>
+            <td style="padding:10px 6px;text-align:right;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace">${h.tanOdds?h.tanOdds+'倍':'−'}</td>
+            <td style="padding:10px 10px;text-align:right;font-size:12px;font-weight:700;color:${evC};font-family:'DM Mono',monospace">${ev?ev.toFixed(0):'−'}</td>
+          </tr>`;
+        }
+        html+=`</tbody></table></div>`;
+      }
     })();
 
   // 全馬期待値一覧
