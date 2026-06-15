@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.8
+  v2026.06.15.9
 
   変更履歴:
+    v2026.06.15.9 - calcAll: 合計投資額・資金使用率の表示ブロックを削除。
     v2026.06.15.8 - calcAll: 単勝推奨をspat4_scheduler.pyの自動購入と同じ判定（フィルタ→EV降順→max_bets頭、
                    スキップ対象レースは対象外）で算出するよう変更。skipReason2にskip_jra_3yoを追加し判定を一致。
     v2026.06.15.7 - calcAll: 「期待値100超の馬が見つかりません」警告を削除（買い目がある時のみ結果テーブル表示）。
@@ -232,7 +233,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.8</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.9</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -981,7 +982,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.8</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.9</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2112,14 +2113,6 @@ function calcAll(){
   // ==========
 
   if(renders.length && Object.values(betMap).some(v=>v>0)){
-    // ===== 結果テーブル =====
-    const rate=fund>0?(ttl/fund*100).toFixed(1):0;
-    html+=`<div class="total-box" style="margin-bottom:14px">
-      <div class="sg">
-        <div class="sm"><div class="sl">合計投資額</div><div class="sv">¥${ttl.toLocaleString()}</div></div>
-        <div class="sm"><div class="sl">資金使用率</div><div class="sv ${parseFloat(rate)>30?'a':'g'}">${rate}%</div></div>
-      </div>
-    </div>`;
     // 管理者のみ購入ボタンを表示（地方競馬のみ・中央競馬は非表示）
     const JRA_VENUES_BTN = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
     const RAKUTEN_VENUES_BTN = ['帯広','帯広ば','門別','盛岡','水沢','浦和','船橋','大井','川崎','金沢','笠松','名古屋','園田','姫路','高知','佐賀'];
