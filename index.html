@@ -1,8 +1,14 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.9
+  v2026.06.15.12
 
   変更履歴:
+    v2026.06.15.12 - 設定タブ名を「レース選択」に変更。総資金・最大投資額を共有タブへ移動。
+                    loadSoftmaxSettings: fund/max-investをlocalStorageから復元するよう追加。
+    v2026.06.15.11 - 設定タブ: 総資金・最大投資額を折りたたみ式「購入設定」セクションに移動（目立たない場所へ）。
+                    最大購入点数のみ上部に残す。
+    v2026.06.15.10 - 共有タブ切替時のGitHub自動読み込みを廃止（手動ボタンのみに変更）。
+                    calcAll: 地方レース時はlocal_max_bets、JRAレース時はjra_max_betsを優先参照するよう修正。
     v2026.06.15.9 - calcAll: 合計投資額・資金使用率の表示ブロックを削除。
     v2026.06.15.8 - calcAll: 単勝推奨をspat4_scheduler.pyの自動購入と同じ判定（フィルタ→EV降順→max_bets頭、
                    スキップ対象レースは対象外）で算出するよう変更。skipReason2にskip_jra_3yoを追加し判定を一致。
@@ -233,7 +239,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.9</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.12</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -268,7 +274,7 @@ textarea:focus{border-color:var(--gold)}
 
   <nav class="nav">
     <button class="nb on" onclick="sw('setup')" id="nb-setup">
-      <div class="dot"></div><span class="nb-ico">⚙️</span><span>設定</span>
+      <div class="dot"></div><span class="nb-ico">🏇</span><span>レース選択</span>
     </button>
     <button class="nb" onclick="sw('odds')" id="nb-odds">
       <div class="dot"></div><span class="nb-ico">📊</span><span>オッズ</span>
@@ -284,29 +290,19 @@ textarea:focus{border-color:var(--gold)}
   <!-- 設定 -->
   <div id="p-setup" class="page on">
     <div style="margin-bottom:20px">
-      <div class="sh">資金設定</div>
-      <div class="field"><label>総資金（円）</label>
-        <input type="number" id="fund" placeholder="例: 10000" inputmode="numeric" value="10000">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field" style="margin-bottom:0">
-          <label>最大購入点数</label>
-          <select id="max-bets" onchange="localStorage.setItem('max_bets', this.value)" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
-            <option value="1">1点</option>
-            <option value="2">2点</option>
-            <option value="3">3点</option>
-            <option value="4" selected>4点</option>
-            <option value="5">5点</option>
-            <option value="6">6点</option>
-            <option value="7">7点</option>
-            <option value="8">8点</option>
-            <option value="99">制限なし</option>
-          </select>
-        </div>
-        <div class="field" style="margin-bottom:0">
-          <label>最大投資額（円）</label>
-          <input type="number" id="max-invest" placeholder="制限なし" inputmode="numeric" style="height:40px">
-        </div>
+      <div class="field" style="margin-bottom:0">
+        <label>最大購入点数</label>
+        <select id="max-bets" onchange="localStorage.setItem('max_bets', this.value)" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
+          <option value="1">1点</option>
+          <option value="2">2点</option>
+          <option value="3">3点</option>
+          <option value="4" selected>4点</option>
+          <option value="5">5点</option>
+          <option value="6">6点</option>
+          <option value="7">7点</option>
+          <option value="8">8点</option>
+          <option value="99">制限なし</option>
+        </select>
       </div>
     </div>
 
@@ -966,6 +962,20 @@ textarea:focus{border-color:var(--gold)}
           </div>
         </div>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div class="field" style="margin-bottom:0">
+          <label style="font-size:12px">総資金（円）</label>
+          <input type="number" id="fund" placeholder="例: 10000" inputmode="numeric" value="10000"
+            onchange="localStorage.setItem('fund', this.value)"
+            style="height:36px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit;width:100%;padding:0 10px;box-sizing:border-box">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label style="font-size:12px">最大投資額（円）</label>
+          <input type="number" id="max-invest" placeholder="制限なし" inputmode="numeric"
+            onchange="if(this.value) localStorage.setItem('max_invest', this.value); else localStorage.removeItem('max_invest')"
+            style="height:36px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit;width:100%;padding:0 10px;box-sizing:border-box">
+        </div>
+      </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
         <button onclick="saveSoftmaxSettings()" class="btn btn-gold">💾 設定を保存</button>
@@ -982,7 +992,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.9</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.12</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1950,6 +1960,8 @@ function loadSoftmaxSettings() {
   _sf('local-odds-max', 'local_odds_max');
   const localWfEl = document.getElementById('local-winrate-filter'); if(localWfEl) localWfEl.value = localStorage.getItem('local_winrate_filter') || '0';
   const localMbEl = document.getElementById('local-max-bets'); if(localMbEl) localMbEl.value = localStorage.getItem('local_max_bets') || '0';
+  const fundEl = document.getElementById('fund'); if(fundEl && localStorage.getItem('fund')) fundEl.value = localStorage.getItem('fund');
+  const maxInvestEl = document.getElementById('max-invest'); if(maxInvestEl && localStorage.getItem('max_invest')) maxInvestEl.value = localStorage.getItem('max_invest');
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -2028,7 +2040,15 @@ function calcAll(){
   const rname=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
   if(!fund){alert('資金を入力してください');sw('setup');return;}
 
-  const maxBets = parseInt(localStorage.getItem('max_bets') || document.getElementById('max-bets')?.value || '4') || 4;
+  const _JRA_VENUES_CALC = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+  const _curVenue = currentRace?.venue || '';
+  const _isLocalRace = _curVenue && !_JRA_VENUES_CALC.includes(_curVenue);
+  const _baseMaxBets = parseInt(localStorage.getItem('max_bets') || document.getElementById('max-bets')?.value || '4') || 4;
+  const _jraMaxBets  = parseInt(localStorage.getItem('jra_max_bets')   || '0') || 0;
+  const _localMaxBets= parseInt(localStorage.getItem('local_max_bets') || '0') || 0;
+  const maxBets = _isLocalRace && _localMaxBets > 0 ? _localMaxBets
+                : !_isLocalRace && _curVenue && _jraMaxBets > 0 ? _jraMaxBets
+                : _baseMaxBets;
   const maxBetsEl = document.getElementById('max-bets');
   if(maxBetsEl && maxBetsEl.value != String(maxBets)) maxBetsEl.value = String(maxBets);
   const maxInvest = parseInt(document.getElementById('max-invest')?.value)||Infinity;
@@ -4526,9 +4546,9 @@ async function revertTime(idx) {
 
 // 初期化時にソフトマックス設定を読み込む
 loadSoftmaxSettings();
-// 共有タブのアクティブ化を検知して自動読み込み
+// 共有タブのアクティブ化を検知してlocalStorage設定をUIに反映（GitHub自動読み込みは行わない）
 const _origSwFn = window.sw;
-window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='admin') { loadSoftmaxSettings(); setTimeout(loadSoftmaxFromGithub, 100); } };
+window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='admin') { loadSoftmaxSettings(); } };
 
 </script>
 
