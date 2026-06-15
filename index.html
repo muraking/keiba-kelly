@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.1
+  v2026.06.15.2
 
   変更履歴:
+    v2026.06.15.2 - calcAll: v2026.06.15.1で本/穴カード追加時にelseブロックを閉じる`}`を誤削除し、
+                   スクリプト全体が構文エラー（updatePerfPanel is not defined・一覧読込不可）になっていた不具合を修正。
+                   合わせて本/穴・見送り推奨をelseブロック外へ移動し、買い目なし（スキップ対象）レースでも表示されるようにした。
     v2026.06.15.1 - calcAll: 買い目テーブル・馬連参考を廃止し、本/穴カード表示に変更（本=勝率上位3頭、穴=EV100超の勝率上位3頭）。
                    馬連/ワイド購入設定に「本命×穴馬」モード追加（本1-3・穴1-3チェックボックス）。
     v2026.06.14.7 - 管理画面を開いてもGitHubから個別設定が自動読込されず、最適化が書いたev_max等が
@@ -216,7 +219,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -965,7 +968,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.2</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2131,9 +2134,10 @@ function calcAll(){
         ⚠️ 1番人気は${globalFavOdds}倍です。購入前に確認してください。
       </div>`;
     }
+  }
 
-    // 本/穴 表示
-    (()=>{
+  // 本/穴 表示
+  (()=>{
       const JRA_V = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
       const _race2 = currentRace || (ghData[document.getElementById('date-select')?.value]?.races[parseInt(document.getElementById('race-select')?.value)]);
       const isJraVn = _race2 ? JRA_V.includes(_race2.venue) : false;
