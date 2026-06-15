@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.14.7
+  v2026.06.15.1
 
   変更履歴:
+    v2026.06.15.1 - calcAll: 買い目テーブル・馬連参考を廃止し、本/穴カード表示に変更（本=勝率上位3頭、穴=EV100超の勝率上位3頭）。
+                   馬連/ワイド購入設定に「本命×穴馬」モード追加（本1-3・穴1-3チェックボックス）。
     v2026.06.14.7 - 管理画面を開いてもGitHubから個別設定が自動読込されず、最適化が書いたev_max等が
                     空欄表示になるバグを修正。自動読込トリガーのタブ判定を存在しない'share'→'admin'に修正。
     v2026.06.14.6 - JRA/地方個別設定に「期待値最大」「最小オッズ」入力欄を追加。従来は最適化が書いた
@@ -214,7 +216,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.14.7</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -738,7 +740,46 @@ textarea:focus{border-color:var(--gold)}
           <option value="formation">フォーメーション（軸×相手）</option>
           <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
           <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+          <option value="hon_ana">本命×穴馬</option>
         </select>
+        <div id="exacta-hon-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-hon1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_hon1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">本1</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-hon2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_hon2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">本2</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-hon3" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_hon3', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">本3</span>
+            </label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-ana1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_ana1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">穴1</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-ana2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_ana2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">穴2</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="exacta-ana3" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('exacta_ana3', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">穴3</span>
+            </label>
+          </div>
+        </div>
         <div id="exacta-formation-settings">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
@@ -807,7 +848,46 @@ textarea:focus{border-color:var(--gold)}
           <option value="formation">フォーメーション（軸×相手）</option>
           <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
           <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+          <option value="hon_ana">本命×穴馬</option>
         </select>
+        <div id="wide-hon-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-hon1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_hon1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">本1</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-hon2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_hon2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">本2</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-hon3" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_hon3', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">本3</span>
+            </label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-ana1" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_ana1', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">穴1</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-ana2" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_ana2', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">穴2</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
+              <input type="checkbox" id="wide-ana3" style="width:15px;height:15px;cursor:pointer"
+                onchange="localStorage.setItem('wide_ana3', this.checked?'1':'0')">
+              <span style="font-size:12px;color:var(--text)">穴3</span>
+            </label>
+          </div>
+        </div>
         <div id="wide-formation-settings">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
@@ -885,7 +965,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.14.7</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.1</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -1166,11 +1246,12 @@ function updateComboMethodUI(prefix) {
   if(!sel) return;
   const method = sel.value;
   localStorage.setItem(`${prefix}_method`, method);
-  const formEl = document.getElementById(`${prefix}-formation-settings`);
-  const boxEl  = document.getElementById(`${prefix}-box-settings`);
+  const formEl   = document.getElementById(`${prefix}-formation-settings`);
+  const boxEl    = document.getElementById(`${prefix}-box-settings`);
+  const honEl    = document.getElementById(`${prefix}-hon-settings`);
   if(formEl) formEl.style.display = method === 'formation' ? '' : 'none';
-  if(boxEl)  boxEl.style.display  = method !== 'formation' ? '' : 'none';
-  // 勝率ボックス専用フィルタUI（ワイドのみ）
+  if(boxEl)  boxEl.style.display  = (method === 'rec_box' || method === 'top_box') ? '' : 'none';
+  if(honEl)  honEl.style.display  = method === 'hon_ana' ? '' : 'none';
   const filterEl = document.getElementById(`${prefix}-topbox-filter`);
   if(filterEl) filterEl.style.display = method === 'top_box' ? '' : 'none';
 }
@@ -1233,8 +1314,20 @@ async function saveSoftmaxSettings() {
   const wideRec3      = document.getElementById('wide-rec3')?.checked || false;
   const exactaMethod  = document.getElementById('exacta-method')?.value || 'formation';
   const exactaBoxN    = parseInt(document.getElementById('exacta-box-n')?.value || '3') || 3;
+  const exactaHon1    = document.getElementById('exacta-hon1')?.checked || false;
+  const exactaHon2    = document.getElementById('exacta-hon2')?.checked || false;
+  const exactaHon3    = document.getElementById('exacta-hon3')?.checked || false;
+  const exactaAna1    = document.getElementById('exacta-ana1')?.checked || false;
+  const exactaAna2    = document.getElementById('exacta-ana2')?.checked || false;
+  const exactaAna3    = document.getElementById('exacta-ana3')?.checked || false;
   const wideMethod    = document.getElementById('wide-method')?.value || 'formation';
   const wideBoxN      = parseInt(document.getElementById('wide-box-n')?.value || '3') || 3;
+  const wideHon1      = document.getElementById('wide-hon1')?.checked || false;
+  const wideHon2      = document.getElementById('wide-hon2')?.checked || false;
+  const wideHon3      = document.getElementById('wide-hon3')?.checked || false;
+  const wideAna1      = document.getElementById('wide-ana1')?.checked || false;
+  const wideAna2      = document.getElementById('wide-ana2')?.checked || false;
+  const wideAna3      = document.getElementById('wide-ana3')?.checked || false;
   const wideOddsMin   = parseFloat(document.getElementById('wide-odds-min')?.value || '') || null;
   const wideOddsMax   = parseFloat(document.getElementById('wide-odds-max')?.value || '') || null;
   const wideWinrateFilter = parseFloat(document.getElementById('wide-winrate-filter')?.value || '') || null;
@@ -1329,8 +1422,20 @@ async function saveSoftmaxSettings() {
       data._settings.wide_rec3       = wideRec3;
       data._settings.exacta_method   = exactaMethod;
       data._settings.exacta_box_n    = exactaBoxN;
+      data._settings.exacta_hon1     = exactaHon1;
+      data._settings.exacta_hon2     = exactaHon2;
+      data._settings.exacta_hon3     = exactaHon3;
+      data._settings.exacta_ana1     = exactaAna1;
+      data._settings.exacta_ana2     = exactaAna2;
+      data._settings.exacta_ana3     = exactaAna3;
       data._settings.wide_method     = wideMethod;
       data._settings.wide_box_n      = wideBoxN;
+      data._settings.wide_hon1       = wideHon1;
+      data._settings.wide_hon2       = wideHon2;
+      data._settings.wide_hon3       = wideHon3;
+      data._settings.wide_ana1       = wideAna1;
+      data._settings.wide_ana2       = wideAna2;
+      data._settings.wide_ana3       = wideAna3;
       if(wideOddsMin !== null) data._settings.wide_odds_min = wideOddsMin; else delete data._settings.wide_odds_min;
       if(wideOddsMax !== null) data._settings.wide_odds_max = wideOddsMax; else delete data._settings.wide_odds_max;
       if(wideWinrateFilter !== null) data._settings.wide_winrate_filter = wideWinrateFilter; else delete data._settings.wide_winrate_filter;
@@ -1482,8 +1587,20 @@ async function loadSoftmaxFromGithub() {
     const wideRec3      = s.wide_rec3      || false;
     const exactaMethod  = s.exacta_method  || 'formation';
     const exactaBoxN    = s.exacta_box_n   ?? 3;
+    const exactaHon1    = s.exacta_hon1    || false;
+    const exactaHon2    = s.exacta_hon2    || false;
+    const exactaHon3    = s.exacta_hon3    || false;
+    const exactaAna1    = s.exacta_ana1    || false;
+    const exactaAna2    = s.exacta_ana2    || false;
+    const exactaAna3    = s.exacta_ana3    || false;
     const wideMethod    = s.wide_method    || 'formation';
     const wideBoxN      = s.wide_box_n     ?? 3;
+    const wideHon1      = s.wide_hon1      || false;
+    const wideHon2      = s.wide_hon2      || false;
+    const wideHon3      = s.wide_hon3      || false;
+    const wideAna1      = s.wide_ana1      || false;
+    const wideAna2      = s.wide_ana2      || false;
+    const wideAna3      = s.wide_ana3      || false;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -1523,8 +1640,20 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('wide_rec3',      wideRec3     ? '1' : '0');
     localStorage.setItem('exacta_method', exactaMethod);
     localStorage.setItem('exacta_box_n',  String(exactaBoxN));
+    localStorage.setItem('exacta_hon1',   exactaHon1  ? '1' : '0');
+    localStorage.setItem('exacta_hon2',   exactaHon2  ? '1' : '0');
+    localStorage.setItem('exacta_hon3',   exactaHon3  ? '1' : '0');
+    localStorage.setItem('exacta_ana1',   exactaAna1  ? '1' : '0');
+    localStorage.setItem('exacta_ana2',   exactaAna2  ? '1' : '0');
+    localStorage.setItem('exacta_ana3',   exactaAna3  ? '1' : '0');
     localStorage.setItem('wide_method',   wideMethod);
     localStorage.setItem('wide_box_n',    String(wideBoxN));
+    localStorage.setItem('wide_hon1',     wideHon1    ? '1' : '0');
+    localStorage.setItem('wide_hon2',     wideHon2    ? '1' : '0');
+    localStorage.setItem('wide_hon3',     wideHon3    ? '1' : '0');
+    localStorage.setItem('wide_ana1',     wideAna1    ? '1' : '0');
+    localStorage.setItem('wide_ana2',     wideAna2    ? '1' : '0');
+    localStorage.setItem('wide_ana3',     wideAna3    ? '1' : '0');
     const ablEl2 = document.getElementById('auto-buy-local');
     const abjEl2 = document.getElementById('auto-buy-jra');
     const abmEl2 = document.getElementById('auto-buy-max');
@@ -1576,10 +1705,16 @@ async function loadSoftmaxFromGithub() {
     if(exactaMethodEl){ exactaMethodEl.value = exactaMethod; updateComboMethodUI('exacta'); }
     const exactaBoxNEl = document.getElementById('exacta-box-n');
     if(exactaBoxNEl) exactaBoxNEl.value = String(exactaBoxN);
+    ['exacta-hon1','exacta-hon2','exacta-hon3','exacta-ana1','exacta-ana2','exacta-ana3'].forEach((id,i)=>{
+      const el=document.getElementById(id); if(el) el.checked=[exactaHon1,exactaHon2,exactaHon3,exactaAna1,exactaAna2,exactaAna3][i];
+    });
     const wideMethodEl = document.getElementById('wide-method');
     if(wideMethodEl){ wideMethodEl.value = wideMethod; updateComboMethodUI('wide'); }
     const wideBoxNEl = document.getElementById('wide-box-n');
     if(wideBoxNEl) wideBoxNEl.value = String(wideBoxN);
+    ['wide-hon1','wide-hon2','wide-hon3','wide-ana1','wide-ana2','wide-ana3'].forEach((id,i)=>{
+      const el=document.getElementById(id); if(el) el.checked=[wideHon1,wideHon2,wideHon3,wideAna1,wideAna2,wideAna3][i];
+    });
     const setField = (id, val) => { const el = document.getElementById(id); if(el && val != null && val !== '') el.value = val; else if(el) el.value = ''; };
     setField('jra-ev-min', sjra.ev_min ?? '');
     setField('jra-ev-max', sjra.ev_max ?? '');
@@ -1760,10 +1895,16 @@ function loadSoftmaxSettings() {
   if(exactaMethodEl2){ exactaMethodEl2.value = localStorage.getItem('exacta_method') || 'formation'; updateComboMethodUI('exacta'); }
   const exactaBoxNEl2 = document.getElementById('exacta-box-n');
   if(exactaBoxNEl2) exactaBoxNEl2.value = localStorage.getItem('exacta_box_n') || '3';
+  ['exacta-hon1','exacta-hon2','exacta-hon3','exacta-ana1','exacta-ana2','exacta-ana3'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.checked=localStorage.getItem(id.replace(/-/g,'_'))==='1';
+  });
   const wideMethodEl2 = document.getElementById('wide-method');
   if(wideMethodEl2){ wideMethodEl2.value = localStorage.getItem('wide_method') || 'formation'; updateComboMethodUI('wide'); }
   const wideBoxNEl2 = document.getElementById('wide-box-n');
   if(wideBoxNEl2) wideBoxNEl2.value = localStorage.getItem('wide_box_n') || '3';
+  ['wide-hon1','wide-hon2','wide-hon3','wide-ana1','wide-ana2','wide-ana3'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.checked=localStorage.getItem(id.replace(/-/g,'_'))==='1';
+  });
   const woMinEl = document.getElementById('wide-odds-min');
   if(woMinEl) woMinEl.value = localStorage.getItem('wide_odds_min') || '';
   const woMaxEl = document.getElementById('wide-odds-max');
@@ -1991,118 +2132,67 @@ function calcAll(){
       </div>`;
     }
 
-    // 買い目テーブル
-    html+=`<div class="sh">買い目</div>
-    <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
-      <table style="width:100%;border-collapse:collapse;font-size:13px">
-        <thead>
-          <tr style="border-bottom:0.5px solid var(--border2)">
-            <th style="padding:8px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">馬番・馬名</th>
-            <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">勝率</th>
-            <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">オッズ</th>
-            <th style="padding:8px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">期待値</th>
-            <th style="padding:8px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">賭け額</th>
-          </tr>
-        </thead>
-        <tbody>`;
-
-    const rendersSorted=[...renders].sort((a,b)=>a.num-b.num);
-    for(const h of rendersSorted){
-      const tb=betMap[h.num]||0;
-      const kf=h.tanOdds?halfKelly(h.norm,h.tanOdds):0;
-      const ev=h.tanEV,evC=ev>=150?'var(--green)':ev>=100?'var(--amber)':'var(--text2)';
-      const payout=tb>0?Math.round(tb*h.tanOdds):0;
-      const profit=tb>0?payout-ttl:0;
-      const label=h._t==='main'?`推奨${h._r}`:'サブ';
-      const labelColor=h._t==='main'?'var(--green)':'var(--blue)';
-      html+=`<tr style="border-bottom:0.5px solid var(--border)">
-        <td style="padding:10px 10px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:22px;height:22px;border-radius:50%;background:var(--bg3);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0">${h.num}</div>
-            <div>
-              <div style="font-size:12px;color:var(--text)">${h.name}</div>
-              <div style="font-size:10px;color:${labelColor}">${label}</div>
-            </div>
-          </div>
-        </td>
-        <td style="padding:10px 6px;text-align:right;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</td>
-        <td style="padding:10px 6px;text-align:right;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace">${h.tanOdds?h.tanOdds+'倍':'−'}</td>
-        <td style="padding:10px 6px;text-align:right;font-size:12px;font-weight:700;color:${evC};font-family:'DM Mono',monospace">${ev?ev.toFixed(0):'−'}</td>
-        <td style="padding:10px 10px;text-align:right">
-          ${tb>0?`<div style="font-size:13px;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">¥${tb.toLocaleString()}</div>
-            <div style="font-size:10px;color:var(--text3)">→¥${payout.toLocaleString()}</div>
-            <div style="font-size:10px;color:var(--text3)">純利+¥${profit.toLocaleString()}</div>`
-          :'<span style="font-size:11px;color:var(--text3)">推奨なし</span>'}
-        </td>
-      </tr>`;
-    }
-    html+=`</tbody></table></div>`;
-  }
-
-  // 馬連参考（勝率上位2頭 × 推奨馬最大3頭・最大6点）
-  (()=>{
-    // ハーヴィル公式で馬連確率計算
-    function harvilleExacta(norms, ni, nj) {
-      const entries = Object.entries(norms).map(([n,p])=>({n:parseInt(n),p})).filter(e=>e.p>0);
-      const tot = entries.reduce((s,e)=>s+e.p, 0);
-      if(!tot) return 0;
-      const norm = entries.map(e=>({n:e.n, p:e.p/tot}));
-      const pi = norm.find(e=>e.n===ni)?.p || 0;
-      const pj = norm.find(e=>e.n===nj)?.p || 0;
-      if(!pi || !pj) return 0;
-      const pij = pi > 0 && (1-pi) > 0 ? pi * (pj/(1-pi)) : 0;
-      const pji = pj > 0 && (1-pj) > 0 ? pj * (pi/(1-pj)) : 0;
-      return Math.min(pij + pji, 1.0);
-    }
-
-    const normMap = {};
-    horses.forEach(h => { normMap[h.num] = h.norm || 0; });
-
-    // 勝率上位2頭
-    const sorted = [...horses].sort((a,b)=>(b.norm||0)-(a.norm||0));
-    const top2 = sorted.slice(0,2).map(h=>h.num);
-
-    // 推奨馬（買い目あり）最大3頭
-    const recNums = renders.filter(h=>betMap[h.num]>0)
-      .sort((a,b)=>(b.norm||0)-(a.norm||0))
-      .slice(0,3).map(h=>h.num);
-
-    if(recNums.length > 0) {
-      const pairs = [];
-      const seen = new Set();
-      for(const ni of top2) {
-        for(const nj of recNums) {
-          if(ni === nj) continue;
-          const key = [ni,nj].sort((a,b)=>a-b).join('-');
-          if(seen.has(key)) continue;
-          seen.add(key);
-          const prob = harvilleExacta(normMap, ni, nj);
-          const theo = prob > 0 ? (0.75/prob).toFixed(1) : '-';
-          pairs.push({ni, nj, prob, theo});
-        }
+    // 本/穴 表示
+    (()=>{
+      const JRA_V = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+      const _race2 = currentRace || (ghData[document.getElementById('date-select')?.value]?.races[parseInt(document.getElementById('race-select')?.value)]);
+      const isJraVn = _race2 ? JRA_V.includes(_race2.venue) : false;
+      const rc2 = ((typeof currentRaceClass!=='undefined'&&currentRaceClass)||'') + ((typeof currentRaceName!=='undefined'&&currentRaceName)||'');
+      const skipFavOdds2 = parseFloat(localStorage.getItem('auto_buy_skip_fav_odds')||'1.6')||1.6;
+      const doSkipFav   = localStorage.getItem('auto_buy_skip_fav')==='1';
+      const allTan2 = horses.map(h=>h.tanOdds).filter(Boolean);
+      const minOdds2 = allTan2.length ? Math.min(...allTan2) : null;
+      let skipReason2 = null;
+      if(doSkipFav && minOdds2 && minOdds2 <= skipFavOdds2){
+        skipReason2 = `1番人気${minOdds2}倍`;
+      } else if(!isJraVn){
+        if(localStorage.getItem('skip_local_maiden')==='1' && /新馬/.test(rc2)) skipReason2='新馬戦';
+        else if(localStorage.getItem('skip_local_2yo')==='1'    && /[2２]歳/.test(rc2)) skipReason2='2歳戦';
+        else if(localStorage.getItem('skip_local_3yo')==='1'    && /[3３]歳/.test(rc2)) skipReason2='3歳戦';
+      } else {
+        if(localStorage.getItem('skip_jra_hurdle')==='1'  && /障害|ハードル|J・G|J-G/.test(rc2)) skipReason2='障害戦';
+        else if(localStorage.getItem('skip_jra_maiden')==='1' && /新馬/.test(rc2)) skipReason2='新馬戦';
+        else if(localStorage.getItem('skip_jra_2yo')==='1'    && /[2２]歳/.test(rc2)) skipReason2='2歳戦';
       }
-      pairs.sort((a,b)=>b.prob-a.prob);
-
-      if(pairs.length > 0) {
-        html+=`<div class="sh">🔗 馬連参考（理論値）</div>
-        <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
-          <table style="width:100%;border-collapse:collapse;font-size:13px">
-            <thead><tr style="border-bottom:0.5px solid var(--border2)">
-              <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">馬連</th>
-              <th style="padding:6px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">的中率</th>
-              <th style="padding:6px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">理論オッズ</th>
-            </tr></thead><tbody>`;
-        pairs.forEach(({ni,nj,prob,theo}) => {
-          html+=`<tr style="border-bottom:0.5px solid var(--border)">
-            <td style="padding:8px 10px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace">${ni}-${nj}</td>
-            <td style="padding:8px 6px;text-align:right;font-size:11px;color:var(--text2);font-family:'DM Mono',monospace">${(prob*100).toFixed(1)}%</td>
-            <td style="padding:8px 10px;text-align:right;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">${theo}倍</td>
-          </tr>`;
-        });
-        html+=`</tbody></table></div>`;
+      const buyNums2 = new Set(renders.filter(h=>betMap[h.num]>0).map(h=>h.num));
+      const sortedNorm = [...horses].sort((a,b)=>(b.norm||0)-(a.norm||0));
+      const fv2 = sortedNorm.slice(0,3);
+      const fvNums2 = new Set(fv2.map(h=>h.num));
+      const rest2 = horses.filter(h=>!fvNums2.has(h.num));
+      let ls2 = rest2
+        .filter(h=>h.tanEV && h.tanEV>=100)
+        .sort((a,b)=>{
+          const aB=buyNums2.has(a.num)?0:1, bB=buyNums2.has(b.num)?0:1;
+          if(aB!==bB) return aB-bB;
+          return (b.norm||0)-(a.norm||0);
+        }).slice(0,3);
+      if(ls2.length<3){
+        const lsNums2=new Set(ls2.map(h=>h.num));
+        const fill2=rest2.filter(h=>!lsNums2.has(h.num)&&(!h.tanEV||h.tanEV<100))
+          .sort((a,b)=>(b.tanEV||0)-(a.tanEV||0));
+        ls2=ls2.concat(fill2.slice(0,3-ls2.length));
       }
-    }
-  })();
+      function _circ2(n,filled){
+        if(filled){ if(n>=1&&n<=10) return String.fromCodePoint(0x2776+n-1); if(n>=11&&n<=20) return String.fromCodePoint(0x24EB+n-11); return `[${n}]`; }
+        if(n>=1&&n<=20) return String.fromCodePoint(0x2460+n-1); return `(${n})`;
+      }
+      function _fmtGrp(lst){
+        const s=[...lst].sort((a,b)=>(b.norm||0)-(a.norm||0));
+        return s.map(h=>_circ2(h.num,buyNums2.has(h.num))).join('')+'('+s.map(h=>Math.round(h.tanEV||0)).join('/')+')';
+      }
+      if(skipReason2){
+        html+=`<div style="background:rgba(239,68,68,.08);border:0.5px solid rgba(239,68,68,.3);border-radius:var(--r);padding:8px 12px;margin-bottom:12px;font-size:13px;color:#ef4444">🚫 見送り推奨（${skipReason2}）</div>`;
+      }
+      html+=`<div class="sh">本 / 穴</div>
+      <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:28px 1fr;gap:6px 0;align-items:baseline">
+          <span style="font-size:11px;color:var(--text3)">本</span>
+          <span style="font-family:'DM Mono',monospace;font-size:16px;color:var(--text);letter-spacing:0.5px">${_fmtGrp(fv2)}</span>
+          <span style="font-size:11px;color:var(--text3)">穴</span>
+          <span style="font-family:'DM Mono',monospace;font-size:16px;color:var(--text);letter-spacing:0.5px">${_fmtGrp(ls2)}</span>
+        </div>
+      </div>`;
+    })();
 
   // 全馬期待値一覧
   html+=`<div class="sh">全馬 期待値一覧</div>
