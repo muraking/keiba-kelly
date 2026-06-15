@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.5
+  v2026.06.15.6
 
   変更履歴:
+    v2026.06.15.6 - calcAll: 本/穴をテーブル形式から元のコンパクト表示（馬番＋期待値のみ・馬名なし）に戻し、
+                   馬番だけを全馬期待値一覧と同じ丸バッジ（bg3+gold）フォントに統一。
     v2026.06.15.5 - calcAll: 単勝推奨の並び順を馬番順→推奨順（推奨1,2,3…）に修正。
     v2026.06.15.4 - calcAll: 1番人気xx倍警告を削除。本/穴・単勝推奨・全馬期待値一覧の馬番バッジを
                    bg3背景+gold文字の丸バッジに統一（全馬期待値一覧スタイルに合わせた）。
@@ -226,7 +228,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.5</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.6</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -975,7 +977,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.5</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.6</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2173,44 +2175,24 @@ function calcAll(){
         ls2=ls2.concat(fill2.slice(0,3-ls2.length));
       }
       function _numBadge(n){
-        return `<div style="width:20px;height:20px;border-radius:50%;background:var(--bg3);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0">${n}</div>`;
+        return `<span style="display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--bg3);color:var(--gold);font-size:10px;font-weight:700;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0;vertical-align:middle">${n}</span>`;
       }
-      function _honAnaRows(lst,label,labelColor){
-        return [...lst].sort((a,b)=>(b.norm||0)-(a.norm||0)).map(h=>{
-          const ev=h.tanEV,evC=ev>=150?'var(--green)':ev>=100?'var(--amber)':'var(--text2)';
-          return `<tr style="border-bottom:0.5px solid var(--border)">
-            <td style="padding:8px 10px">
-              <div style="display:flex;align-items:center;gap:6px">
-                ${_numBadge(h.num)}
-                <div>
-                  <div style="font-size:12px;color:var(--text)">${h.name}</div>
-                  <div style="font-size:10px;color:${labelColor}">${label}</div>
-                </div>
-              </div>
-            </td>
-            <td style="padding:8px 6px;text-align:right;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace">${(h.norm*100).toFixed(1)}%</td>
-            <td style="padding:8px 6px;text-align:right;font-size:11px;color:var(--text2);font-family:'DM Mono',monospace">${h.tanOdds?h.tanOdds+'倍':'−'}</td>
-            <td style="padding:8px 10px;text-align:right;font-size:12px;font-weight:700;color:${evC};font-family:'DM Mono',monospace">${ev?ev.toFixed(0):'−'}</td>
-          </tr>`;
-        }).join('');
+      function _fmtGrp(lst){
+        const s=[...lst].sort((a,b)=>(b.norm||0)-(a.norm||0));
+        return `<span style="display:inline-flex;gap:4px;align-items:center">${s.map(h=>_numBadge(h.num)).join('')}</span>`
+          +` <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text3)">(${s.map(h=>Math.round(h.tanEV||0)).join('/')})</span>`;
       }
       if(skipReason2){
         html+=`<div style="background:rgba(239,68,68,.08);border:0.5px solid rgba(239,68,68,.3);border-radius:var(--r);padding:8px 12px;margin-bottom:12px;font-size:13px;color:#ef4444">🚫 見送り推奨（${skipReason2}）</div>`;
       }
       html+=`<div class="sh">本 / 穴</div>
-      <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
-        <table style="width:100%;border-collapse:collapse;font-size:12px">
-          <thead><tr style="border-bottom:0.5px solid var(--border2)">
-            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:500">馬番・馬名</th>
-            <th style="padding:6px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">勝率</th>
-            <th style="padding:6px 6px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">オッズ</th>
-            <th style="padding:6px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">期待値</th>
-          </tr></thead>
-          <tbody>
-            ${_honAnaRows(fv2,'本','var(--gold)')}
-            ${_honAnaRows(ls2,'穴','var(--text2)')}
-          </tbody>
-        </table>
+      <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:28px 1fr;gap:10px 0;align-items:center">
+          <span style="font-size:11px;color:var(--text3)">本</span>
+          <span>${_fmtGrp(fv2)}</span>
+          <span style="font-size:11px;color:var(--text3)">穴</span>
+          <span>${_fmtGrp(ls2)}</span>
+        </div>
       </div>`;
 
       // 単勝推奨（実際に単勝購入予定の馬がいる時のみ表示・賭け額カラムなし）
