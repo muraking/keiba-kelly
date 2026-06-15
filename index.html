@@ -1,8 +1,12 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.6
+  v2026.06.15.8
 
   変更履歴:
+    v2026.06.15.8 - calcAll: 単勝推奨をspat4_scheduler.pyの自動購入と同じ判定（フィルタ→EV降順→max_bets頭、
+                   スキップ対象レースは対象外）で算出するよう変更。skipReason2にskip_jra_3yoを追加し判定を一致。
+    v2026.06.15.7 - calcAll: 「期待値100超の馬が見つかりません」警告を削除（買い目がある時のみ結果テーブル表示）。
+                   最大購入点数を設定タブで変えても効かない不具合を修正（onchangeで即localStorageへ保存）。
     v2026.06.15.6 - calcAll: 本/穴をテーブル形式から元のコンパクト表示（馬番＋期待値のみ・馬名なし）に戻し、
                    馬番だけを全馬期待値一覧と同じ丸バッジ（bg3+gold）フォントに統一。
     v2026.06.15.5 - calcAll: 単勝推奨の並び順を馬番順→推奨順（推奨1,2,3…）に修正。
@@ -228,7 +232,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.6</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.8</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -286,7 +290,7 @@ textarea:focus{border-color:var(--gold)}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div class="field" style="margin-bottom:0">
           <label>最大購入点数</label>
-          <select id="max-bets" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
+          <select id="max-bets" onchange="localStorage.setItem('max_bets', this.value)" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
             <option value="1">1点</option>
             <option value="2">2点</option>
             <option value="3">3点</option>
@@ -977,7 +981,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.6</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.8</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
@@ -2107,9 +2111,7 @@ function calcAll(){
   }
   // ==========
 
-  if(!renders.length||!Object.values(betMap).some(v=>v>0)){
-    html+='<div class="msg">期待値100超の馬が見つかりません</div>';
-  } else {
+  if(renders.length && Object.values(betMap).some(v=>v>0)){
     // ===== 結果テーブル =====
     const rate=fund>0?(ttl/fund*100).toFixed(1):0;
     html+=`<div class="total-box" style="margin-bottom:14px">
@@ -2155,6 +2157,7 @@ function calcAll(){
         if(localStorage.getItem('skip_jra_hurdle')==='1'  && /障害|ハードル|J・G|J-G/.test(rc2)) skipReason2='障害戦';
         else if(localStorage.getItem('skip_jra_maiden')==='1' && /新馬/.test(rc2)) skipReason2='新馬戦';
         else if(localStorage.getItem('skip_jra_2yo')==='1'    && /[2２]歳/.test(rc2)) skipReason2='2歳戦';
+        else if(localStorage.getItem('skip_jra_3yo')==='1'    && /[3３]歳/.test(rc2)) skipReason2='3歳戦';
       }
       const buyNums2 = new Set(renders.filter(h=>betMap[h.num]>0).map(h=>h.num));
       const sortedNorm = [...horses].sort((a,b)=>(b.norm||0)-(a.norm||0));
@@ -2195,9 +2198,20 @@ function calcAll(){
         </div>
       </div>`;
 
-      // 単勝推奨（実際に単勝購入予定の馬がいる時のみ表示・賭け額カラムなし）
-      const buyList = renders.filter(h=>betMap[h.num]>0).sort((a,b)=>(a._r||99)-(b._r||99));
-      if(buyList.length){
+      // 単勝推奨（spat4_scheduler.py の自動購入と同じ判定：フィルタ→EV降順→max_bets頭。スキップ対象レースは対象外）
+      const autoBuyList = skipReason2 ? [] : horses
+        .filter(h=>{
+          if(!h.tanEV || !h.tanOdds) return false;
+          if(_wf > 0 && (h.norm*100) < _wf) return false;
+          if(h.tanEV < _evMin) return false;
+          if(h.tanEV > _evMax) return false;
+          if(h.tanOdds < _oddsMin) return false;
+          if(h.tanOdds > _oddsMax) return false;
+          return true;
+        })
+        .sort((a,b)=>b.tanEV-a.tanEV)
+        .slice(0, maxBets);
+      if(autoBuyList.length){
         html+=`<div class="sh">単勝推奨</div>
         <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
           <table style="width:100%;border-collapse:collapse;font-size:13px">
@@ -2210,17 +2224,15 @@ function calcAll(){
               </tr>
             </thead>
             <tbody>`;
-        for(const h of buyList){
+        autoBuyList.forEach((h,i)=>{
           const ev=h.tanEV,evC=ev>=150?'var(--green)':ev>=100?'var(--amber)':'var(--text2)';
-          const label=h._t==='main'?`推奨${h._r}`:'サブ';
-          const labelColor=h._t==='main'?'var(--green)':'var(--blue)';
           html+=`<tr style="border-bottom:0.5px solid var(--border)">
             <td style="padding:10px 10px">
               <div style="display:flex;align-items:center;gap:6px">
                 ${_numBadge(h.num)}
                 <div>
                   <div style="font-size:12px;color:var(--text)">${h.name}</div>
-                  <div style="font-size:10px;color:${labelColor}">${label}</div>
+                  <div style="font-size:10px;color:var(--green)">推奨${i+1}</div>
                 </div>
               </div>
             </td>
@@ -2228,7 +2240,7 @@ function calcAll(){
             <td style="padding:10px 6px;text-align:right;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace">${h.tanOdds?h.tanOdds+'倍':'−'}</td>
             <td style="padding:10px 10px;text-align:right;font-size:12px;font-weight:700;color:${evC};font-family:'DM Mono',monospace">${ev?ev.toFixed(0):'−'}</td>
           </tr>`;
-        }
+        });
         html+=`</tbody></table></div>`;
       }
     })();
