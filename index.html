@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.12
+  v2026.06.15.13
 
   変更履歴:
+    v2026.06.15.13 - 最大購入点数もレース選択タブから共有タブへ移動（総資金・最大投資額と横並び3列）。
     v2026.06.15.12 - 設定タブ名を「レース選択」に変更。総資金・最大投資額を共有タブへ移動。
                     loadSoftmaxSettings: fund/max-investをlocalStorageから復元するよう追加。
     v2026.06.15.11 - 設定タブ: 総資金・最大投資額を折りたたみ式「購入設定」セクションに移動（目立たない場所へ）。
@@ -239,7 +240,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.12</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.13</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -287,24 +288,8 @@ textarea:focus{border-color:var(--gold)}
     </button>
   </nav>
 
-  <!-- 設定 -->
+  <!-- レース選択 -->
   <div id="p-setup" class="page on">
-    <div style="margin-bottom:20px">
-      <div class="field" style="margin-bottom:0">
-        <label>最大購入点数</label>
-        <select id="max-bets" onchange="localStorage.setItem('max_bets', this.value)" style="width:100%;height:40px;padding:0 10px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:inherit">
-          <option value="1">1点</option>
-          <option value="2">2点</option>
-          <option value="3">3点</option>
-          <option value="4" selected>4点</option>
-          <option value="5">5点</option>
-          <option value="6">6点</option>
-          <option value="7">7点</option>
-          <option value="8">8点</option>
-          <option value="99">制限なし</option>
-        </select>
-      </div>
-    </div>
 
     <div style="margin-bottom:20px">
       <div class="sh">GitHubからレースを選択</div>
@@ -962,7 +947,22 @@ textarea:focus{border-color:var(--gold)}
           </div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+        <div class="field" style="margin-bottom:0">
+          <label style="font-size:12px">最大購入点数</label>
+          <select id="max-bets" onchange="localStorage.setItem('max_bets', this.value)"
+            style="height:36px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:13px;font-family:inherit;width:100%;padding:0 8px;box-sizing:border-box">
+            <option value="1">1点</option>
+            <option value="2">2点</option>
+            <option value="3">3点</option>
+            <option value="4" selected>4点</option>
+            <option value="5">5点</option>
+            <option value="6">6点</option>
+            <option value="7">7点</option>
+            <option value="8">8点</option>
+            <option value="99">制限なし</option>
+          </select>
+        </div>
         <div class="field" style="margin-bottom:0">
           <label style="font-size:12px">総資金（円）</label>
           <input type="number" id="fund" placeholder="例: 10000" inputmode="numeric" value="10000"
@@ -992,7 +992,7 @@ textarea:focus{border-color:var(--gold)}
       <div id="date-list-area"></div>
     </div>
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.12</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.13</span></div>
       </div>
     </div><!-- /subtab-admin -->
 
