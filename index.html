@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.16.6
+  v2026.06.16.7
 
   変更履歴:
+    v2026.06.16.7 - 地方・中央タブの末尾に「GitHubから読込」「設定を保存」ボタンを追加。
     v2026.06.16.6 - 共通タブに「単勝購入時のみ馬連/ワイドを購入」フラグを追加。
                    combo_only_with_tan=ONの時、単勝購入がなければ馬連/ワイドをスキップ。
     v2026.06.16.5 - 共通タブに「発走何分前に取得するか」設定を追加。デフォルト7分。
@@ -251,7 +252,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.6</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.7</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -770,7 +771,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.6</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.7</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -870,6 +871,11 @@ textarea:focus{border-color:var(--gold)}
         </label>
         <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると地方の買い目対象馬の複勝も購入</div>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+        <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
+        <button onclick="saveSoftmaxSettings()" class="btn btn-gold">💾 設定を保存</button>
+      </div>
+      <div style="font-size:12px;text-align:center;margin-top:6px;min-height:16px" id="sm-save-status-local"></div>
     </div><!-- /subtab-local-settings -->
 
     <!-- 中央サブタブ -->
@@ -970,6 +976,11 @@ textarea:focus{border-color:var(--gold)}
         </label>
         <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると中央の買い目対象馬の複勝も購入</div>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+        <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
+        <button onclick="saveSoftmaxSettings()" class="btn btn-gold">💾 設定を保存</button>
+      </div>
+      <div style="font-size:12px;text-align:center;margin-top:6px;min-height:16px" id="sm-save-status-jra"></div>
     </div><!-- /subtab-jra-settings -->
 
   </div>
