@@ -1,8 +1,14 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.16.7
+  v2026.06.16.9
 
   変更履歴:
+    v2026.06.16.9 - 地方/中央の勝率フィルターを「空欄=共通値使用 / 0=フィルタなし」に変更。
+                   従来は0でも_settings_localに書き込み共通値を上書きしていた（0%適用）。
+                   空欄なら_settings_local/_settings_jraにキーを書かず共通値を継承するよう修正。
+    v2026.06.16.8 - 地方サブタブのdiv閉じ忘れを修正（1番人気スキップ設定のラッパーdiv欠落により
+                   損切り/最大投資額/複勝/保存ボタンが中央タブにも漏れて表示されていた不具合を修正）。
+                   地方/中央タブの保存ボタンの結果メッセージが各タブにも表示されるよう修正。
     v2026.06.16.7 - 地方・中央タブの末尾に「GitHubから読込」「設定を保存」ボタンを追加。
     v2026.06.16.6 - 共通タブに「単勝購入時のみ馬連/ワイドを購入」フラグを追加。
                    combo_only_with_tan=ONの時、単勝購入がなければ馬連/ワイドをスキップ。
@@ -252,7 +258,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.7</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.9</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -771,7 +777,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.7</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.9</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -793,7 +799,7 @@ textarea:focus{border-color:var(--gold)}
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最大（空=共通値）</div><input id="local-ev-max" type="number" min="100" max="9999" step="1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空=共通値）</div><input id="local-odds-min" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div><input id="local-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
-        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div><input id="local-winrate-filter" type="number" min="0" max="50" step="1" value="0" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（空=共通 / 0=フィルタなし）</div><input id="local-winrate-filter" type="number" min="0" max="50" step="1" placeholder="空=共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
           <select id="local-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
             <option value="0">共通値使用</option><option value="1">1点</option><option value="2">2点</option><option value="3" selected>3点</option><option value="4">4点</option><option value="5">5点</option><option value="99">制限なし</option>
@@ -828,6 +834,7 @@ textarea:focus{border-color:var(--gold)}
         </label>
       </div>
 
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
         <div style="font-size:11px;color:var(--text3);margin-bottom:6px">1番人気スキップ設定（地方）</div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
           <input type="checkbox" id="local-skip-fav" style="width:18px;height:18px;cursor:pointer"
@@ -896,7 +903,7 @@ textarea:focus{border-color:var(--gold)}
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最大（空=共通値）</div><input id="jra-ev-max" type="number" min="100" max="9999" step="1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空=共通値）</div><input id="jra-odds-min" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div><input id="jra-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
-        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div><input id="jra-winrate-filter" type="number" min="0" max="50" step="1" value="0" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（空=共通 / 0=フィルタなし）</div><input id="jra-winrate-filter" type="number" min="0" max="50" step="1" placeholder="空=共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
         <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
           <select id="jra-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
             <option value="0">共通値使用</option><option value="1">1点</option><option value="2">2点</option><option value="3" selected>3点</option><option value="4">4点</option><option value="5">5点</option><option value="99">制限なし</option>
@@ -1242,7 +1249,7 @@ function updateComboMethodUI(prefix) {
 async function saveSoftmaxSettings() {
   const T = parseFloat(document.getElementById('sm-temperature').value) || 15;
   const minP = parseFloat(document.getElementById('sm-minpct').value);
-  const statusEl = document.getElementById('sm-save-status');
+  const statusEl = { set innerHTML(v){ ['sm-save-status','sm-save-status-local','sm-save-status-jra'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=v; }); } };
 
   const evMin = parseFloat(document.getElementById('ev-min').value) || 105;
   const evMax = parseFloat(document.getElementById('ev-max').value) || null;
@@ -1320,13 +1327,15 @@ async function saveSoftmaxSettings() {
   const jraEvMax        = parseFloat(document.getElementById('jra-ev-max')?.value || '') || null;
   const jraOddsMin      = parseFloat(document.getElementById('jra-odds-min')?.value || '') || null;
   const jraOddsMax      = parseFloat(document.getElementById('jra-odds-max')?.value || '') || null;
-  const jraWinrateFilter = parseFloat(document.getElementById('jra-winrate-filter')?.value || '0') || 0;
+  const _jwfRaw = document.getElementById('jra-winrate-filter')?.value;
+  const jraWinrateFilter = (_jwfRaw === '' || _jwfRaw == null) ? null : (parseFloat(_jwfRaw) || 0);
   const jraMaxBets      = parseInt(document.getElementById('jra-max-bets')?.value || '0') || 0;
   const localEvMin       = parseFloat(document.getElementById('local-ev-min')?.value || '') || null;
   const localEvMax       = parseFloat(document.getElementById('local-ev-max')?.value || '') || null;
   const localOddsMin     = parseFloat(document.getElementById('local-odds-min')?.value || '') || null;
   const localOddsMax     = parseFloat(document.getElementById('local-odds-max')?.value || '') || null;
-  const localWinrateFilter = parseFloat(document.getElementById('local-winrate-filter')?.value || '0') || 0;
+  const _lwfRaw = document.getElementById('local-winrate-filter')?.value;
+  const localWinrateFilter = (_lwfRaw === '' || _lwfRaw == null) ? null : (parseFloat(_lwfRaw) || 0);
   const localMaxBets     = parseInt(document.getElementById('local-max-bets')?.value || '0') || 0;
   // 地方/中央 個別の自動購入詳細設定（1番人気スキップ・損切り・1レース最大投資額・複勝）
   const localSkipFav       = document.getElementById('local-skip-fav')?.checked || false;
@@ -1368,13 +1377,13 @@ async function saveSoftmaxSettings() {
   if(jraEvMax !== null) localStorage.setItem('jra_ev_max', String(jraEvMax)); else localStorage.removeItem('jra_ev_max');
   if(jraOddsMin !== null) localStorage.setItem('jra_odds_min', String(jraOddsMin)); else localStorage.removeItem('jra_odds_min');
   if(jraOddsMax !== null) localStorage.setItem('jra_odds_max', String(jraOddsMax)); else localStorage.removeItem('jra_odds_max');
-  localStorage.setItem('jra_winrate_filter', String(jraWinrateFilter));
+  if(jraWinrateFilter !== null) localStorage.setItem('jra_winrate_filter', String(jraWinrateFilter)); else localStorage.removeItem('jra_winrate_filter');
   if(jraMaxBets > 0) localStorage.setItem('jra_max_bets', String(jraMaxBets)); else localStorage.removeItem('jra_max_bets');
   if(localEvMin !== null) localStorage.setItem('local_ev_min', String(localEvMin)); else localStorage.removeItem('local_ev_min');
   if(localEvMax !== null) localStorage.setItem('local_ev_max', String(localEvMax)); else localStorage.removeItem('local_ev_max');
   if(localOddsMin !== null) localStorage.setItem('local_odds_min', String(localOddsMin)); else localStorage.removeItem('local_odds_min');
   if(localOddsMax !== null) localStorage.setItem('local_odds_max', String(localOddsMax)); else localStorage.removeItem('local_odds_max');
-  localStorage.setItem('local_winrate_filter', String(localWinrateFilter));
+  if(localWinrateFilter !== null) localStorage.setItem('local_winrate_filter', String(localWinrateFilter)); else localStorage.removeItem('local_winrate_filter');
   if(localMaxBets > 0) localStorage.setItem('local_max_bets', String(localMaxBets)); else localStorage.removeItem('local_max_bets');
   // ワイド勝率ボックス専用フィルタをlocalStorageにも保存
   if(wideOddsMin !== null) localStorage.setItem('wide_odds_min', String(wideOddsMin)); else localStorage.removeItem('wide_odds_min');
@@ -1464,7 +1473,7 @@ async function saveSoftmaxSettings() {
       if (jraEvMax !== null) data._settings_jra.ev_max = jraEvMax; else delete data._settings_jra.ev_max;
       if (jraOddsMin !== null) data._settings_jra.odds_min = jraOddsMin; else delete data._settings_jra.odds_min;
       if (jraOddsMax !== null) data._settings_jra.odds_max = jraOddsMax;
-      data._settings_jra.sm_winrate_filter = jraWinrateFilter;
+      if(jraWinrateFilter !== null) data._settings_jra.sm_winrate_filter = jraWinrateFilter; else delete data._settings_jra.sm_winrate_filter;
       if (jraMaxBets > 0) data._settings_jra.max_bets = jraMaxBets;
       data._settings_jra.auto_buy_skip_fav = jraSkipFav;
       data._settings_jra.auto_buy_skip_fav_odds = jraSkipFavOdds;
@@ -1477,7 +1486,7 @@ async function saveSoftmaxSettings() {
       if (localEvMax !== null) data._settings_local.ev_max = localEvMax; else delete data._settings_local.ev_max;
       if (localOddsMin !== null) data._settings_local.odds_min = localOddsMin; else delete data._settings_local.odds_min;
       if (localOddsMax !== null) data._settings_local.odds_max = localOddsMax;
-      data._settings_local.sm_winrate_filter = localWinrateFilter;
+      if(localWinrateFilter !== null) data._settings_local.sm_winrate_filter = localWinrateFilter; else delete data._settings_local.sm_winrate_filter;
       if (localMaxBets > 0) data._settings_local.max_bets = localMaxBets;
       data._settings_local.auto_buy_skip_fav = localSkipFav;
       data._settings_local.auto_buy_skip_fav_odds = localSkipFavOdds;
@@ -1537,7 +1546,7 @@ function updatePerfPanel(perfLocal, perfJra) {
 }
 
 async function loadSoftmaxFromGithub() {
-  const statusEl = document.getElementById('sm-save-status');
+  const statusEl = { set innerHTML(v){ ['sm-save-status','sm-save-status-local','sm-save-status-jra'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=v; }); } };
   const currentEl = document.getElementById('sm-current');
   statusEl.innerHTML = '<span style="color:var(--amber)">🔄 GitHubから読み込み中...</span>';
   try {
@@ -1756,14 +1765,14 @@ async function loadSoftmaxFromGithub() {
     setField('jra-ev-max', sjra.ev_max ?? '');
     setField('jra-odds-min', sjra.odds_min ?? '');
     setField('jra-odds-max', sjra.odds_max ?? '');
-    setField('jra-winrate-filter', sjra.sm_winrate_filter ?? 0);
+    setField('jra-winrate-filter', sjra.sm_winrate_filter ?? '');
     const jraMaxBetsEl = document.getElementById('jra-max-bets');
     if(jraMaxBetsEl) jraMaxBetsEl.value = String(sjra.max_bets ?? 0);
     setField('local-ev-min', slocal.ev_min ?? '');
     setField('local-ev-max', slocal.ev_max ?? '');
     setField('local-odds-min', slocal.odds_min ?? '');
     setField('local-odds-max', slocal.odds_max ?? '');
-    setField('local-winrate-filter', slocal.sm_winrate_filter ?? 0);
+    setField('local-winrate-filter', slocal.sm_winrate_filter ?? '');
     const localMaxBetsEl = document.getElementById('local-max-bets');
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
     // ワイド勝率ボックス専用フィルタ
@@ -1778,13 +1787,13 @@ async function loadSoftmaxFromGithub() {
     if(sjra.ev_max != null) localStorage.setItem('jra_ev_max', String(sjra.ev_max)); else localStorage.removeItem('jra_ev_max');
     if(sjra.odds_min != null) localStorage.setItem('jra_odds_min', String(sjra.odds_min)); else localStorage.removeItem('jra_odds_min');
     if(sjra.odds_max != null) localStorage.setItem('jra_odds_max', String(sjra.odds_max)); else localStorage.removeItem('jra_odds_max');
-    localStorage.setItem('jra_winrate_filter', String(sjra.sm_winrate_filter ?? 0));
+    if(sjra.sm_winrate_filter != null) localStorage.setItem('jra_winrate_filter', String(sjra.sm_winrate_filter)); else localStorage.removeItem('jra_winrate_filter');
     if((sjra.max_bets ?? 0) > 0) localStorage.setItem('jra_max_bets', String(sjra.max_bets)); else localStorage.removeItem('jra_max_bets');
     if(slocal.ev_min != null) localStorage.setItem('local_ev_min', String(slocal.ev_min)); else localStorage.removeItem('local_ev_min');
     if(slocal.ev_max != null) localStorage.setItem('local_ev_max', String(slocal.ev_max)); else localStorage.removeItem('local_ev_max');
     if(slocal.odds_min != null) localStorage.setItem('local_odds_min', String(slocal.odds_min)); else localStorage.removeItem('local_odds_min');
     if(slocal.odds_max != null) localStorage.setItem('local_odds_max', String(slocal.odds_max)); else localStorage.removeItem('local_odds_max');
-    localStorage.setItem('local_winrate_filter', String(slocal.sm_winrate_filter ?? 0));
+    if(slocal.sm_winrate_filter != null) localStorage.setItem('local_winrate_filter', String(slocal.sm_winrate_filter)); else localStorage.removeItem('local_winrate_filter');
     if((slocal.max_bets ?? 0) > 0) localStorage.setItem('local_max_bets', String(slocal.max_bets)); else localStorage.removeItem('local_max_bets');
 
     // 地方/中央 個別の自動購入詳細設定をフォーム・localStorageへ反映
@@ -2004,13 +2013,13 @@ function loadSoftmaxSettings() {
   _sf('jra-ev-max', 'jra_ev_max');
   _sf('jra-odds-min', 'jra_odds_min');
   _sf('jra-odds-max', 'jra_odds_max');
-  const jraWfEl = document.getElementById('jra-winrate-filter'); if(jraWfEl) jraWfEl.value = localStorage.getItem('jra_winrate_filter') || '0';
+  const jraWfEl = document.getElementById('jra-winrate-filter'); if(jraWfEl) jraWfEl.value = localStorage.getItem('jra_winrate_filter') || '';
   const jraMbEl = document.getElementById('jra-max-bets'); if(jraMbEl) jraMbEl.value = localStorage.getItem('jra_max_bets') || '0';
   _sf('local-ev-min', 'local_ev_min');
   _sf('local-ev-max', 'local_ev_max');
   _sf('local-odds-min', 'local_odds_min');
   _sf('local-odds-max', 'local_odds_max');
-  const localWfEl = document.getElementById('local-winrate-filter'); if(localWfEl) localWfEl.value = localStorage.getItem('local_winrate_filter') || '0';
+  const localWfEl = document.getElementById('local-winrate-filter'); if(localWfEl) localWfEl.value = localStorage.getItem('local_winrate_filter') || '';
   const localMbEl = document.getElementById('local-max-bets'); if(localMbEl) localMbEl.value = localStorage.getItem('local_max_bets') || '0';
   const fundEl = document.getElementById('fund'); if(fundEl && localStorage.getItem('fund')) fundEl.value = localStorage.getItem('fund');
   const maxInvestEl = document.getElementById('max-invest'); if(maxInvestEl && localStorage.getItem('max_invest')) maxInvestEl.value = localStorage.getItem('max_invest');
