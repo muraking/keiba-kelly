@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.16.1
+  v2026.06.16.2
 
   変更履歴:
+    v2026.06.16.2 - 共通タブの馬連/ワイドブロックから JRA/地方 ON/OFF を削除。ON/OFFは地方/中央タブのみに表示。
     v2026.06.16.1 - 共有タブを「設定」に改名し共通/地方/中央の3サブタブに再編。地方/中央別に
                    1番人気スキップ・損切り・1レース最大投資額・複勝設定を追加（_settings_local/_settings_jra保存）。
                    calcAllの1番人気スキップ判定をレース種別ごとに参照（未設定時は旧共通設定にフォールバック）。
@@ -243,7 +244,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -521,18 +522,12 @@ textarea:focus{border-color:var(--gold)}
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔗 馬連購入設定</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 8px">
-            <input type="checkbox" id="buy-exacta-jra" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('buy_exacta_jra', this.checked?'1':'0'); document.getElementById('buy-exacta-jra-label').textContent=this.checked?'ON':'OFF'">
-            <span style="font-size:12px;color:var(--text)">JRA <span id="buy-exacta-jra-label">OFF</span></span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 8px">
-            <input type="checkbox" id="buy-exacta-local" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('buy_exacta_local', this.checked?'1':'0'); document.getElementById('buy-exacta-local-label').textContent=this.checked?'ON':'OFF'">
-            <span style="font-size:12px;color:var(--text)">地方 <span id="buy-exacta-local-label">OFF</span></span>
-          </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔗 馬連詳細設定（共通）<span style="font-size:10px;color:var(--text3)">　※ON/OFFは地方/中央タブで設定</span></div>
+        <div style="display:none">
+          <input type="checkbox" id="buy-exacta-jra" onchange="localStorage.setItem('buy_exacta_jra', this.checked?'1':'0')">
+          <span id="buy-exacta-jra-label"></span>
+          <input type="checkbox" id="buy-exacta-local" onchange="localStorage.setItem('buy_exacta_local', this.checked?'1':'0')">
+          <span id="buy-exacta-local-label"></span>
         </div>
         <label style="display:none"><input type="checkbox" id="buy-exacta" checked></label>
         <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
@@ -585,18 +580,12 @@ textarea:focus{border-color:var(--gold)}
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔀 ワイド購入設定</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 8px">
-            <input type="checkbox" id="buy-wide-jra" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('buy_wide_jra', this.checked?'1':'0'); document.getElementById('buy-wide-jra-label').textContent=this.checked?'ON':'OFF'">
-            <span style="font-size:12px;color:var(--text)">JRA <span id="buy-wide-jra-label">OFF</span></span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 8px">
-            <input type="checkbox" id="buy-wide-local" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('buy_wide_local', this.checked?'1':'0'); document.getElementById('buy-wide-local-label').textContent=this.checked?'ON':'OFF'">
-            <span style="font-size:12px;color:var(--text)">地方 <span id="buy-wide-local-label">OFF</span></span>
-          </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔀 ワイド詳細設定（共通）<span style="font-size:10px;color:var(--text3)">　※ON/OFFは地方/中央タブで設定</span></div>
+        <div style="display:none">
+          <input type="checkbox" id="buy-wide-jra" onchange="localStorage.setItem('buy_wide_jra', this.checked?'1':'0')">
+          <span id="buy-wide-jra-label"></span>
+          <input type="checkbox" id="buy-wide-local" onchange="localStorage.setItem('buy_wide_local', this.checked?'1':'0')">
+          <span id="buy-wide-local-label"></span>
         </div>
         <label style="display:none"><input type="checkbox" id="buy-wide" checked></label>
         <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
@@ -755,7 +744,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.2</span></div>
       </div>
     </div><!-- /subtab-common -->
 
