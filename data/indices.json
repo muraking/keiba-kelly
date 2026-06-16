@@ -17876,7 +17876,59 @@
           ]
         }
       ],
-      "updated": "2026-06-16T06:49:58.590+09:00"
+      "updated": "2026-06-16T06:49:58.590+09:00",
+      "odds": {
+        "07": {
+          "1": {
+            "1": {
+              "tan": 3.4,
+              "fuku_min": 1.2,
+              "fuku_max": 1.4
+            },
+            "2": {
+              "tan": 6.6,
+              "fuku_min": 1.7,
+              "fuku_max": 2.7
+            },
+            "3": {
+              "tan": 27.7,
+              "fuku_min": 3.6,
+              "fuku_max": 5.9
+            },
+            "4": {
+              "tan": 12.2,
+              "fuku_min": 2.2,
+              "fuku_max": 3.5
+            },
+            "5": {
+              "tan": 6.5,
+              "fuku_min": 3.1,
+              "fuku_max": 5.1
+            },
+            "6": {
+              "tan": 3.8,
+              "fuku_min": 1.2,
+              "fuku_max": 1.6
+            },
+            "7": {
+              "tan": 6.8,
+              "fuku_min": 1.5,
+              "fuku_max": 2.3
+            },
+            "8": {
+              "tan": 21.9,
+              "fuku_min": 4.9,
+              "fuku_max": 8
+            },
+            "9": {
+              "tan": 10.8,
+              "fuku_min": 2.7,
+              "fuku_max": 4.3
+            }
+          }
+        }
+      },
+      "odds_updated": "2026-06-16T11:34:18.547304+09:00"
     }
   },
   "_settings": {
@@ -17906,8 +17958,8 @@
     "buy_place_bet": false,
     "combined_kelly": true,
     "buy_exacta_jra": false,
-    "buy_exacta_local": false,
-    "buy_exacta": false,
+    "buy_exacta_local": true,
+    "buy_exacta": true,
     "exacta_amount": 100,
     "exacta_top1": true,
     "exacta_top2": true,
@@ -17915,22 +17967,34 @@
     "exacta_rec2": true,
     "exacta_rec3": true,
     "buy_wide_jra": false,
-    "buy_wide_local": false,
-    "buy_wide": false,
-    "wide_amount": 300,
+    "buy_wide_local": true,
+    "buy_wide": true,
+    "wide_amount": 200,
     "wide_top1": true,
     "wide_top2": false,
     "wide_rec1": true,
     "wide_rec2": true,
     "wide_rec3": false,
     "notify_bets": 3,
-    "exacta_method": "formation",
+    "exacta_method": "hon_ana",
     "exacta_box_n": 3,
-    "wide_method": "top_box",
+    "wide_method": "hon_ana",
     "wide_box_n": 3,
     "wide_odds_min": 5,
     "wide_odds_max": 15,
-    "wide_winrate_filter": 10
+    "wide_winrate_filter": 10,
+    "exacta_hon1": true,
+    "exacta_hon2": true,
+    "exacta_hon3": false,
+    "exacta_ana1": true,
+    "exacta_ana2": false,
+    "exacta_ana3": false,
+    "wide_hon1": true,
+    "wide_hon2": true,
+    "wide_hon3": false,
+    "wide_ana1": true,
+    "wide_ana2": false,
+    "wide_ana3": false
   },
   "_settings_jra": {
     "sm_winrate_filter": 0,
