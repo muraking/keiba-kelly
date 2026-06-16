@@ -1,8 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.16.2
+  v2026.06.16.3
 
   変更履歴:
+    v2026.06.16.3 - calcAll 本/穴カード: 本命をEV降順・穴馬を勝率降順で表示するよう変更。
     v2026.06.16.2 - 共通タブの馬連/ワイドブロックから JRA/地方 ON/OFF を削除。ON/OFFは地方/中央タブのみに表示。
     v2026.06.16.1 - 共有タブを「設定」に改名し共通/地方/中央の3サブタブに再編。地方/中央別に
                    1番人気スキップ・損切り・1レース最大投資額・複勝設定を追加（_settings_local/_settings_jra保存）。
@@ -244,7 +245,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -744,7 +745,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.3</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -2205,8 +2206,8 @@ function calcAll(){
       function _numBadge(n){
         return `<span style="display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--bg3);color:var(--gold);font-size:10px;font-weight:700;align-items:center;justify-content:center;font-family:'DM Mono',monospace;flex-shrink:0;vertical-align:middle">${n}</span>`;
       }
-      function _fmtGrp(lst){
-        const s=[...lst].sort((a,b)=>(b.norm||0)-(a.norm||0));
+      function _fmtGrp(lst, sortByEv=false){
+        const s=[...lst].sort((a,b)=>sortByEv ? (b.tanEV||0)-(a.tanEV||0) : (b.norm||0)-(a.norm||0));
         return `<span style="display:inline-flex;gap:4px;align-items:center">${s.map(h=>_numBadge(h.num)).join('')}</span>`
           +` <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text3)">(${s.map(h=>Math.round(h.tanEV||0)).join('/')})</span>`;
       }
@@ -2217,7 +2218,7 @@ function calcAll(){
       <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px">
         <div style="display:grid;grid-template-columns:28px 1fr;gap:10px 0;align-items:center">
           <span style="font-size:11px;color:var(--text3)">本</span>
-          <span>${_fmtGrp(fv2)}</span>
+          <span>${_fmtGrp(fv2, true)}</span>
           <span style="font-size:11px;color:var(--text3)">穴</span>
           <span>${_fmtGrp(ls2)}</span>
         </div>
