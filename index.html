@@ -1,8 +1,12 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.16.4
+  v2026.06.16.6
 
   変更履歴:
+    v2026.06.16.6 - 共通タブに「単勝購入時のみ馬連/ワイドを購入」フラグを追加。
+                   combo_only_with_tan=ONの時、単勝購入がなければ馬連/ワイドをスキップ。
+    v2026.06.16.5 - 共通タブに「発走何分前に取得するか」設定を追加。デフォルト7分。
+                   スケジューラーのMINUTES_BEFOREデフォルトも6→7に変更。
     v2026.06.16.4 - calcAll 本/穴カード: 自動購入対象馬を先頭に表示するよう変更。
                    _fmtGrp()にbuyNumsパラメータを追加し、購入対象馬を優先ソートしてから次点（EV/勝率）順に並べる。
     v2026.06.16.3 - calcAll 本/穴カード: 本命をEV降順・穴馬を勝率降順で表示するよう変更。
@@ -247,7 +251,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.6</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -439,6 +443,15 @@ textarea:focus{border-color:var(--gold)}
         </div>
       </div>
 
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">発走何分前に取得するか</div>
+          <input id="minutes-before" type="number" min="1" max="30" step="1" value="7"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          <div style="font-size:10px;color:var(--text3);margin-top:2px">デフォルト: 7分前</div>
+        </div>
+      </div>
+
       <div class="sh">ソフトマックス設定</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
         <div>
@@ -522,6 +535,16 @@ textarea:focus{border-color:var(--gold)}
           <b>IS-ROI</b>: 学習期間の回収率（過学習あり）　<b>OOS-ROI</b>: テスト期間（未来データ）の回収率 ← 実力値<br>
           <b>MaxDD</b>: 最大ドローダウン（資金ピークからの最大下落率）　<b>最大連敗</b>: 連続不的中の最大回数
         </div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔀 馬連/ワイド購入タイミング</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="combo-only-with-tan" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('combo_only_with_tan', this.checked?'1':'0'); document.getElementById('combo-only-with-tan-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">単勝購入時のみ購入 <span id="combo-only-with-tan-label">OFF</span></span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ON: 単勝が購入された時のみ馬連/ワイドも購入　OFF: 常に購入（現状）</div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -747,7 +770,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.4</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.6</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -804,7 +827,6 @@ textarea:focus{border-color:var(--gold)}
         </label>
       </div>
 
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
         <div style="font-size:11px;color:var(--text3);margin-bottom:6px">1番人気スキップ設定（地方）</div>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
           <input type="checkbox" id="local-skip-fav" style="width:18px;height:18px;cursor:pointer"
@@ -1243,6 +1265,8 @@ async function saveSoftmaxSettings() {
   const skipJraHurdle   = document.getElementById('skip-jra-hurdle')?.checked || false;
   const buyPlaceBet = document.getElementById('buy-place-bet')?.checked || false;
   const notifyBets = parseInt(document.getElementById('notify-bets')?.value || '3') || 3;
+  const minutesBefore = parseInt(document.getElementById('minutes-before')?.value || '7') || 7;
+  const comboOnlyWithTan = document.getElementById('combo-only-with-tan')?.checked || false;
   const combinedKelly = document.getElementById('combined-kelly')?.checked || false;
   const buyExactaJra   = document.getElementById('buy-exacta-jra')?.checked || false;
   const buyExactaLocal = document.getElementById('buy-exacta-local')?.checked || false;
@@ -1324,6 +1348,8 @@ async function saveSoftmaxSettings() {
   localStorage.setItem('auto_buy_skip_fav', autoBuySkipFav ? '1' : '0');
   localStorage.setItem('max_bets', String(maxBetsSave));
   localStorage.setItem('notify_bets', String(notifyBets));
+  localStorage.setItem('minutes_before', String(minutesBefore));
+  localStorage.setItem('combo_only_with_tan', comboOnlyWithTan ? '1' : '0');
   localStorage.setItem('auto_buy_skip_fav_odds', String(autoBuySkipFavOdds));
   localStorage.setItem('sm_winrate_filter', String(winrateFilter));
   // JRA/地方個別設定をlocalStorageにも保存
@@ -1366,6 +1392,8 @@ async function saveSoftmaxSettings() {
       data._settings.sm_winrate_filter = winrateFilter;
       data._settings.max_bets = maxBetsSave;
       data._settings.notify_bets = notifyBets;
+      data._settings.minutes_before = minutesBefore;
+      data._settings.combo_only_with_tan = comboOnlyWithTan;
       data._settings.stop_loss_enabled = stopLossEnabled;
       data._settings.stop_loss_amount = stopLossAmount;
       data._settings.skip_local_maiden = skipLocalMaiden;
@@ -1416,6 +1444,8 @@ async function saveSoftmaxSettings() {
       if(wideWinrateFilter !== null) data._settings.wide_winrate_filter = wideWinrateFilter; else delete data._settings.wide_winrate_filter;
       data._settings.max_bets = maxBetsSave;
       data._settings.notify_bets = notifyBets;
+      data._settings.minutes_before = minutesBefore;
+      data._settings.combo_only_with_tan = comboOnlyWithTan;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
       if (!data._settings_jra) data._settings_jra = {};
@@ -1553,6 +1583,8 @@ async function loadSoftmaxFromGithub() {
     const skipJraHurdle   = s.skip_jra_hurdle   || false;
     const buyPlaceBet   = s.buy_place_bet  || false;
     const notifyBets     = s.notify_bets     ?? 3;
+    const minutesBefore    = s.minutes_before    ?? 7;
+    const comboOnlyWithTan = s.combo_only_with_tan || false;
     const combinedKelly  = s.combined_kelly  || false;
     const buyExactaJra   = s.buy_exacta_jra   || false;
     const buyExactaLocal = s.buy_exacta_local || false;
@@ -1606,6 +1638,8 @@ async function loadSoftmaxFromGithub() {
   localStorage.setItem('skip_jra_hurdle',   skipJraHurdle   ? '1' : '0');
     localStorage.setItem('buy_place_bet',  buyPlaceBet  ? '1' : '0');
     localStorage.setItem('notify_bets', String(notifyBets));
+    localStorage.setItem('minutes_before', String(minutesBefore));
+    localStorage.setItem('combo_only_with_tan', comboOnlyWithTan ? '1' : '0');
     localStorage.setItem('combined_kelly',  combinedKelly  ? '1' : '0');
     localStorage.setItem('buy_exacta_jra',   buyExactaJra   ? '1' : '0');
     localStorage.setItem('buy_exacta_local', buyExactaLocal ? '1' : '0');
@@ -1657,6 +1691,10 @@ async function loadSoftmaxFromGithub() {
     if(maxBetsElGh) maxBetsElGh.value = String(s.max_bets ?? 4);
     const notifyBetsElGh = document.getElementById('notify-bets');
     if(notifyBetsElGh) notifyBetsElGh.value = String(s.notify_bets ?? 3);
+    const mbfElGh = document.getElementById('minutes-before');
+    if(mbfElGh) mbfElGh.value = String(s.minutes_before ?? 7);
+    const cowtEl = document.getElementById('combo-only-with-tan');
+    if(cowtEl){ cowtEl.checked = comboOnlyWithTan; document.getElementById('combo-only-with-tan-label').textContent = comboOnlyWithTan ? 'ON' : 'OFF'; }
     const slEnabledEl = document.getElementById('stop-loss-enabled');
     if(slEnabledEl){ slEnabledEl.checked = stopLossEnabled; document.getElementById('stop-loss-enabled-label').textContent = stopLossEnabled ? 'ON' : 'OFF'; }
     const slPctEl = document.getElementById('stop-loss-amount');
@@ -1872,6 +1910,11 @@ function loadSoftmaxSettings() {
   if(mbEl) mbEl.value = localStorage.getItem('max_bets') || '4';
   const nbEl = document.getElementById('notify-bets');
   if(nbEl) nbEl.value = localStorage.getItem('notify_bets') || '3';
+  const mbfEl = document.getElementById('minutes-before');
+  if(mbfEl) mbfEl.value = localStorage.getItem('minutes_before') || '7';
+  const cowtEl2 = document.getElementById('combo-only-with-tan');
+  const cowtVal = localStorage.getItem('combo_only_with_tan') === '1';
+  if(cowtEl2){ cowtEl2.checked = cowtVal; document.getElementById('combo-only-with-tan-label').textContent = cowtVal ? 'ON' : 'OFF'; }
   const slEnabledEl = document.getElementById('stop-loss-enabled');
   const slEnabledVal = localStorage.getItem('stop_loss_enabled') === '1';
   if(slEnabledEl){ slEnabledEl.checked = slEnabledVal; document.getElementById('stop-loss-enabled-label').textContent = slEnabledVal ? 'ON' : 'OFF'; }
@@ -1936,6 +1979,11 @@ function loadSoftmaxSettings() {
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
   const nbEl2 = document.getElementById('notify-bets');
   if(nbEl2) nbEl2.value = localStorage.getItem('notify_bets') || '3';
+  const mbfEl2 = document.getElementById('minutes-before');
+  if(mbfEl2) mbfEl2.value = localStorage.getItem('minutes_before') || '7';
+  const cowtEl3 = document.getElementById('combo-only-with-tan');
+  const cowtVal2 = localStorage.getItem('combo_only_with_tan') === '1';
+  if(cowtEl3){ cowtEl3.checked = cowtVal2; document.getElementById('combo-only-with-tan-label').textContent = cowtVal2 ? 'ON' : 'OFF'; }
   const ckEl2 = document.getElementById('combined-kelly');
   const ckVal = localStorage.getItem('combined_kelly') === '1';
   if(ckEl2){ ckEl2.checked = ckVal; document.getElementById('combined-kelly-label').textContent = ckVal ? 'ON' : 'OFF'; }
