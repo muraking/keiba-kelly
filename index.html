@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.15.13
+  v2026.06.16.1
 
   変更履歴:
+    v2026.06.16.1 - 共有タブを「設定」に改名し共通/地方/中央の3サブタブに再編。地方/中央別に
+                   1番人気スキップ・損切り・1レース最大投資額・複勝設定を追加（_settings_local/_settings_jra保存）。
+                   calcAllの1番人気スキップ判定をレース種別ごとに参照（未設定時は旧共通設定にフォールバック）。
     v2026.06.15.13 - 最大購入点数もレース選択タブから共有タブへ移動（総資金・最大投資額と横並び3列）。
     v2026.06.15.12 - 設定タブ名を「レース選択」に変更。総資金・最大投資額を共有タブへ移動。
                     loadSoftmaxSettings: fund/max-investをlocalStorageから復元するよう追加。
@@ -240,7 +243,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.15.13</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -284,7 +287,7 @@ textarea:focus{border-color:var(--gold)}
       <div class="dot"></div><span class="nb-ico">🏆</span><span>結果</span>
     </button>
     <button class="nb" onclick="sw('admin')" id="nb-admin" style="display:none">
-      <div class="dot"></div><span class="nb-ico">☁️</span><span>共有</span>
+      <div class="dot"></div><span class="nb-ico">⚙️</span><span>設定</span>
     </button>
   </nav>
 
@@ -374,18 +377,16 @@ textarea:focus{border-color:var(--gold)}
 
     <!-- サブタブ -->
     <div style="display:flex;background:var(--bg3);border-radius:var(--r);padding:3px;gap:3px;margin-bottom:16px" id="shared-subtab-bar">
-      <button id="subtab-admin-btn" onclick="switchSharedSubtab('admin')"
-        style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;transition:.15s;background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)">
-        ⚙️ 管理者設定
-      </button>
-      <button id="subtab-time-btn" onclick="switchSharedSubtab('time')"
-        style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s;background:transparent;color:var(--text3)">
-        🕐 時刻変更・スキップ設定
-      </button>
+      <button id="subtab-common-btn" onclick="switchSharedSubtab('common')"
+        style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;transition:.15s;background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)">共通</button>
+      <button id="subtab-local-btn" onclick="switchSharedSubtab('local')"
+        style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s;background:transparent;color:var(--text2)">🏟 地方</button>
+      <button id="subtab-jra-btn" onclick="switchSharedSubtab('jra')"
+        style="flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s;background:transparent;color:var(--text2)">🏇 中央</button>
     </div>
 
-    <!-- 管理者設定サブタブ -->
-    <div id="subtab-admin">
+    <!-- 共通サブタブ -->
+    <div id="subtab-common">
     <div style="margin-bottom:16px">
       <div class="sh">GitHub共有設定</div>
       <div class="field">
@@ -492,86 +493,7 @@ textarea:focus{border-color:var(--gold)}
             style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
         </div>
       </div>
-      <div class="sh" style="margin-top:12px">🏇 中央競馬（JRA）個別設定 <span style="font-weight:400;font-size:10px;color:var(--text3)">※共通設定を上書き</span></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最小</div>
-          <input id="jra-ev-min" type="number" min="100" max="200" step="1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最大（空=共通値）</div>
-          <input id="jra-ev-max" type="number" min="100" max="9999" step="1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空=共通値）</div>
-          <input id="jra-odds-min" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div>
-          <input id="jra-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div>
-          <input id="jra-winrate-filter" type="number" min="0" max="50" step="1" value="0"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
-          <select id="jra-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-            <option value="0">共通値使用</option>
-            <option value="1">1点</option>
-            <option value="2">2点</option>
-            <option value="3" selected>3点</option>
-            <option value="4">4点</option>
-            <option value="5">5点</option>
-            <option value="99">制限なし</option>
-          </select>
-        </div>
-      </div>
-      <div class="sh" style="margin-top:12px">🏟 地方競馬 個別設定 <span style="font-weight:400;font-size:10px;color:var(--text3)">※共通設定を上書き</span></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最小</div>
-          <input id="local-ev-min" type="number" min="100" max="200" step="1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最大（空=共通値）</div>
-          <input id="local-ev-max" type="number" min="100" max="9999" step="1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空=共通値）</div>
-          <input id="local-odds-min" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div>
-          <input id="local-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div>
-          <input id="local-winrate-filter" type="number" min="0" max="50" step="1" value="0"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
-          <select id="local-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-            <option value="0">共通値使用</option>
-            <option value="1">1点</option>
-            <option value="2">2点</option>
-            <option value="3" selected>3点</option>
-            <option value="4">4点</option>
-            <option value="5">5点</option>
-            <option value="99">制限なし</option>
-          </select>
-        </div>
-      </div>
+
       <div class="sh" style="margin-top:12px">📈 投資パフォーマンス指標 <span style="font-weight:400;font-size:10px;color:var(--text3)">自動最適化後に更新</span></div>
       <div id="perf-panel" style="font-size:12px;margin-bottom:12px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
@@ -596,120 +518,6 @@ textarea:focus{border-color:var(--gold)}
           <b>IS-ROI</b>: 学習期間の回収率（過学習あり）　<b>OOS-ROI</b>: テスト期間（未来データ）の回収率 ← 実力値<br>
           <b>MaxDD</b>: 最大ドローダウン（資金ピークからの最大下落率）　<b>最大連敗</b>: 連続不的中の最大回数
         </div>
-      </div>
-      <div class="sh" style="margin-top:12px">自動購入設定</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div style="background:var(--bg3);border-radius:var(--r);padding:8px">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:6px">地方競馬 自動購入</div>
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="checkbox" id="auto-buy-local" style="width:18px;height:18px;cursor:pointer" onchange="document.getElementById('auto-buy-local-label').textContent=this.checked?'ON':'OFF'">
-            <span style="font-size:13px;color:var(--text)" id="auto-buy-local-label">OFF</span>
-          </label>
-        </div>
-        <div style="background:var(--bg3);border-radius:var(--r);padding:8px">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:6px">中央競馬 自動購入</div>
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="checkbox" id="auto-buy-jra" style="width:18px;height:18px;cursor:pointer" onchange="document.getElementById('auto-buy-jra-label').textContent=this.checked?'ON':'OFF'">
-            <span style="font-size:13px;color:var(--text)" id="auto-buy-jra-label">OFF</span>
-          </label>
-        </div>
-      </div>
-      <div style="margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1レース最大投資額（円）</div>
-        <input id="auto-buy-max" type="number" min="0" max="100000" step="100" value="0" placeholder="0=無制限"
-          style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        <div style="font-size:10px;color:var(--text3);margin-top:2px">0または空白=無制限（ケリー計算額をそのまま使用）</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">1番人気スキップ設定</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
-          <input type="checkbox" id="auto-buy-skip-fav" style="width:18px;height:18px;cursor:pointer"
-            onchange="document.getElementById('auto-buy-skip-fav-label').textContent=this.checked?'スキップON':'スキップOFF'">
-          <span style="font-size:13px;color:var(--text)" id="auto-buy-skip-fav-label">スキップOFF</span>
-        </label>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1番人気が何倍以下の時スキップするか</div>
-        <input id="auto-buy-skip-fav-odds" type="number" min="1.0" max="5.0" step="0.1" value="2.0"
-          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 2.0 → 1番人気が2.0倍以下のレースをスキップ</div>
-      </div>
-
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">損切り設定</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
-          <input type="checkbox" id="stop-loss-enabled" style="width:18px;height:18px;cursor:pointer"
-            onchange="localStorage.setItem('stop_loss_enabled', this.checked?'1':'0'); document.getElementById('stop-loss-enabled-label').textContent=this.checked?'ON':'OFF'">
-          <span style="font-size:13px;color:var(--text)" id="stop-loss-enabled-label">OFF</span>
-        </label>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">投票可能額がこの金額を下回ったら投票しない（円）</div>
-        <input id="stop-loss-amount" type="number" min="0" max="1000000" step="100" value="3000"
-          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
-          onchange="localStorage.setItem('stop_loss_amount', this.value)" oninput="localStorage.setItem('stop_loss_amount', this.value)">
-        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 3000 → 投票可能額¥3,000未満で自動投票停止</div>
-      </div>
-
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🚫 レーススキップ設定</div>
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:bold">地方競馬</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="skip-local-maiden" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('skip_local_maiden', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">新馬戦</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="skip-local-2yo" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('skip_local_2yo', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">2歳戦</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="skip-local-3yo" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('skip_local_3yo', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">3歳戦</span>
-          </label>
-        </div>
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:bold">中央競馬（JRA）</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="skip-jra-maiden" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('skip_jra_maiden', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">新馬戦</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="skip-jra-2yo" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('skip_jra_2yo', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">2歳戦</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="skip-jra-3yo" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('skip_jra_3yo', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">3歳戦</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-            <input type="checkbox" id="skip-jra-hurdle" style="width:15px;height:15px;cursor:pointer"
-              onchange="localStorage.setItem('skip_jra_hurdle', this.checked?'1':'0')">
-            <span style="font-size:12px;color:var(--text)">障害</span>
-          </label>
-        </div>
-      </div>
-
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">複勝購入設定</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="checkbox" id="buy-place-bet" style="width:18px;height:18px;cursor:pointer"
-            onchange="localStorage.setItem('buy_place_bet', this.checked?'1':'0'); document.getElementById('buy-place-bet-label').textContent=this.checked?'ON':'OFF'">
-          <span style="font-size:13px;color:var(--text)" id="buy-place-bet-label">OFF</span>
-        </label>
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると買い目対象馬の複勝も購入（単勝金額×2倍で購入）</div>
-      </div>
-
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">💹 掛け金計算方式</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="checkbox" id="combined-kelly" style="width:18px;height:18px;cursor:pointer"
-            onchange="localStorage.setItem('combined_kelly', this.checked?'1':'0'); document.getElementById('combined-kelly-label').textContent=this.checked?'ON':'OFF'">
-          <span style="font-size:13px;color:var(--text)">合成ケリー <span id="combined-kelly-label">OFF</span></span>
-        </label>
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">ON: 複数馬を1グループとして合成ハーフケリーで合計投資額を計算し配分<br>OFF: 各馬個別にハーフケリー計算（従来）</div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -743,72 +551,28 @@ textarea:focus{border-color:var(--gold)}
         <div id="exacta-hon-settings" style="display:none">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-hon1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_hon1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">本1</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-hon2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_hon2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">本2</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-hon3" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_hon3', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">本3</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
           </div>
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-ana1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_ana1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">穴1</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-ana2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_ana2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">穴2</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-ana3" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_ana3', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">穴3</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
           </div>
         </div>
         <div id="exacta-formation-settings">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-top1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_top1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">勝率1位</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-top2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_top2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">勝率2位</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
           </div>
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-rec1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_rec1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">推奨1</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-rec2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_rec2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">推奨2</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="exacta-rec3" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('exacta_rec3', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">推奨3</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
           </div>
         </div>
         <div id="exacta-box-settings" style="display:none">
@@ -851,72 +615,28 @@ textarea:focus{border-color:var(--gold)}
         <div id="wide-hon-settings" style="display:none">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-hon1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_hon1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">本1</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-hon2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_hon2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">本2</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-hon3" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_hon3', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">本3</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
           </div>
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-ana1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_ana1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">穴1</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-ana2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_ana2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">穴2</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-ana3" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_ana3', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">穴3</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
           </div>
         </div>
         <div id="wide-formation-settings">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-top1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_top1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">勝率1位</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-top2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_top2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">勝率2位</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
           </div>
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-rec1" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_rec1', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">推奨1</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-rec2" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_rec2', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">推奨2</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px">
-              <input type="checkbox" id="wide-rec3" style="width:15px;height:15px;cursor:pointer"
-                onchange="localStorage.setItem('wide_rec3', this.checked?'1':'0')">
-              <span style="font-size:12px;color:var(--text)">推奨3</span>
-            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
           </div>
         </div>
         <div id="wide-box-settings" style="display:none">
@@ -925,28 +645,40 @@ textarea:focus{border-color:var(--gold)}
             style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
             onchange="localStorage.setItem('wide_box_n', this.value)" oninput="localStorage.setItem('wide_box_n', this.value)">
           <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭（下記フィルタで絞り込み）</div>
-        </div>
-        <div id="wide-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
-            <div>
-              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div>
-              <input id="wide-odds-min" type="number" min="1" step="0.5" placeholder="例:5"
-                style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          <div id="wide-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
             </div>
-            <div>
-              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div>
-              <input id="wide-odds-max" type="number" min="1" step="0.5" placeholder="例:15"
-                style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
-            </div>
-          </div>
-          <div>
-            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div>
-            <input id="wide-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10"
-              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
           </div>
         </div>
       </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">💹 掛け金計算方式</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="combined-kelly" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('combined_kelly', this.checked?'1':'0'); document.getElementById('combined-kelly-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">合成ケリー <span id="combined-kelly-label">OFF</span></span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ON: 複数馬を1グループとして合成ハーフケリーで合計投資額を計算し配分<br>OFF: 各馬個別にハーフケリー計算（従来）</div>
+      </div>
+
+      <!-- 旧共通設定（後方互換のため非表示で保持） -->
+      <div style="display:none">
+        <input type="checkbox" id="auto-buy-skip-fav">
+        <input type="number" id="auto-buy-skip-fav-odds" value="2.0">
+        <input type="checkbox" id="stop-loss-enabled">
+        <input type="number" id="stop-loss-amount" value="3000">
+        <input type="number" id="auto-buy-max" value="0">
+        <input type="checkbox" id="buy-place-bet">
+        <span id="auto-buy-skip-fav-label"></span>
+        <span id="stop-loss-enabled-label"></span>
+        <span id="buy-place-bet-label"></span>
+      </div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
         <div class="field" style="margin-bottom:0">
           <label style="font-size:12px">最大購入点数</label>
@@ -991,14 +723,9 @@ textarea:focus{border-color:var(--gold)}
       </button>
       <div id="date-list-area"></div>
     </div>
-      <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.15.13</span></div>
-      </div>
-    </div><!-- /subtab-admin -->
 
-    <!-- 時刻変更サブタブ -->
-    <div id="subtab-time" style="display:none">
-      <div class="sh">レース一覧</div>
+    <div style="margin-top:16px">
+      <div class="sh">レース時刻変更・個別スキップ</div>
       <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.7">
         発走遅延が発生した場合、該当レースの時刻を変更してください。<br>
         スケジューラーは30分以内に自動反映します。
@@ -1025,7 +752,211 @@ textarea:focus{border-color:var(--gold)}
       <div style="margin-top:12px;padding:10px 12px;background:var(--amber-bg);border-radius:var(--r);border:0.5px solid rgba(251,191,36,.3);font-size:11px;color:var(--amber);text-align:center;line-height:1.6">
         ⚠️ 変更はGitHubに即時保存されます<br>スケジューラーは30分以内に自動反映されます
       </div>
-    </div><!-- /subtab-time -->
+    </div>
+
+      <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.1</span></div>
+      </div>
+    </div><!-- /subtab-common -->
+
+    <!-- 地方サブタブ -->
+    <div id="subtab-local-settings" style="display:none">
+      <div style="margin-bottom:12px">
+        <div class="sh">地方競馬 自動購入</div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="auto-buy-local" style="width:18px;height:18px;cursor:pointer" onchange="document.getElementById('auto-buy-local-label').textContent=this.checked?'ON':'OFF'">
+            <span style="font-size:13px;color:var(--text)" id="auto-buy-local-label">OFF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sh" style="margin-top:4px">地方競馬 個別設定 <span style="font-weight:400;font-size:10px;color:var(--text3)">※共通設定を上書き</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最小</div><input id="local-ev-min" type="number" min="100" max="200" step="1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最大（空=共通値）</div><input id="local-ev-max" type="number" min="100" max="9999" step="1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空=共通値）</div><input id="local-odds-min" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div><input id="local-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div><input id="local-winrate-filter" type="number" min="0" max="50" step="1" value="0" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
+          <select id="local-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            <option value="0">共通値使用</option><option value="1">1点</option><option value="2">2点</option><option value="3" selected>3点</option><option value="4">4点</option><option value="5">5点</option><option value="99">制限なし</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🚫 地方 スキップ設定</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-local-maiden" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_local_maiden', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">新馬戦</span></label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-local-2yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_local_2yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">2歳戦</span></label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-local-3yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_local_3yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">3歳戦</span></label>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔗 馬連 ON/OFF（地方）<span style="font-size:10px">　※詳細は共通タブ</span></div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="buy-exacta-local-tab" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('buy_exacta_local', this.checked?'1':'0'); var el=document.getElementById('buy-exacta-local'); if(el){el.checked=this.checked; var l=document.getElementById('buy-exacta-local-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-exacta-local-tab-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">馬連購入 <span id="buy-exacta-local-tab-label">OFF</span></span>
+        </label>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔀 ワイド ON/OFF（地方）<span style="font-size:10px">　※詳細は共通タブ</span></div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="buy-wide-local-tab" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('buy_wide_local', this.checked?'1':'0'); var el=document.getElementById('buy-wide-local'); if(el){el.checked=this.checked; var l=document.getElementById('buy-wide-local-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-wide-local-tab-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">ワイド購入 <span id="buy-wide-local-tab-label">OFF</span></span>
+        </label>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">1番人気スキップ設定（地方）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
+          <input type="checkbox" id="local-skip-fav" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('local_skip_fav', this.checked?'1':'0'); document.getElementById('local-skip-fav-label').textContent=this.checked?'スキップON':'スキップOFF'">
+          <span style="font-size:13px;color:var(--text)" id="local-skip-fav-label">スキップOFF</span>
+        </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1番人気が何倍以下の時スキップするか</div>
+        <input id="local-skip-fav-odds" type="number" min="1.0" max="5.0" step="0.1" value="2.0"
+          onchange="localStorage.setItem('local_skip_fav_odds', this.value)"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 2.0 → 1番人気が2.0倍以下のレースをスキップ</div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">損切り設定（地方）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
+          <input type="checkbox" id="local-stop-loss-enabled" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('local_stop_loss_enabled', this.checked?'1':'0'); document.getElementById('local-stop-loss-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)" id="local-stop-loss-label">OFF</span>
+        </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">投票可能額がこの金額を下回ったら投票しない（円）</div>
+        <input id="local-stop-loss-amount" type="number" min="0" max="1000000" step="100" value="3000"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+          onchange="localStorage.setItem('local_stop_loss_amount', this.value)">
+      </div>
+
+      <div style="margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1レース最大投資額（地方・円）</div>
+        <input id="local-auto-buy-max" type="number" min="0" max="100000" step="100" value="0" placeholder="0=無制限"
+          onchange="localStorage.setItem('local_auto_buy_max', this.value)"
+          style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">0または空白=無制限（ケリー計算額をそのまま使用）</div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">複勝購入設定（地方）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="buy-place-bet-local" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('buy_place_bet_local', this.checked?'1':'0'); document.getElementById('buy-place-bet-local-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)" id="buy-place-bet-local-label">OFF</span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると地方の買い目対象馬の複勝も購入</div>
+      </div>
+    </div><!-- /subtab-local-settings -->
+
+    <!-- 中央サブタブ -->
+    <div id="subtab-jra-settings" style="display:none">
+      <div style="margin-bottom:12px">
+        <div class="sh">中央競馬（JRA）自動購入</div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="auto-buy-jra" style="width:18px;height:18px;cursor:pointer" onchange="document.getElementById('auto-buy-jra-label').textContent=this.checked?'ON':'OFF'">
+            <span style="font-size:13px;color:var(--text)" id="auto-buy-jra-label">OFF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sh" style="margin-top:4px">中央競馬（JRA）個別設定 <span style="font-weight:400;font-size:10px;color:var(--text3)">※共通設定を上書き</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最小</div><input id="jra-ev-min" type="number" min="100" max="200" step="1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">期待値最大（空=共通値）</div><input id="jra-ev-max" type="number" min="100" max="9999" step="1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最小オッズ（空=共通値）</div><input id="jra-odds-min" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大オッズ（空=共通値）</div><input id="jra-odds-max" type="number" min="1" max="9999" step="0.1" placeholder="共通値使用" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">勝率フィルター%（0=共通）</div><input id="jra-winrate-filter" type="number" min="0" max="50" step="1" value="0" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">最大購入点数</div>
+          <select id="jra-max-bets" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+            <option value="0">共通値使用</option><option value="1">1点</option><option value="2">2点</option><option value="3" selected>3点</option><option value="4">4点</option><option value="5">5点</option><option value="99">制限なし</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🚫 中央（JRA）スキップ設定</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-maiden" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_maiden', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">新馬戦</span></label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-2yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_2yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">2歳戦</span></label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-3yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_3yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">3歳戦</span></label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-hurdle" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_hurdle', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">障害</span></label>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔗 馬連 ON/OFF（中央）<span style="font-size:10px">　※詳細は共通タブ</span></div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="buy-exacta-jra-tab" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('buy_exacta_jra', this.checked?'1':'0'); var el=document.getElementById('buy-exacta-jra'); if(el){el.checked=this.checked; var l=document.getElementById('buy-exacta-jra-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-exacta-jra-tab-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">馬連購入 <span id="buy-exacta-jra-tab-label">OFF</span></span>
+        </label>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔀 ワイド ON/OFF（中央）<span style="font-size:10px">　※詳細は共通タブ</span></div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="buy-wide-jra-tab" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('buy_wide_jra', this.checked?'1':'0'); var el=document.getElementById('buy-wide-jra'); if(el){el.checked=this.checked; var l=document.getElementById('buy-wide-jra-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-wide-jra-tab-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">ワイド購入 <span id="buy-wide-jra-tab-label">OFF</span></span>
+        </label>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">1番人気スキップ設定（中央）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
+          <input type="checkbox" id="jra-skip-fav" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('jra_skip_fav', this.checked?'1':'0'); document.getElementById('jra-skip-fav-label').textContent=this.checked?'スキップON':'スキップOFF'">
+          <span style="font-size:13px;color:var(--text)" id="jra-skip-fav-label">スキップOFF</span>
+        </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1番人気が何倍以下の時スキップするか</div>
+        <input id="jra-skip-fav-odds" type="number" min="1.0" max="5.0" step="0.1" value="2.0"
+          onchange="localStorage.setItem('jra_skip_fav_odds', this.value)"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">例: 2.0 → 1番人気が2.0倍以下のレースをスキップ</div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">損切り設定（中央）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
+          <input type="checkbox" id="jra-stop-loss-enabled" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('jra_stop_loss_enabled', this.checked?'1':'0'); document.getElementById('jra-stop-loss-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)" id="jra-stop-loss-label">OFF</span>
+        </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">投票可能額がこの金額を下回ったら投票しない（円）</div>
+        <input id="jra-stop-loss-amount" type="number" min="0" max="1000000" step="100" value="3000"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+          onchange="localStorage.setItem('jra_stop_loss_amount', this.value)">
+      </div>
+
+      <div style="margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1レース最大投資額（中央・円）</div>
+        <input id="jra-auto-buy-max" type="number" min="0" max="100000" step="100" value="0" placeholder="0=無制限"
+          onchange="localStorage.setItem('jra_auto_buy_max', this.value)"
+          style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">0または空白=無制限（ケリー計算額をそのまま使用）</div>
+      </div>
+
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">複勝購入設定（中央）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="buy-place-bet-jra" style="width:18px;height:18px;cursor:pointer"
+            onchange="localStorage.setItem('buy_place_bet_jra', this.checked?'1':'0'); document.getElementById('buy-place-bet-jra-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)" id="buy-place-bet-jra-label">OFF</span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると中央の買い目対象馬の複勝も購入</div>
+      </div>
+    </div><!-- /subtab-jra-settings -->
 
   </div>
 
@@ -1370,6 +1301,31 @@ async function saveSoftmaxSettings() {
   const localOddsMax     = parseFloat(document.getElementById('local-odds-max')?.value || '') || null;
   const localWinrateFilter = parseFloat(document.getElementById('local-winrate-filter')?.value || '0') || 0;
   const localMaxBets     = parseInt(document.getElementById('local-max-bets')?.value || '0') || 0;
+  // 地方/中央 個別の自動購入詳細設定（1番人気スキップ・損切り・1レース最大投資額・複勝）
+  const localSkipFav       = document.getElementById('local-skip-fav')?.checked || false;
+  const localSkipFavOdds   = parseFloat(document.getElementById('local-skip-fav-odds')?.value || '2.0') || 2.0;
+  const localStopLossOn    = document.getElementById('local-stop-loss-enabled')?.checked || false;
+  const localStopLossAmt   = parseInt(document.getElementById('local-stop-loss-amount')?.value || '3000') || 3000;
+  const localAutoMax       = parseInt(document.getElementById('local-auto-buy-max')?.value || '0') || 0;
+  const localPlaceBet      = document.getElementById('buy-place-bet-local')?.checked || false;
+  const jraSkipFav         = document.getElementById('jra-skip-fav')?.checked || false;
+  const jraSkipFavOdds     = parseFloat(document.getElementById('jra-skip-fav-odds')?.value || '2.0') || 2.0;
+  const jraStopLossOn      = document.getElementById('jra-stop-loss-enabled')?.checked || false;
+  const jraStopLossAmt     = parseInt(document.getElementById('jra-stop-loss-amount')?.value || '3000') || 3000;
+  const jraAutoMax         = parseInt(document.getElementById('jra-auto-buy-max')?.value || '0') || 0;
+  const jraPlaceBet        = document.getElementById('buy-place-bet-jra')?.checked || false;
+  localStorage.setItem('local_skip_fav', localSkipFav ? '1' : '0');
+  localStorage.setItem('local_skip_fav_odds', String(localSkipFavOdds));
+  localStorage.setItem('local_stop_loss_enabled', localStopLossOn ? '1' : '0');
+  localStorage.setItem('local_stop_loss_amount', String(localStopLossAmt));
+  localStorage.setItem('local_auto_buy_max', String(localAutoMax));
+  localStorage.setItem('buy_place_bet_local', localPlaceBet ? '1' : '0');
+  localStorage.setItem('jra_skip_fav', jraSkipFav ? '1' : '0');
+  localStorage.setItem('jra_skip_fav_odds', String(jraSkipFavOdds));
+  localStorage.setItem('jra_stop_loss_enabled', jraStopLossOn ? '1' : '0');
+  localStorage.setItem('jra_stop_loss_amount', String(jraStopLossAmt));
+  localStorage.setItem('jra_auto_buy_max', String(jraAutoMax));
+  localStorage.setItem('buy_place_bet_jra', jraPlaceBet ? '1' : '0');
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -1477,6 +1433,12 @@ async function saveSoftmaxSettings() {
       if (jraOddsMax !== null) data._settings_jra.odds_max = jraOddsMax;
       data._settings_jra.sm_winrate_filter = jraWinrateFilter;
       if (jraMaxBets > 0) data._settings_jra.max_bets = jraMaxBets;
+      data._settings_jra.auto_buy_skip_fav = jraSkipFav;
+      data._settings_jra.auto_buy_skip_fav_odds = jraSkipFavOdds;
+      data._settings_jra.stop_loss_enabled = jraStopLossOn;
+      data._settings_jra.stop_loss_amount = jraStopLossAmt;
+      if (jraAutoMax > 0) data._settings_jra.auto_buy_max = jraAutoMax; else delete data._settings_jra.auto_buy_max;
+      data._settings_jra.buy_place_bet = jraPlaceBet;
       if (!data._settings_local) data._settings_local = {};
       if (localEvMin !== null) data._settings_local.ev_min = localEvMin;
       if (localEvMax !== null) data._settings_local.ev_max = localEvMax; else delete data._settings_local.ev_max;
@@ -1484,6 +1446,12 @@ async function saveSoftmaxSettings() {
       if (localOddsMax !== null) data._settings_local.odds_max = localOddsMax;
       data._settings_local.sm_winrate_filter = localWinrateFilter;
       if (localMaxBets > 0) data._settings_local.max_bets = localMaxBets;
+      data._settings_local.auto_buy_skip_fav = localSkipFav;
+      data._settings_local.auto_buy_skip_fav_odds = localSkipFavOdds;
+      data._settings_local.stop_loss_enabled = localStopLossOn;
+      data._settings_local.stop_loss_amount = localStopLossAmt;
+      if (localAutoMax > 0) data._settings_local.auto_buy_max = localAutoMax; else delete data._settings_local.auto_buy_max;
+      data._settings_local.buy_place_bet = localPlaceBet;
       const jsonStr = JSON.stringify(data, null, 2);
       const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
       const r2 = await fetch(apiUrl, {
@@ -1778,6 +1746,39 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('local_winrate_filter', String(slocal.sm_winrate_filter ?? 0));
     if((slocal.max_bets ?? 0) > 0) localStorage.setItem('local_max_bets', String(slocal.max_bets)); else localStorage.removeItem('local_max_bets');
 
+    // 地方/中央 個別の自動購入詳細設定をフォーム・localStorageへ反映
+    const _setChk = (id, val, onTxt, offTxt) => { const el=document.getElementById(id); if(el){ el.checked=!!val; } const lbl=document.getElementById(id+'-label'); if(lbl) lbl.textContent = val ? (onTxt||'ON') : (offTxt||'OFF'); };
+    const _setVal = (id, val) => { const el=document.getElementById(id); if(el && val!=null) el.value=val; };
+    _setChk('local-skip-fav', slocal.auto_buy_skip_fav || false, 'スキップON', 'スキップOFF');
+    _setVal('local-skip-fav-odds', slocal.auto_buy_skip_fav_odds ?? 2.0);
+    _setChk('local-stop-loss-enabled', slocal.stop_loss_enabled || false);
+    _setVal('local-stop-loss-amount', slocal.stop_loss_amount ?? 3000);
+    _setVal('local-auto-buy-max', slocal.auto_buy_max ?? 0);
+    _setChk('buy-place-bet-local', slocal.buy_place_bet || false);
+    _setChk('jra-skip-fav', sjra.auto_buy_skip_fav || false, 'スキップON', 'スキップOFF');
+    _setVal('jra-skip-fav-odds', sjra.auto_buy_skip_fav_odds ?? 2.0);
+    _setChk('jra-stop-loss-enabled', sjra.stop_loss_enabled || false);
+    _setVal('jra-stop-loss-amount', sjra.stop_loss_amount ?? 3000);
+    _setVal('jra-auto-buy-max', sjra.auto_buy_max ?? 0);
+    _setChk('buy-place-bet-jra', sjra.buy_place_bet || false);
+    // 馬連/ワイド ON/OFF（タブ側チェックボックス）を同期
+    _setChk('buy-exacta-local-tab', slocal.buy_exacta ?? s.buy_exacta_local ?? false);
+    _setChk('buy-wide-local-tab', slocal.buy_wide ?? s.buy_wide_local ?? false);
+    _setChk('buy-exacta-jra-tab', sjra.buy_exacta ?? s.buy_exacta_jra ?? false);
+    _setChk('buy-wide-jra-tab', sjra.buy_wide ?? s.buy_wide_jra ?? false);
+    localStorage.setItem('local_skip_fav', (slocal.auto_buy_skip_fav||false) ? '1' : '0');
+    localStorage.setItem('local_skip_fav_odds', String(slocal.auto_buy_skip_fav_odds ?? 2.0));
+    localStorage.setItem('local_stop_loss_enabled', (slocal.stop_loss_enabled||false) ? '1' : '0');
+    localStorage.setItem('local_stop_loss_amount', String(slocal.stop_loss_amount ?? 3000));
+    localStorage.setItem('local_auto_buy_max', String(slocal.auto_buy_max ?? 0));
+    localStorage.setItem('buy_place_bet_local', (slocal.buy_place_bet||false) ? '1' : '0');
+    localStorage.setItem('jra_skip_fav', (sjra.auto_buy_skip_fav||false) ? '1' : '0');
+    localStorage.setItem('jra_skip_fav_odds', String(sjra.auto_buy_skip_fav_odds ?? 2.0));
+    localStorage.setItem('jra_stop_loss_enabled', (sjra.stop_loss_enabled||false) ? '1' : '0');
+    localStorage.setItem('jra_stop_loss_amount', String(sjra.stop_loss_amount ?? 3000));
+    localStorage.setItem('jra_auto_buy_max', String(sjra.auto_buy_max ?? 0));
+    localStorage.setItem('buy_place_bet_jra', (sjra.buy_place_bet||false) ? '1' : '0');
+
     // 投資指標パネル更新
     updatePerfPanel(data._perf_local || {}, data._perf_jra || {});
 
@@ -1962,6 +1963,25 @@ function loadSoftmaxSettings() {
   const localMbEl = document.getElementById('local-max-bets'); if(localMbEl) localMbEl.value = localStorage.getItem('local_max_bets') || '0';
   const fundEl = document.getElementById('fund'); if(fundEl && localStorage.getItem('fund')) fundEl.value = localStorage.getItem('fund');
   const maxInvestEl = document.getElementById('max-invest'); if(maxInvestEl && localStorage.getItem('max_invest')) maxInvestEl.value = localStorage.getItem('max_invest');
+  // 地方/中央 個別の自動購入詳細設定をlocalStorageから反映
+  const _lsChk = (id, key, onTxt, offTxt) => { const el=document.getElementById(id); const v=localStorage.getItem(key)==='1'; if(el) el.checked=v; const lbl=document.getElementById(id+'-label'); if(lbl) lbl.textContent = v ? (onTxt||'ON') : (offTxt||'OFF'); };
+  const _lsVal = (id, key) => { const el=document.getElementById(id); const v=localStorage.getItem(key); if(el && v!=null) el.value=v; };
+  _lsChk('local-skip-fav', 'local_skip_fav', 'スキップON', 'スキップOFF');
+  _lsVal('local-skip-fav-odds', 'local_skip_fav_odds');
+  _lsChk('local-stop-loss-enabled', 'local_stop_loss_enabled');
+  _lsVal('local-stop-loss-amount', 'local_stop_loss_amount');
+  _lsVal('local-auto-buy-max', 'local_auto_buy_max');
+  _lsChk('buy-place-bet-local', 'buy_place_bet_local');
+  _lsChk('jra-skip-fav', 'jra_skip_fav', 'スキップON', 'スキップOFF');
+  _lsVal('jra-skip-fav-odds', 'jra_skip_fav_odds');
+  _lsChk('jra-stop-loss-enabled', 'jra_stop_loss_enabled');
+  _lsVal('jra-stop-loss-amount', 'jra_stop_loss_amount');
+  _lsVal('jra-auto-buy-max', 'jra_auto_buy_max');
+  _lsChk('buy-place-bet-jra', 'buy_place_bet_jra');
+  _lsChk('buy-exacta-local-tab', 'buy_exacta_local');
+  _lsChk('buy-wide-local-tab', 'buy_wide_local');
+  _lsChk('buy-exacta-jra-tab', 'buy_exacta_jra');
+  _lsChk('buy-wide-jra-tab', 'buy_wide_jra');
 }
 
 function softmaxNorm(horses, temperature, minPct) {
@@ -2155,8 +2175,11 @@ function calcAll(){
       const _race2 = currentRace || (ghData[document.getElementById('date-select')?.value]?.races[parseInt(document.getElementById('race-select')?.value)]);
       const isJraVn = _race2 ? JRA_V.includes(_race2.venue) : false;
       const rc2 = ((typeof currentRaceClass!=='undefined'&&currentRaceClass)||'') + ((typeof currentRaceName!=='undefined'&&currentRaceName)||'');
-      const skipFavOdds2 = parseFloat(localStorage.getItem('auto_buy_skip_fav_odds')||'1.6')||1.6;
-      const doSkipFav   = localStorage.getItem('auto_buy_skip_fav')==='1';
+      // 地方/中央 別の1番人気スキップ設定（未設定なら旧共通設定にフォールバック）
+      const _sfFavKey = isJraVn ? 'jra_skip_fav' : 'local_skip_fav';
+      const _sfOddsKey = isJraVn ? 'jra_skip_fav_odds' : 'local_skip_fav_odds';
+      const doSkipFav   = localStorage.getItem(_sfFavKey)==='1' || (localStorage.getItem(_sfFavKey)===null && localStorage.getItem('auto_buy_skip_fav')==='1');
+      const skipFavOdds2 = parseFloat(localStorage.getItem(_sfOddsKey) || localStorage.getItem('auto_buy_skip_fav_odds') || '1.6') || 1.6;
       const allTan2 = horses.map(h=>h.tanOdds).filter(Boolean);
       const minOdds2 = allTan2.length ? Math.min(...allTan2) : null;
       let skipReason2 = null;
@@ -4204,22 +4227,21 @@ function _renderPhData(el, today, ymLabel) {
 }
 
 function switchSharedSubtab(tab) {
-  const adminDiv = document.getElementById('subtab-admin');
-  const timeDiv  = document.getElementById('subtab-time');
-  const adminBtn = document.getElementById('subtab-admin-btn');
-  const timeBtn  = document.getElementById('subtab-time-btn');
-  if(!adminDiv || !timeDiv) return;
-
-  const isAdmin = tab === 'admin';
-  adminDiv.style.display = isAdmin ? '' : 'none';
-  timeDiv.style.display  = isAdmin ? 'none' : '';
-
-  const activeStyle   = 'flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;transition:.15s;background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)';
-  const inactiveStyle = 'flex:1;padding:7px;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s;background:transparent;color:var(--text3)';
-  if(adminBtn) adminBtn.style.cssText = isAdmin ? activeStyle : inactiveStyle;
-  if(timeBtn)  timeBtn.style.cssText  = isAdmin ? inactiveStyle : activeStyle;
-
-  if(!isAdmin) loadTimeChangeList();
+  const tabs = ['common','local','jra'];
+  const divIds = {common:'subtab-common', local:'subtab-local-settings', jra:'subtab-jra-settings'};
+  const btnIds = {common:'subtab-common-btn', local:'subtab-local-btn', jra:'subtab-jra-btn'};
+  tabs.forEach(t => {
+    const div = document.getElementById(divIds[t]);
+    const btn = document.getElementById(btnIds[t]);
+    const active = t === tab;
+    if(div) div.style.display = active ? '' : 'none';
+    if(btn) {
+      btn.style.background = active ? 'var(--bg2)' : 'transparent';
+      btn.style.color = active ? 'var(--text)' : 'var(--text2)';
+      btn.style.boxShadow = active ? '0 1px 3px rgba(0,0,0,.1)' : 'none';
+      btn.style.fontWeight = active ? '600' : '500';
+    }
+  });
 }
 
 // ===== 時刻変更 =====
@@ -4548,7 +4570,7 @@ async function revertTime(idx) {
 loadSoftmaxSettings();
 // 共有タブのアクティブ化を検知してlocalStorage設定をUIに反映（GitHub自動読み込みは行わない）
 const _origSwFn = window.sw;
-window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='admin') { loadSoftmaxSettings(); } };
+window.sw = function(tab) { if(_origSwFn) _origSwFn(tab); if(tab==='admin') { loadSoftmaxSettings(); switchSharedSubtab('common'); } };
 
 </script>
 
