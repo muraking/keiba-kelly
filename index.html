@@ -1,8 +1,13 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.17.1
+  v2026.06.17.2
 
   変更履歴:
+    v2026.06.17.2 - 馬連/ワイド詳細設定UI（金額・購入方式・フォーメーション・推奨/勝率ボックス・
+                   本命×穴馬・ワイド勝率ボックスフィルタ）を共通タブから地方・中央タブへ分離。
+                   地方タブは_settings_local、中央タブは_settings_jraに読み書き。共通タブの詳細UIは削除し
+                   買い目ON/OFFの隠しinputのみ後方互換で保持。indices.jsonの該当キーを両タブへ移設。
+                   スケジューラーはfetch_latest_settingsのマージで自動対応（コード変更なし）。
     v2026.06.17.1 - 馬連/ワイドhon_ana設定の保存先を_settings→_settings_localに変更。
                    読み込みもslocal優先・sフォールバックに変更（地方・中央分離対応）。
     v2026.06.16.9 - 地方/中央の勝率フィルターを「空欄=共通値使用 / 0=フィルタなし」に変更。
@@ -260,7 +265,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.17.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.17.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -556,128 +561,14 @@ textarea:focus{border-color:var(--gold)}
         <div style="font-size:10px;color:var(--text3);margin-top:4px">ON: 単勝が購入された時のみ馬連/ワイドも購入　OFF: 常に購入（現状）</div>
       </div>
 
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔗 馬連詳細設定（共通）<span style="font-size:10px;color:var(--text3)">　※ON/OFFは地方/中央タブで設定</span></div>
-        <div style="display:none">
-          <input type="checkbox" id="buy-exacta-jra" onchange="localStorage.setItem('buy_exacta_jra', this.checked?'1':'0')">
-          <span id="buy-exacta-jra-label"></span>
-          <input type="checkbox" id="buy-exacta-local" onchange="localStorage.setItem('buy_exacta_local', this.checked?'1':'0')">
-          <span id="buy-exacta-local-label"></span>
-        </div>
-        <label style="display:none"><input type="checkbox" id="buy-exacta" checked></label>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
-        <input id="exacta-amount" type="number" min="100" max="100000" step="100" value="100"
-          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
-          onchange="localStorage.setItem('exacta_amount', this.value)" oninput="localStorage.setItem('exacta_amount', this.value)">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
-        <select id="exacta-method"
-          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
-          onchange="updateComboMethodUI('exacta')">
-          <option value="formation">フォーメーション（軸×相手）</option>
-          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
-          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
-          <option value="hon_ana">本命×穴馬</option>
-        </select>
-        <div id="exacta-hon-settings" style="display:none">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
-          </div>
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
-          </div>
-        </div>
-        <div id="exacta-formation-settings">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
-          </div>
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
-          </div>
-        </div>
-        <div id="exacta-box-settings" style="display:none">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
-          <input id="exacta-box-n" type="number" min="2" max="6" step="1" value="3"
-            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
-            onchange="localStorage.setItem('exacta_box_n', this.value)" oninput="localStorage.setItem('exacta_box_n', this.value)">
-          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭（EVフィルターなし）</div>
-        </div>
-      </div>
-
-      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔀 ワイド詳細設定（共通）<span style="font-size:10px;color:var(--text3)">　※ON/OFFは地方/中央タブで設定</span></div>
-        <div style="display:none">
-          <input type="checkbox" id="buy-wide-jra" onchange="localStorage.setItem('buy_wide_jra', this.checked?'1':'0')">
-          <span id="buy-wide-jra-label"></span>
-          <input type="checkbox" id="buy-wide-local" onchange="localStorage.setItem('buy_wide_local', this.checked?'1':'0')">
-          <span id="buy-wide-local-label"></span>
-        </div>
-        <label style="display:none"><input type="checkbox" id="buy-wide" checked></label>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
-        <input id="wide-amount" type="number" min="100" max="100000" step="100" value="100"
-          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
-          onchange="localStorage.setItem('wide_amount', this.value)" oninput="localStorage.setItem('wide_amount', this.value)">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
-        <select id="wide-method"
-          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
-          onchange="updateComboMethodUI('wide')">
-          <option value="formation">フォーメーション（軸×相手）</option>
-          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
-          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
-          <option value="hon_ana">本命×穴馬</option>
-        </select>
-        <div id="wide-hon-settings" style="display:none">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
-          </div>
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
-          </div>
-        </div>
-        <div id="wide-formation-settings">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
-          </div>
-          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
-          </div>
-        </div>
-        <div id="wide-box-settings" style="display:none">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
-          <input id="wide-box-n" type="number" min="2" max="6" step="1" value="3"
-            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
-            onchange="localStorage.setItem('wide_box_n', this.value)" oninput="localStorage.setItem('wide_box_n', this.value)">
-          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭（下記フィルタで絞り込み）</div>
-          <div id="wide-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
-              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
-              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
-            </div>
-            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
-          </div>
-        </div>
+      <!-- 馬連/ワイド詳細設定は地方/中央タブへ移動(v2026.06.17.2)。買い目ON/OFFの隠しinputのみ後方互換で保持 -->
+      <div style="display:none">
+        <input type="checkbox" id="buy-exacta-jra"><span id="buy-exacta-jra-label"></span>
+        <input type="checkbox" id="buy-exacta-local"><span id="buy-exacta-local-label"></span>
+        <label><input type="checkbox" id="buy-exacta" checked></label>
+        <input type="checkbox" id="buy-wide-jra"><span id="buy-wide-jra-label"></span>
+        <input type="checkbox" id="buy-wide-local"><span id="buy-wide-local-label"></span>
+        <label><input type="checkbox" id="buy-wide" checked></label>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -779,7 +670,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.17.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.17.2</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -819,21 +710,123 @@ textarea:focus{border-color:var(--gold)}
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔗 馬連 ON/OFF（地方）<span style="font-size:10px">　※詳細は共通タブ</span></div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔗 馬連詳細設定（地方）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px">
           <input type="checkbox" id="buy-exacta-local-tab" style="width:18px;height:18px;cursor:pointer"
             onchange="localStorage.setItem('buy_exacta_local', this.checked?'1':'0'); var el=document.getElementById('buy-exacta-local'); if(el){el.checked=this.checked; var l=document.getElementById('buy-exacta-local-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-exacta-local-tab-label').textContent=this.checked?'ON':'OFF'">
           <span style="font-size:13px;color:var(--text)">馬連購入 <span id="buy-exacta-local-tab-label">OFF</span></span>
         </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
+        <input id="exacta-local-amount" type="number" min="100" max="100000" step="100" value="100"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="localStorage.setItem('exacta_local_amount', this.value)" oninput="localStorage.setItem('exacta_local_amount', this.value)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
+        <select id="exacta-local-method"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="updateComboMethodUI('exacta-local')">
+          <option value="formation">フォーメーション（軸×相手）</option>
+          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
+          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+          <option value="hon_ana">本命×穴馬</option>
+        </select>
+        <div id="exacta-local-hon-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
+          </div>
+        </div>
+        <div id="exacta-local-formation-settings">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-local-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_local_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
+          </div>
+        </div>
+        <div id="exacta-local-box-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
+          <input id="exacta-local-box-n" type="number" min="2" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('exacta_local_box_n', this.value)" oninput="localStorage.setItem('exacta_local_box_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭</div>
+        </div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔀 ワイド ON/OFF（地方）<span style="font-size:10px">　※詳細は共通タブ</span></div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔀 ワイド詳細設定（地方）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px">
           <input type="checkbox" id="buy-wide-local-tab" style="width:18px;height:18px;cursor:pointer"
             onchange="localStorage.setItem('buy_wide_local', this.checked?'1':'0'); var el=document.getElementById('buy-wide-local'); if(el){el.checked=this.checked; var l=document.getElementById('buy-wide-local-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-wide-local-tab-label').textContent=this.checked?'ON':'OFF'">
           <span style="font-size:13px;color:var(--text)">ワイド購入 <span id="buy-wide-local-tab-label">OFF</span></span>
         </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
+        <input id="wide-local-amount" type="number" min="100" max="100000" step="100" value="100"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="localStorage.setItem('wide_local_amount', this.value)" oninput="localStorage.setItem('wide_local_amount', this.value)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
+        <select id="wide-local-method"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="updateComboMethodUI('wide-local')">
+          <option value="formation">フォーメーション（軸×相手）</option>
+          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
+          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+          <option value="hon_ana">本命×穴馬</option>
+        </select>
+        <div id="wide-local-hon-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
+          </div>
+        </div>
+        <div id="wide-local-formation-settings">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-local-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_local_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
+          </div>
+        </div>
+        <div id="wide-local-box-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
+          <input id="wide-local-box-n" type="number" min="2" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('wide_local_box_n', this.value)" oninput="localStorage.setItem('wide_local_box_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭</div>
+          <div id="wide-local-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-local-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-local-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+            </div>
+            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-local-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+          </div>
+        </div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -924,21 +917,123 @@ textarea:focus{border-color:var(--gold)}
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔗 馬連 ON/OFF（中央）<span style="font-size:10px">　※詳細は共通タブ</span></div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔗 馬連詳細設定（中央）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px">
           <input type="checkbox" id="buy-exacta-jra-tab" style="width:18px;height:18px;cursor:pointer"
             onchange="localStorage.setItem('buy_exacta_jra', this.checked?'1':'0'); var el=document.getElementById('buy-exacta-jra'); if(el){el.checked=this.checked; var l=document.getElementById('buy-exacta-jra-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-exacta-jra-tab-label').textContent=this.checked?'ON':'OFF'">
           <span style="font-size:13px;color:var(--text)">馬連購入 <span id="buy-exacta-jra-tab-label">OFF</span></span>
         </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
+        <input id="exacta-jra-amount" type="number" min="100" max="100000" step="100" value="100"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="localStorage.setItem('exacta_jra_amount', this.value)" oninput="localStorage.setItem('exacta_jra_amount', this.value)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
+        <select id="exacta-jra-method"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="updateComboMethodUI('exacta-jra')">
+          <option value="formation">フォーメーション（軸×相手）</option>
+          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
+          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+          <option value="hon_ana">本命×穴馬</option>
+        </select>
+        <div id="exacta-jra-hon-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
+          </div>
+        </div>
+        <div id="exacta-jra-formation-settings">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="exacta-jra-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('exacta_jra_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
+          </div>
+        </div>
+        <div id="exacta-jra-box-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
+          <input id="exacta-jra-box-n" type="number" min="2" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('exacta_jra_box_n', this.value)" oninput="localStorage.setItem('exacta_jra_box_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭</div>
+        </div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🔀 ワイド ON/OFF（中央）<span style="font-size:10px">　※詳細は共通タブ</span></div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🔀 ワイド詳細設定（中央）</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px">
           <input type="checkbox" id="buy-wide-jra-tab" style="width:18px;height:18px;cursor:pointer"
             onchange="localStorage.setItem('buy_wide_jra', this.checked?'1':'0'); var el=document.getElementById('buy-wide-jra'); if(el){el.checked=this.checked; var l=document.getElementById('buy-wide-jra-label'); if(l) l.textContent=this.checked?'ON':'OFF';} document.getElementById('buy-wide-jra-tab-label').textContent=this.checked?'ON':'OFF'">
           <span style="font-size:13px;color:var(--text)">ワイド購入 <span id="buy-wide-jra-tab-label">OFF</span></span>
         </label>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">1点あたりの金額（円）</div>
+        <input id="wide-jra-amount" type="number" min="100" max="100000" step="100" value="100"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="localStorage.setItem('wide_jra_amount', this.value)" oninput="localStorage.setItem('wide_jra_amount', this.value)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">購入方式</div>
+        <select id="wide-jra-method"
+          style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box;margin-bottom:8px"
+          onchange="updateComboMethodUI('wide-jra')">
+          <option value="formation">フォーメーション（軸×相手）</option>
+          <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
+          <option value="top_box">勝率ボックス（勝率上位N頭）</option>
+          <option value="hon_ana">本命×穴馬</option>
+        </select>
+        <div id="wide-jra-hon-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-hon1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_hon1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-hon2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_hon2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-hon3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_hon3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">本3</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">穴馬（EV100超 勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-ana1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_ana1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-ana2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_ana2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-ana3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_ana3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">穴3</span></label>
+          </div>
+        </div>
+        <div id="wide-jra-formation-settings">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">軸馬（勝率上位）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-top1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_top1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率1位</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-top2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_top2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">勝率2位</span></label>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:6px">相手（推奨馬）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-rec1" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_rec1', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨1</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-rec2" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_rec2', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨2</span></label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="wide-jra-rec3" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('wide_jra_rec3', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">推奨3</span></label>
+          </div>
+        </div>
+        <div id="wide-jra-box-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">ボックス頭数（2〜6頭）</div>
+          <input id="wide-jra-box-n" type="number" min="2" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('wide_jra_box_n', this.value)" oninput="localStorage.setItem('wide_jra_box_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭</div>
+          <div id="wide-jra-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-jra-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-jra-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+            </div>
+            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-jra-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+          </div>
+        </div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -1237,7 +1332,7 @@ function updateComboMethodUI(prefix) {
   const sel = document.getElementById(`${prefix}-method`);
   if(!sel) return;
   const method = sel.value;
-  localStorage.setItem(`${prefix}_method`, method);
+  localStorage.setItem(`${prefix.replace(/-/g,'_')}_method`, method);
   const formEl   = document.getElementById(`${prefix}-formation-settings`);
   const boxEl    = document.getElementById(`${prefix}-box-settings`);
   const honEl    = document.getElementById(`${prefix}-hon-settings`);
@@ -1291,40 +1386,34 @@ async function saveSoftmaxSettings() {
   const buyExactaJra   = document.getElementById('buy-exacta-jra')?.checked || false;
   const buyExactaLocal = document.getElementById('buy-exacta-local')?.checked || false;
   const buyExacta      = buyExactaJra || buyExactaLocal; // 後方互換
-  const exactaAmount   = parseInt(document.getElementById('exacta-amount')?.value || '100') || 100;
-  const exactaTop1    = document.getElementById('exacta-top1')?.checked || false;
-  const exactaTop2    = document.getElementById('exacta-top2')?.checked || false;
-  const exactaRec1    = document.getElementById('exacta-rec1')?.checked || false;
-  const exactaRec2    = document.getElementById('exacta-rec2')?.checked || false;
-  const exactaRec3    = document.getElementById('exacta-rec3')?.checked || false;
   const buyWideJra    = document.getElementById('buy-wide-jra')?.checked || false;
   const buyWideLocal  = document.getElementById('buy-wide-local')?.checked || false;
   const buyWide       = buyWideJra || buyWideLocal; // 後方互換
-  const wideAmount    = parseInt(document.getElementById('wide-amount')?.value || '100') || 100;
-  const wideTop1      = document.getElementById('wide-top1')?.checked || false;
-  const wideTop2      = document.getElementById('wide-top2')?.checked || false;
-  const wideRec1      = document.getElementById('wide-rec1')?.checked || false;
-  const wideRec2      = document.getElementById('wide-rec2')?.checked || false;
-  const wideRec3      = document.getElementById('wide-rec3')?.checked || false;
-  const exactaMethod  = document.getElementById('exacta-method')?.value || 'formation';
-  const exactaBoxN    = parseInt(document.getElementById('exacta-box-n')?.value || '3') || 3;
-  const exactaHon1    = document.getElementById('exacta-hon1')?.checked || false;
-  const exactaHon2    = document.getElementById('exacta-hon2')?.checked || false;
-  const exactaHon3    = document.getElementById('exacta-hon3')?.checked || false;
-  const exactaAna1    = document.getElementById('exacta-ana1')?.checked || false;
-  const exactaAna2    = document.getElementById('exacta-ana2')?.checked || false;
-  const exactaAna3    = document.getElementById('exacta-ana3')?.checked || false;
-  const wideMethod    = document.getElementById('wide-method')?.value || 'formation';
-  const wideBoxN      = parseInt(document.getElementById('wide-box-n')?.value || '3') || 3;
-  const wideHon1      = document.getElementById('wide-hon1')?.checked || false;
-  const wideHon2      = document.getElementById('wide-hon2')?.checked || false;
-  const wideHon3      = document.getElementById('wide-hon3')?.checked || false;
-  const wideAna1      = document.getElementById('wide-ana1')?.checked || false;
-  const wideAna2      = document.getElementById('wide-ana2')?.checked || false;
-  const wideAna3      = document.getElementById('wide-ana3')?.checked || false;
-  const wideOddsMin   = parseFloat(document.getElementById('wide-odds-min')?.value || '') || null;
-  const wideOddsMax   = parseFloat(document.getElementById('wide-odds-max')?.value || '') || null;
-  const wideWinrateFilter = parseFloat(document.getElementById('wide-winrate-filter')?.value || '') || null;
+  // 馬連/ワイド詳細設定を地方(-local)/中央(-jra)それぞれのUIから読み取る
+  const _chk = id => document.getElementById(id)?.checked || false;
+  const _flt = id => { const v = parseFloat(document.getElementById(id)?.value || ''); return isNaN(v) ? null : v; };
+  const readCombo = (area, bet) => {
+    const p = `${bet}-${area}`;
+    const o = {
+      amount: parseInt(document.getElementById(`${p}-amount`)?.value || '100') || 100,
+      method: document.getElementById(`${p}-method`)?.value || 'formation',
+      box_n:  parseInt(document.getElementById(`${p}-box-n`)?.value || '3') || 3,
+      top1: _chk(`${p}-top1`), top2: _chk(`${p}-top2`),
+      rec1: _chk(`${p}-rec1`), rec2: _chk(`${p}-rec2`), rec3: _chk(`${p}-rec3`),
+      hon1: _chk(`${p}-hon1`), hon2: _chk(`${p}-hon2`), hon3: _chk(`${p}-hon3`),
+      ana1: _chk(`${p}-ana1`), ana2: _chk(`${p}-ana2`), ana3: _chk(`${p}-ana3`),
+    };
+    if (bet === 'wide') {
+      o.odds_min = _flt(`${p}-odds-min`);
+      o.odds_max = _flt(`${p}-odds-max`);
+      o.winrate_filter = _flt(`${p}-winrate-filter`);
+    }
+    return o;
+  };
+  const exactaLocal = readCombo('local', 'exacta');
+  const wideLocal   = readCombo('local', 'wide');
+  const exactaJra   = readCombo('jra',   'exacta');
+  const wideJra     = readCombo('jra',   'wide');
   const jraEvMin        = parseFloat(document.getElementById('jra-ev-min')?.value || '') || null;
   const jraEvMax        = parseFloat(document.getElementById('jra-ev-max')?.value || '') || null;
   const jraOddsMin      = parseFloat(document.getElementById('jra-odds-min')?.value || '') || null;
@@ -1387,10 +1476,7 @@ async function saveSoftmaxSettings() {
   if(localOddsMax !== null) localStorage.setItem('local_odds_max', String(localOddsMax)); else localStorage.removeItem('local_odds_max');
   if(localWinrateFilter !== null) localStorage.setItem('local_winrate_filter', String(localWinrateFilter)); else localStorage.removeItem('local_winrate_filter');
   if(localMaxBets > 0) localStorage.setItem('local_max_bets', String(localMaxBets)); else localStorage.removeItem('local_max_bets');
-  // ワイド勝率ボックス専用フィルタをlocalStorageにも保存
-  if(wideOddsMin !== null) localStorage.setItem('wide_odds_min', String(wideOddsMin)); else localStorage.removeItem('wide_odds_min');
-  if(wideOddsMax !== null) localStorage.setItem('wide_odds_max', String(wideOddsMax)); else localStorage.removeItem('wide_odds_max');
-  if(wideWinrateFilter !== null) localStorage.setItem('wide_winrate_filter', String(wideWinrateFilter)); else localStorage.removeItem('wide_winrate_filter');
+  // 馬連/ワイド詳細(地方/中央)はUI onchangeで個別キャッシュ済みのためここでは保存しない
 
   // GitHubにも保存（管理者のみ）
   const token = loadToken();
@@ -1430,42 +1516,35 @@ async function saveSoftmaxSettings() {
       data._settings.buy_exacta_jra   = buyExactaJra;
       data._settings.buy_exacta_local = buyExactaLocal;
       data._settings.buy_exacta      = buyExacta;
-      data._settings.exacta_amount   = exactaAmount;
-      data._settings.exacta_top1     = exactaTop1;
-      data._settings.exacta_top2     = exactaTop2;
-      data._settings.exacta_rec1     = exactaRec1;
-      data._settings.exacta_rec2     = exactaRec2;
-      data._settings.exacta_rec3     = exactaRec3;
       data._settings.buy_wide_jra    = buyWideJra;
       data._settings.buy_wide_local  = buyWideLocal;
       data._settings.buy_wide        = buyWide;
-      data._settings.wide_amount     = wideAmount;
-      data._settings.wide_top1       = wideTop1;
-      data._settings.wide_top2       = wideTop2;
-      data._settings.wide_rec1       = wideRec1;
-      data._settings.wide_rec2       = wideRec2;
-      data._settings.wide_rec3       = wideRec3;
-      data._settings.exacta_method   = exactaMethod;
-      data._settings.exacta_box_n    = exactaBoxN;
+      // 馬連/ワイド詳細設定: 地方→_settings_local, 中央→_settings_jra に保存
       if (!data._settings_local) data._settings_local = {};
-      data._settings_local.exacta_hon1 = exactaHon1;
-      data._settings_local.exacta_hon2 = exactaHon2;
-      data._settings_local.exacta_hon3 = exactaHon3;
-      data._settings_local.exacta_ana1 = exactaAna1;
-      data._settings_local.exacta_ana2 = exactaAna2;
-      data._settings_local.exacta_ana3 = exactaAna3;
-      data._settings.wide_method     = wideMethod;
-      data._settings.wide_box_n      = wideBoxN;
-      if (!data._settings_local) data._settings_local = {};
-      data._settings_local.wide_hon1 = wideHon1;
-      data._settings_local.wide_hon2 = wideHon2;
-      data._settings_local.wide_hon3 = wideHon3;
-      data._settings_local.wide_ana1 = wideAna1;
-      data._settings_local.wide_ana2 = wideAna2;
-      data._settings_local.wide_ana3 = wideAna3;
-      if(wideOddsMin !== null) data._settings.wide_odds_min = wideOddsMin; else delete data._settings.wide_odds_min;
-      if(wideOddsMax !== null) data._settings.wide_odds_max = wideOddsMax; else delete data._settings.wide_odds_max;
-      if(wideWinrateFilter !== null) data._settings.wide_winrate_filter = wideWinrateFilter; else delete data._settings.wide_winrate_filter;
+      if (!data._settings_jra)   data._settings_jra = {};
+      const writeCombo = (target, bet, o) => {
+        target[`${bet}_amount`] = o.amount;
+        target[`${bet}_method`] = o.method;
+        target[`${bet}_box_n`]  = o.box_n;
+        target[`${bet}_top1`] = o.top1; target[`${bet}_top2`] = o.top2;
+        target[`${bet}_rec1`] = o.rec1; target[`${bet}_rec2`] = o.rec2; target[`${bet}_rec3`] = o.rec3;
+        target[`${bet}_hon1`] = o.hon1; target[`${bet}_hon2`] = o.hon2; target[`${bet}_hon3`] = o.hon3;
+        target[`${bet}_ana1`] = o.ana1; target[`${bet}_ana2`] = o.ana2; target[`${bet}_ana3`] = o.ana3;
+        if (bet === 'wide') {
+          if (o.odds_min !== null) target.wide_odds_min = o.odds_min; else delete target.wide_odds_min;
+          if (o.odds_max !== null) target.wide_odds_max = o.odds_max; else delete target.wide_odds_max;
+          if (o.winrate_filter !== null) target.wide_winrate_filter = o.winrate_filter; else delete target.wide_winrate_filter;
+        }
+      };
+      writeCombo(data._settings_local, 'exacta', exactaLocal);
+      writeCombo(data._settings_local, 'wide',   wideLocal);
+      writeCombo(data._settings_jra,   'exacta', exactaJra);
+      writeCombo(data._settings_jra,   'wide',   wideJra);
+      // _settings（共通）に残る旧combo詳細キーを掃除（地方/中央へ移行済み）
+      ['exacta','wide'].forEach(bet => {
+        ['amount','method','box_n','top1','top2','rec1','rec2','rec3','hon1','hon2','hon3','ana1','ana2','ana3'].forEach(k => delete data._settings[`${bet}_${k}`]);
+      });
+      delete data._settings.wide_odds_min; delete data._settings.wide_odds_max; delete data._settings.wide_winrate_filter;
       data._settings.max_bets = maxBetsSave;
       data._settings.notify_bets = notifyBets;
       data._settings.minutes_before = minutesBefore;
@@ -1613,37 +1692,10 @@ async function loadSoftmaxFromGithub() {
     const buyExactaJra   = s.buy_exacta_jra   || false;
     const buyExactaLocal = s.buy_exacta_local || false;
     const buyExacta      = s.buy_exacta      || buyExactaJra || buyExactaLocal;
-    const exactaAmount  = s.exacta_amount  ?? 100;
-    const exactaTop1    = s.exacta_top1    || false;
-    const exactaTop2    = s.exacta_top2    || false;
-    const exactaRec1    = s.exacta_rec1    || false;
-    const exactaRec2    = s.exacta_rec2    || false;
-    const exactaRec3    = s.exacta_rec3    || false;
     const buyWideJra    = s.buy_wide_jra    || false;
     const buyWideLocal  = s.buy_wide_local  || false;
     const buyWide       = s.buy_wide       || buyWideJra || buyWideLocal;
-    const wideAmount    = s.wide_amount    ?? 100;
-    const wideTop1      = s.wide_top1      || false;
-    const wideTop2      = s.wide_top2      || false;
-    const wideRec1      = s.wide_rec1      || false;
-    const wideRec2      = s.wide_rec2      || false;
-    const wideRec3      = s.wide_rec3      || false;
-    const exactaMethod  = s.exacta_method  || 'formation';
-    const exactaBoxN    = s.exacta_box_n   ?? 3;
-    const exactaHon1    = slocal.exacta_hon1 ?? s.exacta_hon1 ?? false;
-    const exactaHon2    = slocal.exacta_hon2 ?? s.exacta_hon2 ?? false;
-    const exactaHon3    = slocal.exacta_hon3 ?? s.exacta_hon3 ?? false;
-    const exactaAna1    = slocal.exacta_ana1 ?? s.exacta_ana1 ?? false;
-    const exactaAna2    = slocal.exacta_ana2 ?? s.exacta_ana2 ?? false;
-    const exactaAna3    = slocal.exacta_ana3 ?? s.exacta_ana3 ?? false;
-    const wideMethod    = s.wide_method    || 'formation';
-    const wideBoxN      = s.wide_box_n     ?? 3;
-    const wideHon1      = slocal.wide_hon1 ?? s.wide_hon1 ?? false;
-    const wideHon2      = slocal.wide_hon2 ?? s.wide_hon2 ?? false;
-    const wideHon3      = slocal.wide_hon3 ?? s.wide_hon3 ?? false;
-    const wideAna1      = slocal.wide_ana1 ?? s.wide_ana1 ?? false;
-    const wideAna2      = slocal.wide_ana2 ?? s.wide_ana2 ?? false;
-    const wideAna3      = slocal.wide_ana3 ?? s.wide_ana3 ?? false;
+    // 馬連/ワイド詳細設定は地方(slocal)/中央(sjra)から後述のpopulateComboで各タブUIへ反映する
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -1668,37 +1720,10 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('buy_exacta_jra',   buyExactaJra   ? '1' : '0');
     localStorage.setItem('buy_exacta_local', buyExactaLocal ? '1' : '0');
     localStorage.setItem('buy_exacta',       buyExacta      ? '1' : '0');
-    localStorage.setItem('exacta_amount',  String(exactaAmount));
-    localStorage.setItem('exacta_top1',    exactaTop1   ? '1' : '0');
-    localStorage.setItem('exacta_top2',    exactaTop2   ? '1' : '0');
-    localStorage.setItem('exacta_rec1',    exactaRec1   ? '1' : '0');
-    localStorage.setItem('exacta_rec2',    exactaRec2   ? '1' : '0');
-    localStorage.setItem('exacta_rec3',    exactaRec3   ? '1' : '0');
     localStorage.setItem('buy_wide_jra',     buyWideJra     ? '1' : '0');
     localStorage.setItem('buy_wide_local',   buyWideLocal   ? '1' : '0');
     localStorage.setItem('buy_wide',         buyWide        ? '1' : '0');
-    localStorage.setItem('wide_amount',    String(wideAmount));
-    localStorage.setItem('wide_top1',      wideTop1     ? '1' : '0');
-    localStorage.setItem('wide_top2',      wideTop2     ? '1' : '0');
-    localStorage.setItem('wide_rec1',      wideRec1     ? '1' : '0');
-    localStorage.setItem('wide_rec2',      wideRec2     ? '1' : '0');
-    localStorage.setItem('wide_rec3',      wideRec3     ? '1' : '0');
-    localStorage.setItem('exacta_method', exactaMethod);
-    localStorage.setItem('exacta_box_n',  String(exactaBoxN));
-    localStorage.setItem('exacta_hon1',   exactaHon1  ? '1' : '0');
-    localStorage.setItem('exacta_hon2',   exactaHon2  ? '1' : '0');
-    localStorage.setItem('exacta_hon3',   exactaHon3  ? '1' : '0');
-    localStorage.setItem('exacta_ana1',   exactaAna1  ? '1' : '0');
-    localStorage.setItem('exacta_ana2',   exactaAna2  ? '1' : '0');
-    localStorage.setItem('exacta_ana3',   exactaAna3  ? '1' : '0');
-    localStorage.setItem('wide_method',   wideMethod);
-    localStorage.setItem('wide_box_n',    String(wideBoxN));
-    localStorage.setItem('wide_hon1',     wideHon1    ? '1' : '0');
-    localStorage.setItem('wide_hon2',     wideHon2    ? '1' : '0');
-    localStorage.setItem('wide_hon3',     wideHon3    ? '1' : '0');
-    localStorage.setItem('wide_ana1',     wideAna1    ? '1' : '0');
-    localStorage.setItem('wide_ana2',     wideAna2    ? '1' : '0');
-    localStorage.setItem('wide_ana3',     wideAna3    ? '1' : '0');
+    // 馬連/ワイド詳細(amount/method/box/top/rec/hon/ana/filter)はpopulateComboでlocalStorageにもキャッシュ
     const ablEl2 = document.getElementById('auto-buy-local');
     const abjEl2 = document.getElementById('auto-buy-jra');
     const abmEl2 = document.getElementById('auto-buy-max');
@@ -1734,36 +1759,42 @@ async function loadSoftmaxFromGithub() {
     if(exactaJraEl){ exactaJraEl.checked = buyExactaJra; document.getElementById('buy-exacta-jra-label').textContent = buyExactaJra ? 'ON' : 'OFF'; }
     const exactaLocalEl = document.getElementById('buy-exacta-local');
     if(exactaLocalEl){ exactaLocalEl.checked = buyExactaLocal; document.getElementById('buy-exacta-local-label').textContent = buyExactaLocal ? 'ON' : 'OFF'; }
-    const exactaAmtEl = document.getElementById('exacta-amount');
-    if(exactaAmtEl) exactaAmtEl.value = exactaAmount;
-    ['exacta-top1','exacta-top2','exacta-rec1','exacta-rec2','exacta-rec3'].forEach((id,i) => {
-      const el = document.getElementById(id);
-      if(el) el.checked = [exactaTop1,exactaTop2,exactaRec1,exactaRec2,exactaRec3][i];
-    });
     const wideJraEl = document.getElementById('buy-wide-jra');
     if(wideJraEl){ wideJraEl.checked = buyWideJra; document.getElementById('buy-wide-jra-label').textContent = buyWideJra ? 'ON' : 'OFF'; }
     const wideLocalEl = document.getElementById('buy-wide-local');
     if(wideLocalEl){ wideLocalEl.checked = buyWideLocal; document.getElementById('buy-wide-local-label').textContent = buyWideLocal ? 'ON' : 'OFF'; }
-    const wideAmtEl = document.getElementById('wide-amount');
-    if(wideAmtEl) wideAmtEl.value = wideAmount;
-    ['wide-top1','wide-top2','wide-rec1','wide-rec2','wide-rec3'].forEach((id,i) => {
-      const el = document.getElementById(id);
-      if(el) el.checked = [wideTop1,wideTop2,wideRec1,wideRec2,wideRec3][i];
-    });
-    const exactaMethodEl = document.getElementById('exacta-method');
-    if(exactaMethodEl){ exactaMethodEl.value = exactaMethod; updateComboMethodUI('exacta'); }
-    const exactaBoxNEl = document.getElementById('exacta-box-n');
-    if(exactaBoxNEl) exactaBoxNEl.value = String(exactaBoxN);
-    ['exacta-hon1','exacta-hon2','exacta-hon3','exacta-ana1','exacta-ana2','exacta-ana3'].forEach((id,i)=>{
-      const el=document.getElementById(id); if(el) el.checked=[exactaHon1,exactaHon2,exactaHon3,exactaAna1,exactaAna2,exactaAna3][i];
-    });
-    const wideMethodEl = document.getElementById('wide-method');
-    if(wideMethodEl){ wideMethodEl.value = wideMethod; updateComboMethodUI('wide'); }
-    const wideBoxNEl = document.getElementById('wide-box-n');
-    if(wideBoxNEl) wideBoxNEl.value = String(wideBoxN);
-    ['wide-hon1','wide-hon2','wide-hon3','wide-ana1','wide-ana2','wide-ana3'].forEach((id,i)=>{
-      const el=document.getElementById(id); if(el) el.checked=[wideHon1,wideHon2,wideHon3,wideAna1,wideAna2,wideAna3][i];
-    });
+    // 馬連/ワイド詳細設定を地方(_settings_local)/中央(_settings_jra)から各タブUIへ反映
+    const populateCombo = (area, bet, src) => {
+      const p = `${bet}-${area}`, k = `${bet}_${area}`;
+      src = src || {};
+      const amt = src[`${bet}_amount`] ?? 100;
+      const amtEl = document.getElementById(`${p}-amount`); if(amtEl) amtEl.value = amt;
+      localStorage.setItem(`${k}_amount`, String(amt));
+      const method = src[`${bet}_method`] || 'formation';
+      const mEl = document.getElementById(`${p}-method`); if(mEl) mEl.value = method;
+      localStorage.setItem(`${k}_method`, method);
+      const boxN = src[`${bet}_box_n`] ?? 3;
+      const bEl = document.getElementById(`${p}-box-n`); if(bEl) bEl.value = String(boxN);
+      localStorage.setItem(`${k}_box_n`, String(boxN));
+      ['top1','top2','rec1','rec2','rec3','hon1','hon2','hon3','ana1','ana2','ana3'].forEach(suf => {
+        const v = !!src[`${bet}_${suf}`];
+        const el = document.getElementById(`${p}-${suf}`); if(el) el.checked = v;
+        localStorage.setItem(`${k}_${suf}`, v?'1':'0');
+      });
+      if (bet === 'wide') {
+        [['odds-min','wide_odds_min'],['odds-max','wide_odds_max'],['winrate-filter','wide_winrate_filter']].forEach(([suf,key]) => {
+          const v = src[key];
+          const el = document.getElementById(`${p}-${suf}`); if(el) el.value = (v==null?'':v);
+          const lk = `${k}_${suf.replace(/-/g,'_')}`;
+          if(v!=null) localStorage.setItem(lk, String(v)); else localStorage.removeItem(lk);
+        });
+      }
+      if(mEl) updateComboMethodUI(p);
+    };
+    populateCombo('local','exacta', slocal);
+    populateCombo('local','wide',   slocal);
+    populateCombo('jra','exacta',   sjra);
+    populateCombo('jra','wide',     sjra);
     const setField = (id, val) => { const el = document.getElementById(id); if(el && val != null && val !== '') el.value = val; else if(el) el.value = ''; };
     setField('jra-ev-min', sjra.ev_min ?? '');
     setField('jra-ev-max', sjra.ev_max ?? '');
@@ -1857,23 +1888,34 @@ async function loadSoftmaxFromGithub() {
         if(localStorage.getItem('skip_jra_hurdle')==='1') skips.push('中央障害');
         return `スキップ: ${skips.length > 0 ? skips.join('・') : 'なし'}`;
       })(),
-      (()=>{
-        if(!buyExactaLocal && !buyExactaJra) return null;
-        const where = [buyExactaLocal && '地方', buyExactaJra && '中央'].filter(Boolean).join('/');
-        if(exactaMethod === 'rec_box') return `馬連(${where}): 推奨ボックス ${exactaBoxN}頭 ¥${exactaAmount}/点`;
-        if(exactaMethod === 'top_box') return `馬連(${where}): 勝率ボックス ${exactaBoxN}頭 ¥${exactaAmount}/点`;
-        const tops = [exactaTop1 && '勝率1', exactaTop2 && '勝率2'].filter(Boolean).join('・') || '-';
-        const recs = [exactaRec1 && '推奨1', exactaRec2 && '推奨2', exactaRec3 && '推奨3'].filter(Boolean).join('・') || '-';
-        return `馬連(${where}): 軸=${tops} 相手=${recs} ¥${exactaAmount}/点`;
-      })(),
-      (()=>{
-        if(!buyWideLocal && !buyWideJra) return null;
-        const where = [buyWideLocal && '地方', buyWideJra && '中央'].filter(Boolean).join('/');
-        if(wideMethod === 'rec_box') return `ワイド(${where}): 推奨ボックス ${wideBoxN}頭 ¥${wideAmount}/点`;
-        if(wideMethod === 'top_box') { const wf = []; if(s.wide_odds_min!=null||s.wide_odds_max!=null) wf.push(`odds${s.wide_odds_min??'-'}〜${s.wide_odds_max??'-'}`); if(s.wide_winrate_filter!=null) wf.push(`勝率${s.wide_winrate_filter}%+`); return `ワイド(${where}): 勝率ボックス ${wideBoxN}頭 ¥${wideAmount}/点${wf.length?' ['+wf.join(' ')+']':''}`; }
-        const tops = [wideTop1 && '勝率1', wideTop2 && '勝率2'].filter(Boolean).join('・') || '-';
-        const recs = [wideRec1 && '推奨1', wideRec2 && '推奨2', wideRec3 && '推奨3'].filter(Boolean).join('・') || '-';
-        return `ワイド(${where}): 軸=${tops} 相手=${recs} ¥${wideAmount}/点`;
+      ...(()=>{
+        const out = [];
+        const summarize = (bet, area, src, on) => {
+          if(!on) return;
+          const label = (bet==='exacta'?'馬連':'ワイド') + '(' + (area==='local'?'地方':'中央') + ')';
+          const amt = src[`${bet}_amount`] ?? 100;
+          const method = src[`${bet}_method`] || 'formation';
+          const boxN = src[`${bet}_box_n`] ?? 3;
+          if(method === 'rec_box'){ out.push(`${label}: 推奨ボックス ${boxN}頭 ¥${amt}/点`); return; }
+          if(method === 'top_box'){
+            const wf = [];
+            if(bet==='wide'){ if(src.wide_odds_min!=null||src.wide_odds_max!=null) wf.push(`odds${src.wide_odds_min??'-'}〜${src.wide_odds_max??'-'}`); if(src.wide_winrate_filter!=null) wf.push(`勝率${src.wide_winrate_filter}%+`); }
+            out.push(`${label}: 勝率ボックス ${boxN}頭 ¥${amt}/点${wf.length?' ['+wf.join(' ')+']':''}`); return;
+          }
+          if(method === 'hon_ana'){
+            const hons = [src[`${bet}_hon1`]&&'本1', src[`${bet}_hon2`]&&'本2', src[`${bet}_hon3`]&&'本3'].filter(Boolean).join('・') || '-';
+            const anas = [src[`${bet}_ana1`]&&'穴1', src[`${bet}_ana2`]&&'穴2', src[`${bet}_ana3`]&&'穴3'].filter(Boolean).join('・') || '-';
+            out.push(`${label}: 本命=${hons} 穴馬=${anas} ¥${amt}/点`); return;
+          }
+          const tops = [src[`${bet}_top1`]&&'勝率1', src[`${bet}_top2`]&&'勝率2'].filter(Boolean).join('・') || '-';
+          const recs = [src[`${bet}_rec1`]&&'推奨1', src[`${bet}_rec2`]&&'推奨2', src[`${bet}_rec3`]&&'推奨3'].filter(Boolean).join('・') || '-';
+          out.push(`${label}: 軸=${tops} 相手=${recs} ¥${amt}/点`);
+        };
+        summarize('exacta','local', slocal, buyExactaLocal);
+        summarize('exacta','jra',   sjra,   buyExactaJra);
+        summarize('wide','local',   slocal, buyWideLocal);
+        summarize('wide','jra',     sjra,   buyWideJra);
+        return out;
       })(),
     ].filter(v => v !== null);
     if(currentEl){
@@ -1956,48 +1998,31 @@ function loadSoftmaxSettings() {
   const buyExactaJraEl = document.getElementById('buy-exacta-jra');
   const buyExactaJraVal = localStorage.getItem('buy_exacta_jra') === '1';
   if(buyExactaJraEl){ buyExactaJraEl.checked = buyExactaJraVal; document.getElementById('buy-exacta-jra-label').textContent = buyExactaJraVal ? 'ON' : 'OFF'; }
-  const exactaAmtEl = document.getElementById('exacta-amount');
-  if(exactaAmtEl) exactaAmtEl.value = localStorage.getItem('exacta_amount') || '100';
-  ['exacta-top1','exacta-top2','exacta-rec1','exacta-rec2','exacta-rec3'].forEach(id => {
-    const el = document.getElementById(id);
-    const key = id.replace(/-/g,'_');
-    if(el) el.checked = localStorage.getItem(key) === '1';
-  });
-  // ワイド設定
+  // ワイド購入ON/OFF
   const buyWideLocalEl = document.getElementById('buy-wide-local');
   const buyWideLocalVal = localStorage.getItem('buy_wide_local') === '1';
   if(buyWideLocalEl){ buyWideLocalEl.checked = buyWideLocalVal; document.getElementById('buy-wide-local-label').textContent = buyWideLocalVal ? 'ON' : 'OFF'; }
   const buyWideJraEl = document.getElementById('buy-wide-jra');
   const buyWideJraVal = localStorage.getItem('buy_wide_jra') === '1';
   if(buyWideJraEl){ buyWideJraEl.checked = buyWideJraVal; document.getElementById('buy-wide-jra-label').textContent = buyWideJraVal ? 'ON' : 'OFF'; }
-  const wideAmtEl = document.getElementById('wide-amount');
-  if(wideAmtEl) wideAmtEl.value = localStorage.getItem('wide_amount') || '100';
-  ['wide-top1','wide-top2','wide-rec1','wide-rec2','wide-rec3'].forEach(id => {
-    const el = document.getElementById(id);
-    const key = id.replace(/-/g,'_');
-    if(el) el.checked = localStorage.getItem(key) === '1';
-  });
-  // 購入方式セレクト初期化
-  const exactaMethodEl2 = document.getElementById('exacta-method');
-  if(exactaMethodEl2){ exactaMethodEl2.value = localStorage.getItem('exacta_method') || 'formation'; updateComboMethodUI('exacta'); }
-  const exactaBoxNEl2 = document.getElementById('exacta-box-n');
-  if(exactaBoxNEl2) exactaBoxNEl2.value = localStorage.getItem('exacta_box_n') || '3';
-  ['exacta-hon1','exacta-hon2','exacta-hon3','exacta-ana1','exacta-ana2','exacta-ana3'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.checked=localStorage.getItem(id.replace(/-/g,'_'))==='1';
-  });
-  const wideMethodEl2 = document.getElementById('wide-method');
-  if(wideMethodEl2){ wideMethodEl2.value = localStorage.getItem('wide_method') || 'formation'; updateComboMethodUI('wide'); }
-  const wideBoxNEl2 = document.getElementById('wide-box-n');
-  if(wideBoxNEl2) wideBoxNEl2.value = localStorage.getItem('wide_box_n') || '3';
-  ['wide-hon1','wide-hon2','wide-hon3','wide-ana1','wide-ana2','wide-ana3'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.checked=localStorage.getItem(id.replace(/-/g,'_'))==='1';
-  });
-  const woMinEl = document.getElementById('wide-odds-min');
-  if(woMinEl) woMinEl.value = localStorage.getItem('wide_odds_min') || '';
-  const woMaxEl = document.getElementById('wide-odds-max');
-  if(woMaxEl) woMaxEl.value = localStorage.getItem('wide_odds_max') || '';
-  const wwfEl = document.getElementById('wide-winrate-filter');
-  if(wwfEl) wwfEl.value = localStorage.getItem('wide_winrate_filter') || '';
+  // 馬連/ワイド詳細(地方/中央)をlocalStorageキャッシュから復元
+  const initCombo = (area, bet) => {
+    const p = `${bet}-${area}`, k = `${bet}_${area}`;
+    const amtEl = document.getElementById(`${p}-amount`); if(amtEl) amtEl.value = localStorage.getItem(`${k}_amount`) || '100';
+    const mEl = document.getElementById(`${p}-method`); if(mEl) mEl.value = localStorage.getItem(`${k}_method`) || 'formation';
+    const bEl = document.getElementById(`${p}-box-n`); if(bEl) bEl.value = localStorage.getItem(`${k}_box_n`) || '3';
+    ['top1','top2','rec1','rec2','rec3','hon1','hon2','hon3','ana1','ana2','ana3'].forEach(suf => {
+      const el = document.getElementById(`${p}-${suf}`); if(el) el.checked = localStorage.getItem(`${k}_${suf}`) === '1';
+    });
+    if(bet==='wide'){
+      ['odds-min','odds-max','winrate-filter'].forEach(suf => {
+        const el = document.getElementById(`${p}-${suf}`); if(el) el.value = localStorage.getItem(`${k}_${suf.replace(/-/g,'_')}`) || '';
+      });
+    }
+    if(mEl) updateComboMethodUI(p);
+  };
+  initCombo('local','exacta'); initCombo('local','wide');
+  initCombo('jra','exacta');   initCombo('jra','wide');
   const bpbEl2 = document.getElementById('buy-place-bet');
   const bpbVal = localStorage.getItem('buy_place_bet') === '1';
   if(bpbEl2){ bpbEl2.checked = bpbVal; document.getElementById('buy-place-bet-label').textContent = bpbVal ? 'ON' : 'OFF'; }
