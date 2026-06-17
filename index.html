@@ -1,8 +1,17 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.17.2
+  v2026.06.17.5
 
   変更履歴:
+    v2026.06.17.5 - エントロピースキップUI説明文を7段階表記に更新。
+    v2026.06.17.4 - エントロピースキップ設定UIを追加。地方タブ/中央タブのスキップ設定ブロックに
+                   「固い上限（以下でスキップ）」「荒れ下限（以上でスキップ）」の数値入力を追加。
+                   saveSoftmaxSettingsで_settings_local/_settings_jraへ保存。
+                   loadSoftmaxFromGithubでUIとlocalStorageへ反映。
+    v2026.06.17.3 - v2026.06.17.2のレビュー指摘修正。(1)loadSoftmaxFromGithubに残っていた旧共通タブの
+                   ワイドフィルタ読込（削除済みID wide-odds-min等への参照・_settings.wide_*の死んだmirror）を削除。
+                   (2)地方/中央タブのワイド勝率ボックスフィルタ入力にonchange/oninputを追加し
+                   localStorageキャッシュ（リロード時に値が消える不整合を解消）。
     v2026.06.17.2 - 馬連/ワイド詳細設定UI（金額・購入方式・フォーメーション・推奨/勝率ボックス・
                    本命×穴馬・ワイド勝率ボックスフィルタ）を共通タブから地方・中央タブへ分離。
                    地方タブは_settings_local、中央タブは_settings_jraに読み書き。共通タブの詳細UIは削除し
@@ -265,7 +274,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.17.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.17.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -670,7 +679,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.17.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.17.5</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -702,10 +711,25 @@ textarea:focus{border-color:var(--gold)}
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
         <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🚫 地方 スキップ設定</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-local-maiden" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_local_maiden', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">新馬戦</span></label>
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-local-2yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_local_2yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">2歳戦</span></label>
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-local-3yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_local_3yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">3歳戦</span></label>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">エントロピースキップ（0=無効 / 激固&lt;1.50 固&lt;1.65 稍固&lt;1.80 中間&lt;1.95 稍荒&lt;2.10 荒&lt;2.30 激荒≥2.30）</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">固い上限（以下でスキップ）</div>
+            <input id="entropy-skip-min-local" type="number" min="0" max="3" step="0.1" value="0"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:5px 7px;color:var(--text);font-size:12px;box-sizing:border-box"
+              onchange="localStorage.setItem('entropy_skip_min_local', this.value)" oninput="localStorage.setItem('entropy_skip_min_local', this.value)">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">荒れ下限（以上でスキップ）</div>
+            <input id="entropy-skip-max-local" type="number" min="0" max="3" step="0.1" value="0"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:5px 7px;color:var(--text);font-size:12px;box-sizing:border-box"
+              onchange="localStorage.setItem('entropy_skip_max_local', this.value)" oninput="localStorage.setItem('entropy_skip_max_local', this.value)">
+          </div>
         </div>
       </div>
 
@@ -821,10 +845,10 @@ textarea:focus{border-color:var(--gold)}
           <div id="wide-local-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
             <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
-              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-local-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
-              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-local-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-local-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_local_odds_min', this.value)" oninput="localStorage.setItem('wide_local_odds_min', this.value)"></div>
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-local-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_local_odds_max', this.value)" oninput="localStorage.setItem('wide_local_odds_max', this.value)"></div>
             </div>
-            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-local-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-local-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_local_winrate_filter', this.value)" oninput="localStorage.setItem('wide_local_winrate_filter', this.value)"></div>
           </div>
         </div>
       </div>
@@ -908,11 +932,26 @@ textarea:focus{border-color:var(--gold)}
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
         <div style="font-size:11px;color:var(--text3);margin-bottom:8px">🚫 中央（JRA）スキップ設定</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-maiden" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_maiden', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">新馬戦</span></label>
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-2yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_2yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">2歳戦</span></label>
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-3yo" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_3yo', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">3歳戦</span></label>
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg2);border-radius:6px;padding:5px 7px"><input type="checkbox" id="skip-jra-hurdle" style="width:15px;height:15px;cursor:pointer" onchange="localStorage.setItem('skip_jra_hurdle', this.checked?'1':'0')"><span style="font-size:12px;color:var(--text)">障害</span></label>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">エントロピースキップ（0=無効 / 激固&lt;1.50 固&lt;1.65 稍固&lt;1.80 中間&lt;1.95 稍荒&lt;2.10 荒&lt;2.30 激荒≥2.30）</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">固い上限（以下でスキップ）</div>
+            <input id="entropy-skip-min-jra" type="number" min="0" max="3" step="0.1" value="0"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:5px 7px;color:var(--text);font-size:12px;box-sizing:border-box"
+              onchange="localStorage.setItem('entropy_skip_min_jra', this.value)" oninput="localStorage.setItem('entropy_skip_min_jra', this.value)">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">荒れ下限（以上でスキップ）</div>
+            <input id="entropy-skip-max-jra" type="number" min="0" max="3" step="0.1" value="0"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:5px 7px;color:var(--text);font-size:12px;box-sizing:border-box"
+              onchange="localStorage.setItem('entropy_skip_max_jra', this.value)" oninput="localStorage.setItem('entropy_skip_max_jra', this.value)">
+          </div>
         </div>
       </div>
 
@@ -1028,10 +1067,10 @@ textarea:focus{border-color:var(--gold)}
           <div id="wide-jra-topbox-filter" style="display:none;margin-top:8px;padding-top:8px;border-top:0.5px dashed var(--border2)">
             <div style="font-size:10px;color:var(--text3);margin-bottom:6px">勝率ボックス専用フィルタ（空欄なら共通設定を使用）</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
-              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-jra-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
-              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-jra-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ下限</div><input id="wide-jra-odds-min" type="number" min="1" step="0.5" placeholder="例:5" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_jra_odds_min', this.value)" oninput="localStorage.setItem('wide_jra_odds_min', this.value)"></div>
+              <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">オッズ上限</div><input id="wide-jra-odds-max" type="number" min="1" step="0.5" placeholder="例:15" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_jra_odds_max', this.value)" oninput="localStorage.setItem('wide_jra_odds_max', this.value)"></div>
             </div>
-            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-jra-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
+            <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-jra-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_jra_winrate_filter', this.value)" oninput="localStorage.setItem('wide_jra_winrate_filter', this.value)"></div>
           </div>
         </div>
       </div>
@@ -1441,6 +1480,10 @@ async function saveSoftmaxSettings() {
   const jraStopLossAmt     = parseInt(document.getElementById('jra-stop-loss-amount')?.value || '3000') || 3000;
   const jraAutoMax         = parseInt(document.getElementById('jra-auto-buy-max')?.value || '0') || 0;
   const jraPlaceBet        = document.getElementById('buy-place-bet-jra')?.checked || false;
+  const localEntropySkipMin = parseFloat(document.getElementById('entropy-skip-min-local')?.value || '0') || 0;
+  const localEntropySkipMax = parseFloat(document.getElementById('entropy-skip-max-local')?.value || '0') || 0;
+  const jraEntropySkipMin   = parseFloat(document.getElementById('entropy-skip-min-jra')?.value || '0') || 0;
+  const jraEntropySkipMax   = parseFloat(document.getElementById('entropy-skip-max-jra')?.value || '0') || 0;
   localStorage.setItem('local_skip_fav', localSkipFav ? '1' : '0');
   localStorage.setItem('local_skip_fav_odds', String(localSkipFavOdds));
   localStorage.setItem('local_stop_loss_enabled', localStopLossOn ? '1' : '0');
@@ -1564,6 +1607,8 @@ async function saveSoftmaxSettings() {
       data._settings_jra.stop_loss_amount = jraStopLossAmt;
       if (jraAutoMax > 0) data._settings_jra.auto_buy_max = jraAutoMax; else delete data._settings_jra.auto_buy_max;
       data._settings_jra.buy_place_bet = jraPlaceBet;
+      if (jraEntropySkipMin > 0) data._settings_jra.entropy_skip_min = jraEntropySkipMin; else delete data._settings_jra.entropy_skip_min;
+      if (jraEntropySkipMax > 0) data._settings_jra.entropy_skip_max = jraEntropySkipMax; else delete data._settings_jra.entropy_skip_max;
       if (!data._settings_local) data._settings_local = {};
       if (localEvMin !== null) data._settings_local.ev_min = localEvMin;
       if (localEvMax !== null) data._settings_local.ev_max = localEvMax; else delete data._settings_local.ev_max;
@@ -1577,6 +1622,8 @@ async function saveSoftmaxSettings() {
       data._settings_local.stop_loss_amount = localStopLossAmt;
       if (localAutoMax > 0) data._settings_local.auto_buy_max = localAutoMax; else delete data._settings_local.auto_buy_max;
       data._settings_local.buy_place_bet = localPlaceBet;
+      if (localEntropySkipMin > 0) data._settings_local.entropy_skip_min = localEntropySkipMin; else delete data._settings_local.entropy_skip_min;
+      if (localEntropySkipMax > 0) data._settings_local.entropy_skip_max = localEntropySkipMax; else delete data._settings_local.entropy_skip_max;
       const jsonStr = JSON.stringify(data, null, 2);
       const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
       const r2 = await fetch(apiUrl, {
@@ -1810,13 +1857,7 @@ async function loadSoftmaxFromGithub() {
     setField('local-winrate-filter', slocal.sm_winrate_filter ?? '');
     const localMaxBetsEl = document.getElementById('local-max-bets');
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
-    // ワイド勝率ボックス専用フィルタ
-    setField('wide-odds-min', s.wide_odds_min ?? '');
-    setField('wide-odds-max', s.wide_odds_max ?? '');
-    setField('wide-winrate-filter', s.wide_winrate_filter ?? '');
-    if(s.wide_odds_min != null) localStorage.setItem('wide_odds_min', String(s.wide_odds_min)); else localStorage.removeItem('wide_odds_min');
-    if(s.wide_odds_max != null) localStorage.setItem('wide_odds_max', String(s.wide_odds_max)); else localStorage.removeItem('wide_odds_max');
-    if(s.wide_winrate_filter != null) localStorage.setItem('wide_winrate_filter', String(s.wide_winrate_filter)); else localStorage.removeItem('wide_winrate_filter');
+    // ワイド勝率ボックス専用フィルタは地方/中央タブへ移行済み（populateComboで反映）
     // GitHubから読み込んだJRA/地方個別設定をlocalStorageにも反映
     if(sjra.ev_min != null) localStorage.setItem('jra_ev_min', String(sjra.ev_min)); else localStorage.removeItem('jra_ev_min');
     if(sjra.ev_max != null) localStorage.setItem('jra_ev_max', String(sjra.ev_max)); else localStorage.removeItem('jra_ev_max');
@@ -1863,6 +1904,15 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('jra_stop_loss_amount', String(sjra.stop_loss_amount ?? 3000));
     localStorage.setItem('jra_auto_buy_max', String(sjra.auto_buy_max ?? 0));
     localStorage.setItem('buy_place_bet_jra', (sjra.buy_place_bet||false) ? '1' : '0');
+    // エントロピースキップ設定をUIとlocalStorageに反映
+    _setVal('entropy-skip-min-local', slocal.entropy_skip_min ?? 0);
+    _setVal('entropy-skip-max-local', slocal.entropy_skip_max ?? 0);
+    _setVal('entropy-skip-min-jra',   sjra.entropy_skip_min ?? 0);
+    _setVal('entropy-skip-max-jra',   sjra.entropy_skip_max ?? 0);
+    localStorage.setItem('entropy_skip_min_local', String(slocal.entropy_skip_min ?? 0));
+    localStorage.setItem('entropy_skip_max_local', String(slocal.entropy_skip_max ?? 0));
+    localStorage.setItem('entropy_skip_min_jra',   String(sjra.entropy_skip_min ?? 0));
+    localStorage.setItem('entropy_skip_max_jra',   String(sjra.entropy_skip_max ?? 0));
 
     // 投資指標パネル更新
     updatePerfPanel(data._perf_local || {}, data._perf_jra || {});
