@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.16.9
+  v2026.06.17.1
 
   変更履歴:
+    v2026.06.17.1 - 馬連/ワイドhon_ana設定の保存先を_settings→_settings_localに変更。
+                   読み込みもslocal優先・sフォールバックに変更（地方・中央分離対応）。
     v2026.06.16.9 - 地方/中央の勝率フィルターを「空欄=共通値使用 / 0=フィルタなし」に変更。
                    従来は0でも_settings_localに書き込み共通値を上書きしていた（0%適用）。
                    空欄なら_settings_local/_settings_jraにキーを書かず共通値を継承するよう修正。
@@ -258,7 +260,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.16.9</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.17.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -777,7 +779,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.16.9</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.17.1</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -1445,20 +1447,22 @@ async function saveSoftmaxSettings() {
       data._settings.wide_rec3       = wideRec3;
       data._settings.exacta_method   = exactaMethod;
       data._settings.exacta_box_n    = exactaBoxN;
-      data._settings.exacta_hon1     = exactaHon1;
-      data._settings.exacta_hon2     = exactaHon2;
-      data._settings.exacta_hon3     = exactaHon3;
-      data._settings.exacta_ana1     = exactaAna1;
-      data._settings.exacta_ana2     = exactaAna2;
-      data._settings.exacta_ana3     = exactaAna3;
+      if (!data._settings_local) data._settings_local = {};
+      data._settings_local.exacta_hon1 = exactaHon1;
+      data._settings_local.exacta_hon2 = exactaHon2;
+      data._settings_local.exacta_hon3 = exactaHon3;
+      data._settings_local.exacta_ana1 = exactaAna1;
+      data._settings_local.exacta_ana2 = exactaAna2;
+      data._settings_local.exacta_ana3 = exactaAna3;
       data._settings.wide_method     = wideMethod;
       data._settings.wide_box_n      = wideBoxN;
-      data._settings.wide_hon1       = wideHon1;
-      data._settings.wide_hon2       = wideHon2;
-      data._settings.wide_hon3       = wideHon3;
-      data._settings.wide_ana1       = wideAna1;
-      data._settings.wide_ana2       = wideAna2;
-      data._settings.wide_ana3       = wideAna3;
+      if (!data._settings_local) data._settings_local = {};
+      data._settings_local.wide_hon1 = wideHon1;
+      data._settings_local.wide_hon2 = wideHon2;
+      data._settings_local.wide_hon3 = wideHon3;
+      data._settings_local.wide_ana1 = wideAna1;
+      data._settings_local.wide_ana2 = wideAna2;
+      data._settings_local.wide_ana3 = wideAna3;
       if(wideOddsMin !== null) data._settings.wide_odds_min = wideOddsMin; else delete data._settings.wide_odds_min;
       if(wideOddsMax !== null) data._settings.wide_odds_max = wideOddsMax; else delete data._settings.wide_odds_max;
       if(wideWinrateFilter !== null) data._settings.wide_winrate_filter = wideWinrateFilter; else delete data._settings.wide_winrate_filter;
@@ -1626,20 +1630,20 @@ async function loadSoftmaxFromGithub() {
     const wideRec3      = s.wide_rec3      || false;
     const exactaMethod  = s.exacta_method  || 'formation';
     const exactaBoxN    = s.exacta_box_n   ?? 3;
-    const exactaHon1    = s.exacta_hon1    || false;
-    const exactaHon2    = s.exacta_hon2    || false;
-    const exactaHon3    = s.exacta_hon3    || false;
-    const exactaAna1    = s.exacta_ana1    || false;
-    const exactaAna2    = s.exacta_ana2    || false;
-    const exactaAna3    = s.exacta_ana3    || false;
+    const exactaHon1    = slocal.exacta_hon1 ?? s.exacta_hon1 ?? false;
+    const exactaHon2    = slocal.exacta_hon2 ?? s.exacta_hon2 ?? false;
+    const exactaHon3    = slocal.exacta_hon3 ?? s.exacta_hon3 ?? false;
+    const exactaAna1    = slocal.exacta_ana1 ?? s.exacta_ana1 ?? false;
+    const exactaAna2    = slocal.exacta_ana2 ?? s.exacta_ana2 ?? false;
+    const exactaAna3    = slocal.exacta_ana3 ?? s.exacta_ana3 ?? false;
     const wideMethod    = s.wide_method    || 'formation';
     const wideBoxN      = s.wide_box_n     ?? 3;
-    const wideHon1      = s.wide_hon1      || false;
-    const wideHon2      = s.wide_hon2      || false;
-    const wideHon3      = s.wide_hon3      || false;
-    const wideAna1      = s.wide_ana1      || false;
-    const wideAna2      = s.wide_ana2      || false;
-    const wideAna3      = s.wide_ana3      || false;
+    const wideHon1      = slocal.wide_hon1 ?? s.wide_hon1 ?? false;
+    const wideHon2      = slocal.wide_hon2 ?? s.wide_hon2 ?? false;
+    const wideHon3      = slocal.wide_hon3 ?? s.wide_hon3 ?? false;
+    const wideAna1      = slocal.wide_ana1 ?? s.wide_ana1 ?? false;
+    const wideAna2      = slocal.wide_ana2 ?? s.wide_ana2 ?? false;
+    const wideAna3      = slocal.wide_ana3 ?? s.wide_ana3 ?? false;
     localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
     localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
     localStorage.setItem('auto_buy_max', String(autoBuyMax));
