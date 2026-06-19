@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.17.6
+  v2026.06.19.1
 
   変更履歴:
+    v2026.06.19.1 - calcAll 本/穴カードに荒れ区分（エントロピーラベル）を表示。
+                   _calcEntropyLabel()をJS内に追加（Pythonの_calc_entropy/_entropy_labelと同ロジック）。
+                   「本 / 穴 [稍荒]」形式でカードヘッダーに表示。
     v2026.06.17.6 - エントロピースキップを数値入力(min/max)から7区分チェックボックスに変更。
                    激固/固/稍固/中間/稍荒/荒/激荒を個別にON/OFF可能（非連続選択対応）。
                    保存は_settings_local/_settings_jraのentropy_skip_labels(配列)。
@@ -278,7 +281,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.17.6</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.19.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -683,7 +686,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.17.6</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.19.1</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -2319,6 +2322,22 @@ function calcAll(){
 
   // 本/穴 表示
   (()=>{
+      // エントロピーラベル計算（spat4_scheduler.py の _calc_entropy/_entropy_label と同ロジック）
+      function _calcEntropyLabel(horseList){
+        const norms = horseList.map(h=>h.norm||0).filter(v=>v>0);
+        if(!norms.length) return '';
+        const total = norms.reduce((s,v)=>s+v, 0);
+        if(total<=0) return '';
+        const p = norms.map(v=>v/total);
+        const H = -p.reduce((s,x)=>s + x*Math.log(x), 0);
+        if(H < 1.50) return '激固';
+        if(H < 1.65) return '固';
+        if(H < 1.80) return '稍固';
+        if(H < 1.95) return '中間';
+        if(H < 2.10) return '稍荒';
+        if(H < 2.30) return '荒';
+        return '激荒';
+      }
       const JRA_V = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
       const _race2 = currentRace || (ghData[document.getElementById('date-select')?.value]?.races[parseInt(document.getElementById('race-select')?.value)]);
       const isJraVn = _race2 ? JRA_V.includes(_race2.venue) : false;
@@ -2376,7 +2395,9 @@ function calcAll(){
       if(skipReason2){
         html+=`<div style="background:rgba(239,68,68,.08);border:0.5px solid rgba(239,68,68,.3);border-radius:var(--r);padding:8px 12px;margin-bottom:12px;font-size:13px;color:#ef4444">🚫 見送り推奨（${skipReason2}）</div>`;
       }
-      html+=`<div class="sh">本 / 穴</div>
+      const entLabel2 = _calcEntropyLabel(horses);
+      const entColor2 = {'激固':'#60a5fa','固':'#93c5fd','稍固':'#bfdbfe','中間':'var(--text3)','稍荒':'#fcd34d','荒':'#f97316','激荒':'#ef4444'}[entLabel2] || 'var(--text3)';
+      html+=`<div class="sh" style="display:flex;align-items:center;gap:8px">本 / 穴${entLabel2?`<span style="font-size:10px;font-weight:600;color:${entColor2};background:rgba(128,128,128,0.1);border-radius:4px;padding:1px 6px">[${entLabel2}]</span>`:''}</div>
       <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px">
         <div style="display:grid;grid-template-columns:28px 1fr;gap:10px 0;align-items:center">
           <span style="font-size:11px;color:var(--text3)">本</span>
