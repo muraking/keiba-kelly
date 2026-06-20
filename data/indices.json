@@ -23911,68 +23911,52 @@
         "函館(土)": {
           "1": {
             "1": {
-              "tan": 4.2,
-              "fuku_min": 1.6
+              "tan": 5.1
             },
             "2": {
-              "tan": 14.7,
-              "fuku_min": 2.5
+              "tan": 21.9
             },
             "3": {
-              "tan": 17.2,
-              "fuku_min": 5.3
+              "tan": 16.4
             },
             "4": {
-              "tan": 3.0,
-              "fuku_min": 1.8
+              "tan": 3.1
             },
             "5": {
-              "tan": 55.6,
-              "fuku_min": 6.9
+              "tan": 78.8
             },
             "6": {
-              "tan": 60.9,
-              "fuku_min": 10.9
+              "tan": 65.9
             },
             "7": {
-              "tan": 32.8,
-              "fuku_min": 8.2
+              "tan": 84.2
             },
             "8": {
-              "tan": 24.6,
-              "fuku_min": 5.0
+              "tan": 14.4
             },
             "9": {
-              "tan": 7.0,
-              "fuku_min": 2.4
+              "tan": 4.9
             },
             "10": {
-              "tan": 45.6,
-              "fuku_min": 13.6
+              "tan": 125.1
             },
             "11": {
-              "tan": 51.1,
-              "fuku_min": 7.9
+              "tan": 72.5
             },
             "12": {
-              "tan": 75.2,
-              "fuku_min": 4.9
+              "tan": 67.6
             },
             "13": {
-              "tan": 9.3,
-              "fuku_min": 2.5
+              "tan": 36.3
             },
             "14": {
-              "tan": 53.3,
-              "fuku_min": 5.2
+              "tan": 44.5
             },
             "15": {
-              "tan": 53.3,
-              "fuku_min": 7.7
+              "tan": 30.7
             },
             "16": {
-              "tan": 8.4,
-              "fuku_min": 2.1
+              "tan": 5.0
             }
           },
           "2": {
@@ -24561,7 +24545,7 @@
         "東京(日)": {},
         "阪神(日)": {}
       },
-      "jra_odds_updated": "2026-06-19T20:33:21.699554+09:00"
+      "jra_odds_updated": "2026-06-20T09:43:31.741275+09:00"
     }
   },
   "_settings": {
@@ -24650,24 +24634,24 @@
     "ev_min": 130,
     "ev_max": 160,
     "odds_min": 7,
-    "max_bets": 3,
+    "max_bets": 2,
     "auto_buy_max": 1500,
     "auto_buy_skip_fav": true,
     "auto_buy_skip_fav_odds": 1.6,
     "buy_place_bet": false,
     "stop_loss_amount": 3000,
     "stop_loss_enabled": true,
-    "exacta_hon1": false,
-    "exacta_hon2": true,
+    "exacta_hon1": true,
+    "exacta_hon2": false,
     "exacta_hon3": false,
-    "exacta_ana1": true,
-    "exacta_ana2": false,
+    "exacta_ana1": false,
+    "exacta_ana2": true,
     "exacta_ana3": false,
     "wide_hon1": false,
-    "wide_hon2": true,
-    "wide_hon3": false,
-    "wide_ana1": true,
-    "wide_ana2": false,
+    "wide_hon2": false,
+    "wide_hon3": true,
+    "wide_ana1": false,
+    "wide_ana2": true,
     "wide_ana3": false,
     "exacta_amount": 100,
     "exacta_top1": true,
@@ -24689,7 +24673,6 @@
     "wide_odds_max": 15,
     "wide_winrate_filter": 10,
     "entropy_skip_labels": [
-      "激固",
       "固",
       "稍固",
       "荒"
@@ -24710,17 +24693,17 @@
     "max_consecutive_loss": 13
   },
   "_perf_local": {
-    "updated_at": "2026-06-18",
-    "is_roi": 170.9,
-    "oos_roi": 193.8,
-    "oos_bets": 69,
-    "train_days": 9,
+    "updated_at": "2026-06-19",
+    "is_roi": 158.4,
+    "oos_roi": 161.3,
+    "oos_bets": 62,
+    "train_days": 10,
     "oos_days": 4,
-    "bets": 127,
+    "bets": 137,
     "profit_days": 5,
-    "total_days": 9,
-    "max_drawdown": 24,
-    "sharpe": 7.23,
+    "total_days": 10,
+    "max_drawdown": 24.0,
+    "sharpe": 5.95,
     "max_consecutive_loss": 28
   }
 }
