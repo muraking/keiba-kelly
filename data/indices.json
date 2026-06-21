@@ -33142,68 +33142,52 @@
         "阪神(日)": {
           "1": {
             "1": {
-              "tan": 2.5,
-              "fuku_min": 1.1
+              "tan": 2.9
             },
             "2": {
-              "tan": 20.5,
-              "fuku_min": 5
+              "tan": 56.0
             },
             "3": {
-              "tan": 3.6,
-              "fuku_min": 1.3
+              "tan": 3.4
             },
             "4": {
-              "tan": 93.3,
-              "fuku_min": 10.3
+              "tan": 129.6
             },
             "5": {
-              "tan": 26.3,
-              "fuku_min": 3.3
+              "tan": 29.4
             },
             "6": {
-              "tan": 75.2,
-              "fuku_min": 11.7
+              "tan": 81.4
             },
             "7": {
-              "tan": 26,
-              "fuku_min": 5.7
+              "tan": 30.5
             },
             "8": {
-              "tan": 43.1,
-              "fuku_min": 6.5
+              "tan": 85.6
             },
             "9": {
-              "tan": 61.3,
-              "fuku_min": 10.8
+              "tan": 98.1
             },
             "10": {
-              "tan": 32,
-              "fuku_min": 5.3
+              "tan": 37.6
             },
             "11": {
-              "tan": 11.8,
-              "fuku_min": 2.6
+              "tan": 7.7
             },
             "12": {
-              "tan": 9.3,
-              "fuku_min": 2.6
+              "tan": 9.6
             },
             "13": {
-              "tan": 29.4,
-              "fuku_min": 4.9
+              "tan": 57.1
             },
             "14": {
-              "tan": 14.7,
-              "fuku_min": 2.1
+              "tan": 8.4
             },
             "15": {
-              "tan": 63.5,
-              "fuku_min": 12.8
+              "tan": 110.2
             },
             "16": {
-              "tan": 17.5,
-              "fuku_min": 2.7
+              "tan": 11.2
             }
           },
           "2": {
@@ -34456,7 +34440,7 @@
           }
         }
       },
-      "jra_odds_updated": "2026-06-21T09:43:43.097113+09:00"
+      "jra_odds_updated": "2026-06-21T09:48:42.711324+09:00"
     }
   },
   "_settings": {
@@ -34538,13 +34522,7 @@
     "wide_box_n": 3,
     "wide_odds_min": 5,
     "wide_odds_max": 15,
-    "wide_winrate_filter": 10,
-    "entropy_skip_labels": [
-      "稍固",
-      "中間",
-      "稍荒",
-      "荒"
-    ]
+    "wide_winrate_filter": 10
   },
   "_settings_local": {
     "sm_winrate_filter": 4,
