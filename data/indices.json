@@ -40503,6 +40503,58 @@
               "fuku_min": 3,
               "fuku_max": 4.9
             }
+          },
+          "4": {
+            "1": {
+              "tan": 70.3,
+              "fuku_min": 8,
+              "fuku_max": 13.9
+            },
+            "2": {
+              "tan": 40.5,
+              "fuku_min": 2.1,
+              "fuku_max": 3.4
+            },
+            "3": {
+              "tan": 49.2,
+              "fuku_min": 4.2,
+              "fuku_max": 7.1
+            },
+            "4": {
+              "tan": 85.3,
+              "fuku_min": 11.4,
+              "fuku_max": 19.9
+            },
+            "5": {
+              "tan": 8.5,
+              "fuku_min": 1.7,
+              "fuku_max": 2.6
+            },
+            "6": {
+              "tan": 4.8,
+              "fuku_min": 1.5,
+              "fuku_max": 2.2
+            },
+            "7": {
+              "tan": 10.7,
+              "fuku_min": 1.8,
+              "fuku_max": 2.9
+            },
+            "8": {
+              "tan": 11.5,
+              "fuku_min": 1.7,
+              "fuku_max": 2.8
+            },
+            "9": {
+              "tan": 1.5,
+              "fuku_min": 1.1,
+              "fuku_max": 1.3
+            },
+            "10": {
+              "tan": 54.8,
+              "fuku_min": 4.4,
+              "fuku_max": 7.6
+            }
           }
         },
         "12": {
@@ -40622,7 +40674,7 @@
           }
         }
       },
-      "odds_updated": "2026-06-22T12:43:11.629547+09:00"
+      "odds_updated": "2026-06-22T13:08:20.879779+09:00"
     }
   },
   "_settings": {
@@ -40754,7 +40806,8 @@
     "wide_odds_max": 15,
     "wide_winrate_filter": 10,
     "entropy_skip_labels": [
-      "中間",
+      "激固",
+      "稍固",
       "激荒"
     ],
     "odds_max": 15
