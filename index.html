@@ -1,8 +1,12 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.19.1
+  v2026.06.22.1
 
   変更履歴:
+    v2026.06.22.1 - 馬連/ワイド購入方式に tan_axis（単勝軸×勝率上位N頭）を追加。
+                   4セクション（馬連地方/ワイド地方/馬連中央/ワイド中央）のselectにoption追加、
+                   相手頭数(tan_n)入力UI追加。updateComboMethodUI/readCombo/writeCombo/populateCombo/
+                   initCombo/summarizeをtan_axis対応に拡張。
     v2026.06.19.1 - calcAll 本/穴カードに荒れ区分（エントロピーラベル）を表示。
                    _calcEntropyLabel()をJS内に追加（Pythonの_calc_entropy/_entropy_labelと同ロジック）。
                    「本 / 穴 [稍荒]」形式でカードヘッダーに表示。
@@ -281,7 +285,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.19.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.22.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -686,7 +690,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.19.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.22.1</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -754,6 +758,7 @@ textarea:focus{border-color:var(--gold)}
           <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
           <option value="top_box">勝率ボックス（勝率上位N頭）</option>
           <option value="hon_ana">本命×穴馬</option>
+          <option value="tan_axis">単勝軸×勝率上位N頭</option>
         </select>
         <div id="exacta-local-hon-settings" style="display:none">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
@@ -789,6 +794,13 @@ textarea:focus{border-color:var(--gold)}
             onchange="localStorage.setItem('exacta_local_box_n', this.value)" oninput="localStorage.setItem('exacta_local_box_n', this.value)">
           <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭</div>
         </div>
+        <div id="exacta-local-tanaxis-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">相手頭数（勝率上位N頭・1〜6）</div>
+          <input id="exacta-local-tan-n" type="number" min="1" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('exacta_local_tan_n', this.value)" oninput="localStorage.setItem('exacta_local_tan_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">単勝発火馬を軸に、勝率（norm）上位N頭を相手とするフォーメーション</div>
+        </div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -810,6 +822,7 @@ textarea:focus{border-color:var(--gold)}
           <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
           <option value="top_box">勝率ボックス（勝率上位N頭）</option>
           <option value="hon_ana">本命×穴馬</option>
+          <option value="tan_axis">単勝軸×勝率上位N頭</option>
         </select>
         <div id="wide-local-hon-settings" style="display:none">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
@@ -852,6 +865,13 @@ textarea:focus{border-color:var(--gold)}
             </div>
             <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-local-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_local_winrate_filter', this.value)" oninput="localStorage.setItem('wide_local_winrate_filter', this.value)"></div>
           </div>
+        </div>
+        <div id="wide-local-tanaxis-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">相手頭数（勝率上位N頭・1〜6）</div>
+          <input id="wide-local-tan-n" type="number" min="1" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('wide_local_tan_n', this.value)" oninput="localStorage.setItem('wide_local_tan_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">単勝発火馬を軸に、勝率（norm）上位N頭を相手とするフォーメーション</div>
         </div>
       </div>
 
@@ -971,6 +991,7 @@ textarea:focus{border-color:var(--gold)}
           <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
           <option value="top_box">勝率ボックス（勝率上位N頭）</option>
           <option value="hon_ana">本命×穴馬</option>
+          <option value="tan_axis">単勝軸×勝率上位N頭</option>
         </select>
         <div id="exacta-jra-hon-settings" style="display:none">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
@@ -1006,6 +1027,13 @@ textarea:focus{border-color:var(--gold)}
             onchange="localStorage.setItem('exacta_jra_box_n', this.value)" oninput="localStorage.setItem('exacta_jra_box_n', this.value)">
           <div style="font-size:10px;color:var(--text3);margin-top:4px">推奨ボックス: EV条件を満たす推奨馬上位N頭<br>勝率ボックス: 勝率（norm）上位N頭</div>
         </div>
+        <div id="exacta-jra-tanaxis-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">相手頭数（勝率上位N頭・1〜6）</div>
+          <input id="exacta-jra-tan-n" type="number" min="1" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('exacta_jra_tan_n', this.value)" oninput="localStorage.setItem('exacta_jra_tan_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">単勝発火馬を軸に、勝率（norm）上位N頭を相手とするフォーメーション</div>
+        </div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -1027,6 +1055,7 @@ textarea:focus{border-color:var(--gold)}
           <option value="rec_box">推奨ボックス（EV推奨馬N頭）</option>
           <option value="top_box">勝率ボックス（勝率上位N頭）</option>
           <option value="hon_ana">本命×穴馬</option>
+          <option value="tan_axis">単勝軸×勝率上位N頭</option>
         </select>
         <div id="wide-jra-hon-settings" style="display:none">
           <div style="font-size:10px;color:var(--text3);margin-bottom:6px">本命（勝率上位）</div>
@@ -1069,6 +1098,13 @@ textarea:focus{border-color:var(--gold)}
             </div>
             <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">勝率フィルタ（norm % 以上）</div><input id="wide-jra-winrate-filter" type="number" min="0" max="100" step="1" placeholder="例:10" style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box" onchange="localStorage.setItem('wide_jra_winrate_filter', this.value)" oninput="localStorage.setItem('wide_jra_winrate_filter', this.value)"></div>
           </div>
+        </div>
+        <div id="wide-jra-tanaxis-settings" style="display:none">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px">相手頭数（勝率上位N頭・1〜6）</div>
+          <input id="wide-jra-tan-n" type="number" min="1" max="6" step="1" value="3"
+            style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"
+            onchange="localStorage.setItem('wide_jra_tan_n', this.value)" oninput="localStorage.setItem('wide_jra_tan_n', this.value)">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">単勝発火馬を軸に、勝率（norm）上位N頭を相手とするフォーメーション</div>
         </div>
       </div>
 
@@ -1384,9 +1420,11 @@ function updateComboMethodUI(prefix) {
   const formEl   = document.getElementById(`${prefix}-formation-settings`);
   const boxEl    = document.getElementById(`${prefix}-box-settings`);
   const honEl    = document.getElementById(`${prefix}-hon-settings`);
+  const tanaxisEl= document.getElementById(`${prefix}-tanaxis-settings`);
   if(formEl) formEl.style.display = method === 'formation' ? '' : 'none';
   if(boxEl)  boxEl.style.display  = (method === 'rec_box' || method === 'top_box') ? '' : 'none';
   if(honEl)  honEl.style.display  = method === 'hon_ana' ? '' : 'none';
+  if(tanaxisEl) tanaxisEl.style.display = method === 'tan_axis' ? '' : 'none';
   const filterEl = document.getElementById(`${prefix}-topbox-filter`);
   if(filterEl) filterEl.style.display = method === 'top_box' ? '' : 'none';
 }
@@ -1446,6 +1484,7 @@ async function saveSoftmaxSettings() {
       amount: parseInt(document.getElementById(`${p}-amount`)?.value || '100') || 100,
       method: document.getElementById(`${p}-method`)?.value || 'formation',
       box_n:  parseInt(document.getElementById(`${p}-box-n`)?.value || '3') || 3,
+      tan_n:  parseInt(document.getElementById(`${p}-tan-n`)?.value || '3') || 3,
       top1: _chk(`${p}-top1`), top2: _chk(`${p}-top2`),
       rec1: _chk(`${p}-rec1`), rec2: _chk(`${p}-rec2`), rec3: _chk(`${p}-rec3`),
       hon1: _chk(`${p}-hon1`), hon2: _chk(`${p}-hon2`), hon3: _chk(`${p}-hon3`),
@@ -1581,6 +1620,7 @@ async function saveSoftmaxSettings() {
         target[`${bet}_amount`] = o.amount;
         target[`${bet}_method`] = o.method;
         target[`${bet}_box_n`]  = o.box_n;
+        target[`${bet}_tan_n`]  = o.tan_n;
         target[`${bet}_top1`] = o.top1; target[`${bet}_top2`] = o.top2;
         target[`${bet}_rec1`] = o.rec1; target[`${bet}_rec2`] = o.rec2; target[`${bet}_rec3`] = o.rec3;
         target[`${bet}_hon1`] = o.hon1; target[`${bet}_hon2`] = o.hon2; target[`${bet}_hon3`] = o.hon3;
@@ -1597,7 +1637,7 @@ async function saveSoftmaxSettings() {
       writeCombo(data._settings_jra,   'wide',   wideJra);
       // _settings（共通）に残る旧combo詳細キーを掃除（地方/中央へ移行済み）
       ['exacta','wide'].forEach(bet => {
-        ['amount','method','box_n','top1','top2','rec1','rec2','rec3','hon1','hon2','hon3','ana1','ana2','ana3'].forEach(k => delete data._settings[`${bet}_${k}`]);
+        ['amount','method','box_n','tan_n','top1','top2','rec1','rec2','rec3','hon1','hon2','hon3','ana1','ana2','ana3'].forEach(k => delete data._settings[`${bet}_${k}`]);
       });
       delete data._settings.wide_odds_min; delete data._settings.wide_odds_max; delete data._settings.wide_winrate_filter;
       data._settings.max_bets = maxBetsSave;
@@ -1835,6 +1875,9 @@ async function loadSoftmaxFromGithub() {
       const boxN = src[`${bet}_box_n`] ?? 3;
       const bEl = document.getElementById(`${p}-box-n`); if(bEl) bEl.value = String(boxN);
       localStorage.setItem(`${k}_box_n`, String(boxN));
+      const tanN = src[`${bet}_tan_n`] ?? 3;
+      const tEl = document.getElementById(`${p}-tan-n`); if(tEl) tEl.value = String(tanN);
+      localStorage.setItem(`${k}_tan_n`, String(tanN));
       ['top1','top2','rec1','rec2','rec3','hon1','hon2','hon3','ana1','ana2','ana3'].forEach(suf => {
         const v = !!src[`${bet}_${suf}`];
         const el = document.getElementById(`${p}-${suf}`); if(el) el.checked = v;
@@ -1952,6 +1995,8 @@ async function loadSoftmaxFromGithub() {
           const amt = src[`${bet}_amount`] ?? 100;
           const method = src[`${bet}_method`] || 'formation';
           const boxN = src[`${bet}_box_n`] ?? 3;
+          const tanN = src[`${bet}_tan_n`] ?? 3;
+          if(method === 'tan_axis'){ out.push(`${label}: 単勝軸×勝率上位${tanN}頭 ¥${amt}/点`); return; }
           if(method === 'rec_box'){ out.push(`${label}: 推奨ボックス ${boxN}頭 ¥${amt}/点`); return; }
           if(method === 'top_box'){
             const wf = [];
@@ -2073,6 +2118,7 @@ function loadSoftmaxSettings() {
     const amtEl = document.getElementById(`${p}-amount`); if(amtEl) amtEl.value = localStorage.getItem(`${k}_amount`) || '100';
     const mEl = document.getElementById(`${p}-method`); if(mEl) mEl.value = localStorage.getItem(`${k}_method`) || 'formation';
     const bEl = document.getElementById(`${p}-box-n`); if(bEl) bEl.value = localStorage.getItem(`${k}_box_n`) || '3';
+    const tEl = document.getElementById(`${p}-tan-n`); if(tEl) tEl.value = localStorage.getItem(`${k}_tan_n`) || '3';
     ['top1','top2','rec1','rec2','rec3','hon1','hon2','hon3','ana1','ana2','ana3'].forEach(suf => {
       const el = document.getElementById(`${p}-${suf}`); if(el) el.checked = localStorage.getItem(`${k}_${suf}`) === '1';
     });
