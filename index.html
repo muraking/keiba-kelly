@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.22.1
+  v2026.06.23.3
 
   変更履歴:
+    v2026.06.23.3 - 購入履歴の「購入R」カウントをbets展開数→レース単位（purchases.length）に修正。
+                   単勝+ワイド+馬連を同一レースで購入しても1Rと表示。結果待ち件数も同様修正。
     v2026.06.22.1 - 馬連/ワイド購入方式に tan_axis（単勝軸×勝率上位N頭）を追加。
                    4セクション（馬連地方/ワイド地方/馬連中央/ワイド中央）のselectにoption追加、
                    相手頭数(tan_n)入力UI追加。updateComboMethodUI/readCombo/writeCombo/populateCombo/
@@ -285,7 +287,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.22.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.23.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -690,7 +692,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.22.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.23.3</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -4402,14 +4404,15 @@ function _renderPhData(el, today, ymLabel) {
 
   const roi = totalBet > 0 ? (totalReturn / totalBet * 100).toFixed(1) : '0.0';
   const roiColor = parseFloat(roi) >= 100 ? 'var(--green)' : '#ef4444';
-  const pendingCount = rows.filter(r => r.status === 'pending').length;
+  const pendingCount = purchases.filter(p => !_phCachedResultsMap[`${p.date}_${p.venue}_${p.raceNum}`]).length;
+  const raceCount = purchases.length;
   const dispLabel = filterDate || ymLabel;
 
   let html = `
     <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:14px">
       <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${dispLabel} ${label} の購入結果${pendingCount ? ` <span style="color:var(--amber)">（⏳${pendingCount}R 結果待ち）</span>` : ''}</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:10px">
-        <div><div style="font-size:10px;color:var(--text3)">購入</div><div style="font-size:20px;font-weight:700">${rows.length}R</div></div>
+        <div><div style="font-size:10px;color:var(--text3)">購入</div><div style="font-size:20px;font-weight:700">${raceCount}R</div></div>
         <div><div style="font-size:10px;color:var(--text3)">的中</div><div style="font-size:20px;font-weight:700;color:var(--green)">${hitCount}R</div></div>
         <div><div style="font-size:10px;color:var(--text3)">ROI</div><div style="font-size:20px;font-weight:700;color:${roiColor}">${roi}%</div></div>
       </div>
