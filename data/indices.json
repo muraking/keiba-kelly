@@ -47776,9 +47776,63 @@
               "fuku_max": 5.7
             }
           }
+        },
+        "08": {
+          "1": {
+            "1": {
+              "tan": 2,
+              "fuku_min": 1.2,
+              "fuku_max": 1.9
+            },
+            "2": {
+              "tan": 2.9,
+              "fuku_min": 1,
+              "fuku_max": 1.2
+            },
+            "3": {
+              "tan": 71.2,
+              "fuku_min": 9.4,
+              "fuku_max": 19.5
+            },
+            "4": {
+              "tan": 69.1,
+              "fuku_min": 8.1,
+              "fuku_max": 16.7
+            },
+            "5": {
+              "tan": 18.2,
+              "fuku_min": 2.8,
+              "fuku_max": 5.5
+            },
+            "6": {
+              "tan": 10.5,
+              "fuku_min": 1.8,
+              "fuku_max": 3.4
+            },
+            "7": {
+              "tan": 13,
+              "fuku_min": 1.5,
+              "fuku_max": 2.6
+            },
+            "8": {
+              "tan": 9.6,
+              "fuku_min": 2.1,
+              "fuku_max": 4.1
+            },
+            "9": {
+              "tan": 27.9,
+              "fuku_min": 4.3,
+              "fuku_max": 8.7
+            },
+            "10": {
+              "tan": 23.1,
+              "fuku_min": 2.8,
+              "fuku_max": 5.5
+            }
+          }
         }
       },
-      "odds_updated": "2026-06-26T12:58:15.129415+09:00"
+      "odds_updated": "2026-06-26T13:23:23.303448+09:00"
     }
   },
   "_settings": {
@@ -47866,7 +47920,9 @@
       "荒"
     ],
     "exacta_tan_n": 3,
-    "wide_tan_n": 3
+    "wide_tan_n": 3,
+    "place_amount_mode": "fixed",
+    "place_kelly_mult": 2
   },
   "_settings_local": {
     "sm_winrate_filter": 0,
@@ -47877,7 +47933,11 @@
     "auto_buy_max": 1500,
     "auto_buy_skip_fav": true,
     "auto_buy_skip_fav_odds": 1.2,
-    "buy_place_bet": false,
+    "buy_place_bet": true,
+    "place_bet_odds_min": 15,
+    "place_amount": 200,
+    "place_amount_mode": "fixed",
+    "place_kelly_mult": 2,
     "stop_loss_amount": 3000,
     "stop_loss_enabled": true,
     "exacta_hon1": false,
