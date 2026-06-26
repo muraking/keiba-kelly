@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.26.6
+  v2026.06.26.7
 
   変更履歴:
+    v2026.06.26.7 - 緑バッジ（自動購入対象）の判定を通知（スケジューラ）と一致させる修正。
+                   旧: betMap（勝率降順で選定）由来→通知のEV降順とズレて別の馬が緑になっていた。
+                   新: autoBuyList（EV降順・max_bets頭）からbuyNums2を算出。単勝推奨と完全一致。
     v2026.06.26.6 - 本/穴の馬番バッジを自動購入対象馬は緑塗り・白文字に変更。
                    単勝推奨テーブルも同様に緑バッジ表示。buyNumsで購入対象を判定し_fmtGrpで買い先頭ソート。
     v2026.06.26.5 - fetchGHContent: 1MB超ファイルのBlobフォールバックをtoken有無で分岐。
@@ -304,7 +307,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.26.6</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.26.7</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -709,7 +712,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.26.6</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.26.7</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -2627,7 +2630,21 @@ function calcAll(){
         else if(localStorage.getItem('skip_jra_2yo')==='1'    && /[2２]歳/.test(rc2)) skipReason2='2歳戦';
         else if(localStorage.getItem('skip_jra_3yo')==='1'    && /[3３]歳/.test(rc2)) skipReason2='3歳戦';
       }
-      const buyNums2 = new Set(renders.filter(h=>betMap[h.num]>0).map(h=>h.num));
+      // 自動購入対象（spat4_scheduler.py の自動購入と同じ判定：フィルタ→EV降順→max_bets頭。スキップ対象は対象外）
+      // ※ renders/betMap は勝率降順で選定されるため通知（EV降順）とズレる。緑バッジは通知と揃えるためEV降順で算出する。
+      const autoBuyList = skipReason2 ? [] : horses
+        .filter(h=>{
+          if(!h.tanEV || !h.tanOdds) return false;
+          if(_wf > 0 && (h.norm*100) < _wf) return false;
+          if(h.tanEV < _evMin) return false;
+          if(h.tanEV > _evMax) return false;
+          if(h.tanOdds < _oddsMin) return false;
+          if(h.tanOdds > _oddsMax) return false;
+          return true;
+        })
+        .sort((a,b)=>b.tanEV-a.tanEV)
+        .slice(0, maxBets);
+      const buyNums2 = new Set(autoBuyList.map(h=>h.num));
       const sortedNorm = [...horses].sort((a,b)=>(b.norm||0)-(a.norm||0));
       const fv2 = sortedNorm.slice(0,3);
       const fvNums2 = new Set(fv2.map(h=>h.num));
@@ -2675,19 +2692,7 @@ function calcAll(){
         </div>
       </div>`;
 
-      // 単勝推奨（spat4_scheduler.py の自動購入と同じ判定：フィルタ→EV降順→max_bets頭。スキップ対象レースは対象外）
-      const autoBuyList = skipReason2 ? [] : horses
-        .filter(h=>{
-          if(!h.tanEV || !h.tanOdds) return false;
-          if(_wf > 0 && (h.norm*100) < _wf) return false;
-          if(h.tanEV < _evMin) return false;
-          if(h.tanEV > _evMax) return false;
-          if(h.tanOdds < _oddsMin) return false;
-          if(h.tanOdds > _oddsMax) return false;
-          return true;
-        })
-        .sort((a,b)=>b.tanEV-a.tanEV)
-        .slice(0, maxBets);
+      // 単勝推奨（autoBuyList は上部で算出済み：フィルタ→EV降順→max_bets頭。スキップ対象レースは対象外）
       if(autoBuyList.length){
         html+=`<div class="sh">単勝推奨</div>
         <div style="background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:16px">
