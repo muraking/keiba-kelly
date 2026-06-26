@@ -1,8 +1,16 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.23.3
+  v2026.06.26.2
 
   変更履歴:
+    v2026.06.26.3 - loadPurchaseHistory: purchase_log・race_history の取得を fetchGHContent 経由に変更。
+                   1MB超のrace_historyでも Blob API フォールバックで取得し購入履歴が表示される。
+  v2026.06.26.2 - 複勝金額に「金額モード」を追加。固定金額 or ハーフケリー×n倍を選択可能に。
+                   ハーフケリー選択時は単勝ケリー額×倍率で複勝額を算出。
+                   _settings_local/_settings_jra の place_amount_mode・place_kelly_mult に保存。
+    v2026.06.26.1 - 複勝購入設定（地方/中央）に「複勝を買う単勝オッズ下限」と「複勝金額」を追加。
+                   単勝オッズが指定倍数以上の馬だけ複勝を買える／金額も固定指定できるようにし、
+                   _settings_local/_settings_jra の place_bet_odds_min・place_amount に保存。
     v2026.06.23.3 - 購入履歴の「購入R」カウントをbets展開数→レース単位（purchases.length）に修正。
                    単勝+ワイド+馬連を同一レースで購入しても1Rと表示。結果待ち件数も同様修正。
     v2026.06.22.1 - 馬連/ワイド購入方式に tan_axis（単勝軸×勝率上位N頭）を追加。
@@ -287,7 +295,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.23.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.26.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -692,7 +700,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.23.3</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.26.3</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -920,6 +928,37 @@ textarea:focus{border-color:var(--gold)}
           <span style="font-size:13px;color:var(--text)" id="buy-place-bet-local-label">OFF</span>
         </label>
         <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると地方の買い目対象馬の複勝も購入</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">複勝を買う単勝オッズ下限（倍）</div>
+            <input id="place-bet-odds-min-local" type="number" min="0" step="0.1" value="0" placeholder="0=全部"
+              onchange="localStorage.setItem('place_bet_odds_min_local', this.value)"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">複勝金額モード</div>
+            <select id="place-mode-local" onchange="togglePlaceMode('local')"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+              <option value="fixed">固定金額</option>
+              <option value="kelly">ハーフケリー×n</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div id="place-amount-wrap-local">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">固定金額（円）</div>
+            <input id="place-amount-local" type="number" min="0" step="100" value="0" placeholder="0=単勝×2"
+              onchange="localStorage.setItem('place_amount_local', this.value)"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          </div>
+          <div id="place-kelly-wrap-local" style="display:none">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">ハーフケリー倍率（×）</div>
+            <input id="place-kelly-mult-local" type="number" min="0" step="0.5" value="2" placeholder="例:2"
+              onchange="localStorage.setItem('place_kelly_mult_local', this.value)"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">オッズ下限: 単勝がこの倍数以上の馬だけ複勝購入（0/空=全部）。金額モード: 固定金額 or 単勝ケリー額×倍率</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
         <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
@@ -1153,6 +1192,37 @@ textarea:focus{border-color:var(--gold)}
           <span style="font-size:13px;color:var(--text)" id="buy-place-bet-jra-label">OFF</span>
         </label>
         <div style="font-size:10px;color:var(--text3);margin-top:4px">ONにすると中央の買い目対象馬の複勝も購入</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">複勝を買う単勝オッズ下限（倍）</div>
+            <input id="place-bet-odds-min-jra" type="number" min="0" step="0.1" value="0" placeholder="0=全部"
+              onchange="localStorage.setItem('place_bet_odds_min_jra', this.value)"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">複勝金額モード</div>
+            <select id="place-mode-jra" onchange="togglePlaceMode('jra')"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+              <option value="fixed">固定金額</option>
+              <option value="kelly">ハーフケリー×n</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div id="place-amount-wrap-jra">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">固定金額（円）</div>
+            <input id="place-amount-jra" type="number" min="0" step="100" value="0" placeholder="0=単勝×2"
+              onchange="localStorage.setItem('place_amount_jra', this.value)"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          </div>
+          <div id="place-kelly-wrap-jra" style="display:none">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">ハーフケリー倍率（×）</div>
+            <input id="place-kelly-mult-jra" type="number" min="0" step="0.5" value="2" placeholder="例:2"
+              onchange="localStorage.setItem('place_kelly_mult_jra', this.value)"
+              style="width:100%;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">オッズ下限: 単勝がこの倍数以上の馬だけ複勝購入（0/空=全部）。金額モード: 固定金額 or 単勝ケリー額×倍率</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
         <button onclick="loadSoftmaxFromGithub()" class="btn btn-outline">📥 GitHubから読込</button>
@@ -1431,6 +1501,16 @@ function updateComboMethodUI(prefix) {
   if(filterEl) filterEl.style.display = method === 'top_box' ? '' : 'none';
 }
 
+// 複勝金額モード（固定 or ハーフケリー×n）に応じて入力欄を切り替え
+function togglePlaceMode(area) {
+  const mode = document.getElementById('place-mode-' + area)?.value || 'fixed';
+  const aw = document.getElementById('place-amount-wrap-' + area);
+  const kw = document.getElementById('place-kelly-wrap-' + area);
+  if (aw) aw.style.display = (mode === 'kelly') ? 'none' : '';
+  if (kw) kw.style.display = (mode === 'kelly') ? '' : 'none';
+  localStorage.setItem('place_amount_mode_' + area, mode);
+}
+
 async function saveSoftmaxSettings() {
   const T = parseFloat(document.getElementById('sm-temperature').value) || 15;
   const minP = parseFloat(document.getElementById('sm-minpct').value);
@@ -1524,12 +1604,20 @@ async function saveSoftmaxSettings() {
   const localStopLossAmt   = parseInt(document.getElementById('local-stop-loss-amount')?.value || '3000') || 3000;
   const localAutoMax       = parseInt(document.getElementById('local-auto-buy-max')?.value || '0') || 0;
   const localPlaceBet      = document.getElementById('buy-place-bet-local')?.checked || false;
+  const localPlaceOddsMin  = parseFloat(document.getElementById('place-bet-odds-min-local')?.value || '0') || 0;
+  const localPlaceAmount   = parseInt(document.getElementById('place-amount-local')?.value || '0') || 0;
+  const localPlaceMode     = document.getElementById('place-mode-local')?.value || 'fixed';
+  const localPlaceKellyMult = parseFloat(document.getElementById('place-kelly-mult-local')?.value || '2') || 2;
   const jraSkipFav         = document.getElementById('jra-skip-fav')?.checked || false;
   const jraSkipFavOdds     = parseFloat(document.getElementById('jra-skip-fav-odds')?.value || '2.0') || 2.0;
   const jraStopLossOn      = document.getElementById('jra-stop-loss-enabled')?.checked || false;
   const jraStopLossAmt     = parseInt(document.getElementById('jra-stop-loss-amount')?.value || '3000') || 3000;
   const jraAutoMax         = parseInt(document.getElementById('jra-auto-buy-max')?.value || '0') || 0;
   const jraPlaceBet        = document.getElementById('buy-place-bet-jra')?.checked || false;
+  const jraPlaceOddsMin    = parseFloat(document.getElementById('place-bet-odds-min-jra')?.value || '0') || 0;
+  const jraPlaceAmount     = parseInt(document.getElementById('place-amount-jra')?.value || '0') || 0;
+  const jraPlaceMode       = document.getElementById('place-mode-jra')?.value || 'fixed';
+  const jraPlaceKellyMult  = parseFloat(document.getElementById('place-kelly-mult-jra')?.value || '2') || 2;
   const _readEntropySkip = (area) => {
     const labels = [];
     document.querySelectorAll('.entropy-skip-' + area).forEach(cb => { if (cb.checked) labels.push(cb.dataset.ent); });
@@ -1543,12 +1631,20 @@ async function saveSoftmaxSettings() {
   localStorage.setItem('local_stop_loss_amount', String(localStopLossAmt));
   localStorage.setItem('local_auto_buy_max', String(localAutoMax));
   localStorage.setItem('buy_place_bet_local', localPlaceBet ? '1' : '0');
+  localStorage.setItem('place_bet_odds_min_local', String(localPlaceOddsMin));
+  localStorage.setItem('place_amount_local', String(localPlaceAmount));
+  localStorage.setItem('place_amount_mode_local', localPlaceMode);
+  localStorage.setItem('place_kelly_mult_local', String(localPlaceKellyMult));
   localStorage.setItem('jra_skip_fav', jraSkipFav ? '1' : '0');
   localStorage.setItem('jra_skip_fav_odds', String(jraSkipFavOdds));
   localStorage.setItem('jra_stop_loss_enabled', jraStopLossOn ? '1' : '0');
   localStorage.setItem('jra_stop_loss_amount', String(jraStopLossAmt));
   localStorage.setItem('jra_auto_buy_max', String(jraAutoMax));
   localStorage.setItem('buy_place_bet_jra', jraPlaceBet ? '1' : '0');
+  localStorage.setItem('place_bet_odds_min_jra', String(jraPlaceOddsMin));
+  localStorage.setItem('place_amount_jra', String(jraPlaceAmount));
+  localStorage.setItem('place_amount_mode_jra', jraPlaceMode);
+  localStorage.setItem('place_kelly_mult_jra', String(jraPlaceKellyMult));
   localStorage.setItem('auto_buy_local', autoBuyLocal ? '1' : '0');
   localStorage.setItem('auto_buy_jra', autoBuyJra ? '1' : '0');
   localStorage.setItem('auto_buy_max', String(autoBuyMax));
@@ -1661,6 +1757,10 @@ async function saveSoftmaxSettings() {
       data._settings_jra.stop_loss_amount = jraStopLossAmt;
       if (jraAutoMax > 0) data._settings_jra.auto_buy_max = jraAutoMax; else delete data._settings_jra.auto_buy_max;
       data._settings_jra.buy_place_bet = jraPlaceBet;
+      if (jraPlaceOddsMin > 0) data._settings_jra.place_bet_odds_min = jraPlaceOddsMin; else delete data._settings_jra.place_bet_odds_min;
+      if (jraPlaceAmount > 0) data._settings_jra.place_amount = jraPlaceAmount; else delete data._settings_jra.place_amount;
+      data._settings_jra.place_amount_mode = jraPlaceMode;
+      data._settings_jra.place_kelly_mult = jraPlaceKellyMult;
       if (jraEntropySkip.length) data._settings_jra.entropy_skip_labels = jraEntropySkip; else delete data._settings_jra.entropy_skip_labels;
       delete data._settings_jra.entropy_skip_min; delete data._settings_jra.entropy_skip_max;
       if (!data._settings_local) data._settings_local = {};
@@ -1676,6 +1776,10 @@ async function saveSoftmaxSettings() {
       data._settings_local.stop_loss_amount = localStopLossAmt;
       if (localAutoMax > 0) data._settings_local.auto_buy_max = localAutoMax; else delete data._settings_local.auto_buy_max;
       data._settings_local.buy_place_bet = localPlaceBet;
+      if (localPlaceOddsMin > 0) data._settings_local.place_bet_odds_min = localPlaceOddsMin; else delete data._settings_local.place_bet_odds_min;
+      if (localPlaceAmount > 0) data._settings_local.place_amount = localPlaceAmount; else delete data._settings_local.place_amount;
+      data._settings_local.place_amount_mode = localPlaceMode;
+      data._settings_local.place_kelly_mult = localPlaceKellyMult;
       if (localEntropySkip.length) data._settings_local.entropy_skip_labels = localEntropySkip; else delete data._settings_local.entropy_skip_labels;
       delete data._settings_local.entropy_skip_min; delete data._settings_local.entropy_skip_max;
       const jsonStr = JSON.stringify(data, null, 2);
@@ -1938,12 +2042,22 @@ async function loadSoftmaxFromGithub() {
     _setVal('local-stop-loss-amount', slocal.stop_loss_amount ?? 3000);
     _setVal('local-auto-buy-max', slocal.auto_buy_max ?? 0);
     _setChk('buy-place-bet-local', slocal.buy_place_bet || false);
+    _setVal('place-bet-odds-min-local', slocal.place_bet_odds_min ?? 0);
+    _setVal('place-amount-local', slocal.place_amount ?? 0);
+    _setVal('place-mode-local', slocal.place_amount_mode || 'fixed');
+    _setVal('place-kelly-mult-local', slocal.place_kelly_mult ?? 2);
+    togglePlaceMode('local');
     _setChk('jra-skip-fav', sjra.auto_buy_skip_fav || false, 'スキップON', 'スキップOFF');
     _setVal('jra-skip-fav-odds', sjra.auto_buy_skip_fav_odds ?? 2.0);
     _setChk('jra-stop-loss-enabled', sjra.stop_loss_enabled || false);
     _setVal('jra-stop-loss-amount', sjra.stop_loss_amount ?? 3000);
     _setVal('jra-auto-buy-max', sjra.auto_buy_max ?? 0);
     _setChk('buy-place-bet-jra', sjra.buy_place_bet || false);
+    _setVal('place-bet-odds-min-jra', sjra.place_bet_odds_min ?? 0);
+    _setVal('place-amount-jra', sjra.place_amount ?? 0);
+    _setVal('place-mode-jra', sjra.place_amount_mode || 'fixed');
+    _setVal('place-kelly-mult-jra', sjra.place_kelly_mult ?? 2);
+    togglePlaceMode('jra');
     // 馬連/ワイド ON/OFF（タブ側チェックボックス）を同期
     _setChk('buy-exacta-local-tab', slocal.buy_exacta ?? s.buy_exacta_local ?? false);
     _setChk('buy-wide-local-tab', slocal.buy_wide ?? s.buy_wide_local ?? false);
@@ -1955,12 +2069,20 @@ async function loadSoftmaxFromGithub() {
     localStorage.setItem('local_stop_loss_amount', String(slocal.stop_loss_amount ?? 3000));
     localStorage.setItem('local_auto_buy_max', String(slocal.auto_buy_max ?? 0));
     localStorage.setItem('buy_place_bet_local', (slocal.buy_place_bet||false) ? '1' : '0');
+    localStorage.setItem('place_bet_odds_min_local', String(slocal.place_bet_odds_min ?? 0));
+    localStorage.setItem('place_amount_local', String(slocal.place_amount ?? 0));
+    localStorage.setItem('place_amount_mode_local', slocal.place_amount_mode || 'fixed');
+    localStorage.setItem('place_kelly_mult_local', String(slocal.place_kelly_mult ?? 2));
     localStorage.setItem('jra_skip_fav', (sjra.auto_buy_skip_fav||false) ? '1' : '0');
     localStorage.setItem('jra_skip_fav_odds', String(sjra.auto_buy_skip_fav_odds ?? 2.0));
     localStorage.setItem('jra_stop_loss_enabled', (sjra.stop_loss_enabled||false) ? '1' : '0');
     localStorage.setItem('jra_stop_loss_amount', String(sjra.stop_loss_amount ?? 3000));
     localStorage.setItem('jra_auto_buy_max', String(sjra.auto_buy_max ?? 0));
     localStorage.setItem('buy_place_bet_jra', (sjra.buy_place_bet||false) ? '1' : '0');
+    localStorage.setItem('place_bet_odds_min_jra', String(sjra.place_bet_odds_min ?? 0));
+    localStorage.setItem('place_amount_jra', String(sjra.place_amount ?? 0));
+    localStorage.setItem('place_amount_mode_jra', sjra.place_amount_mode || 'fixed');
+    localStorage.setItem('place_kelly_mult_jra', String(sjra.place_kelly_mult ?? 2));
     // エントロピースキップ設定をUIとlocalStorageに反映（区分チェック方式）
     applyEntropySkip('local', slocal.entropy_skip_labels);
     applyEntropySkip('jra',   sjra.entropy_skip_labels);
@@ -2171,12 +2293,22 @@ function loadSoftmaxSettings() {
   _lsVal('local-stop-loss-amount', 'local_stop_loss_amount');
   _lsVal('local-auto-buy-max', 'local_auto_buy_max');
   _lsChk('buy-place-bet-local', 'buy_place_bet_local');
+  _lsVal('place-bet-odds-min-local', 'place_bet_odds_min_local');
+  _lsVal('place-amount-local', 'place_amount_local');
+  _lsVal('place-mode-local', 'place_amount_mode_local');
+  _lsVal('place-kelly-mult-local', 'place_kelly_mult_local');
+  togglePlaceMode('local');
   _lsChk('jra-skip-fav', 'jra_skip_fav', 'スキップON', 'スキップOFF');
   _lsVal('jra-skip-fav-odds', 'jra_skip_fav_odds');
   _lsChk('jra-stop-loss-enabled', 'jra_stop_loss_enabled');
   _lsVal('jra-stop-loss-amount', 'jra_stop_loss_amount');
   _lsVal('jra-auto-buy-max', 'jra_auto_buy_max');
   _lsChk('buy-place-bet-jra', 'buy_place_bet_jra');
+  _lsVal('place-bet-odds-min-jra', 'place_bet_odds_min_jra');
+  _lsVal('place-amount-jra', 'place_amount_jra');
+  _lsVal('place-mode-jra', 'place_amount_mode_jra');
+  _lsVal('place-kelly-mult-jra', 'place_kelly_mult_jra');
+  togglePlaceMode('jra');
   _lsChk('buy-exacta-local-tab', 'buy_exacta_local');
   _lsChk('buy-wide-local-tab', 'buy_wide_local');
   _lsChk('buy-exacta-jra-tab', 'buy_exacta_jra');
@@ -4296,18 +4428,18 @@ async function loadPurchaseHistory(type) {
   const label = isJra ? '中央（IPAT）' : '地方';
 
   try {
-    const logRes = await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${logFile}`, { headers });
-    if (!logRes.ok) { el.innerHTML = `<div class="msg">${label}の購入データなし（${ymLabel}）</div>`; return; }
-    const _dec = s => { const b = Uint8Array.from(atob(s.replace(/\n/g,'')),c=>c.charCodeAt(0)); return new TextDecoder().decode(b); };
-    const allPurchases = JSON.parse(_dec((await logRes.json()).content));
+    const logUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${logFile}`;
+    const histUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${histFile}`;
+    const allPurchases = await fetchGHContent(logUrl, token);
+    if (!allPurchases) { el.innerHTML = `<div class="msg">${label}の購入データなし（${ymLabel}）</div>`; return; }
 
-    const histRes = await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/${histFile}`, { headers });
     const resultsMap = {};
-    if (histRes.ok) {
-      JSON.parse(_dec((await histRes.json()).content)).forEach(r => {
+    try {
+      const histData = await fetchGHContent(histUrl, token);
+      if (histData) histData.forEach(r => {
         resultsMap[`${r.date}_${r.venue}_${r.raceNum}`] = r;
       });
-    }
+    } catch(e) { /* race_history 取得失敗は無視 */ }
 
     _phCachedPurchases = allPurchases;
     _phCachedResultsMap = resultsMap;
