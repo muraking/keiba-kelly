@@ -1,8 +1,12 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.26.4
+  v2026.06.26.5
 
   変更履歴:
+    v2026.06.26.5 - fetchGHContent: 1MB超ファイルのBlobフォールバックをtoken有無で分岐。
+                   tokenなし（非管理者）はdownload_url経由で取得（公開リポジトリ対応）。
+                   tokenあり（管理者）は従来通りBlob API。
+                   非管理者がPWAを開くと「Blob取得失敗」が出ていたバグを修正。
     v2026.06.26.4 - 複勝にEV範囲・オッズ上限フィルター追加（パターンA実装）。
                    地方/中央タブの複勝設定に「単勝オッズ上限」「EV下限」「EV上限」を追加。
                    推奨値: odds20-40倍、EV118-138（分析結果よりROI150.7%/OOS186.7%）。
@@ -298,7 +302,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.26.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.26.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -703,7 +707,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.26.4</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.26.5</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -2856,12 +2860,21 @@ async function fetchGHContent(url, token, withSha = false) {
   if (json.content) {
     data = _decode(json.content);
   } else if (json.sha) {
-    // 1MB超: Git Blob APIで取得（CORSや認証の問題なし）
-    const blobUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/git/blobs/${json.sha}`;
-    const blobRes = await fetch(blobUrl, {headers, cache: 'no-store'});
-    if (!blobRes.ok) throw new Error(`Blob取得失敗: ${blobRes.status}`);
-    const blob = await blobRes.json();
-    data = _decode(blob.content);
+    // 1MB超ファイル: tokenありはBlob API（privateリポジトリ対応）、
+    // tokenなしはdownload_url（公開リポジトリ向け、認証不要）
+    if (token) {
+      const blobUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/git/blobs/${json.sha}`;
+      const blobRes = await fetch(blobUrl, {headers, cache: 'no-store'});
+      if (!blobRes.ok) throw new Error(`Blob取得失敗: ${blobRes.status}`);
+      const blob = await blobRes.json();
+      data = _decode(blob.content);
+    } else if (json.download_url) {
+      const dlRes = await fetch(json.download_url, {cache: 'no-store'});
+      if (!dlRes.ok) throw new Error(`ダウンロード失敗: ${dlRes.status}`);
+      data = await dlRes.json();
+    } else {
+      throw new Error('コンテンツが取得できません（大容量ファイル、tokenなし）');
+    }
   } else {
     throw new Error('コンテンツが取得できません');
   }
