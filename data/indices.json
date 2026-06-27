@@ -23244,51 +23244,61 @@
           },
           "12": {
             "1": {
-              "tan": 13.0,
-              "fuku_min": 1.9
+              "tan": 15.5,
+              "fuku_min": 2.5,
+              "fuku_max": 3.6
             },
             "2": {
-              "tan": 2.7,
-              "fuku_min": 1.4
+              "tan": 2.6,
+              "fuku_min": 1.4,
+              "fuku_max": 1.9
             },
             "3": {
-              "tan": 22.4,
-              "fuku_min": 5.2
+              "tan": 25.7,
+              "fuku_min": 3.2,
+              "fuku_max": 4.7
             },
             "4": {
-              "tan": 6.9,
-              "fuku_min": 1.7
+              "tan": 4.3,
+              "fuku_min": 1.4,
+              "fuku_max": 1.8
             },
             "5": {
-              "tan": 10.6,
-              "fuku_min": 2.4
+              "tan": 8.3,
+              "fuku_min": 1.7,
+              "fuku_max": 2.3
             },
             "6": {
-              "tan": 28.5,
-              "fuku_min": 4.3
+              "tan": 92.5,
+              "fuku_min": 12.5,
+              "fuku_max": 18.2
             },
             "7": {
-              "tan": 14.8,
-              "fuku_min": 3.5
+              "tan": 16.6,
+              "fuku_min": 3.0,
+              "fuku_max": 4.3
             },
             "8": {
-              "tan": 28.2,
-              "fuku_min": 4.3
+              "tan": 49.5,
+              "fuku_min": 5.1,
+              "fuku_max": 7.4
             },
             "9": {
-              "tan": 7.1,
-              "fuku_min": 2.1
+              "tan": 15.0,
+              "fuku_min": 3.0,
+              "fuku_max": 4.4
             },
             "10": {
-              "tan": 3.9,
-              "fuku_min": 1.5
+              "tan": 3.8,
+              "fuku_min": 1.5,
+              "fuku_max": 2.1
             }
           }
         },
         "福島(日)": {},
         "函館(日)": {}
       },
-      "jra_odds_updated": "2026-06-27T15:38:27.214312+09:00",
+      "jra_odds_updated": "2026-06-27T15:58:26.793234+09:00",
       "odds": {
         "03": {
           "1": {
