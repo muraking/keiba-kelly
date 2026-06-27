@@ -1,8 +1,12 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.27.1
+  v2026.06.28.1
 
   変更履歴:
+    v2026.06.28.1 - calcAll: 本/穴・単勝推奨のフィルタ値を会場別キー(jra_*/local_*)優先で読むよう修正。
+                   従来は ev_min/ev_max/odds_min/odds_max/sm_winrate_filter を共通キーだけで判定していたため、
+                   中央レースでPWAの自動購入対象が通知(スケジューラ)とズレていた（例: 勝率7.7%の馬を
+                   共通フィルタ5%では対象化するが中央フィルタ10%では除外）。max_bets同様に会場別へ統一。
     v2026.06.27.1 - 中央(JRA)の本/穴表示に、イルカ推奨馬と馬名一致した馬へ🐬マークを追加。
                    data/iruka_picks_YYYY_MM.json を起動時にバックグラウンド取得（token必須・失敗時は静かにスキップ）。
                    会場+R番号でその日の推奨馬名を引き、本/穴の馬名と一致したらバッジ右に🐬を表示。
@@ -310,7 +314,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.27.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.28.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -715,7 +719,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.27.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.28.1</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -2469,7 +2473,19 @@ function copyResultText(){
   });
 }
 function calcAll(){
-  const _wf = parseFloat(localStorage.getItem('sm_winrate_filter') || '0') || 0;
+  // 会場(中央/地方)を判定し、フィルタ値は会場別キー(jra_*/local_*)を優先・無ければ共通キーにフォールバック。
+  // スケジューラの fetch_latest_settings(is_jra) のマージ挙動（共通＋会場別の上書き）と一致させる。
+  const _JRA_VENUES_CALC = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
+  const _curVenue = currentRace?.venue || '';
+  const _isJraRace = !!_curVenue && _JRA_VENUES_CALC.includes(_curVenue);
+  const _isLocalRace = !!_curVenue && !_isJraRace;
+  const _venueVal = (jraKey, localKey, commonKey) => {
+    const vk = _isJraRace ? jraKey : (_isLocalRace ? localKey : null);
+    let v = vk ? localStorage.getItem(vk) : null;
+    if(v === null || v === '') v = localStorage.getItem(commonKey);
+    return v;
+  };
+  const _wf = parseFloat(_venueVal('jra_winrate_filter','local_winrate_filter','sm_winrate_filter') || '0') || 0;
   for(const h of horses){
     const tv=document.getElementById('t-'+h.num)?.value;
     // 手動入力がある場合はそちらを優先、なければ取得済みオッズを維持
@@ -2482,9 +2498,6 @@ function calcAll(){
   const rname=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
   if(!fund){alert('資金を入力してください');sw('setup');return;}
 
-  const _JRA_VENUES_CALC = ['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉'];
-  const _curVenue = currentRace?.venue || '';
-  const _isLocalRace = _curVenue && !_JRA_VENUES_CALC.includes(_curVenue);
   const _baseMaxBets = parseInt(localStorage.getItem('max_bets') || document.getElementById('max-bets')?.value || '4') || 4;
   const _jraMaxBets  = parseInt(localStorage.getItem('jra_max_bets')   || '0') || 0;
   const _localMaxBets= parseInt(localStorage.getItem('local_max_bets') || '0') || 0;
@@ -2495,11 +2508,11 @@ function calcAll(){
   if(maxBetsEl && maxBetsEl.value != String(maxBets)) maxBetsEl.value = String(maxBets);
   const maxInvest = parseInt(document.getElementById('max-invest')?.value)||Infinity;
 
-  // フィルター設定を取得
-  const _evMin = parseFloat(localStorage.getItem('ev_min') || '105');
-  const _evMax = parseFloat(localStorage.getItem('ev_max') || '0') || Infinity;
-  const _oddsMin = parseFloat(localStorage.getItem('odds_min') || '0') || 0;
-  const _oddsMax = parseFloat(localStorage.getItem('odds_max') || '0') || Infinity;
+  // フィルター設定を取得（会場別キー優先・無ければ共通キー）
+  const _evMin = parseFloat(_venueVal('jra_ev_min','local_ev_min','ev_min') || '105');
+  const _evMax = parseFloat(_venueVal('jra_ev_max','local_ev_max','ev_max') || '0') || Infinity;
+  const _oddsMin = parseFloat(_venueVal('jra_odds_min','local_odds_min','odds_min') || '0') || 0;
+  const _oddsMax = parseFloat(_venueVal('jra_odds_max','local_odds_max','odds_max') || '0') || Infinity;
 
   // 期待値・オッズフィルターで馬を抽出して勝率高い順
   const evPool = [...horses]
