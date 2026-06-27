@@ -21926,40 +21926,49 @@
           },
           "11": {
             "1": {
-              "tan": 11.8,
-              "fuku_min": 2.4
+              "tan": 17.9,
+              "fuku_min": 2.9,
+              "fuku_max": 5.2
             },
             "2": {
-              "tan": 7.0,
-              "fuku_min": 2.1
+              "tan": 14.3,
+              "fuku_min": 2.3,
+              "fuku_max": 3.9
             },
             "3": {
-              "tan": 7.8,
-              "fuku_min": 2.1
+              "tan": 7.3,
+              "fuku_min": 1.6,
+              "fuku_max": 2.6
             },
             "4": {
-              "tan": 2.9,
-              "fuku_min": 1.1
+              "tan": 1.9,
+              "fuku_min": 1.1,
+              "fuku_max": 1.1
             },
             "5": {
-              "tan": 7.3,
-              "fuku_min": 2.0
+              "tan": 13.5,
+              "fuku_min": 2.5,
+              "fuku_max": 4.4
             },
             "6": {
-              "tan": 42.9,
-              "fuku_min": 6.5
+              "tan": 52.0,
+              "fuku_min": 5.8,
+              "fuku_max": 10.5
             },
             "7": {
-              "tan": 7.0,
-              "fuku_min": 2.0
+              "tan": 6.2,
+              "fuku_min": 1.6,
+              "fuku_max": 2.7
             },
             "8": {
-              "tan": 5.0,
-              "fuku_min": 1.7
+              "tan": 5.1,
+              "fuku_min": 1.5,
+              "fuku_max": 2.3
             },
             "9": {
-              "tan": 18.6,
-              "fuku_min": 2.6
+              "tan": 24.6,
+              "fuku_min": 3.6,
+              "fuku_max": 6.4
             }
           },
           "12": {
@@ -23279,7 +23288,7 @@
         "福島(日)": {},
         "函館(日)": {}
       },
-      "jra_odds_updated": "2026-06-27T15:23:54.040725+09:00",
+      "jra_odds_updated": "2026-06-27T15:38:27.214312+09:00",
       "odds": {
         "03": {
           "1": {
