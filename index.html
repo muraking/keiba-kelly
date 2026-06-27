@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.27.2
+  v2026.06.27.3
 
   変更履歴:
+    v2026.06.27.3 - getIrukaPick: イルカ推奨の保存形式が文字列(旧)でも {name,num}(新) でも
+                   馬名を返すよう両対応化（スケジューラ側で馬番付き保存に変更したため）。
     v2026.06.27.2 - calcAll: 本/穴・単勝推奨のフィルタ値を会場別キー(jra_*/local_*)優先で読むよう修正。
                    従来は ev_min/ev_max/odds_min/odds_max/sm_winrate_filter を共通キーだけで判定していたため、
                    中央レースでPWAの自動購入対象が通知(スケジューラ)とズレていた（例: 勝率7.7%の馬を
@@ -314,7 +316,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.27.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.27.3</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -719,7 +721,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.27.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.27.3</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -3105,12 +3107,15 @@ async function loadIrukaPicks(token){
 }
 
 // 指定レースのイルカ推奨馬名を返す（中央のみ。なければ null）
+// 保存形式が文字列(旧)でも {name,num}(新) でも馬名を返す
 function getIrukaPick(date, venue, raceNum){
   if(!date || !venue) return null;
   const ym = date.slice(0,7).replace('-','_');
   const num = parseInt(String(raceNum || '').replace(/[^0-9]/g, ''), 10);
   if(!num) return null;
-  return irukaPicks[ym]?.[date]?.[`${venue}${num}`] || null;
+  const v = irukaPicks[ym]?.[date]?.[`${venue}${num}`];
+  if(!v) return null;
+  return (typeof v === 'object') ? (v.name || null) : v;
 }
 
 function isInHistory(race) {
