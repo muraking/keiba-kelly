@@ -1,9 +1,9 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.28.1
+  v2026.06.27.2
 
   変更履歴:
-    v2026.06.28.1 - calcAll: 本/穴・単勝推奨のフィルタ値を会場別キー(jra_*/local_*)優先で読むよう修正。
+    v2026.06.27.2 - calcAll: 本/穴・単勝推奨のフィルタ値を会場別キー(jra_*/local_*)優先で読むよう修正。
                    従来は ev_min/ev_max/odds_min/odds_max/sm_winrate_filter を共通キーだけで判定していたため、
                    中央レースでPWAの自動購入対象が通知(スケジューラ)とズレていた（例: 勝率7.7%の馬を
                    共通フィルタ5%では対象化するが中央フィルタ10%では除外）。max_bets同様に会場別へ統一。
@@ -314,7 +314,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.28.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.27.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -719,7 +719,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.28.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.27.2</span></div>
       </div>
     </div><!-- /subtab-common -->
 
