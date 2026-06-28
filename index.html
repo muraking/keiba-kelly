@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.28.1
+  v2026.06.28.2
 
   変更履歴:
+    v2026.06.28.2 - 購入結果の複勝払戻計算を修正。複勝(bet_type=fuku)は1〜3着のfukusho払戻で計算するよう
+                   専用分岐を追加（従来は単勝扱いでtan_payout＝単勝換算され過大表示されていた）。
     v2026.06.28.1 - 複勝購入設定に「独立複勝モード/勝率下限%/最大点数」を地方・中央へ追加。
                    独立ONで単勝発火に関係なく全馬から複勝候補を選択(_settings_*の
                    place_bet_independent/place_bet_winrate_filter/place_bet_max_n に保存)。
@@ -319,7 +321,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.28.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.28.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -724,7 +726,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.28.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.28.2</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -4764,6 +4766,13 @@ function _renderPhData(el, today, ymLabel) {
           });
           if (match) {
             payout = Math.floor((match.payout || 0) * amount / 100);
+            totalReturn += payout; hitCount++; status = 'hit';
+          } else { status = 'miss'; }
+        } else if (betType === 'fuku') {
+          // 複勝: 1〜3着(fukushoリストに馬番があれば的中)、複勝払戻を使用
+          const fmatch = (rec.fukusho || []).find(f => f.num === b.num);
+          if (fmatch) {
+            payout = Math.floor((fmatch.payout || 0) * amount / 100);
             totalReturn += payout; hitCount++; status = 'hit';
           } else { status = 'miss'; }
         } else {
