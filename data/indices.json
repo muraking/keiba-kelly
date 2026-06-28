@@ -34311,9 +34311,58 @@
               "fuku_max": 1
             }
           }
+        },
+        "12": {
+          "1": {
+            "1": {
+              "tan": 8.3,
+              "fuku_min": 1.8,
+              "fuku_max": 28
+            },
+            "2": {
+              "tan": 57.8,
+              "fuku_min": 9.5,
+              "fuku_max": 99.9
+            },
+            "3": {
+              "tan": 41.8,
+              "fuku_min": 6,
+              "fuku_max": 99.9
+            },
+            "4": {
+              "tan": 1.1,
+              "fuku_min": 1,
+              "fuku_max": 1
+            },
+            "5": {
+              "tan": 69.4,
+              "fuku_min": 2,
+              "fuku_max": 30.9
+            },
+            "6": {
+              "tan": 23,
+              "fuku_min": 1.9,
+              "fuku_max": 29.6
+            },
+            "7": {
+              "tan": 12.6,
+              "fuku_min": 1.5,
+              "fuku_max": 20.9
+            },
+            "8": {
+              "tan": 25.3,
+              "fuku_min": 1.4,
+              "fuku_max": 18.3
+            },
+            "9": {
+              "tan": 60.9,
+              "fuku_min": 3.3,
+              "fuku_max": 57.8
+            }
+          }
         }
       },
-      "odds_updated": "2026-06-28T11:34:02.483529+09:00"
+      "odds_updated": "2026-06-28T11:53:14.917534+09:00"
     }
   },
   "_settings": {
