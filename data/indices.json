@@ -33319,6 +33319,53 @@
               "fuku_min": 52.7,
               "fuku_max": 77.8
             }
+          },
+          "11": {
+            "1": {
+              "tan": 21.7,
+              "fuku_min": 2.2,
+              "fuku_max": 5.5
+            },
+            "2": {
+              "tan": 15.2,
+              "fuku_min": 2.5,
+              "fuku_max": 6.6
+            },
+            "3": {
+              "tan": 11.1,
+              "fuku_min": 1.5,
+              "fuku_max": 3.4
+            },
+            "4": {
+              "tan": 9.1,
+              "fuku_min": 1.5,
+              "fuku_max": 3.6
+            },
+            "5": {
+              "tan": 77.2,
+              "fuku_min": 11.1,
+              "fuku_max": 31.3
+            },
+            "6": {
+              "tan": 75.3,
+              "fuku_min": 3.6,
+              "fuku_max": 9.8
+            },
+            "7": {
+              "tan": 10.5,
+              "fuku_min": 1.4,
+              "fuku_max": 3.1
+            },
+            "8": {
+              "tan": 1.2,
+              "fuku_min": 1,
+              "fuku_max": 1
+            },
+            "9": {
+              "tan": 40.6,
+              "fuku_min": 4.2,
+              "fuku_max": 11.5
+            }
           }
         },
         "10": {
@@ -33889,7 +33936,7 @@
           }
         }
       },
-      "odds_updated": "2026-06-30T19:23:08.104553+09:00"
+      "odds_updated": "2026-06-30T19:48:15.926805+09:00"
     }
   },
   "_settings": {
@@ -33993,6 +34040,7 @@
     "ev_max": 145,
     "odds_min": 4,
     "max_bets": 1,
+    "popularity_min_rank": 5,
     "auto_buy_max": 3000,
     "auto_buy_skip_fav": true,
     "auto_buy_skip_fav_odds": 1.2,
