@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.28.2
+  v2026.06.30.1
 
   変更履歴:
+    v2026.06.30.1 - 地方/中央タブに「人気順位下限（popularity_min_rank）」入力欄を追加。
+                   N番人気以降の人気薄だけを単勝対象にする設定をPWAから編集可能に
+                   （0=無効）。_settings_local/_settings_jra に読み書き。
     v2026.06.28.2 - 購入結果の複勝払戻計算を修正。複勝(bet_type=fuku)は1〜3着のfukusho払戻で計算するよう
                    専用分岐を追加（従来は単勝扱いでtan_payout＝単勝換算され過大表示されていた）。
     v2026.06.28.1 - 複勝購入設定に「独立複勝モード/勝率下限%/最大点数」を地方・中央へ追加。
@@ -321,7 +324,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.28.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.30.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -726,7 +729,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.28.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.30.1</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -754,6 +757,7 @@ textarea:focus{border-color:var(--gold)}
             <option value="0">共通値使用</option><option value="1">1点</option><option value="2">2点</option><option value="3" selected>3点</option><option value="4">4点</option><option value="5">5点</option><option value="99">制限なし</option>
           </select>
         </div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">人気順位下限（N番人気以降のみ / 0=無効）</div><input id="local-pop-min" type="number" min="0" max="18" step="1" placeholder="0=無効" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -1059,6 +1063,7 @@ textarea:focus{border-color:var(--gold)}
             <option value="0">共通値使用</option><option value="1">1点</option><option value="2">2点</option><option value="3" selected>3点</option><option value="4">4点</option><option value="5">5点</option><option value="99">制限なし</option>
           </select>
         </div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">人気順位下限（N番人気以降のみ / 0=無効）</div><input id="jra-pop-min" type="number" min="0" max="18" step="1" placeholder="0=無効" style="width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);padding:6px 8px;color:var(--text);font-size:13px;box-sizing:border-box"></div>
       </div>
 
       <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
@@ -1700,6 +1705,8 @@ async function saveSoftmaxSettings() {
   const _jwfRaw = document.getElementById('jra-winrate-filter')?.value;
   const jraWinrateFilter = (_jwfRaw === '' || _jwfRaw == null) ? null : (parseFloat(_jwfRaw) || 0);
   const jraMaxBets      = parseInt(document.getElementById('jra-max-bets')?.value || '0') || 0;
+  const jraPopMin       = parseInt(document.getElementById('jra-pop-min')?.value || '0') || 0;
+  const localPopMin     = parseInt(document.getElementById('local-pop-min')?.value || '0') || 0;
   const localEvMin       = parseFloat(document.getElementById('local-ev-min')?.value || '') || null;
   const localEvMax       = parseFloat(document.getElementById('local-ev-max')?.value || '') || null;
   const localOddsMin     = parseFloat(document.getElementById('local-odds-min')?.value || '') || null;
@@ -1885,6 +1892,7 @@ async function saveSoftmaxSettings() {
       if (jraOddsMax !== null) data._settings_jra.odds_max = jraOddsMax;
       if(jraWinrateFilter !== null) data._settings_jra.sm_winrate_filter = jraWinrateFilter; else delete data._settings_jra.sm_winrate_filter;
       if (jraMaxBets > 0) data._settings_jra.max_bets = jraMaxBets;
+      if (jraPopMin > 0) data._settings_jra.popularity_min_rank = jraPopMin; else delete data._settings_jra.popularity_min_rank;
       data._settings_jra.auto_buy_skip_fav = jraSkipFav;
       data._settings_jra.auto_buy_skip_fav_odds = jraSkipFavOdds;
       data._settings_jra.stop_loss_enabled = jraStopLossOn;
@@ -1910,6 +1918,7 @@ async function saveSoftmaxSettings() {
       if (localOddsMax !== null) data._settings_local.odds_max = localOddsMax;
       if(localWinrateFilter !== null) data._settings_local.sm_winrate_filter = localWinrateFilter; else delete data._settings_local.sm_winrate_filter;
       if (localMaxBets > 0) data._settings_local.max_bets = localMaxBets;
+      if (localPopMin > 0) data._settings_local.popularity_min_rank = localPopMin; else delete data._settings_local.popularity_min_rank;
       data._settings_local.auto_buy_skip_fav = localSkipFav;
       data._settings_local.auto_buy_skip_fav_odds = localSkipFavOdds;
       data._settings_local.stop_loss_enabled = localStopLossOn;
@@ -2157,6 +2166,7 @@ async function loadSoftmaxFromGithub() {
     setField('jra-winrate-filter', sjra.sm_winrate_filter ?? '');
     const jraMaxBetsEl = document.getElementById('jra-max-bets');
     if(jraMaxBetsEl) jraMaxBetsEl.value = String(sjra.max_bets ?? 0);
+    setField('jra-pop-min', sjra.popularity_min_rank ?? '');
     setField('local-ev-min', slocal.ev_min ?? '');
     setField('local-ev-max', slocal.ev_max ?? '');
     setField('local-odds-min', slocal.odds_min ?? '');
@@ -2164,6 +2174,7 @@ async function loadSoftmaxFromGithub() {
     setField('local-winrate-filter', slocal.sm_winrate_filter ?? '');
     const localMaxBetsEl = document.getElementById('local-max-bets');
     if(localMaxBetsEl) localMaxBetsEl.value = String(slocal.max_bets ?? 0);
+    setField('local-pop-min', slocal.popularity_min_rank ?? '');
     // ワイド勝率ボックス専用フィルタは地方/中央タブへ移行済み（populateComboで反映）
     // GitHubから読み込んだJRA/地方個別設定をlocalStorageにも反映
     if(sjra.ev_min != null) localStorage.setItem('jra_ev_min', String(sjra.ev_min)); else localStorage.removeItem('jra_ev_min');
