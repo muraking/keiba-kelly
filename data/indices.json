@@ -39835,6 +39835,83 @@
               "fuku_min": 2.2,
               "fuku_max": 6
             }
+          },
+          "12": {
+            "1": {
+              "tan": 136.9,
+              "fuku_min": 13,
+              "fuku_max": 21.3
+            },
+            "2": {
+              "tan": 24.4,
+              "fuku_min": 3.8,
+              "fuku_max": 6
+            },
+            "3": {
+              "tan": 28.1,
+              "fuku_min": 3.9,
+              "fuku_max": 6.2
+            },
+            "4": {
+              "tan": 9,
+              "fuku_min": 2,
+              "fuku_max": 3.1
+            },
+            "5": {
+              "tan": 48.5,
+              "fuku_min": 5,
+              "fuku_max": 8
+            },
+            "6": {
+              "tan": 262.3,
+              "fuku_min": 24.8,
+              "fuku_max": 40.6
+            },
+            "7": {
+              "tan": 51.7,
+              "fuku_min": 5.3,
+              "fuku_max": 8.4
+            },
+            "8": {
+              "tan": 44.8,
+              "fuku_min": 4.7,
+              "fuku_max": 7.4
+            },
+            "9": {
+              "tan": 262,
+              "fuku_min": 22.1,
+              "fuku_max": 36.2
+            },
+            "10": {
+              "tan": 5.4,
+              "fuku_min": 1.6,
+              "fuku_max": 2.2
+            },
+            "11": {
+              "tan": 13.5,
+              "fuku_min": 2.3,
+              "fuku_max": 3.5
+            },
+            "12": {
+              "tan": 3.4,
+              "fuku_min": 1.6,
+              "fuku_max": 2.4
+            },
+            "13": {
+              "tan": 108.3,
+              "fuku_min": 10.3,
+              "fuku_max": 16.7
+            },
+            "14": {
+              "tan": 2.4,
+              "fuku_min": 1.2,
+              "fuku_max": 1.5
+            },
+            "15": {
+              "tan": 70,
+              "fuku_min": 7.2,
+              "fuku_max": 11.6
+            }
           }
         },
         "04": {
@@ -40434,7 +40511,7 @@
           }
         }
       },
-      "odds_updated": "2026-07-01T20:13:14.825379+09:00"
+      "odds_updated": "2026-07-01T20:43:14.916845+09:00"
     }
   },
   "_settings": {
