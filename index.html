@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.06.30.1
+  v2026.07.04.1
 
   変更履歴:
+    v2026.07.04.1 - 共通タブに自作AI指数トグルを追加（ai_index_shadow: 比較のみ / use_ai_index: AI指数で購入）。
+                   _settingsに保存しスケジューラーが参照。既定OFFで従来通り。
     v2026.06.30.1 - 地方/中央タブに「人気順位下限（popularity_min_rank）」入力欄を追加。
                    N番人気以降の人気薄だけを単勝対象にする設定をPWAから編集可能に
                    （0=無効）。_settings_local/_settings_jra に読み書き。
@@ -324,7 +326,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.06.30.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.07.04.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -620,6 +622,21 @@ textarea:focus{border-color:var(--gold)}
         <div style="font-size:10px;color:var(--text3);margin-top:4px">ON: 単勝が購入された時のみ馬連/ワイドも購入　OFF: 常に購入（現状）</div>
       </div>
 
+      <div style="background:var(--bg3);border-radius:var(--r);padding:8px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">🤖 自作AI指数</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px">
+          <input type="checkbox" id="ai-index-shadow" style="width:18px;height:18px;cursor:pointer"
+            onchange="document.getElementById('ai-index-shadow-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">shadow比較のみ <span id="ai-index-shadow-label">OFF</span></span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="use-ai-index" style="width:18px;height:18px;cursor:pointer"
+            onchange="document.getElementById('use-ai-index-label').textContent=this.checked?'ON':'OFF'">
+          <span style="font-size:13px;color:var(--text)">AI指数で購入 <span id="use-ai-index-label">OFF</span></span>
+        </label>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">shadow=AI本命と外部本命を比較記録のみ(購入は既存)。AI指数で購入=本使用。ばんえい等は自動で既存指数。</div>
+      </div>
+
       <!-- 馬連/ワイド詳細設定は地方/中央タブへ移動(v2026.06.17.2)。買い目ON/OFFの隠しinputのみ後方互換で保持 -->
       <div style="display:none">
         <input type="checkbox" id="buy-exacta-jra"><span id="buy-exacta-jra-label"></span>
@@ -729,7 +746,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.06.30.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.07.04.1</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -1835,6 +1852,8 @@ async function saveSoftmaxSettings() {
       data._settings.notify_bets = notifyBets;
       data._settings.minutes_before = minutesBefore;
       data._settings.combo_only_with_tan = comboOnlyWithTan;
+      data._settings.use_ai_index = document.getElementById('use-ai-index')?.checked || false;
+      data._settings.ai_index_shadow = document.getElementById('ai-index-shadow')?.checked || false;
       data._settings.stop_loss_enabled = stopLossEnabled;
       data._settings.stop_loss_amount = stopLossAmount;
       data._settings.skip_local_maiden = skipLocalMaiden;
@@ -1883,6 +1902,8 @@ async function saveSoftmaxSettings() {
       data._settings.notify_bets = notifyBets;
       data._settings.minutes_before = minutesBefore;
       data._settings.combo_only_with_tan = comboOnlyWithTan;
+      data._settings.use_ai_index = document.getElementById('use-ai-index')?.checked || false;
+      data._settings.ai_index_shadow = document.getElementById('ai-index-shadow')?.checked || false;
       data._settings.auto_buy_skip_fav_odds = autoBuySkipFavOdds;
       data._settings.sm_winrate_filter = winrateFilter;
       if (!data._settings_jra) data._settings_jra = {};
@@ -2048,6 +2069,10 @@ async function loadSoftmaxFromGithub() {
     const notifyBets     = s.notify_bets     ?? 3;
     const minutesBefore    = s.minutes_before    ?? 7;
     const comboOnlyWithTan = s.combo_only_with_tan || false;
+    { const _uai = s.use_ai_index || false, _ais = s.ai_index_shadow || false;
+      const _e1 = document.getElementById('use-ai-index'), _e2 = document.getElementById('ai-index-shadow');
+      if (_e1) { _e1.checked = _uai; const l=document.getElementById('use-ai-index-label'); if(l) l.textContent=_uai?'ON':'OFF'; }
+      if (_e2) { _e2.checked = _ais; const l=document.getElementById('ai-index-shadow-label'); if(l) l.textContent=_ais?'ON':'OFF'; } }
     const combinedKelly  = s.combined_kelly  || false;
     const buyExactaJra   = s.buy_exacta_jra   || false;
     const buyExactaLocal = s.buy_exacta_local || false;
