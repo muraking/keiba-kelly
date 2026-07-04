@@ -36629,6 +36629,63 @@
               "fuku_min": 1.4,
               "fuku_max": 2
             }
+          },
+          "4": {
+            "1": {
+              "tan": 188.1,
+              "fuku_min": 17.5,
+              "fuku_max": 40.9
+            },
+            "2": {
+              "tan": 39.1,
+              "fuku_min": 3.2,
+              "fuku_max": 7
+            },
+            "3": {
+              "tan": 3,
+              "fuku_min": 1,
+              "fuku_max": 1.5
+            },
+            "4": {
+              "tan": 85.1,
+              "fuku_min": 9.7,
+              "fuku_max": 22.6
+            },
+            "5": {
+              "tan": 10.8,
+              "fuku_min": 1.8,
+              "fuku_max": 3.8
+            },
+            "6": {
+              "tan": 21.8,
+              "fuku_min": 4.8,
+              "fuku_max": 10.9
+            },
+            "7": {
+              "tan": 38.1,
+              "fuku_min": 3.3,
+              "fuku_max": 7.3
+            },
+            "8": {
+              "tan": 11.3,
+              "fuku_min": 1.3,
+              "fuku_max": 2.4
+            },
+            "9": {
+              "tan": 41.9,
+              "fuku_min": 3.8,
+              "fuku_max": 8.6
+            },
+            "10": {
+              "tan": 55.7,
+              "fuku_min": 3.9,
+              "fuku_max": 8.7
+            },
+            "11": {
+              "tan": 1.6,
+              "fuku_min": 1,
+              "fuku_max": 1.2
+            }
           }
         },
         "32": {
@@ -36805,7 +36862,7 @@
           }
         }
       },
-      "odds_updated": "2026-07-04T16:54:00.686590+09:00"
+      "odds_updated": "2026-07-04T17:08:49.629033+09:00"
     }
   },
   "_settings": {
@@ -36845,11 +36902,11 @@
     "combo_only_with_tan": true
   },
   "_settings_jra": {
-    "sm_winrate_filter": 8,
-    "ev_min": 125,
+    "sm_winrate_filter": 0,
+    "ev_min": 110,
     "odds_min": 8,
-    "odds_max": 30,
-    "max_bets": 1,
+    "odds_max": 15,
+    "max_bets": 2,
     "auto_buy_skip_fav": true,
     "auto_buy_skip_fav_odds": 1.6,
     "stop_loss_enabled": true,
@@ -36869,12 +36926,12 @@
     "wide_ana2": true,
     "wide_ana3": false,
     "exacta_amount": 100,
-    "exacta_top1": true,
+    "exacta_top1": false,
     "exacta_top2": true,
-    "exacta_rec1": true,
+    "exacta_rec1": false,
     "exacta_rec2": true,
-    "exacta_rec3": true,
-    "exacta_method": "rec_box",
+    "exacta_rec3": false,
+    "exacta_method": "formation",
     "exacta_box_n": 4,
     "wide_amount": 200,
     "wide_top1": false,
@@ -36882,26 +36939,28 @@
     "wide_rec1": false,
     "wide_rec2": true,
     "wide_rec3": false,
-    "wide_method": "formation",
+    "wide_method": "tan_axis",
     "wide_box_n": 3,
     "wide_odds_min": 5,
     "wide_odds_max": 15,
     "wide_winrate_filter": 10,
     "entropy_skip_labels": [
+      "稍固",
       "中間",
-      "荒"
+      "稍荒"
     ],
     "exacta_tan_n": 3,
-    "wide_tan_n": 3,
+    "wide_tan_n": 5,
     "place_amount_mode": "kelly",
     "place_kelly_mult": 2,
     "place_bet_odds_min": 8,
     "place_bet_ev_min": 110,
     "place_amount": 200,
     "place_bet_independent": true,
-    "place_bet_ev_max": 160,
     "place_bet_winrate_filter": 10,
-    "place_bet_max_n": 2
+    "place_bet_max_n": 1,
+    "ev_max": 165,
+    "place_bet_odds_max": 30
   },
   "_settings_local": {
     "sm_winrate_filter": 5,
@@ -36966,18 +37025,18 @@
     "place_bet_odds_max": 40
   },
   "_perf_jra": {
-    "updated_at": "2026-06-28",
-    "is_roi": 143.8,
-    "oos_roi": 147.7,
-    "oos_bets": 30,
-    "train_days": 3,
+    "updated_at": "2026-07-04",
+    "is_roi": 160.0,
+    "oos_roi": 254.1,
+    "oos_bets": 22,
+    "train_days": 5,
     "oos_days": 2,
-    "bets": 39,
-    "profit_days": 1,
-    "total_days": 3,
-    "max_drawdown": 31.2,
-    "sharpe": 4.95,
-    "max_consecutive_loss": 19
+    "bets": 41,
+    "profit_days": 3,
+    "total_days": 5,
+    "max_drawdown": 6.3,
+    "sharpe": 12.17,
+    "max_consecutive_loss": 7
   },
   "_perf_local": {
     "updated_at": "2026-07-03",
