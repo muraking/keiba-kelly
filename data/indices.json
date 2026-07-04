@@ -37106,6 +37106,68 @@
               "fuku_min": 2.1,
               "fuku_max": 3.8
             }
+          },
+          "10": {
+            "1": {
+              "tan": 27.6,
+              "fuku_min": 3.8,
+              "fuku_max": 30
+            },
+            "2": {
+              "tan": 108.9,
+              "fuku_min": 8.3,
+              "fuku_max": 70.1
+            },
+            "3": {
+              "tan": 70.5,
+              "fuku_min": 2.8,
+              "fuku_max": 21.5
+            },
+            "4": {
+              "tan": 108.9,
+              "fuku_min": 12.5,
+              "fuku_max": 99.9
+            },
+            "5": {
+              "tan": 15,
+              "fuku_min": 1.6,
+              "fuku_max": 10.2
+            },
+            "6": {
+              "tan": 25.1,
+              "fuku_min": 1.9,
+              "fuku_max": 13.4
+            },
+            "7": {
+              "tan": 16.9,
+              "fuku_min": 3.4,
+              "fuku_max": 26.8
+            },
+            "8": {
+              "tan": 107,
+              "fuku_min": 6.1,
+              "fuku_max": 50.5
+            },
+            "9": {
+              "tan": 17.4,
+              "fuku_min": 2.1,
+              "fuku_max": 14.7
+            },
+            "10": {
+              "tan": 72.2,
+              "fuku_min": 6.1,
+              "fuku_max": 50.5
+            },
+            "11": {
+              "tan": 4.3,
+              "fuku_min": 1.7,
+              "fuku_max": 11.6
+            },
+            "12": {
+              "tan": 1.4,
+              "fuku_min": 1,
+              "fuku_max": 1
+            }
           }
         },
         "03": {
@@ -38078,7 +38140,7 @@
           }
         }
       },
-      "odds_updated": "2026-07-04T20:23:18.153825+09:00"
+      "odds_updated": "2026-07-04T20:33:57.932612+09:00"
     }
   },
   "_settings": {
@@ -38116,7 +38178,7 @@
     "notify_bets": 3,
     "minutes_before": 7,
     "combo_only_with_tan": true,
-    "use_ai_index": true,
+    "use_ai_index": false,
     "ai_index_shadow": true
   },
   "_settings_jra": {
