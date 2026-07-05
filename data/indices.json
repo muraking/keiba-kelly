@@ -48914,6 +48914,53 @@
               "fuku_min": 5.9,
               "fuku_max": 8.9
             }
+          },
+          "6": {
+            "1": {
+              "tan": 31.1,
+              "fuku_min": 5.8,
+              "fuku_max": 8.5
+            },
+            "2": {
+              "tan": 6.2,
+              "fuku_min": 1.3,
+              "fuku_max": 1.6
+            },
+            "3": {
+              "tan": 5.8,
+              "fuku_min": 1.7,
+              "fuku_max": 2.4
+            },
+            "4": {
+              "tan": 2.8,
+              "fuku_min": 1.5,
+              "fuku_max": 2
+            },
+            "5": {
+              "tan": 7.4,
+              "fuku_min": 1.8,
+              "fuku_max": 2.5
+            },
+            "6": {
+              "tan": 6.4,
+              "fuku_min": 1.8,
+              "fuku_max": 2.6
+            },
+            "7": {
+              "tan": 36,
+              "fuku_min": 6.1,
+              "fuku_max": 8.9
+            },
+            "8": {
+              "tan": 12.6,
+              "fuku_min": 2.3,
+              "fuku_max": 3.3
+            },
+            "9": {
+              "tan": 7.4,
+              "fuku_min": 2.6,
+              "fuku_max": 3.8
+            }
           }
         },
         "31": {
@@ -49252,7 +49299,7 @@
           }
         }
       },
-      "odds_updated": "2026-07-05T16:59:22.658452+09:00"
+      "odds_updated": "2026-07-05T17:13:16.150808+09:00"
     }
   },
   "_settings": {
@@ -49294,11 +49341,11 @@
     "ai_index_shadow": true
   },
   "_settings_jra": {
-    "sm_winrate_filter": 0,
+    "sm_winrate_filter": 8,
     "ev_min": 110,
     "odds_min": 8,
     "odds_max": 15,
-    "max_bets": 2,
+    "max_bets": 3,
     "auto_buy_skip_fav": true,
     "auto_buy_skip_fav_odds": 1.6,
     "stop_loss_enabled": true,
@@ -49331,8 +49378,8 @@
     "wide_rec1": false,
     "wide_rec2": true,
     "wide_rec3": false,
-    "wide_method": "tan_axis",
-    "wide_box_n": 3,
+    "wide_method": "rec_box",
+    "wide_box_n": 2,
     "wide_odds_min": 5,
     "wide_odds_max": 15,
     "wide_winrate_filter": 10,
@@ -49346,13 +49393,13 @@
     "place_amount_mode": "kelly",
     "place_kelly_mult": 2,
     "place_bet_odds_min": 8,
-    "place_bet_ev_min": 110,
+    "place_bet_ev_min": 120,
     "place_amount": 200,
     "place_bet_independent": true,
     "place_bet_winrate_filter": 10,
-    "place_bet_max_n": 1,
-    "ev_max": 165,
-    "place_bet_odds_max": 30
+    "place_bet_max_n": 2,
+    "ev_max": 180,
+    "place_bet_ev_max": 160
   },
   "_settings_local": {
     "sm_winrate_filter": 5,
@@ -49417,18 +49464,18 @@
     "place_bet_winrate_filter": 5
   },
   "_perf_jra": {
-    "updated_at": "2026-07-04",
-    "is_roi": 160,
-    "oos_roi": 254.1,
-    "oos_bets": 22,
-    "train_days": 5,
+    "updated_at": "2026-07-05",
+    "is_roi": 162.8,
+    "oos_roi": 160.0,
+    "oos_bets": 21,
+    "train_days": 6,
     "oos_days": 2,
-    "bets": 41,
-    "profit_days": 3,
-    "total_days": 5,
-    "max_drawdown": 6.3,
-    "sharpe": 12.17,
-    "max_consecutive_loss": 7
+    "bets": 54,
+    "profit_days": 4,
+    "total_days": 6,
+    "max_drawdown": 12.9,
+    "sharpe": 3.94,
+    "max_consecutive_loss": 9
   },
   "_perf_local": {
     "updated_at": "2026-07-04",
