@@ -45325,7 +45325,89 @@
           ]
         }
       ],
-      "updated": "2026-07-04T21:01:57.843+09:00"
+      "updated": "2026-07-04T21:01:57.843+09:00",
+      "jra_odds": {
+        "福島(日)": {
+          "1": {
+            "1": {
+              "tan": 61.0,
+              "fuku_min": 13.3,
+              "fuku_max": 19.7
+            },
+            "2": {
+              "tan": 13.6,
+              "fuku_min": 2.8,
+              "fuku_max": 3.9
+            },
+            "3": {
+              "tan": 17.8,
+              "fuku_min": 3.9,
+              "fuku_max": 5.6
+            },
+            "4": {
+              "tan": 107.4,
+              "fuku_min": 17.0,
+              "fuku_max": 25.1
+            },
+            "5": {
+              "tan": 4.5,
+              "fuku_min": 1.6,
+              "fuku_max": 2.1
+            },
+            "6": {
+              "tan": 24.8,
+              "fuku_min": 6.1,
+              "fuku_max": 8.9
+            },
+            "7": {
+              "tan": 100.0,
+              "fuku_min": 16.3,
+              "fuku_max": 24.1
+            },
+            "8": {
+              "tan": 84.7,
+              "fuku_min": 17.4,
+              "fuku_max": 25.8
+            },
+            "9": {
+              "tan": 52.9,
+              "fuku_min": 7.9,
+              "fuku_max": 11.5
+            },
+            "10": {
+              "tan": 7.1,
+              "fuku_min": 2.0,
+              "fuku_max": 2.7
+            },
+            "11": {
+              "tan": 17.1,
+              "fuku_min": 3.8,
+              "fuku_max": 5.5
+            },
+            "12": {
+              "tan": 49.4,
+              "fuku_min": 8.1,
+              "fuku_max": 11.8
+            },
+            "13": {
+              "tan": 3.8,
+              "fuku_min": 1.5,
+              "fuku_max": 1.9
+            },
+            "14": {
+              "tan": 9.2,
+              "fuku_min": 2.7,
+              "fuku_max": 3.7
+            },
+            "15": {
+              "tan": 4.8,
+              "fuku_min": 1.6,
+              "fuku_max": 2.1
+            }
+          }
+        }
+      },
+      "jra_odds_updated": "2026-07-05T09:51:14.706875+09:00"
     }
   },
   "_settings": {
@@ -45462,7 +45544,7 @@
     "exacta_rec1": false,
     "exacta_rec2": false,
     "exacta_rec3": true,
-    "exacta_method": "tan_axis",
+    "exacta_method": "hon_ana",
     "exacta_box_n": 3,
     "wide_amount": 200,
     "wide_top1": true,
@@ -45476,18 +45558,18 @@
     "wide_odds_max": 15,
     "wide_winrate_filter": 10,
     "entropy_skip_labels": [
-      "激固",
+      "固",
       "中間",
-      "稍荒"
+      "荒"
     ],
     "odds_max": null,
     "exacta_tan_n": 4,
     "wide_tan_n": 1,
-    "place_bet_ev_min": 130,
+    "place_bet_ev_min": 110,
     "place_bet_ev_max": 140,
     "place_bet_independent": true,
-    "place_bet_max_n": 1,
-    "place_bet_odds_max": 40
+    "place_bet_max_n": 2,
+    "place_bet_winrate_filter": 5
   },
   "_perf_jra": {
     "updated_at": "2026-07-04",
@@ -45504,17 +45586,17 @@
     "max_consecutive_loss": 7
   },
   "_perf_local": {
-    "updated_at": "2026-07-03",
-    "is_roi": 143,
-    "oos_roi": 165,
-    "oos_bets": 109,
+    "updated_at": "2026-07-04",
+    "is_roi": 143.0,
+    "oos_roi": 167.0,
+    "oos_bets": 122,
     "train_days": 21,
-    "oos_days": 7,
+    "oos_days": 8,
     "bets": 280,
     "profit_days": 11,
     "total_days": 21,
     "max_drawdown": 52.2,
-    "sharpe": 3.09,
+    "sharpe": 4.14,
     "max_consecutive_loss": 50
   }
 }
