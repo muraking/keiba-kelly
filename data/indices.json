@@ -45709,6 +45709,98 @@
               "fuku_min": 3.4,
               "fuku_max": 6.6
             }
+          },
+          "3": {
+            "1": {
+              "tan": 39.5,
+              "fuku_min": 8.0,
+              "fuku_max": 13.4
+            },
+            "2": {
+              "tan": 58.7,
+              "fuku_min": 9.3,
+              "fuku_max": 15.7
+            },
+            "3": {
+              "tan": 16.6,
+              "fuku_min": 3.6,
+              "fuku_max": 5.8
+            },
+            "4": {
+              "tan": 5.3,
+              "fuku_min": 1.7,
+              "fuku_max": 2.6
+            },
+            "5": {
+              "tan": 27.0,
+              "fuku_min": 6.0,
+              "fuku_max": 10.0
+            },
+            "6": {
+              "tan": 48.4,
+              "fuku_min": 6.5,
+              "fuku_max": 10.8
+            },
+            "7": {
+              "tan": 11.3,
+              "fuku_min": 3.0,
+              "fuku_max": 4.7
+            },
+            "8": {
+              "tan": 74.6,
+              "fuku_min": 10.3,
+              "fuku_max": 17.4
+            },
+            "9": {
+              "tan": 101.3,
+              "fuku_min": 14.4,
+              "fuku_max": 24.4
+            },
+            "10": {
+              "tan": 17.5,
+              "fuku_min": 3.1,
+              "fuku_max": 4.9
+            },
+            "11": {
+              "tan": 7.7,
+              "fuku_min": 2.5,
+              "fuku_max": 3.9
+            },
+            "12": {
+              "tan": 106.8,
+              "fuku_min": 13.5,
+              "fuku_max": 22.9
+            },
+            "13": {
+              "tan": 84.8,
+              "fuku_min": 14.5,
+              "fuku_max": 24.6
+            },
+            "14": {
+              "tan": 80.2,
+              "fuku_min": 9.9,
+              "fuku_max": 16.7
+            },
+            "15": {
+              "tan": 34.5,
+              "fuku_min": 7.8,
+              "fuku_max": 13.1
+            },
+            "16": {
+              "tan": 3.2,
+              "fuku_min": 1.4,
+              "fuku_max": 1.8
+            },
+            "17": {
+              "tan": 4.7,
+              "fuku_min": 1.3,
+              "fuku_max": 1.6
+            },
+            "18": {
+              "tan": 44.5,
+              "fuku_min": 6.8,
+              "fuku_max": 11.3
+            }
           }
         },
         "函館(日)": {
@@ -45848,7 +45940,7 @@
           }
         }
       },
-      "jra_odds_updated": "2026-07-05T10:53:35.905262+09:00"
+      "jra_odds_updated": "2026-07-05T11:03:50.974299+09:00"
     }
   },
   "_settings": {
