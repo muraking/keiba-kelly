@@ -43572,6 +43572,58 @@
               "fuku_min": 11.9,
               "fuku_max": 21.1
             }
+          },
+          "10": {
+            "1": {
+              "tan": 4.6,
+              "fuku_min": 1.3,
+              "fuku_max": 2
+            },
+            "2": {
+              "tan": 65.9,
+              "fuku_min": 8.4,
+              "fuku_max": 15.2
+            },
+            "3": {
+              "tan": 5.6,
+              "fuku_min": 1.6,
+              "fuku_max": 2.6
+            },
+            "4": {
+              "tan": 75,
+              "fuku_min": 7.6,
+              "fuku_max": 13.8
+            },
+            "5": {
+              "tan": 8.3,
+              "fuku_min": 1.7,
+              "fuku_max": 2.8
+            },
+            "6": {
+              "tan": 57.5,
+              "fuku_min": 3.9,
+              "fuku_max": 6.9
+            },
+            "7": {
+              "tan": 10,
+              "fuku_min": 2.2,
+              "fuku_max": 3.7
+            },
+            "8": {
+              "tan": 22,
+              "fuku_min": 3.6,
+              "fuku_max": 6.4
+            },
+            "9": {
+              "tan": 1.9,
+              "fuku_min": 1.1,
+              "fuku_max": 1.3
+            },
+            "10": {
+              "tan": 21.5,
+              "fuku_min": 2.3,
+              "fuku_max": 3.9
+            }
           }
         },
         "12": {
@@ -44311,7 +44363,7 @@
           }
         }
       },
-      "odds_updated": "2026-07-12T16:58:07.598760+09:00"
+      "odds_updated": "2026-07-12T17:23:16.379134+09:00"
     }
   },
   "_settings": {
@@ -44382,7 +44434,7 @@
     "exacta_rec1": false,
     "exacta_rec2": true,
     "exacta_rec3": false,
-    "exacta_method": "formation",
+    "exacta_method": "tan_axis",
     "exacta_box_n": 4,
     "wide_amount": 200,
     "wide_top1": true,
@@ -44397,20 +44449,21 @@
     "wide_winrate_filter": 10,
     "entropy_skip_labels": [
       "稍固",
-      "中間"
+      "中間",
+      "稍荒"
     ],
-    "exacta_tan_n": 3,
+    "exacta_tan_n": 2,
     "wide_tan_n": 5,
     "place_amount_mode": "kelly",
     "place_kelly_mult": 2,
     "place_bet_odds_min": 8,
-    "place_bet_ev_min": 110,
+    "place_bet_ev_min": 120,
     "place_amount": 200,
     "place_bet_independent": true,
     "place_bet_winrate_filter": 10,
-    "place_bet_max_n": 2,
-    "ev_max": 160,
-    "place_bet_ev_max": 150
+    "place_bet_max_n": 1,
+    "ev_max": 165,
+    "place_bet_ev_max": 160
   },
   "_settings_local": {
     "sm_winrate_filter": 5,
@@ -44475,18 +44528,18 @@
     "place_bet_ev_min": 110
   },
   "_perf_jra": {
-    "updated_at": "2026-07-11",
-    "is_roi": 183.1,
-    "oos_roi": 212.7,
-    "oos_bets": 37,
-    "train_days": 6,
+    "updated_at": "2026-07-12",
+    "is_roi": 202.5,
+    "oos_roi": 204.1,
+    "oos_bets": 41,
+    "train_days": 7,
     "oos_days": 3,
-    "bets": 48,
-    "profit_days": 4,
-    "total_days": 6,
-    "max_drawdown": 7.7,
-    "sharpe": 10.38,
-    "max_consecutive_loss": 10
+    "bets": 60,
+    "profit_days": 5,
+    "total_days": 7,
+    "max_drawdown": 12.4,
+    "sharpe": 11.17,
+    "max_consecutive_loss": 11
   },
   "_perf_local": {
     "updated_at": "2026-07-11",
