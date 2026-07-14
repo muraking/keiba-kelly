@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.07.14.2
+  v2026.07.14.4
 
   変更履歴:
+    v2026.07.14.4 - 「指数」タブに脚質タグ（［逃/先/差/追/転］）と展開行（脚質構成→前残り/差し有利）を追加。
+    v2026.07.14.3 - 「指数」タブ改良: レース選択をプルダウン化(下スクロール不要)。馬名・EV(合成×オッズ)・
+                   穴🕳️・妙・🐬(前走不利)を表示。荒度はエントロピーから算出。live_probsが馬名h/イルカdを保存。
     v2026.07.14.2 - 「指数」タブを非管理者にも公開。private取得失敗時は公開リポジトリ(keiba-kelly)へ
                    フォールバック（トークン無しでも閲覧可）。live_probsがアーカイブをpublicへも同期。
     v2026.07.14.1 - 「指数」タブを新設。ai_live_archive_YYYY_MM.json を読み、WEBHOOK6と同じAI指数表示
@@ -331,7 +334,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.07.14.2</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.07.14.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -466,14 +469,15 @@ textarea:focus{border-color:var(--gold)}
   <div id="p-index" class="page">
     <div style="margin-bottom:14px">
       <div class="sh">🤖 AI指数</div>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
         <select id="idx-date" onchange="renderIndexRaces()"
-          style="flex:1;min-width:130px;padding:9px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px"></select>
+          style="min-width:120px;padding:9px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:13px"></select>
+        <select id="idx-race" onchange="showIndexRaceSel()"
+          style="flex:1;min-width:140px;padding:9px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:14px;font-weight:600"></select>
         <button onclick="loadIndexTab(true)"
-          style="padding:9px 14px;border:none;border-radius:8px;background:var(--bg3);color:var(--text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">↻ 更新</button>
+          style="padding:9px 12px;border:none;border-radius:8px;background:var(--bg3);color:var(--text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">↻</button>
       </div>
       <div id="idx-status" style="font-size:12px;color:var(--text3);margin-bottom:8px"></div>
-      <div id="idx-races" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
       <div id="idx-detail"></div>
     </div>
   </div><!-- /p-index -->
@@ -770,7 +774,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.07.14.2</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.07.14.4</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -3102,7 +3106,7 @@ async function loadIndexTab(force){
   }catch(e){
     idxArchive = null;
     if(status) status.textContent = '取得できませんでした（当月のアーカイブ未生成）: ' + e.message;
-    const r = document.getElementById('idx-races'); if(r) r.innerHTML = '';
+    const r = document.getElementById('idx-race'); if(r) r.innerHTML = '';
     const d = document.getElementById('idx-detail'); if(d) d.innerHTML = '';
     const sel = document.getElementById('idx-date'); if(sel) sel.innerHTML = '';
   }
@@ -3121,48 +3125,96 @@ function renderIndexDates(){
 function _idxEsc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 
 function renderIndexRaces(){
-  const box = document.getElementById('idx-races');
-  const detail = document.getElementById('idx-detail');
   const sel = document.getElementById('idx-date');
-  if(!box || !sel) return;
-  if(detail) detail.innerHTML = '';
+  const rsel = document.getElementById('idx-race');
+  const detail = document.getElementById('idx-detail');
+  if(!sel || !rsel) return;
   const day = (idxArchive && idxArchive[sel.value]) || {};
-  const keys = Object.keys(day);
-  if(!keys.length){ box.innerHTML = '<div style="color:var(--text3);font-size:13px">この日のデータがありません</div>'; return; }
-  keys.sort((a,b)=> (day[a].t||'').localeCompare(day[b].t||'') || a.localeCompare(b));
-  box.innerHTML = keys.map(k=>{
-    const t = day[k].t || '';
-    const dim = day[k].m ? '' : ';opacity:.6';   // フルテキストが無い過去分は薄め
-    return `<button onclick="showIndexRace('${sel.value}','${_idxEsc(k)}')" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer${dim}">${_idxEsc(k)}R<span style="color:var(--text3);font-weight:400;margin-left:5px">${t}</span></button>`;
-  }).join('');
+  const keys = Object.keys(day).sort((a,b)=> (day[a].t||'').localeCompare(day[b].t||'') || a.localeCompare(b));
+  if(!keys.length){ rsel.innerHTML=''; if(detail) detail.innerHTML='<div style="color:var(--text3);font-size:13px">この日のデータがありません</div>'; return; }
+  const cur = rsel.value;
+  rsel.innerHTML = keys.map(k=>`<option value="${_idxEsc(k)}">${_idxEsc(k)}R ${day[k].t||''}</option>`).join('');
+  rsel.value = keys.includes(cur) ? cur : keys[0];
+  showIndexRaceSel();
 }
 
+function showIndexRaceSel(){
+  const sel = document.getElementById('idx-date');
+  const rsel = document.getElementById('idx-race');
+  if(sel && rsel && rsel.value) showIndexRace(sel.value, rsel.value);
+}
+
+// 荒度(エントロピー)ラベルの会場別閾値（live_probs と同一）
+const IDX_ENT_TH = {
+  local: [[1.50,'激固'],[1.65,'固'],[1.80,'稍固'],[1.95,'中間'],[2.10,'稍荒'],[2.30,'荒']],
+  jra:   [[1.61,'激固'],[1.75,'固'],[1.86,'稍固'],[1.96,'中間'],[2.05,'稍荒'],[2.16,'荒']],
+  banei: [[1.55,'激固'],[1.68,'固'],[1.77,'稍固'],[1.83,'中間'],[1.89,'稍荒'],[1.96,'荒']]
+};
+const IDX_JRA_VENUES = new Set(['札幌','函館','福島','新潟','東京','中山','中京','京都','阪神','小倉']);
+function _idxCirc(n){ const C='①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱'; n=parseInt(n,10); return (n>=1&&n<=18)?C[n-1]:('['+n+']'); }
+function _idxVenue(key){ let i=key.length; while(i>0){ const c=key.charCodeAt(i-1); if(c>=48&&c<=57) i--; else break; } return [key.slice(0,i), key.slice(i)]; }
+function _idxBand(H, venue){
+  const th = venue==='帯広' ? IDX_ENT_TH.banei : (IDX_JRA_VENUES.has(venue) ? IDX_ENT_TH.jra : IDX_ENT_TH.local);
+  for(const [t,name] of th) if(H<t) return name;
+  return '激荒';
+}
+
+// アーカイブ(p純/n合成/o オッズ/h馬名/d🐬)から、馬名・EV・穴🕳️・妙・🐬付きで表示
 function showIndexRace(date, key){
   const detail = document.getElementById('idx-detail');
   const rec = idxArchive && idxArchive[date] && idxArchive[date][key];
   if(!detail) return;
+  const preCss = 'white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;line-height:1.75;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:0';
   if(!rec){ detail.textContent = 'データなし'; return; }
-  const preCss = 'white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;line-height:1.7;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:0';
-  if(rec.m){
-    detail.innerHTML = `<pre style="${preCss}">${_idxEsc(rec.m)}</pre>`;
-  }else{
-    detail.innerHTML = _idxReconstruct(rec, key, preCss);
-  }
-}
-
-// フルテキスト(m)が無い過去レコード用の簡易再構成（印＋純%＋オッズ）
-function _idxReconstruct(rec, key, preCss){
+  const p = rec.p || {}, n = rec.n || rec.p || {}, o = rec.o || {}, h = rec.h || {};
+  const dol = new Set((rec.d||[]).map(x=>String(x)));
+  const styl = rec.s || {};                      // 脚質(逃/先/差/追/？)
+  const xf = new Set((rec.x||[]).map(x=>String(x)));   // 中央転入馬
+  const nums = Object.keys(p);
+  if(!nums.length){ detail.innerHTML = `<pre style="${preCss}">${_idxEsc(rec.m||'（このレースは指数データなし）')}</pre>`; return; }
   const MARKS = ['◎','〇','▲','△','☆','注'];
-  const CIRC = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱';
-  const circ = n => { n = parseInt(n,10); return (n>=1 && n<=18) ? CIRC[n-1] : ('['+n+']'); };
-  const p = rec.p || rec.n || {}, o = rec.o || {};
-  const order = Object.keys(p).sort((a,b)=> p[b]-p[a]);
-  const rows = order.map((u,i)=>{
-    const mk = i<MARKS.length ? MARKS[i] : '　';
+  const pureOrder = nums.slice().sort((a,b)=> p[b]-p[a]);
+  const pureTop3 = new Set(pureOrder.slice(0,3));
+  const ev = u => (n[u]!=null && o[u]) ? n[u]*o[u] : null;
+  const ana = new Set(nums.filter(u=>!pureTop3.has(u) && ev(u)!=null).sort((a,b)=>ev(b)-ev(a)).slice(0,3));
+  const tot = pureOrder.reduce((s,u)=>s+p[u],0) || 1;
+  let Hs = 0; for(const u of pureOrder){ const q=p[u]/tot; if(q>0) Hs -= q*Math.log(q); }
+  const [venue,num] = _idxVenue(key);
+  const band = _idxBand(Hs, venue);
+  const hasStyle = Object.keys(styl).length > 0;
+  const styleTag = u => {
+    const s = styl[u] || '？';
+    if(xf.has(u)) return s!=='？' ? `［転${s}］` : '［転］';
+    return s!=='？' ? `［${s}］` : '［新］';
+  };
+  const rows = pureOrder.map((u,i)=>{
+    const mk = i<6 ? MARKS[i] : '　';
+    const nm = h[u] || '';
+    const tag = hasStyle ? styleTag(u) : '';
     const od = o[u] ? `(${o[u]}倍)` : '';
-    return `${mk}${circ(u)} ${(p[u]*100).toFixed(1)}%${od}`;
+    const e = ev(u);
+    const evs = e!=null ? ` EV${e.toFixed(2)}` : '';
+    let suf = '';
+    if(e!=null && e>=1.0) suf += '妙';
+    if(ana.has(u)) suf += '🕳️';
+    if(dol.has(u)) suf += '🐬';
+    return `${mk}${_idxCirc(u)}${nm}${tag} ${(p[u]*100).toFixed(1)}%${od}${evs}${suf}`;
   }).join('\n');
-  return `<pre style="${preCss}">【${_idxEsc(key)}R】${rec.t||''}（簡易表示：純%のみ保存の過去分）\n${rows}</pre>`;
+  // 展開（脚質構成＋前残り/差し有利の判定）。脚質未保存の過去分は出さない。
+  let pace = '';
+  if(hasStyle){
+    const grp = {逃:[],先:[],差:[],追:[],新:[]};
+    for(const u of pureOrder){ const s = styl[u]; grp[(s==='逃'||s==='先'||s==='差'||s==='追')?s:'新'].push(_idxCirc(u)); }
+    const line = Object.keys(grp).filter(k=>grp[k].length).map(k=>k+grp[k].join('')).join(' ') || '脚質不明';
+    const nNige = pureOrder.filter(u=>styl[u]==='逃').length;
+    const nFront = nNige + pureOrder.filter(u=>styl[u]==='先').length;
+    const nKnown = pureOrder.filter(u=>['逃','先','差','追'].includes(styl[u])).length;
+    const verdict = nKnown<3 ? '判定不可' : (nNige>=2 ? '差し有利（前が競る）' : (nNige<=1 && nFront<=3 ? '前残り濃厚' : 'やや前残り'));
+    pace = `\n🏇展開: ${line} → ${verdict}`;
+  }
+  const head = `【${venue}${num}R】${rec.t||''}　荒度:${band}（${nums.length}頭）${pace}\nEV=合成勝率×オッズ ／ 🕳️穴 妙=EV1.0+ 🐬前走不利`;
+  const noname = Object.keys(h).length===0 ? '\n※この日は馬名未保存（今後のレースから表示）' : '';
+  detail.innerHTML = `<pre style="${preCss}">${_idxEsc(head)}\n${'─'.repeat(22)}\n${_idxEsc(rows)}${_idxEsc(noname)}</pre>`;
 }
 
 // indices.json を keiba-kelly（公開）へ同期
