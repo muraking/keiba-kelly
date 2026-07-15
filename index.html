@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.07.14.4
+  v2026.07.14.5
 
   変更履歴:
+    v2026.07.14.5 - 「指数」タブが note_index（--noteで作った前日/当日指数）も読むように。ai_live_archiveと
+                   統合し、ノート作成直後から指数タブに表示（前日は純%のみ→ライブでオッズ/EV/脚質が埋まる）。
     v2026.07.14.4 - 「指数」タブに脚質タグ（［逃/先/差/追/転］）と展開行（脚質構成→前残り/差し有利）を追加。
     v2026.07.14.3 - 「指数」タブ改良: レース選択をプルダウン化(下スクロール不要)。馬名・EV(合成×オッズ)・
                    穴🕳️・妙・🐬(前走不利)を表示。荒度はエントロピーから算出。live_probsが馬名h/イルカdを保存。
@@ -334,7 +336,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.07.14.4</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.07.14.5</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -774,7 +776,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.07.14.4</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.07.14.5</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -3083,33 +3085,46 @@ function loadToken(){
 // ===== 「指数」タブ: ai_live_archive_YYYY_MM.json を読み、WEBHOOK6と同じAI指数表示を出す =====
 let idxArchive = null, idxMonth = null;
 
+// private→public フォールバックで1ファイル取得。無ければ null。
+async function _idxFetchFile(file, token){
+  try{
+    return await fetchGHContent(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${file}`, token);
+  }catch(e){
+    try{
+      return await fetchGHContent(`https://api.github.com/repos/${GH_USER}/${GH_REPO_PUBLIC}/contents/${file}`, null);
+    }catch(e2){ return null; }
+  }
+}
+
 async function loadIndexTab(force){
   const status = document.getElementById('idx-status');
   const month = idxMonth || getTodayJST().slice(0,7).replace('-','_');
   if(idxArchive && !force){ renderIndexDates(); return; }
   if(status) status.textContent = '読み込み中…';
-  try{
-    const file = `data/ai_live_archive_${month}.json`;
-    const token = loadToken();
-    try{
-      // 管理者: private を直読み（トークン有り）
-      const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${file}`;
-      idxArchive = await fetchGHContent(url, token);
-    }catch(prErr){
-      // 非管理者/取得失敗: 公開リポジトリへフォールバック（スケジューラーが同期済み・認証不要）
-      const pubUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO_PUBLIC}/contents/${file}`;
-      idxArchive = await fetchGHContent(pubUrl, null);
-    }
-    idxMonth = month;
-    if(status) status.textContent = '';
-    renderIndexDates();
-  }catch(e){
+  const token = loadToken();
+  // note_index（--noteで作った当日/翌日の指数）＋ ai_live_archive（ライブ7分前指数）を両方読んで統合。
+  //   同じレースが両方にあれば、情報の多いライブ(オッズ有り)を優先。
+  const [ni, la] = await Promise.all([
+    _idxFetchFile(`data/note_index_${month}.json`, token),
+    _idxFetchFile(`data/ai_live_archive_${month}.json`, token)
+  ]);
+  if(!ni && !la){
     idxArchive = null;
-    if(status) status.textContent = '取得できませんでした（当月のアーカイブ未生成）: ' + e.message;
-    const r = document.getElementById('idx-race'); if(r) r.innerHTML = '';
-    const d = document.getElementById('idx-detail'); if(d) d.innerHTML = '';
-    const sel = document.getElementById('idx-date'); if(sel) sel.innerHTML = '';
+    if(status) status.textContent = '取得できませんでした（当月の指数がまだありません）。';
+    ['idx-race','idx-detail','idx-date'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML='';});
+    return;
   }
+  const merged = {};
+  const addSrc = src => { if(!src) return; for(const date in src){ merged[date] = merged[date] || {};
+    for(const k in src[date]){ const cur = merged[date][k]; const rec = src[date][k];
+      if(!cur || (rec && rec.o && Object.keys(rec.o).length)) merged[date][k] = rec;  // オッズ有り(ライブ)優先
+    } } };
+  addSrc(ni);          // まず note_index（純%のみ・前日/当日）
+  addSrc(la);          // 次に ai_live_archive（オッズ/EV/脚質…）で上書き
+  idxArchive = merged;
+  idxMonth = month;
+  if(status) status.textContent = '';
+  renderIndexDates();
 }
 
 function renderIndexDates(){
