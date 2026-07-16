@@ -36904,6 +36904,702 @@
       ],
       "updated": "2026-07-15T02:29:20.239+09:00",
       "odds": {
+        "14": {
+          "1": {
+            "1": {
+              "tan": 84.6,
+              "fuku_min": 4.5,
+              "fuku_max": 8.4
+            },
+            "2": {
+              "tan": 38.6,
+              "fuku_min": 5.9,
+              "fuku_max": 11.1
+            },
+            "3": {
+              "tan": 3.3,
+              "fuku_min": 1.1,
+              "fuku_max": 1.4
+            },
+            "4": {
+              "tan": 15.5,
+              "fuku_min": 2,
+              "fuku_max": 3.4
+            },
+            "5": {
+              "tan": 132.6,
+              "fuku_min": 10.3,
+              "fuku_max": 19.5
+            },
+            "6": {
+              "tan": 6.2,
+              "fuku_min": 3.6,
+              "fuku_max": 6.5
+            },
+            "7": {
+              "tan": 21.1,
+              "fuku_min": 4.3,
+              "fuku_max": 7.9
+            },
+            "8": {
+              "tan": 3.4,
+              "fuku_min": 1.2,
+              "fuku_max": 1.6
+            },
+            "9": {
+              "tan": 24,
+              "fuku_min": 2.9,
+              "fuku_max": 5.2
+            },
+            "10": {
+              "tan": 10.6,
+              "fuku_min": 2.4,
+              "fuku_max": 4.3
+            },
+            "11": {
+              "tan": 30.8,
+              "fuku_min": 12,
+              "fuku_max": 22.7
+            },
+            "12": {
+              "tan": 5.5,
+              "fuku_min": 1.5,
+              "fuku_max": 2.6
+            }
+          },
+          "2": {
+            "1": {
+              "tan": 52.8,
+              "fuku_min": 4.4,
+              "fuku_max": 6.9
+            },
+            "2": {
+              "tan": 86.9,
+              "fuku_min": 12.9,
+              "fuku_max": 20.5
+            },
+            "3": {
+              "tan": 1.8,
+              "fuku_min": 1.4,
+              "fuku_max": 1.9
+            },
+            "4": {
+              "tan": 42,
+              "fuku_min": 2.3,
+              "fuku_max": 3.5
+            },
+            "5": {
+              "tan": 142.7,
+              "fuku_min": 14.3,
+              "fuku_max": 22.8
+            },
+            "6": {
+              "tan": 33.1,
+              "fuku_min": 2.6,
+              "fuku_max": 3.9
+            },
+            "7": {
+              "tan": 4.3,
+              "fuku_min": 1.9,
+              "fuku_max": 2.8
+            },
+            "8": {
+              "tan": 91.1,
+              "fuku_min": 8.6,
+              "fuku_max": 13.6
+            },
+            "9": {
+              "tan": 13.3,
+              "fuku_min": 2.8,
+              "fuku_max": 4.3
+            },
+            "10": {
+              "tan": 5.1,
+              "fuku_min": 1.3,
+              "fuku_max": 1.7
+            },
+            "11": {
+              "tan": 21.7,
+              "fuku_min": 3.8,
+              "fuku_max": 5.8
+            },
+            "12": {
+              "tan": 18.5,
+              "fuku_min": 1.8,
+              "fuku_max": 2.6
+            }
+          },
+          "3": {
+            "1": {
+              "tan": 10,
+              "fuku_min": 2.6,
+              "fuku_max": 4.6
+            },
+            "2": {
+              "tan": 22.1,
+              "fuku_min": 14.4,
+              "fuku_max": 26.1
+            },
+            "3": {
+              "tan": 5.6,
+              "fuku_min": 3.2,
+              "fuku_max": 5.6
+            },
+            "4": {
+              "tan": 19.7,
+              "fuku_min": 2.4,
+              "fuku_max": 4.2
+            },
+            "5": {
+              "tan": 20.8,
+              "fuku_min": 5.5,
+              "fuku_max": 10.1
+            },
+            "6": {
+              "tan": 2.9,
+              "fuku_min": 1.4,
+              "fuku_max": 2.3
+            },
+            "7": {
+              "tan": 2,
+              "fuku_min": 1,
+              "fuku_max": 1.2
+            }
+          },
+          "4": {
+            "1": {
+              "tan": 49.5,
+              "fuku_min": 6.3,
+              "fuku_max": 11.5
+            },
+            "2": {
+              "tan": 1.5,
+              "fuku_min": 1,
+              "fuku_max": 1.2
+            },
+            "3": {
+              "tan": 89.5,
+              "fuku_min": 10,
+              "fuku_max": 18.3
+            },
+            "4": {
+              "tan": 3.5,
+              "fuku_min": 1.4,
+              "fuku_max": 2.3
+            },
+            "5": {
+              "tan": 12.2,
+              "fuku_min": 2.6,
+              "fuku_max": 4.4
+            },
+            "6": {
+              "tan": 59.9,
+              "fuku_min": 9.7,
+              "fuku_max": 17.8
+            },
+            "7": {
+              "tan": 5.2,
+              "fuku_min": 1.7,
+              "fuku_max": 2.9
+            }
+          },
+          "5": {
+            "1": {
+              "tan": 68.8,
+              "fuku_min": 6.8,
+              "fuku_max": 11.4
+            },
+            "2": {
+              "tan": 5.9,
+              "fuku_min": 1.2,
+              "fuku_max": 1.8
+            },
+            "3": {
+              "tan": 5.1,
+              "fuku_min": 2,
+              "fuku_max": 3.1
+            },
+            "4": {
+              "tan": 9,
+              "fuku_min": 1.2,
+              "fuku_max": 1.8
+            },
+            "5": {
+              "tan": 153,
+              "fuku_min": 15.8,
+              "fuku_max": 26.3
+            },
+            "6": {
+              "tan": 87.6,
+              "fuku_min": 5.8,
+              "fuku_max": 9.6
+            },
+            "7": {
+              "tan": 54.1,
+              "fuku_min": 4.6,
+              "fuku_max": 7.5
+            },
+            "8": {
+              "tan": 1.7,
+              "fuku_min": 1.2,
+              "fuku_max": 1.6
+            },
+            "9": {
+              "tan": 25.3,
+              "fuku_min": 4.5,
+              "fuku_max": 7.4
+            },
+            "10": {
+              "tan": 16.6,
+              "fuku_min": 3.9,
+              "fuku_max": 6.4
+            },
+            "11": {
+              "tan": 17.4,
+              "fuku_min": 2.3,
+              "fuku_max": 3.7
+            },
+            "12": {
+              "tan": 224.2,
+              "fuku_min": 17.7,
+              "fuku_max": 29.5
+            }
+          },
+          "6": {
+            "1": {
+              "tan": 94.7,
+              "fuku_min": 3,
+              "fuku_max": 5.4
+            },
+            "2": {
+              "tan": 359.1,
+              "fuku_min": 20.6,
+              "fuku_max": 40.3
+            },
+            "3": {
+              "tan": 104.9,
+              "fuku_min": 10.4,
+              "fuku_max": 20.4
+            },
+            "4": {
+              "tan": 1.3,
+              "fuku_min": 1,
+              "fuku_max": 1.3
+            },
+            "5": {
+              "tan": 5.2,
+              "fuku_min": 1.3,
+              "fuku_max": 2
+            },
+            "6": {
+              "tan": 7.6,
+              "fuku_min": 1.3,
+              "fuku_max": 2.2
+            },
+            "7": {
+              "tan": 160.5,
+              "fuku_min": 7.3,
+              "fuku_max": 14.2
+            },
+            "8": {
+              "tan": 95.4,
+              "fuku_min": 6.1,
+              "fuku_max": 11.8
+            },
+            "9": {
+              "tan": 216.6,
+              "fuku_min": 10.4,
+              "fuku_max": 20.4
+            },
+            "10": {
+              "tan": 12.5,
+              "fuku_min": 1.9,
+              "fuku_max": 3.4
+            },
+            "11": {
+              "tan": 17.2,
+              "fuku_min": 1.7,
+              "fuku_max": 3
+            },
+            "12": {
+              "tan": 164.4,
+              "fuku_min": 11.2,
+              "fuku_max": 21.8
+            }
+          },
+          "7": {
+            "1": {
+              "tan": 136.1,
+              "fuku_min": 19.8,
+              "fuku_max": 36.4
+            },
+            "2": {
+              "tan": 12.4,
+              "fuku_min": 1.7,
+              "fuku_max": 2.8
+            },
+            "3": {
+              "tan": 86.7,
+              "fuku_min": 7.4,
+              "fuku_max": 13.4
+            },
+            "4": {
+              "tan": 1.7,
+              "fuku_min": 1.2,
+              "fuku_max": 1.6
+            },
+            "5": {
+              "tan": 8.8,
+              "fuku_min": 1.7,
+              "fuku_max": 2.8
+            },
+            "6": {
+              "tan": 252.8,
+              "fuku_min": 63.3,
+              "fuku_max": 99.9
+            },
+            "7": {
+              "tan": 14.6,
+              "fuku_min": 1.6,
+              "fuku_max": 2.7
+            },
+            "8": {
+              "tan": 46.3,
+              "fuku_min": 5.9,
+              "fuku_max": 10.6
+            },
+            "9": {
+              "tan": 114.9,
+              "fuku_min": 12.9,
+              "fuku_max": 23.6
+            },
+            "10": {
+              "tan": 4.3,
+              "fuku_min": 1.2,
+              "fuku_max": 1.6
+            },
+            "11": {
+              "tan": 8,
+              "fuku_min": 2,
+              "fuku_max": 3.4
+            },
+            "12": {
+              "tan": 42.3,
+              "fuku_min": 6.7,
+              "fuku_max": 12
+            }
+          },
+          "8": {
+            "1": {
+              "tan": 11.2,
+              "fuku_min": 1.4,
+              "fuku_max": 1.9
+            },
+            "2": {
+              "tan": 15.4,
+              "fuku_min": 2.4,
+              "fuku_max": 3.7
+            },
+            "3": {
+              "tan": 5.5,
+              "fuku_min": 1.4,
+              "fuku_max": 2.1
+            },
+            "4": {
+              "tan": 71.3,
+              "fuku_min": 5.7,
+              "fuku_max": 9.1
+            },
+            "5": {
+              "tan": 5.8,
+              "fuku_min": 1.8,
+              "fuku_max": 2.7
+            },
+            "6": {
+              "tan": 42.9,
+              "fuku_min": 7,
+              "fuku_max": 11.2
+            },
+            "7": {
+              "tan": 91.5,
+              "fuku_min": 9.5,
+              "fuku_max": 15.2
+            },
+            "8": {
+              "tan": 25.7,
+              "fuku_min": 4.3,
+              "fuku_max": 6.8
+            },
+            "9": {
+              "tan": 13.3,
+              "fuku_min": 3.5,
+              "fuku_max": 5.5
+            },
+            "10": {
+              "tan": 41.3,
+              "fuku_min": 8.5,
+              "fuku_max": 13.6
+            },
+            "11": {
+              "tan": 1.9,
+              "fuku_min": 1.2,
+              "fuku_max": 1.6
+            },
+            "12": {
+              "tan": 23.7,
+              "fuku_min": 3.9,
+              "fuku_max": 6
+            }
+          },
+          "9": {
+            "1": {
+              "tan": 116.4,
+              "fuku_min": 10.5,
+              "fuku_max": 24.7
+            },
+            "2": {
+              "tan": 24.4,
+              "fuku_min": 3.7,
+              "fuku_max": 8.5
+            },
+            "3": {
+              "tan": 62.4,
+              "fuku_min": 3.8,
+              "fuku_max": 8.5
+            },
+            "4": {
+              "tan": 17.4,
+              "fuku_min": 3.1,
+              "fuku_max": 6.9
+            },
+            "5": {
+              "tan": 24.8,
+              "fuku_min": 3.8,
+              "fuku_max": 8.5
+            },
+            "6": {
+              "tan": 14.3,
+              "fuku_min": 1.9,
+              "fuku_max": 3.9
+            },
+            "7": {
+              "tan": 1.4,
+              "fuku_min": 1,
+              "fuku_max": 1
+            },
+            "8": {
+              "tan": 117.6,
+              "fuku_min": 13.3,
+              "fuku_max": 31.4
+            },
+            "9": {
+              "tan": 9.7,
+              "fuku_min": 1.6,
+              "fuku_max": 3.1
+            },
+            "10": {
+              "tan": 49.5,
+              "fuku_min": 4.5,
+              "fuku_max": 10.4
+            },
+            "11": {
+              "tan": 8.3,
+              "fuku_min": 2,
+              "fuku_max": 4.3
+            },
+            "12": {
+              "tan": 10.8,
+              "fuku_min": 2,
+              "fuku_max": 4.1
+            }
+          },
+          "10": {
+            "1": {
+              "tan": 9.3,
+              "fuku_min": 1.7,
+              "fuku_max": 2.8
+            },
+            "2": {
+              "tan": 3.6,
+              "fuku_min": 1.3,
+              "fuku_max": 1.8
+            },
+            "3": {
+              "tan": 117.6,
+              "fuku_min": 10.8,
+              "fuku_max": 19.4
+            },
+            "4": {
+              "tan": 66.9,
+              "fuku_min": 15.8,
+              "fuku_max": 28.5
+            },
+            "5": {
+              "tan": 3.2,
+              "fuku_min": 1.1,
+              "fuku_max": 1.5
+            },
+            "6": {
+              "tan": 20.8,
+              "fuku_min": 2.2,
+              "fuku_max": 3.7
+            },
+            "7": {
+              "tan": 6.1,
+              "fuku_min": 1.5,
+              "fuku_max": 2.4
+            },
+            "8": {
+              "tan": 20.1,
+              "fuku_min": 4.3,
+              "fuku_max": 7.6
+            },
+            "9": {
+              "tan": 6.5,
+              "fuku_min": 2.7,
+              "fuku_max": 4.6
+            },
+            "10": {
+              "tan": 22.3,
+              "fuku_min": 5.6,
+              "fuku_max": 9.9
+            },
+            "11": {
+              "tan": 69.2,
+              "fuku_min": 9.7,
+              "fuku_max": 17.3
+            },
+            "12": {
+              "tan": 14.5,
+              "fuku_min": 4.5,
+              "fuku_max": 7.8
+            }
+          },
+          "11": {
+            "1": {
+              "tan": 20,
+              "fuku_min": 2.4,
+              "fuku_max": 5.3
+            },
+            "2": {
+              "tan": 18.3,
+              "fuku_min": 2.3,
+              "fuku_max": 5.1
+            },
+            "3": {
+              "tan": 39.9,
+              "fuku_min": 7,
+              "fuku_max": 16.8
+            },
+            "4": {
+              "tan": 20.4,
+              "fuku_min": 3.6,
+              "fuku_max": 8.3
+            },
+            "5": {
+              "tan": 109.3,
+              "fuku_min": 7.8,
+              "fuku_max": 18.7
+            },
+            "6": {
+              "tan": 7.4,
+              "fuku_min": 2.2,
+              "fuku_max": 4.8
+            },
+            "7": {
+              "tan": 2.4,
+              "fuku_min": 1,
+              "fuku_max": 1.4
+            },
+            "8": {
+              "tan": 2.8,
+              "fuku_min": 1,
+              "fuku_max": 1.3
+            },
+            "9": {
+              "tan": 56.2,
+              "fuku_min": 2.7,
+              "fuku_max": 6.1
+            },
+            "10": {
+              "tan": 261,
+              "fuku_min": 21.6,
+              "fuku_max": 52.7
+            },
+            "11": {
+              "tan": 8.2,
+              "fuku_min": 1.9,
+              "fuku_max": 3.9
+            },
+            "12": {
+              "tan": 41.6,
+              "fuku_min": 4,
+              "fuku_max": 9.2
+            }
+          },
+          "12": {
+            "1": {
+              "tan": 105.7,
+              "fuku_min": 4.5,
+              "fuku_max": 7.3
+            },
+            "2": {
+              "tan": 17,
+              "fuku_min": 3.1,
+              "fuku_max": 4.9
+            },
+            "3": {
+              "tan": 27.4,
+              "fuku_min": 5.5,
+              "fuku_max": 8.9
+            },
+            "4": {
+              "tan": 5.2,
+              "fuku_min": 2.1,
+              "fuku_max": 3.2
+            },
+            "5": {
+              "tan": 43.3,
+              "fuku_min": 6.4,
+              "fuku_max": 10.3
+            },
+            "6": {
+              "tan": 21.4,
+              "fuku_min": 3.5,
+              "fuku_max": 5.5
+            },
+            "7": {
+              "tan": 3.5,
+              "fuku_min": 1.5,
+              "fuku_max": 2
+            },
+            "8": {
+              "tan": 98,
+              "fuku_min": 11.5,
+              "fuku_max": 18.6
+            },
+            "9": {
+              "tan": 14.4,
+              "fuku_min": 2.2,
+              "fuku_max": 3.4
+            },
+            "10": {
+              "tan": 11.1,
+              "fuku_min": 2.3,
+              "fuku_max": 3.5
+            },
+            "11": {
+              "tan": 8.4,
+              "fuku_min": 2.2,
+              "fuku_max": 3.4
+            },
+            "12": {
+              "tan": 3.1,
+              "fuku_min": 1.2,
+              "fuku_max": 1.5
+            }
+          }
+        },
         "17": {
           "1": {
             "1": {
@@ -38201,702 +38897,6 @@
             }
           }
         },
-        "14": {
-          "1": {
-            "1": {
-              "tan": 84.6,
-              "fuku_min": 4.5,
-              "fuku_max": 8.4
-            },
-            "2": {
-              "tan": 38.6,
-              "fuku_min": 5.9,
-              "fuku_max": 11.1
-            },
-            "3": {
-              "tan": 3.3,
-              "fuku_min": 1.1,
-              "fuku_max": 1.4
-            },
-            "4": {
-              "tan": 15.5,
-              "fuku_min": 2,
-              "fuku_max": 3.4
-            },
-            "5": {
-              "tan": 132.6,
-              "fuku_min": 10.3,
-              "fuku_max": 19.5
-            },
-            "6": {
-              "tan": 6.2,
-              "fuku_min": 3.6,
-              "fuku_max": 6.5
-            },
-            "7": {
-              "tan": 21.1,
-              "fuku_min": 4.3,
-              "fuku_max": 7.9
-            },
-            "8": {
-              "tan": 3.4,
-              "fuku_min": 1.2,
-              "fuku_max": 1.6
-            },
-            "9": {
-              "tan": 24,
-              "fuku_min": 2.9,
-              "fuku_max": 5.2
-            },
-            "10": {
-              "tan": 10.6,
-              "fuku_min": 2.4,
-              "fuku_max": 4.3
-            },
-            "11": {
-              "tan": 30.8,
-              "fuku_min": 12,
-              "fuku_max": 22.7
-            },
-            "12": {
-              "tan": 5.5,
-              "fuku_min": 1.5,
-              "fuku_max": 2.6
-            }
-          },
-          "2": {
-            "1": {
-              "tan": 52.8,
-              "fuku_min": 4.4,
-              "fuku_max": 6.9
-            },
-            "2": {
-              "tan": 86.9,
-              "fuku_min": 12.9,
-              "fuku_max": 20.5
-            },
-            "3": {
-              "tan": 1.8,
-              "fuku_min": 1.4,
-              "fuku_max": 1.9
-            },
-            "4": {
-              "tan": 42,
-              "fuku_min": 2.3,
-              "fuku_max": 3.5
-            },
-            "5": {
-              "tan": 142.7,
-              "fuku_min": 14.3,
-              "fuku_max": 22.8
-            },
-            "6": {
-              "tan": 33.1,
-              "fuku_min": 2.6,
-              "fuku_max": 3.9
-            },
-            "7": {
-              "tan": 4.3,
-              "fuku_min": 1.9,
-              "fuku_max": 2.8
-            },
-            "8": {
-              "tan": 91.1,
-              "fuku_min": 8.6,
-              "fuku_max": 13.6
-            },
-            "9": {
-              "tan": 13.3,
-              "fuku_min": 2.8,
-              "fuku_max": 4.3
-            },
-            "10": {
-              "tan": 5.1,
-              "fuku_min": 1.3,
-              "fuku_max": 1.7
-            },
-            "11": {
-              "tan": 21.7,
-              "fuku_min": 3.8,
-              "fuku_max": 5.8
-            },
-            "12": {
-              "tan": 18.5,
-              "fuku_min": 1.8,
-              "fuku_max": 2.6
-            }
-          },
-          "3": {
-            "1": {
-              "tan": 10,
-              "fuku_min": 2.6,
-              "fuku_max": 4.6
-            },
-            "2": {
-              "tan": 22.1,
-              "fuku_min": 14.4,
-              "fuku_max": 26.1
-            },
-            "3": {
-              "tan": 5.6,
-              "fuku_min": 3.2,
-              "fuku_max": 5.6
-            },
-            "4": {
-              "tan": 19.7,
-              "fuku_min": 2.4,
-              "fuku_max": 4.2
-            },
-            "5": {
-              "tan": 20.8,
-              "fuku_min": 5.5,
-              "fuku_max": 10.1
-            },
-            "6": {
-              "tan": 2.9,
-              "fuku_min": 1.4,
-              "fuku_max": 2.3
-            },
-            "7": {
-              "tan": 2,
-              "fuku_min": 1,
-              "fuku_max": 1.2
-            }
-          },
-          "4": {
-            "1": {
-              "tan": 49.5,
-              "fuku_min": 6.3,
-              "fuku_max": 11.5
-            },
-            "2": {
-              "tan": 1.5,
-              "fuku_min": 1,
-              "fuku_max": 1.2
-            },
-            "3": {
-              "tan": 89.5,
-              "fuku_min": 10,
-              "fuku_max": 18.3
-            },
-            "4": {
-              "tan": 3.5,
-              "fuku_min": 1.4,
-              "fuku_max": 2.3
-            },
-            "5": {
-              "tan": 12.2,
-              "fuku_min": 2.6,
-              "fuku_max": 4.4
-            },
-            "6": {
-              "tan": 59.9,
-              "fuku_min": 9.7,
-              "fuku_max": 17.8
-            },
-            "7": {
-              "tan": 5.2,
-              "fuku_min": 1.7,
-              "fuku_max": 2.9
-            }
-          },
-          "5": {
-            "1": {
-              "tan": 68.8,
-              "fuku_min": 6.8,
-              "fuku_max": 11.4
-            },
-            "2": {
-              "tan": 5.9,
-              "fuku_min": 1.2,
-              "fuku_max": 1.8
-            },
-            "3": {
-              "tan": 5.1,
-              "fuku_min": 2,
-              "fuku_max": 3.1
-            },
-            "4": {
-              "tan": 9,
-              "fuku_min": 1.2,
-              "fuku_max": 1.8
-            },
-            "5": {
-              "tan": 153,
-              "fuku_min": 15.8,
-              "fuku_max": 26.3
-            },
-            "6": {
-              "tan": 87.6,
-              "fuku_min": 5.8,
-              "fuku_max": 9.6
-            },
-            "7": {
-              "tan": 54.1,
-              "fuku_min": 4.6,
-              "fuku_max": 7.5
-            },
-            "8": {
-              "tan": 1.7,
-              "fuku_min": 1.2,
-              "fuku_max": 1.6
-            },
-            "9": {
-              "tan": 25.3,
-              "fuku_min": 4.5,
-              "fuku_max": 7.4
-            },
-            "10": {
-              "tan": 16.6,
-              "fuku_min": 3.9,
-              "fuku_max": 6.4
-            },
-            "11": {
-              "tan": 17.4,
-              "fuku_min": 2.3,
-              "fuku_max": 3.7
-            },
-            "12": {
-              "tan": 224.2,
-              "fuku_min": 17.7,
-              "fuku_max": 29.5
-            }
-          },
-          "6": {
-            "1": {
-              "tan": 94.7,
-              "fuku_min": 3,
-              "fuku_max": 5.4
-            },
-            "2": {
-              "tan": 359.1,
-              "fuku_min": 20.6,
-              "fuku_max": 40.3
-            },
-            "3": {
-              "tan": 104.9,
-              "fuku_min": 10.4,
-              "fuku_max": 20.4
-            },
-            "4": {
-              "tan": 1.3,
-              "fuku_min": 1,
-              "fuku_max": 1.3
-            },
-            "5": {
-              "tan": 5.2,
-              "fuku_min": 1.3,
-              "fuku_max": 2
-            },
-            "6": {
-              "tan": 7.6,
-              "fuku_min": 1.3,
-              "fuku_max": 2.2
-            },
-            "7": {
-              "tan": 160.5,
-              "fuku_min": 7.3,
-              "fuku_max": 14.2
-            },
-            "8": {
-              "tan": 95.4,
-              "fuku_min": 6.1,
-              "fuku_max": 11.8
-            },
-            "9": {
-              "tan": 216.6,
-              "fuku_min": 10.4,
-              "fuku_max": 20.4
-            },
-            "10": {
-              "tan": 12.5,
-              "fuku_min": 1.9,
-              "fuku_max": 3.4
-            },
-            "11": {
-              "tan": 17.2,
-              "fuku_min": 1.7,
-              "fuku_max": 3
-            },
-            "12": {
-              "tan": 164.4,
-              "fuku_min": 11.2,
-              "fuku_max": 21.8
-            }
-          },
-          "7": {
-            "1": {
-              "tan": 136.1,
-              "fuku_min": 19.8,
-              "fuku_max": 36.4
-            },
-            "2": {
-              "tan": 12.4,
-              "fuku_min": 1.7,
-              "fuku_max": 2.8
-            },
-            "3": {
-              "tan": 86.7,
-              "fuku_min": 7.4,
-              "fuku_max": 13.4
-            },
-            "4": {
-              "tan": 1.7,
-              "fuku_min": 1.2,
-              "fuku_max": 1.6
-            },
-            "5": {
-              "tan": 8.8,
-              "fuku_min": 1.7,
-              "fuku_max": 2.8
-            },
-            "6": {
-              "tan": 252.8,
-              "fuku_min": 63.3,
-              "fuku_max": 99.9
-            },
-            "7": {
-              "tan": 14.6,
-              "fuku_min": 1.6,
-              "fuku_max": 2.7
-            },
-            "8": {
-              "tan": 46.3,
-              "fuku_min": 5.9,
-              "fuku_max": 10.6
-            },
-            "9": {
-              "tan": 114.9,
-              "fuku_min": 12.9,
-              "fuku_max": 23.6
-            },
-            "10": {
-              "tan": 4.3,
-              "fuku_min": 1.2,
-              "fuku_max": 1.6
-            },
-            "11": {
-              "tan": 8,
-              "fuku_min": 2,
-              "fuku_max": 3.4
-            },
-            "12": {
-              "tan": 42.3,
-              "fuku_min": 6.7,
-              "fuku_max": 12
-            }
-          },
-          "8": {
-            "1": {
-              "tan": 11.2,
-              "fuku_min": 1.4,
-              "fuku_max": 1.9
-            },
-            "2": {
-              "tan": 15.4,
-              "fuku_min": 2.4,
-              "fuku_max": 3.7
-            },
-            "3": {
-              "tan": 5.5,
-              "fuku_min": 1.4,
-              "fuku_max": 2.1
-            },
-            "4": {
-              "tan": 71.3,
-              "fuku_min": 5.7,
-              "fuku_max": 9.1
-            },
-            "5": {
-              "tan": 5.8,
-              "fuku_min": 1.8,
-              "fuku_max": 2.7
-            },
-            "6": {
-              "tan": 42.9,
-              "fuku_min": 7,
-              "fuku_max": 11.2
-            },
-            "7": {
-              "tan": 91.5,
-              "fuku_min": 9.5,
-              "fuku_max": 15.2
-            },
-            "8": {
-              "tan": 25.7,
-              "fuku_min": 4.3,
-              "fuku_max": 6.8
-            },
-            "9": {
-              "tan": 13.3,
-              "fuku_min": 3.5,
-              "fuku_max": 5.5
-            },
-            "10": {
-              "tan": 41.3,
-              "fuku_min": 8.5,
-              "fuku_max": 13.6
-            },
-            "11": {
-              "tan": 1.9,
-              "fuku_min": 1.2,
-              "fuku_max": 1.6
-            },
-            "12": {
-              "tan": 23.7,
-              "fuku_min": 3.9,
-              "fuku_max": 6
-            }
-          },
-          "9": {
-            "1": {
-              "tan": 116.4,
-              "fuku_min": 10.5,
-              "fuku_max": 24.7
-            },
-            "2": {
-              "tan": 24.4,
-              "fuku_min": 3.7,
-              "fuku_max": 8.5
-            },
-            "3": {
-              "tan": 62.4,
-              "fuku_min": 3.8,
-              "fuku_max": 8.5
-            },
-            "4": {
-              "tan": 17.4,
-              "fuku_min": 3.1,
-              "fuku_max": 6.9
-            },
-            "5": {
-              "tan": 24.8,
-              "fuku_min": 3.8,
-              "fuku_max": 8.5
-            },
-            "6": {
-              "tan": 14.3,
-              "fuku_min": 1.9,
-              "fuku_max": 3.9
-            },
-            "7": {
-              "tan": 1.4,
-              "fuku_min": 1,
-              "fuku_max": 1
-            },
-            "8": {
-              "tan": 117.6,
-              "fuku_min": 13.3,
-              "fuku_max": 31.4
-            },
-            "9": {
-              "tan": 9.7,
-              "fuku_min": 1.6,
-              "fuku_max": 3.1
-            },
-            "10": {
-              "tan": 49.5,
-              "fuku_min": 4.5,
-              "fuku_max": 10.4
-            },
-            "11": {
-              "tan": 8.3,
-              "fuku_min": 2,
-              "fuku_max": 4.3
-            },
-            "12": {
-              "tan": 10.8,
-              "fuku_min": 2,
-              "fuku_max": 4.1
-            }
-          },
-          "10": {
-            "1": {
-              "tan": 9.3,
-              "fuku_min": 1.7,
-              "fuku_max": 2.8
-            },
-            "2": {
-              "tan": 3.6,
-              "fuku_min": 1.3,
-              "fuku_max": 1.8
-            },
-            "3": {
-              "tan": 117.6,
-              "fuku_min": 10.8,
-              "fuku_max": 19.4
-            },
-            "4": {
-              "tan": 66.9,
-              "fuku_min": 15.8,
-              "fuku_max": 28.5
-            },
-            "5": {
-              "tan": 3.2,
-              "fuku_min": 1.1,
-              "fuku_max": 1.5
-            },
-            "6": {
-              "tan": 20.8,
-              "fuku_min": 2.2,
-              "fuku_max": 3.7
-            },
-            "7": {
-              "tan": 6.1,
-              "fuku_min": 1.5,
-              "fuku_max": 2.4
-            },
-            "8": {
-              "tan": 20.1,
-              "fuku_min": 4.3,
-              "fuku_max": 7.6
-            },
-            "9": {
-              "tan": 6.5,
-              "fuku_min": 2.7,
-              "fuku_max": 4.6
-            },
-            "10": {
-              "tan": 22.3,
-              "fuku_min": 5.6,
-              "fuku_max": 9.9
-            },
-            "11": {
-              "tan": 69.2,
-              "fuku_min": 9.7,
-              "fuku_max": 17.3
-            },
-            "12": {
-              "tan": 14.5,
-              "fuku_min": 4.5,
-              "fuku_max": 7.8
-            }
-          },
-          "11": {
-            "1": {
-              "tan": 20,
-              "fuku_min": 2.4,
-              "fuku_max": 5.3
-            },
-            "2": {
-              "tan": 18.3,
-              "fuku_min": 2.3,
-              "fuku_max": 5.1
-            },
-            "3": {
-              "tan": 39.9,
-              "fuku_min": 7,
-              "fuku_max": 16.8
-            },
-            "4": {
-              "tan": 20.4,
-              "fuku_min": 3.6,
-              "fuku_max": 8.3
-            },
-            "5": {
-              "tan": 109.3,
-              "fuku_min": 7.8,
-              "fuku_max": 18.7
-            },
-            "6": {
-              "tan": 7.4,
-              "fuku_min": 2.2,
-              "fuku_max": 4.8
-            },
-            "7": {
-              "tan": 2.4,
-              "fuku_min": 1,
-              "fuku_max": 1.4
-            },
-            "8": {
-              "tan": 2.8,
-              "fuku_min": 1,
-              "fuku_max": 1.3
-            },
-            "9": {
-              "tan": 56.2,
-              "fuku_min": 2.7,
-              "fuku_max": 6.1
-            },
-            "10": {
-              "tan": 261,
-              "fuku_min": 21.6,
-              "fuku_max": 52.7
-            },
-            "11": {
-              "tan": 8.2,
-              "fuku_min": 1.9,
-              "fuku_max": 3.9
-            },
-            "12": {
-              "tan": 41.6,
-              "fuku_min": 4,
-              "fuku_max": 9.2
-            }
-          },
-          "12": {
-            "1": {
-              "tan": 105.7,
-              "fuku_min": 4.5,
-              "fuku_max": 7.3
-            },
-            "2": {
-              "tan": 17,
-              "fuku_min": 3.1,
-              "fuku_max": 4.9
-            },
-            "3": {
-              "tan": 27.4,
-              "fuku_min": 5.5,
-              "fuku_max": 8.9
-            },
-            "4": {
-              "tan": 5.2,
-              "fuku_min": 2.1,
-              "fuku_max": 3.2
-            },
-            "5": {
-              "tan": 43.3,
-              "fuku_min": 6.4,
-              "fuku_max": 10.3
-            },
-            "6": {
-              "tan": 21.4,
-              "fuku_min": 3.5,
-              "fuku_max": 5.5
-            },
-            "7": {
-              "tan": 3.5,
-              "fuku_min": 1.5,
-              "fuku_max": 2
-            },
-            "8": {
-              "tan": 98,
-              "fuku_min": 11.5,
-              "fuku_max": 18.6
-            },
-            "9": {
-              "tan": 14.4,
-              "fuku_min": 2.2,
-              "fuku_max": 3.4
-            },
-            "10": {
-              "tan": 11.1,
-              "fuku_min": 2.3,
-              "fuku_max": 3.5
-            },
-            "11": {
-              "tan": 8.4,
-              "fuku_min": 2.2,
-              "fuku_max": 3.4
-            },
-            "12": {
-              "tan": 3.1,
-              "fuku_min": 1.2,
-              "fuku_max": 1.5
-            }
-          }
-        },
         "04": {
           "1": {
             "1": {
@@ -39515,6 +39515,3197 @@
         }
       },
       "odds_updated": "2026-07-15T20:43:11.178672+09:00"
+    },
+    "2026-07-16": {
+      "races": [
+        {
+          "raceName": "7/16 門別 1R",
+          "raceClass": "2歳 未勝利",
+          "startTime": "14:45",
+          "venue": "門別",
+          "raceNum": "1R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 3,
+              "pct": 51.7,
+              "name": "フェリンヴァラー"
+            },
+            {
+              "rank": 2,
+              "num": 7,
+              "pct": 50.8,
+              "name": "コンチワッチ"
+            },
+            {
+              "rank": 3,
+              "num": 12,
+              "pct": 43.3,
+              "name": "ルナベレッツァ"
+            },
+            {
+              "rank": 4,
+              "num": 8,
+              "pct": 41.4,
+              "name": "ドリームパッション"
+            },
+            {
+              "rank": 5,
+              "num": 5,
+              "pct": 37.1,
+              "name": "ライトビーンズ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 28.2,
+              "name": "リュウノソイジャー"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 23.4,
+              "name": "リコーツェッペリン"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 7.5,
+              "name": "アンクルチャーリー"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 7.3,
+              "name": "マナラニアケア"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 5.5,
+              "name": "ハッピーアフリート"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 2.2,
+              "name": "ジャスパーロマン"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 1.8,
+              "name": "イグレックリヤン"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 2R",
+          "raceClass": "2歳 未勝利",
+          "startTime": "15:15",
+          "venue": "門別",
+          "raceNum": "2R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 71.1,
+              "name": "ナーランガ"
+            },
+            {
+              "rank": 2,
+              "num": 3,
+              "pct": 70.7,
+              "name": "リガンド"
+            },
+            {
+              "rank": 3,
+              "num": 9,
+              "pct": 35,
+              "name": "クリシュナラブリー"
+            },
+            {
+              "rank": 4,
+              "num": 5,
+              "pct": 32.2,
+              "name": "リヴァールミナス"
+            },
+            {
+              "rank": 5,
+              "num": 6,
+              "pct": 26.7,
+              "name": "エカヒリオ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 26.2,
+              "name": "トシデンセツ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 17.9,
+              "name": "リュウノゴウワン"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 7.1,
+              "name": "バンシイハーピー"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 5.8,
+              "name": "ケイキカーネ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 4.4,
+              "name": "カルリトス"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 1.7,
+              "name": "レラノア"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 3R",
+          "raceClass": "JRA認定競走アタックチャレンジ競走(2歳)",
+          "startTime": "15:50",
+          "venue": "門別",
+          "raceNum": "3R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 4,
+              "pct": 71.5,
+              "name": "ティンバリートス"
+            },
+            {
+              "rank": 2,
+              "num": 2,
+              "pct": 53.4,
+              "name": "シャディアラ"
+            },
+            {
+              "rank": 3,
+              "num": 5,
+              "pct": 35.5,
+              "name": "ライヴユアドリーム"
+            },
+            {
+              "rank": 4,
+              "num": 6,
+              "pct": 30.2,
+              "name": "カストール"
+            },
+            {
+              "rank": 5,
+              "num": 9,
+              "pct": 28.9,
+              "name": "クラウンアウォーズ"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 28.1,
+              "name": "スターリーローラー"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 24.9,
+              "name": "リュウノマッスル"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 17.5,
+              "name": "ディアスプリンター"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 6.8,
+              "name": "ベストメッセージ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 4R",
+          "raceClass": "3歳以上 C4ー2",
+          "startTime": "16:25",
+          "venue": "門別",
+          "raceNum": "4R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 9,
+              "pct": 81.4,
+              "name": "スティールアンバー"
+            },
+            {
+              "rank": 2,
+              "num": 7,
+              "pct": 64.2,
+              "name": "オオイシアジサイ"
+            },
+            {
+              "rank": 3,
+              "num": 3,
+              "pct": 57.8,
+              "name": "ポートエレン"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 21.7,
+              "name": "アミラジオネ"
+            },
+            {
+              "rank": 5,
+              "num": 2,
+              "pct": 17.7,
+              "name": "プチビーンズ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 14.1,
+              "name": "オカノティアラ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 13.7,
+              "name": "サンヨウコイノボリ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 9,
+              "name": "スイレンチャン"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 7.3,
+              "name": "ゴールデンアイル"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 6.3,
+              "name": "ルックスライクパツ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 3.9,
+              "name": "スズオリーブ"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 0.3,
+              "name": "エイシンキャノピー"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 5R",
+          "raceClass": "JRA認定競走フレッシュチャレンジ競走(2歳)",
+          "startTime": "16:55",
+          "venue": "門別",
+          "raceNum": "5R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 6,
+              "pct": 19.6,
+              "name": "(競走データなし)フレンドリーグリン"
+            },
+            {
+              "rank": 2,
+              "num": 5,
+              "pct": 19.3,
+              "name": "(競走データなし)ドミネイト"
+            },
+            {
+              "rank": 3,
+              "num": 7,
+              "pct": 19,
+              "name": "(競走データなし)カズドリーム"
+            },
+            {
+              "rank": 4,
+              "num": 8,
+              "pct": 19,
+              "name": "(競走データなし)アドミレリッチー"
+            },
+            {
+              "rank": 5,
+              "num": 9,
+              "pct": 19,
+              "name": "(競走データなし)パーフェクトナイト"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 18.9,
+              "name": "(競走データなし)サザンマキシム"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 18.7,
+              "name": "(競走データなし)ミサオ"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 18.5,
+              "name": "(競走データなし)ハンドクラップ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 18,
+              "name": "(競走データなし)エレシュトゥ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 6R",
+          "raceClass": "JRA認定競走フレッシュチャレンジ競走(2歳)",
+          "startTime": "17:30",
+          "venue": "門別",
+          "raceNum": "6R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 6,
+              "pct": 24.3,
+              "name": "(競走データなし)ポコアポコ"
+            },
+            {
+              "rank": 2,
+              "num": 7,
+              "pct": 24.3,
+              "name": "(競走データなし)トラブルメーカー"
+            },
+            {
+              "rank": 3,
+              "num": 8,
+              "pct": 24.3,
+              "name": "(競走データなし)サスラオウ"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 23.9,
+              "name": "(競走データなし)アクタール"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 23.7,
+              "name": "(競走データなし)リコーリベレーター"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 23.2,
+              "name": "(競走データなし)ドルファティーガ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 22.7,
+              "name": "(競走データなし)ステラマームード"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 22.4,
+              "name": "(競走データなし)ブラビット"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 7R",
+          "raceClass": "3歳以上 C4ー2",
+          "startTime": "18:05",
+          "venue": "門別",
+          "raceNum": "7R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 5,
+              "pct": 71,
+              "name": "マルティネーテ"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 58.6,
+              "name": "カセノフォルス"
+            },
+            {
+              "rank": 3,
+              "num": 3,
+              "pct": 55.2,
+              "name": "カネショウラッシュ"
+            },
+            {
+              "rank": 4,
+              "num": 7,
+              "pct": 46.1,
+              "name": "ダイヤノゴトク"
+            },
+            {
+              "rank": 5,
+              "num": 1,
+              "pct": 21.8,
+              "name": "レヴァンターセ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 15.9,
+              "name": "キョウエイフレアー"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 5.6,
+              "name": "フックセンチョウ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 8R",
+          "raceClass": "3歳以上 C3ー2 C4ー1",
+          "startTime": "18:35",
+          "venue": "門別",
+          "raceNum": "8R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 2,
+              "pct": 86.1,
+              "name": "ガイストゼーゲン"
+            },
+            {
+              "rank": 2,
+              "num": 5,
+              "pct": 71.2,
+              "name": "キタサンモンドー"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 67.2,
+              "name": "サンゼントカガヤク"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 45.1,
+              "name": "ウフフトルンナ"
+            },
+            {
+              "rank": 5,
+              "num": 7,
+              "pct": 8.7,
+              "name": "オールスパイス"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 2.8,
+              "name": "マリノシュライエン"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 2.7,
+              "name": "ユーライナー"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 9R",
+          "raceClass": "3歳以上 C3ー2 C4ー1",
+          "startTime": "19:10",
+          "venue": "門別",
+          "raceNum": "9R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 1,
+              "pct": 93.9,
+              "name": "コウユーダイダイ"
+            },
+            {
+              "rank": 2,
+              "num": 5,
+              "pct": 53.2,
+              "name": "ピエールテネシー"
+            },
+            {
+              "rank": 3,
+              "num": 4,
+              "pct": 51,
+              "name": "アサガオ"
+            },
+            {
+              "rank": 4,
+              "num": 6,
+              "pct": 44.4,
+              "name": "エリオットゲーム"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 9.7,
+              "name": "エスカルチャ"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 8.2,
+              "name": "アンエクスプロード"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 4.6,
+              "name": "ゼファーバローズ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 10R",
+          "raceClass": "グランシャリオドリーム34(C3)",
+          "startTime": "19:40",
+          "venue": "門別",
+          "raceNum": "10R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 9,
+              "pct": 82.9,
+              "name": "カネトシエテルノ"
+            },
+            {
+              "rank": 2,
+              "num": 10,
+              "pct": 66.9,
+              "name": "ビービーエリス"
+            },
+            {
+              "rank": 3,
+              "num": 11,
+              "pct": 55.5,
+              "name": "ヤマニンエラマ"
+            },
+            {
+              "rank": 4,
+              "num": 5,
+              "pct": 54.7,
+              "name": "レーザーベルン"
+            },
+            {
+              "rank": 5,
+              "num": 7,
+              "pct": 19.3,
+              "name": "グレイトエイト"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 13.9,
+              "name": "マジックライン"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 11.9,
+              "name": "ドクターストップ"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 8.6,
+              "name": "ユニコーンホエール"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 6.1,
+              "name": "カムイノウタゲ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 4.9,
+              "name": "マリノロマンス"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 3.9,
+              "name": "レッドコート"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 1,
+              "name": "ブッシュドノエル"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 11R",
+          "raceClass": "新冠町軽種馬生産振興会1特別(A1)",
+          "startTime": "20:15",
+          "venue": "門別",
+          "raceNum": "11R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 2,
+              "pct": 79.1,
+              "name": "ワンダーウーマン"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 77.5,
+              "name": "ラッキーホープ"
+            },
+            {
+              "rank": 3,
+              "num": 5,
+              "pct": 54.6,
+              "name": "モノノフブラック"
+            },
+            {
+              "rank": 4,
+              "num": 3,
+              "pct": 52.8,
+              "name": "ドウドウキリシマ"
+            },
+            {
+              "rank": 5,
+              "num": 4,
+              "pct": 44,
+              "name": "ピンクヴェノム"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 19.6,
+              "name": "オメガレインボー"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 2.2,
+              "name": "キタノインディ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 門別 12R",
+          "raceClass": "ノースクイーンカップ〔H2〕(ワールドプ重賞",
+          "startTime": "20:50",
+          "venue": "門別",
+          "raceNum": "12R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 4,
+              "pct": 65.4,
+              "name": "ゼロアワー"
+            },
+            {
+              "rank": 2,
+              "num": 3,
+              "pct": 65.1,
+              "name": "ラブラブパイロ"
+            },
+            {
+              "rank": 3,
+              "num": 7,
+              "pct": 49.1,
+              "name": "バレンタインケーキ"
+            },
+            {
+              "rank": 4,
+              "num": 2,
+              "pct": 40.8,
+              "name": "イージーオンミー"
+            },
+            {
+              "rank": 5,
+              "num": 9,
+              "pct": 39.4,
+              "name": "チャチャハツゴウ"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 22.5,
+              "name": "カツノトキメキ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 20.5,
+              "name": "ニジコ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 13.7,
+              "name": "シルバーミラージュ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 13.5,
+              "name": "スターオブフェザー"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 1R",
+          "raceClass": "ランチタイム(C3)",
+          "startTime": "13:30",
+          "venue": "浦和",
+          "raceNum": "1R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 8,
+              "pct": 46.6,
+              "name": "ハヌマーンビーチ"
+            },
+            {
+              "rank": 2,
+              "num": 3,
+              "pct": 45.8,
+              "name": "テットドール"
+            },
+            {
+              "rank": 3,
+              "num": 2,
+              "pct": 43.5,
+              "name": "ルラクソント"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 43.2,
+              "name": "タイムレスブルーム"
+            },
+            {
+              "rank": 5,
+              "num": 7,
+              "pct": 31,
+              "name": "カリプソ"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 23,
+              "name": "ノワスティエ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 13.4,
+              "name": "アルファウィンザー"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 10,
+              "name": "ピノヌイ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 8.7,
+              "name": "プリンセスパリー"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 2R",
+          "raceClass": "3歳六",
+          "startTime": "14:00",
+          "venue": "浦和",
+          "raceNum": "2R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 8,
+              "pct": 57.9,
+              "name": "キサラフラッシュ"
+            },
+            {
+              "rank": 2,
+              "num": 1,
+              "pct": 43.5,
+              "name": "ジーティーグレース"
+            },
+            {
+              "rank": 3,
+              "num": 2,
+              "pct": 31.8,
+              "name": "ヒーローズ"
+            },
+            {
+              "rank": 4,
+              "num": 11,
+              "pct": 29.1,
+              "name": "ヤギリパール"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 24.2,
+              "name": "キングハービン"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 16.4,
+              "name": "エムティライカ"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 16.4,
+              "name": "キンパツビジン"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 14.1,
+              "name": "シシリアンマインド"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 8.7,
+              "name": "ルミナスストーン"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 8.5,
+              "name": "エムワンワークス"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 6.9,
+              "name": "トゥンカロン"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 3R",
+          "raceClass": "2歳二",
+          "startTime": "14:30",
+          "venue": "浦和",
+          "raceNum": "3R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 62.2,
+              "name": "ビナドリーム"
+            },
+            {
+              "rank": 2,
+              "num": 2,
+              "pct": 60.3,
+              "name": "ユウユウコクトバ"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 51.5,
+              "name": "ユウユウキュラソー"
+            },
+            {
+              "rank": 4,
+              "num": 5,
+              "pct": 29.7,
+              "name": "ユウユウヒレシュ"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 23.6,
+              "name": "オサケノオトモニ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 21.5,
+              "name": "ダイバマアヤ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 11.3,
+              "name": "ユウユウウタゲ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 4R",
+          "raceClass": "C3四五",
+          "startTime": "15:00",
+          "venue": "浦和",
+          "raceNum": "4R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 10,
+              "pct": 52.7,
+              "name": "ロベルタインパクト"
+            },
+            {
+              "rank": 2,
+              "num": 3,
+              "pct": 36.4,
+              "name": "レバット"
+            },
+            {
+              "rank": 3,
+              "num": 4,
+              "pct": 35.3,
+              "name": "ファンタフェスタ"
+            },
+            {
+              "rank": 4,
+              "num": 8,
+              "pct": 31.6,
+              "name": "イチゴホイップ"
+            },
+            {
+              "rank": 5,
+              "num": 9,
+              "pct": 30.7,
+              "name": "スペルガッサン"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 30.1,
+              "name": "エーアイキリシマ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 26.5,
+              "name": "ピノモラーン"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 13.6,
+              "name": "コビナイフォンテン"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 10.9,
+              "name": "セイダンシング"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 7.8,
+              "name": "ナイトダンサー"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 7.6,
+              "name": "セイウンコチョウ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 3.1,
+              "name": "ルナティックアイ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 5R",
+          "raceClass": "特選(C2)",
+          "startTime": "15:30",
+          "venue": "浦和",
+          "raceNum": "5R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 1,
+              "pct": 83.6,
+              "name": "クウレイナニ"
+            },
+            {
+              "rank": 2,
+              "num": 4,
+              "pct": 67.6,
+              "name": "ライヴラジアン"
+            },
+            {
+              "rank": 3,
+              "num": 11,
+              "pct": 32.7,
+              "name": "サンタアナウインド"
+            },
+            {
+              "rank": 4,
+              "num": 2,
+              "pct": 28.3,
+              "name": "アンジェマリーナ"
+            },
+            {
+              "rank": 5,
+              "num": 8,
+              "pct": 18.9,
+              "name": "アヤサンメルシー"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 10.4,
+              "name": "グッドインディード"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 8.8,
+              "name": "ユウユウロザリウム"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 6.8,
+              "name": "セイウンスイート"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 5.7,
+              "name": "チェスナットドレス"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 5.5,
+              "name": "クイーンマートル"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 2.9,
+              "name": "インマイブラッド"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 6R",
+          "raceClass": "C2六",
+          "startTime": "16:00",
+          "venue": "浦和",
+          "raceNum": "6R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 10,
+              "pct": 58.1,
+              "name": "フェアーメロディ"
+            },
+            {
+              "rank": 2,
+              "num": 7,
+              "pct": 53.2,
+              "name": "アストラルフレア"
+            },
+            {
+              "rank": 3,
+              "num": 11,
+              "pct": 33.1,
+              "name": "フェリスラリー"
+            },
+            {
+              "rank": 4,
+              "num": 8,
+              "pct": 31.7,
+              "name": "コットンフラワー"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 30.2,
+              "name": "アンジュマロン"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 30,
+              "name": "テリオスボス"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 25.1,
+              "name": "ニシノリピート"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 20.8,
+              "name": "セキテイジュウオー"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 6.6,
+              "name": "エムリエール"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 6.3,
+              "name": "オリエンタルマック"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 4.2,
+              "name": "イーオレイ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 3.1,
+              "name": "ニシノウール"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 7R",
+          "raceClass": "特選(C3)",
+          "startTime": "16:35",
+          "venue": "浦和",
+          "raceNum": "7R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 9,
+              "pct": 67.4,
+              "name": "ルミナヴィクター"
+            },
+            {
+              "rank": 2,
+              "num": 3,
+              "pct": 57,
+              "name": "ミノリチャン"
+            },
+            {
+              "rank": 3,
+              "num": 4,
+              "pct": 53.8,
+              "name": "ジャストザヴァルス"
+            },
+            {
+              "rank": 4,
+              "num": 8,
+              "pct": 45.7,
+              "name": "エコロルキナ"
+            },
+            {
+              "rank": 5,
+              "num": 10,
+              "pct": 44,
+              "name": "スプリングネージュ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 31.4,
+              "name": "アンビータブルニコ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 19.7,
+              "name": "パルメニデス"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 14.9,
+              "name": "ステンノー"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 10.5,
+              "name": "マーニク"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 9.4,
+              "name": "タマモコンペイトウ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 2.6,
+              "name": "シェナハート"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 2,
+              "name": "シェナカレン"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 8R",
+          "raceClass": "FM NACK5 FAV FOUR賞(C1C2)",
+          "startTime": "17:10",
+          "venue": "浦和",
+          "raceNum": "8R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 5,
+              "pct": 64.8,
+              "name": "ブラックエンパイア"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 44.8,
+              "name": "ミヅルーラー"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 43.8,
+              "name": "ビナラオカイ"
+            },
+            {
+              "rank": 4,
+              "num": 9,
+              "pct": 38.6,
+              "name": "セファイドループ"
+            },
+            {
+              "rank": 5,
+              "num": 2,
+              "pct": 20.5,
+              "name": "コウユーミューミュ"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 20,
+              "name": "タイトルコール"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 16.6,
+              "name": "クラパッション"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 12.4,
+              "name": "ハワイアンジュエル"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 5.1,
+              "name": "ニシノニューリーフ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 9R",
+          "raceClass": "ツインベスト特別(3歳)",
+          "startTime": "17:45",
+          "venue": "浦和",
+          "raceNum": "9R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 57.1,
+              "name": "ドリームファイター"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 46.5,
+              "name": "アルコア"
+            },
+            {
+              "rank": 3,
+              "num": 2,
+              "pct": 43,
+              "name": "ルージュソムニウム"
+            },
+            {
+              "rank": 4,
+              "num": 9,
+              "pct": 38.2,
+              "name": "チェストー"
+            },
+            {
+              "rank": 5,
+              "num": 12,
+              "pct": 23.3,
+              "name": "レオスキーム"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 17,
+              "name": "トゥモローズウェイ"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 15.6,
+              "name": "ビップルーク"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 14.9,
+              "name": "ダイユウサルターレ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 9.8,
+              "name": "マッドスピード"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 6.2,
+              "name": "オーデンサフィー"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 6.1,
+              "name": "ラジスタンロイヤル"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 2.1,
+              "name": "コスモゼーリエ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 10R",
+          "raceClass": "ルビー特別(C1)",
+          "startTime": "18:20",
+          "venue": "浦和",
+          "raceNum": "10R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 82,
+              "name": "クインズステラ"
+            },
+            {
+              "rank": 2,
+              "num": 9,
+              "pct": 53.1,
+              "name": "ノヴァヴィア"
+            },
+            {
+              "rank": 3,
+              "num": 3,
+              "pct": 43.2,
+              "name": "サンスレッド"
+            },
+            {
+              "rank": 4,
+              "num": 5,
+              "pct": 42.9,
+              "name": "マスクドサムライ"
+            },
+            {
+              "rank": 5,
+              "num": 1,
+              "pct": 37.1,
+              "name": "ツガノショウグン"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 32,
+              "name": "エレガントジュエリ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 24.2,
+              "name": "アイスキング"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 23.6,
+              "name": "アマノハバキリ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 7.5,
+              "name": "コスタデラルス"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 11R",
+          "raceClass": "七夕月特別(B2B3)",
+          "startTime": "18:55",
+          "venue": "浦和",
+          "raceNum": "11R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 69,
+              "name": "フォーティチュード"
+            },
+            {
+              "rank": 2,
+              "num": 2,
+              "pct": 46.2,
+              "name": "ダイメイタマナ"
+            },
+            {
+              "rank": 3,
+              "num": 12,
+              "pct": 42.1,
+              "name": "サンダビューク"
+            },
+            {
+              "rank": 4,
+              "num": 5,
+              "pct": 35.8,
+              "name": "ボディコンシャス"
+            },
+            {
+              "rank": 5,
+              "num": 4,
+              "pct": 35.1,
+              "name": "ルールメイプル"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 25.2,
+              "name": "スーパーマン"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 21.5,
+              "name": "シェナウエーブ"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 12.3,
+              "name": "アイグレース"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 8.4,
+              "name": "ユウノワンワン"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 8.3,
+              "name": "デュアルロンド"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 7.3,
+              "name": "クリーゲリン"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 1.2,
+              "name": "セイウンハルカニ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 浦和 12R",
+          "raceClass": "夏帽子特別(C2)",
+          "startTime": "19:30",
+          "venue": "浦和",
+          "raceNum": "12R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 74.1,
+              "name": "メイショウフソウ"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 42.7,
+              "name": "ベルルート"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 36.6,
+              "name": "ルージュメアート"
+            },
+            {
+              "rank": 4,
+              "num": 2,
+              "pct": 35.6,
+              "name": "ミライヘホウショウ"
+            },
+            {
+              "rank": 5,
+              "num": 11,
+              "pct": 27.8,
+              "name": "ユイノパチョレック"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 25.9,
+              "name": "ユウオウマイシン"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 25.6,
+              "name": "ロットゥーラ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 17.9,
+              "name": "シングアウト"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 13.7,
+              "name": "ビーチガール"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 9.5,
+              "name": "シェナクラウン"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 3.4,
+              "name": "ニシノシャイニング"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 1.9,
+              "name": "メイショウサノサ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 1R",
+          "raceClass": "C3二",
+          "startTime": "10:40",
+          "venue": "園田",
+          "raceNum": "1R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 1,
+              "pct": 85,
+              "name": "サクラヴィグール"
+            },
+            {
+              "rank": 2,
+              "num": 7,
+              "pct": 76.5,
+              "name": "グランロゼ"
+            },
+            {
+              "rank": 3,
+              "num": 8,
+              "pct": 47.3,
+              "name": "カコウガン"
+            },
+            {
+              "rank": 4,
+              "num": 2,
+              "pct": 42,
+              "name": "メイショウロンド"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 21.3,
+              "name": "ララアンセストラル"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 16.7,
+              "name": "スナークユウマ"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 15.4,
+              "name": "リザンテラ"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 6.3,
+              "name": "ドナルドポーカー"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 5.8,
+              "name": "クリスバーグ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 2.3,
+              "name": "タイキクロニクル"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 2R",
+          "raceClass": "C3一",
+          "startTime": "11:10",
+          "venue": "園田",
+          "raceNum": "2R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 79.2,
+              "name": "ワレラホシノコ"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 77.5,
+              "name": "シビックシャルル"
+            },
+            {
+              "rank": 3,
+              "num": 8,
+              "pct": 56.7,
+              "name": "スカイアクセル"
+            },
+            {
+              "rank": 4,
+              "num": 2,
+              "pct": 38,
+              "name": "ハイレジリエンス"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 26.2,
+              "name": "サクラトップセラー"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 12.4,
+              "name": "ハルサメ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 10.2,
+              "name": "ミストレビノ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 9.1,
+              "name": "スーパークール"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 4.9,
+              "name": "フェスティーヴォ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 2.3,
+              "name": "リンガスウォリアー"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 3R",
+          "raceClass": "NewBeginning 2歳初出走",
+          "startTime": "11:40",
+          "venue": "園田",
+          "raceNum": "3R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 2,
+              "pct": 65.5,
+              "name": "(競走データなし)クイーンピロコ"
+            },
+            {
+              "rank": 2,
+              "num": 3,
+              "pct": 65.3,
+              "name": "(競走データなし)クールスカイ"
+            },
+            {
+              "rank": 3,
+              "num": 4,
+              "pct": 65,
+              "name": "(競走データなし)マイクロフォン"
+            },
+            {
+              "rank": 4,
+              "num": 1,
+              "pct": 64.9,
+              "name": "(競走データなし)プリンセスロード"
+            },
+            {
+              "rank": 5,
+              "num": 5,
+              "pct": 64.8,
+              "name": "(競走データなし)ポワソンドール"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 4R",
+          "raceClass": "春哉7ハロンC2三",
+          "startTime": "12:10",
+          "venue": "園田",
+          "raceNum": "4R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 9,
+              "pct": 69.8,
+              "name": "レベッカレインボー"
+            },
+            {
+              "rank": 2,
+              "num": 2,
+              "pct": 52.7,
+              "name": "モルツシャン"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 45.5,
+              "name": "シャンクスレガシー"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 40,
+              "name": "サンリナリア"
+            },
+            {
+              "rank": 5,
+              "num": 8,
+              "pct": 36.9,
+              "name": "ラスアルハイマ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 24.1,
+              "name": "エイシンジコクテン"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 17.9,
+              "name": "イエローキャブ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 16.7,
+              "name": "メイショウサザナミ"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 10.7,
+              "name": "フルリール"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 2.7,
+              "name": "メイショウヨウホウ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 5R",
+          "raceClass": "海内スプリントC3",
+          "startTime": "12:40",
+          "venue": "園田",
+          "raceNum": "5R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 4,
+              "pct": 59.5,
+              "name": "ゴールデンスキーム"
+            },
+            {
+              "rank": 2,
+              "num": 10,
+              "pct": 48.2,
+              "name": "コインアフレーズ"
+            },
+            {
+              "rank": 3,
+              "num": 7,
+              "pct": 46.7,
+              "name": "モウショウ"
+            },
+            {
+              "rank": 4,
+              "num": 6,
+              "pct": 26.2,
+              "name": "クリノコウテイ"
+            },
+            {
+              "rank": 5,
+              "num": 5,
+              "pct": 24.5,
+              "name": "ジーティーパール"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 22.9,
+              "name": "グルーヴグルーヴ"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 16.7,
+              "name": "ヨシノマロンチャン"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 13.2,
+              "name": "イセベイ"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 6.5,
+              "name": "ヘルミオーネ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 6.1,
+              "name": "ニシノオールマイト"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 2,
+              "name": "チョウモーレツ"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 1.4,
+              "name": "キタノハヤブサ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 6R",
+          "raceClass": "C2二",
+          "startTime": "13:10",
+          "venue": "園田",
+          "raceNum": "6R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 8,
+              "pct": 63,
+              "name": "タマゴ"
+            },
+            {
+              "rank": 2,
+              "num": 4,
+              "pct": 48.9,
+              "name": "ミライチケット"
+            },
+            {
+              "rank": 3,
+              "num": 10,
+              "pct": 37.1,
+              "name": "スターオブアダム"
+            },
+            {
+              "rank": 4,
+              "num": 9,
+              "pct": 23,
+              "name": "アグネスサンキ"
+            },
+            {
+              "rank": 5,
+              "num": 5,
+              "pct": 19.6,
+              "name": "メイショウシブキ"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 19.3,
+              "name": "サカキ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 14,
+              "name": "クルシファー"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 10.8,
+              "name": "マエストロライト"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 9.8,
+              "name": "マジェンカ"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 8.8,
+              "name": "エザルターレ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 7R",
+          "raceClass": "C2一",
+          "startTime": "13:40",
+          "venue": "園田",
+          "raceNum": "7R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 1,
+              "pct": 76,
+              "name": "ミヤグリフォン"
+            },
+            {
+              "rank": 2,
+              "num": 10,
+              "pct": 58.1,
+              "name": "ホウオウサムレット"
+            },
+            {
+              "rank": 3,
+              "num": 2,
+              "pct": 57.4,
+              "name": "リケアマキアート"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 41.9,
+              "name": "チェリータイム"
+            },
+            {
+              "rank": 5,
+              "num": 5,
+              "pct": 18.9,
+              "name": "マットーネロッソ"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 16.5,
+              "name": "ブラッドショー"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 7.5,
+              "name": "イデアールマッチ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 7.1,
+              "name": "ナリタセレーノ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 5.8,
+              "name": "トーラスキング"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 8R",
+          "raceClass": "A1A2",
+          "startTime": "14:10",
+          "venue": "園田",
+          "raceNum": "8R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 1,
+              "pct": 74.4,
+              "name": "シンリミテス"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 48.7,
+              "name": "アースイオス"
+            },
+            {
+              "rank": 3,
+              "num": 2,
+              "pct": 43.7,
+              "name": "スマラグドス"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 34.2,
+              "name": "オズモポリタン"
+            },
+            {
+              "rank": 5,
+              "num": 7,
+              "pct": 28.3,
+              "name": "マダムホーク"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 17.5,
+              "name": "アーマルコライト"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 11.8,
+              "name": "ニホンピロハーバー"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 9R",
+          "raceClass": "C1二",
+          "startTime": "14:45",
+          "venue": "園田",
+          "raceNum": "9R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 1,
+              "pct": 88.6,
+              "name": "ヘルツアス"
+            },
+            {
+              "rank": 2,
+              "num": 9,
+              "pct": 36.3,
+              "name": "ニシノベニトアイト"
+            },
+            {
+              "rank": 3,
+              "num": 10,
+              "pct": 29.2,
+              "name": "エルグランゴラッソ"
+            },
+            {
+              "rank": 4,
+              "num": 7,
+              "pct": 28.4,
+              "name": "カネミツエース"
+            },
+            {
+              "rank": 5,
+              "num": 4,
+              "pct": 22.4,
+              "name": "イスラアズール"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 22.4,
+              "name": "ミキヨウッドテール"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 11,
+              "name": "ハングタイム"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 10.5,
+              "name": "スターアイセーラ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 5.2,
+              "name": "グラスフラッグ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 3.8,
+              "name": "ウルティモ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 10R",
+          "raceClass": "C1一",
+          "startTime": "15:20",
+          "venue": "園田",
+          "raceNum": "10R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 2,
+              "pct": 91.5,
+              "name": "カワキタホクレア"
+            },
+            {
+              "rank": 2,
+              "num": 3,
+              "pct": 73.6,
+              "name": "アンノドミニ"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 36.6,
+              "name": "スナークドリアン"
+            },
+            {
+              "rank": 4,
+              "num": 10,
+              "pct": 35,
+              "name": "リボンピーチ"
+            },
+            {
+              "rank": 5,
+              "num": 4,
+              "pct": 31.2,
+              "name": "クイッククイーン"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 17.5,
+              "name": "チャンチャン"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 17.4,
+              "name": "ムーンガーデン"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 4.6,
+              "name": "ブルーデイジー"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 3.8,
+              "name": "スピリトーゾ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 1,
+              "name": "トップリーチ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 11R",
+          "raceClass": "しまね和牛特別A1",
+          "startTime": "15:55",
+          "venue": "園田",
+          "raceNum": "11R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 5,
+              "pct": 72.8,
+              "name": "タガノエスコート"
+            },
+            {
+              "rank": 2,
+              "num": 6,
+              "pct": 65.9,
+              "name": "オケマル"
+            },
+            {
+              "rank": 3,
+              "num": 4,
+              "pct": 61,
+              "name": "インベルシオン"
+            },
+            {
+              "rank": 4,
+              "num": 2,
+              "pct": 32.2,
+              "name": "テーオーターナー"
+            },
+            {
+              "rank": 5,
+              "num": 7,
+              "pct": 15,
+              "name": "タイキフォース"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 13.1,
+              "name": "ハイエストエンド"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 12.3,
+              "name": "スマイルサルファー"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 9.5,
+              "name": "メイショウハクサン"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 5.3,
+              "name": "サンライズホープ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 園田 12R",
+          "raceClass": "B1B2",
+          "startTime": "16:30",
+          "venue": "園田",
+          "raceNum": "12R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 12,
+              "pct": 55.4,
+              "name": "ゴッドアマベル"
+            },
+            {
+              "rank": 2,
+              "num": 5,
+              "pct": 53.3,
+              "name": "ベラドンナリリー"
+            },
+            {
+              "rank": 3,
+              "num": 6,
+              "pct": 39,
+              "name": "バイシュウ"
+            },
+            {
+              "rank": 4,
+              "num": 2,
+              "pct": 26.8,
+              "name": "トリニティノット"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 26.2,
+              "name": "ワキノノーブル"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 24.2,
+              "name": "ミニフィーユ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 21.8,
+              "name": "カンタウッドテール"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 19.7,
+              "name": "シリアスヒッター"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 15.2,
+              "name": "テイラーテソーロ"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 12.3,
+              "name": "ソレア"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 3.8,
+              "name": "ブーヤカ"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 3.5,
+              "name": "アグネスシュウ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 1R",
+          "raceClass": "C2ー6組",
+          "startTime": "15:40",
+          "venue": "佐賀",
+          "raceNum": "1R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 2,
+              "pct": 80.9,
+              "name": "エスプラネード"
+            },
+            {
+              "rank": 2,
+              "num": 8,
+              "pct": 75.6,
+              "name": "グリームスター"
+            },
+            {
+              "rank": 3,
+              "num": 4,
+              "pct": 28.1,
+              "name": "ヴァシーオ"
+            },
+            {
+              "rank": 4,
+              "num": 3,
+              "pct": 26.5,
+              "name": "ミシャベル"
+            },
+            {
+              "rank": 5,
+              "num": 6,
+              "pct": 25.7,
+              "name": "ホイッスルベイト"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 22,
+              "name": "エメラルドシティー"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 17.5,
+              "name": "メイショウトレック"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 5.3,
+              "name": "ツクモナイン"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 5.1,
+              "name": "シシノステラ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 2R",
+          "raceClass": "JRA交流 サマーカップ(3歳)",
+          "startTime": "16:15",
+          "venue": "佐賀",
+          "raceNum": "2R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 8,
+              "pct": 65.3,
+              "name": "ジーティースティア"
+            },
+            {
+              "rank": 2,
+              "num": 1,
+              "pct": 65.2,
+              "name": "レジェルテ"
+            },
+            {
+              "rank": 3,
+              "num": 11,
+              "pct": 58.4,
+              "name": "カセノコンコルド"
+            },
+            {
+              "rank": 4,
+              "num": 7,
+              "pct": 49.3,
+              "name": "サンライズアーサー"
+            },
+            {
+              "rank": 5,
+              "num": 12,
+              "pct": 30.2,
+              "name": "サンロンブル"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 19.7,
+              "name": "キャプテンレガーロ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 18.4,
+              "name": "バンブラボー"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 14.9,
+              "name": "ユイアヴェニール"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 13.5,
+              "name": "シズリ"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 10.6,
+              "name": "テクノストロベリー"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 9.5,
+              "name": "イノセントブレイヴ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 2.8,
+              "name": "ユウヤケコヤケ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 3R",
+          "raceClass": "JRA交流 霧島賞重賞",
+          "startTime": "16:50",
+          "venue": "佐賀",
+          "raceNum": "3R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 12,
+              "pct": 79.3,
+              "name": "ベルウッドウズメ"
+            },
+            {
+              "rank": 2,
+              "num": 9,
+              "pct": 52.8,
+              "name": "ゴーツウキリシマ"
+            },
+            {
+              "rank": 3,
+              "num": 5,
+              "pct": 39.9,
+              "name": "アイタカ"
+            },
+            {
+              "rank": 4,
+              "num": 10,
+              "pct": 37.6,
+              "name": "ケイテンアイジン"
+            },
+            {
+              "rank": 5,
+              "num": 1,
+              "pct": 36.5,
+              "name": "ヒマワリクン"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 23.1,
+              "name": "アンヘリータス"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 13.1,
+              "name": "カラクニダケ"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 12.7,
+              "name": "カシノフレックス"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 10.5,
+              "name": "レーニス"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 10.4,
+              "name": "カシノハンゾウ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 4.9,
+              "name": "カシノルーカス"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 3.3,
+              "name": "アベベ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 4R",
+          "raceClass": "C2ー5組",
+          "startTime": "17:25",
+          "venue": "佐賀",
+          "raceNum": "4R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 1,
+              "pct": 69.2,
+              "name": "ボーズマン"
+            },
+            {
+              "rank": 2,
+              "num": 11,
+              "pct": 68.7,
+              "name": "マイチャージ"
+            },
+            {
+              "rank": 3,
+              "num": 7,
+              "pct": 58.6,
+              "name": "アデリーヌ"
+            },
+            {
+              "rank": 4,
+              "num": 4,
+              "pct": 57.3,
+              "name": "カシノフロイデ"
+            },
+            {
+              "rank": 5,
+              "num": 9,
+              "pct": 30.9,
+              "name": "ウラチャチャ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 27.3,
+              "name": "エムズマン"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 10.4,
+              "name": "オスマン"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 8.4,
+              "name": "ロイヤルキャピタル"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 6.2,
+              "name": "カナデルエア"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 6.2,
+              "name": "アトラーレ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 4.9,
+              "name": "ミラルージュ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 5R",
+          "raceClass": "C2ー4組",
+          "startTime": "17:55",
+          "venue": "佐賀",
+          "raceNum": "5R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 8,
+              "pct": 79.2,
+              "name": "ヘキレキイッセン"
+            },
+            {
+              "rank": 2,
+              "num": 11,
+              "pct": 62.2,
+              "name": "ジュエリーオブラヴ"
+            },
+            {
+              "rank": 3,
+              "num": 10,
+              "pct": 55.3,
+              "name": "アデニウム"
+            },
+            {
+              "rank": 4,
+              "num": 7,
+              "pct": 21.2,
+              "name": "エスケーダンディ"
+            },
+            {
+              "rank": 5,
+              "num": 4,
+              "pct": 16.5,
+              "name": "ピンゾロ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 13.7,
+              "name": "サーマル"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 9.8,
+              "name": "トゥーナアンディ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 9.7,
+              "name": "カオリチャン"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 8.1,
+              "name": "フーレイ"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 6.2,
+              "name": "ラフト"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 3.5,
+              "name": "ティアン"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 6R",
+          "raceClass": "C2ー3組",
+          "startTime": "18:30",
+          "venue": "佐賀",
+          "raceNum": "6R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 2,
+              "pct": 61.3,
+              "name": "ウーバーミッション"
+            },
+            {
+              "rank": 2,
+              "num": 4,
+              "pct": 55.8,
+              "name": "シンゼンマルノスケ"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 44,
+              "name": "ドリフトウッド"
+            },
+            {
+              "rank": 4,
+              "num": 7,
+              "pct": 33.6,
+              "name": "グレイトミッション"
+            },
+            {
+              "rank": 5,
+              "num": 5,
+              "pct": 31.1,
+              "name": "マジョレル"
+            },
+            {
+              "rank": 6,
+              "num": 8,
+              "pct": 28.5,
+              "name": "ジーティーセイント"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 9.5,
+              "name": "メーリッハベイ"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 8.4,
+              "name": "グレナマディー"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 7.6,
+              "name": "リネンフラッシュ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 4.7,
+              "name": "ナンゴクトップガン"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 7R",
+          "raceClass": "ポーチュラカ賞(C1)",
+          "startTime": "19:05",
+          "venue": "佐賀",
+          "raceNum": "7R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 12,
+              "pct": 59.5,
+              "name": "エイシンパルサー"
+            },
+            {
+              "rank": 2,
+              "num": 11,
+              "pct": 36.8,
+              "name": "レジェンダイズ"
+            },
+            {
+              "rank": 3,
+              "num": 8,
+              "pct": 32.1,
+              "name": "エイシンラーラ"
+            },
+            {
+              "rank": 4,
+              "num": 10,
+              "pct": 31.8,
+              "name": "ペイシャアゲイン"
+            },
+            {
+              "rank": 5,
+              "num": 4,
+              "pct": 28.5,
+              "name": "ジオパークピリカ"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 27.5,
+              "name": "ドライカプチーノ"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 20.9,
+              "name": "パンツタイショウ"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 17,
+              "name": "ティプシーワールド"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 15.4,
+              "name": "チェストイケ"
+            },
+            {
+              "rank": 6,
+              "num": 9,
+              "pct": 7.7,
+              "name": "シュリーデービー"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 3.2,
+              "name": "メイショウケンセイ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 1.2,
+              "name": "フォールロワ"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 8R",
+          "raceClass": "KYUSHU DREAM賞(C1)",
+          "startTime": "19:35",
+          "venue": "佐賀",
+          "raceNum": "8R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 7,
+              "pct": 91.2,
+              "name": "カンカール"
+            },
+            {
+              "rank": 2,
+              "num": 8,
+              "pct": 66.4,
+              "name": "ワイドレッド"
+            },
+            {
+              "rank": 3,
+              "num": 4,
+              "pct": 42.8,
+              "name": "ハネガハエテマス"
+            },
+            {
+              "rank": 4,
+              "num": 9,
+              "pct": 30.3,
+              "name": "ナックオリオン"
+            },
+            {
+              "rank": 5,
+              "num": 10,
+              "pct": 28.5,
+              "name": "ヒナノマーチス"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 23.6,
+              "name": "カズヴィトシャ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 18.9,
+              "name": "サヨノフジ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 7.3,
+              "name": "マーシャン"
+            },
+            {
+              "rank": 6,
+              "num": 1,
+              "pct": 7,
+              "name": "クリノマイスター"
+            },
+            {
+              "rank": 6,
+              "num": 11,
+              "pct": 3.6,
+              "name": "フェルカド"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 3.3,
+              "name": "キタカラキタテンシ"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 2.5,
+              "name": "スパーキングブルー"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 9R",
+          "raceClass": "虹の日賞(B)",
+          "startTime": "20:05",
+          "venue": "佐賀",
+          "raceNum": "9R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 2,
+              "pct": 80.2,
+              "name": "フェルサイト"
+            },
+            {
+              "rank": 2,
+              "num": 9,
+              "pct": 69.8,
+              "name": "グレイストーム"
+            },
+            {
+              "rank": 3,
+              "num": 1,
+              "pct": 51.3,
+              "name": "ヴィアトル"
+            },
+            {
+              "rank": 4,
+              "num": 8,
+              "pct": 36.8,
+              "name": "カシノエイサップ"
+            },
+            {
+              "rank": 5,
+              "num": 3,
+              "pct": 34.6,
+              "name": "ミランカ"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 17.5,
+              "name": "パワポケチャンプ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 13.8,
+              "name": "セクシーコマンドー"
+            },
+            {
+              "rank": 6,
+              "num": 5,
+              "pct": 11.3,
+              "name": "ビーチボーイ"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 10,
+              "name": "サザンフィールド"
+            }
+          ]
+        },
+        {
+          "raceName": "7/16 佐賀 10R",
+          "raceClass": "SAGAリベンジャーズ(3歳)",
+          "startTime": "20:40",
+          "venue": "佐賀",
+          "raceNum": "10R",
+          "horses": [
+            {
+              "rank": 1,
+              "num": 9,
+              "pct": 82.7,
+              "name": "イアソンテソーロ"
+            },
+            {
+              "rank": 2,
+              "num": 1,
+              "pct": 59.4,
+              "name": "フランシーヌ"
+            },
+            {
+              "rank": 3,
+              "num": 8,
+              "pct": 46.8,
+              "name": "モラール"
+            },
+            {
+              "rank": 4,
+              "num": 5,
+              "pct": 24.3,
+              "name": "アメアメフレフレ"
+            },
+            {
+              "rank": 5,
+              "num": 11,
+              "pct": 21.6,
+              "name": "リュウノプティ"
+            },
+            {
+              "rank": 6,
+              "num": 6,
+              "pct": 19.7,
+              "name": "コリアンダーアイ"
+            },
+            {
+              "rank": 6,
+              "num": 10,
+              "pct": 14.7,
+              "name": "オッハッピー"
+            },
+            {
+              "rank": 6,
+              "num": 3,
+              "pct": 12.1,
+              "name": "オニタイジ"
+            },
+            {
+              "rank": 6,
+              "num": 12,
+              "pct": 11.4,
+              "name": "ネモフィラノアテナ"
+            },
+            {
+              "rank": 6,
+              "num": 2,
+              "pct": 4.8,
+              "name": "マイントップスター"
+            },
+            {
+              "rank": 6,
+              "num": 4,
+              "pct": 4.7,
+              "name": "ボンスヴニール"
+            },
+            {
+              "rank": 6,
+              "num": 7,
+              "pct": 2.6,
+              "name": "ハイパーアリュール"
+            }
+          ]
+        }
+      ],
+      "updated": "2026-07-16T11:04:18.989+09:00"
     }
   },
   "_settings": {
@@ -39617,9 +42808,9 @@
     "place_bet_ev_max": 160
   },
   "_settings_local": {
-    "sm_winrate_filter": 4,
-    "ev_min": 140,
-    "ev_max": 165,
+    "sm_winrate_filter": 5,
+    "ev_min": 110,
+    "ev_max": 145,
     "odds_min": 8,
     "max_bets": 2,
     "popularity_min_rank": 5,
@@ -39633,17 +42824,17 @@
     "place_kelly_mult": 2,
     "stop_loss_amount": 3000,
     "stop_loss_enabled": true,
-    "exacta_hon1": false,
+    "exacta_hon1": true,
     "exacta_hon2": false,
-    "exacta_hon3": true,
-    "exacta_ana1": false,
-    "exacta_ana2": true,
+    "exacta_hon3": false,
+    "exacta_ana1": true,
+    "exacta_ana2": false,
     "exacta_ana3": false,
     "wide_hon1": false,
     "wide_hon2": false,
     "wide_hon3": true,
     "wide_ana1": false,
-    "wide_ana2": true,
+    "wide_ana2": false,
     "wide_ana3": true,
     "exacta_amount": 100,
     "exacta_top1": false,
@@ -39651,7 +42842,7 @@
     "exacta_rec1": false,
     "exacta_rec2": false,
     "exacta_rec3": true,
-    "exacta_method": "formation",
+    "exacta_method": "hon_ana",
     "exacta_box_n": 4,
     "wide_amount": 200,
     "wide_top1": true,
@@ -39667,15 +42858,16 @@
     "entropy_skip_labels": [
       "激固",
       "固",
-      "稍固"
+      "稍荒"
     ],
-    "odds_max": 25,
+    "odds_max": 30,
     "exacta_tan_n": 5,
     "wide_tan_n": 1,
     "place_bet_independent": true,
-    "place_bet_max_n": 2,
+    "place_bet_max_n": 1,
     "place_bet_ev_max": 140,
-    "place_bet_winrate_filter": 5
+    "place_bet_winrate_filter": 5,
+    "place_bet_ev_min": 120
   },
   "_perf_jra": {
     "updated_at": "2026-07-12",
@@ -39693,16 +42885,16 @@
   },
   "_perf_local": {
     "updated_at": "2026-07-15",
-    "is_roi": 130.8,
-    "oos_roi": 133.9,
-    "oos_bets": 112,
+    "is_roi": 123.5,
+    "oos_roi": 123,
+    "oos_bets": 135,
     "train_days": 30,
     "oos_days": 10,
-    "bets": 368,
-    "profit_days": 15,
+    "bets": 421,
+    "profit_days": 13,
     "total_days": 30,
-    "max_drawdown": 40.9,
-    "sharpe": 2.84,
-    "max_consecutive_loss": 42
+    "max_drawdown": 51.2,
+    "sharpe": 0.62,
+    "max_consecutive_loss": 56
   }
 }
