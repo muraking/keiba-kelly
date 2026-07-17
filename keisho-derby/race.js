@@ -838,32 +838,6 @@ function drawTrack() {
   });
   if(raceClock-visionRankStamp>700){visionOrder.forEach((h,i)=>visionRanks.set(h.id,i+1));visionRankStamp=raceClock}
   ctx.textAlign="center";
-  const leaderForCheer=visionOrder[0];
-  if(leaderForCheer&&state==="running"&&raceDistance(leaderForCheer)/TOTAL>.50){
-    const ratio=raceDistance(leaderForCheer)/TOTAL;
-    const midCalls=["いいぞー！","前を追え！","落ち着いて！","その位置！","いい手応え！","まだ我慢！","行けるぞ！","頑張れー！","ナイス騎乗！","ついていけ！","ここからだ！","負けるな！"];
-    const turnCalls=["外から来た！","内を突け！","回ってこい！","前が開いた！","進路を取れ！","動き出した！","まくれー！","差を詰めろ！","先頭を狙え！","いい脚だ！","馬群を割れ！","そのまま外！"];
-    const finalCalls=["差せー！","粘れー！","そのまま！","伸びろー！","届いてくれ！","逃げ切れ！","並んだ！","もう少し！","いけー！","負けるな！","突き抜けろ！","大外から来た！","首の上げ下げ！","頑張れー！","先頭だ！","ゴールまで！"];
-    const calls=ratio>.82?finalCalls:ratio>.62?turnCalls:midCalls;
-    // One spectator speaks, the bubble disappears, then a different stand
-    // position is selected. This avoids rapid text swapping in one place.
-    // 歓声は4倍速のレース時間ではなく実時間で制御する。
-    // 約2.4秒表示し、その後約2.8秒空けるため読みやすく連発しない。
-    const cycle=5200,visibleFor=2400,slot=Math.floor(cheerClock/cycle);
-    const elapsed=cheerClock%cycle;
-    if(elapsed<visibleFor){
-      const spots=[
-        {x:252,y:61,w:76},{x:267,y:94,w:70},{x:238,y:126,w:82},
-        {x:260,y:216,w:74},{x:246,y:250,w:84},{x:270,y:283,w:67},
-        {x:241,y:316,w:88},{x:263,y:350,w:72},{x:248,y:383,w:82}
-      ];
-      const spot=spots[(slot*5+raceSeed)%spots.length];
-      const call=calls[(slot*7+raceSeed)%calls.length];
-      ctx.fillStyle="#fffbe7";ctx.fillRect(spot.x,spot.y,spot.w,17);
-      ctx.beginPath();ctx.moveTo(spot.x+spot.w,spot.y+7);ctx.lineTo(345,spot.y+11);ctx.lineTo(spot.x+spot.w,spot.y+14);ctx.closePath();ctx.fill();
-      ctx.fillStyle="#262015";ctx.font="bold 8px monospace";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+11);
-    }
-  }
 
   // 高低差図をターフビジョン直下へ小さく配置し、全馬の現在位置を重ねる。
   const elevationX=68,elevationY=343,elevationW=224,elevationH=31;
@@ -950,6 +924,25 @@ function draw() {
   drawTrack();
   [...horses].sort((a, b) => b.lane - a.lane).forEach(h => drawPixelHorse(h, coursePoint(h.progress, h.lane)));
   drawWeather();
+  drawCrowdCheer();
+}
+
+function drawCrowdCheer(){
+  const visionOrder=order(),leader=visionOrder[0];
+  if(!leader||state!=="running"||raceDistance(leader)/TOTAL<=.50)return;
+  const ratio=raceDistance(leader)/TOTAL;
+  const calls=ratio>.82?["差せー！","粘れー！","そのまま！","伸びろー！","届いてくれ！","逃げ切れ！","並んだ！","もう少し！","いけー！","突き抜けろ！"]:ratio>.62?["外から来た！","内を突け！","前が開いた！","進路を取れ！","動き出した！","差を詰めろ！","いい脚だ！","馬群を割れ！"]:["いいぞー！","前を追え！","落ち着いて！","いい手応え！","まだ我慢！","行けるぞ！","頑張れー！"];
+  const cycle=5200,visibleFor=2400,slot=Math.floor(cheerClock/cycle);
+  if(cheerClock%cycle>=visibleFor)return;
+  const spots=[{x:226,y:54,w:108},{x:232,y:96,w:102},{x:218,y:220,w:116},{x:225,y:285,w:109},{x:216,y:350,w:118}];
+  const spot=spots[(slot*3+raceSeed)%spots.length],call=calls[(slot*7+raceSeed)%calls.length];
+  ctx.save();
+  ctx.shadowColor="#000b";ctx.shadowBlur=0;ctx.shadowOffsetX=3;ctx.shadowOffsetY=3;
+  ctx.fillStyle="#ffffff";ctx.strokeStyle="#262015";ctx.lineWidth=3;
+  ctx.fillRect(spot.x,spot.y,spot.w,24);ctx.strokeRect(spot.x,spot.y,spot.w,24);
+  ctx.beginPath();ctx.moveTo(spot.x+spot.w,spot.y+9);ctx.lineTo(349,spot.y+15);ctx.lineTo(spot.x+spot.w,spot.y+19);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.shadowColor="transparent";ctx.fillStyle="#111";ctx.font="bold 10px monospace";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+16);
+  ctx.restore();
 }
 
 function drawWeather(){

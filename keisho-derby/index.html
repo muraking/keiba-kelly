@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
   <title>ドット競馬 継承ダービー｜育成体験版</title>
-  <link rel="stylesheet" href="style.css?v=20260718-5">
+  <link rel="stylesheet" href="style.css?v=20260718-6">
 </head>
 <body>
   <main class="phone">
@@ -201,7 +201,7 @@
 
     <section id="raceSelectScreen" class="game-screen select-screen">
       <header class="simple-header"><b>レース選択</b><span id="selectTurn">残り12ターン</span></header>
-      <div class="race-period-tabs"><button data-period="current" class="selected">今週開催</button><button data-period="future">未来の予定</button></div>
+      <div class="race-period-tabs"><button data-period="current" class="selected">今週のレース</button><button data-period="future">今後のレース</button></div>
       <div id="raceVenueTabs" class="race-venue-tabs"></div>
       <div id="raceChoices"></div>
       <button data-back="homeScreen">育成へもどる</button>
@@ -310,8 +310,8 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-1"></script>
-  <script src="race.js?v=20260718-4"></script>
+  <script src="app.js?v=20260718-2"></script>
+  <script src="race.js?v=20260718-5"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>
