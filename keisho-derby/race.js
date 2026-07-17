@@ -782,10 +782,12 @@ function drawTrack() {
   ctx.fillStyle="#fff3a6";ctx.font="bold 8px monospace";ctx.textAlign="center";
   ctx.fillText("TURF VISION",180,148);
   ctx.font="bold 10px monospace";ctx.fillText(playerSetup.raceName||document.querySelector("#raceNameTitle")?.textContent||"レース名",180,161);
-  // 上位3頭が競り合うレース映像。育成ポップアップと同じ大きさのドット馬を使う。
+  // 先頭を基準に、カメラ範囲内（約65m）へ入っている馬を実際の差で配置する。
   ctx.fillStyle=raceSurface==="ダート"?"#9a6c43":"#3e8e3e";ctx.fillRect(76,170,208,35);
-  visionOrder.slice(0,3).forEach((h,i)=>{
-    const lead=raceDistance(visionOrder[0])-raceDistance(h),x=Math.round(220-Math.min(72,lead*2.2)),y=178+i*9,legPhase=(Math.floor(raceClock/180)+h.id)%2;
+  const leaderVisionDistance=raceDistance(visionOrder[0]);
+  const visibleVisionHorses=visionOrder.filter(h=>leaderVisionDistance-raceDistance(h)<=65).slice(0,5);
+  visibleVisionHorses.forEach((h,i)=>{
+    const lead=leaderVisionDistance-raceDistance(h),x=Math.round(252-lead*2.55),y=175+(i%3)*9+(i>=3?4:0),legPhase=(Math.floor(raceClock/180)+h.id)%2;
     ctx.fillStyle=h.player?"#ffe15a":"#bd7137";ctx.fillRect(x,y,18,7);ctx.fillRect(x+14,y-5,7,7);ctx.fillRect(x-5,y+1,7,3);
     ctx.fillRect(x+(legPhase?3:1),y+7,3,5);ctx.fillRect(x+(legPhase?12:14),y+7,3,5);
     ctx.fillStyle=h.color;ctx.fillRect(x+6,y+1,7,5);ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 5px monospace";ctx.fillText(h.id,x+9,y+6);
@@ -803,10 +805,15 @@ function drawTrack() {
   ctx.textAlign="center";
   const leaderForCheer=visionOrder[0];
   if(leaderForCheer&&state==="running"&&raceDistance(leaderForCheer)/TOTAL>.72){
-    const calls=["ワー！！","ガンバレー！","差せー！","そのまま！"];
-    const callIndex=Math.floor(raceClock/650)%calls.length;
-    ctx.fillStyle="#fffbe7";ctx.fillRect(252,88,74,18);ctx.fillRect(29,105,67,17);
-    ctx.fillStyle="#262015";ctx.font="bold 8px monospace";ctx.fillText(calls[callIndex],289,100);ctx.fillText(calls[(callIndex+1)%calls.length],62,117);
+    const calls=["ワー！！","ガンバレー！","差せー！","そのまま！","いけー！","負けるな！"];
+    const callIndex=Math.floor(raceClock/720)%calls.length;
+    const bubbles=[{x:270,y:78,w:70,call:calls[callIndex]},{x:274,y:224,w:66,call:calls[(callIndex+2)%calls.length]},{x:267,y:386,w:73,call:calls[(callIndex+4)%calls.length]}];
+    bubbles.forEach((bubble,index)=>{
+      if((Math.floor(raceClock/520)+index)%3===0)return;
+      ctx.fillStyle="#fffbe7";ctx.fillRect(bubble.x,bubble.y,bubble.w,17);
+      ctx.beginPath();ctx.moveTo(bubble.x+bubble.w,bubble.y+7);ctx.lineTo(345,bubble.y+11);ctx.lineTo(bubble.x+bubble.w,bubble.y+14);ctx.closePath();ctx.fill();
+      ctx.fillStyle="#262015";ctx.font="bold 8px monospace";ctx.fillText(bubble.call,bubble.x+bubble.w/2,bubble.y+11);
+    });
   }
 
   drawMarker(START_PROGRESS, "#35dc5c", "START");
