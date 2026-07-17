@@ -52,6 +52,7 @@ let lastTime = 0;
 let raceClock = 0;
 let cheerClock = 0;
 let commentaryStamp = new Set();
+let commentaryHistory = [];
 let raf = 0;
 let racePace = { name: "平均", escapeCount: 1, timeFactor: 1 };
 let split1000Time = null;
@@ -71,6 +72,14 @@ let visionRanks = new Map();
 let visionRankStamp = 0;
 const BASE_PLAYBACK_RATE = 4;
 let playerSetup = { horseName: "ドットスター", ability: 940, dash: 550, gateSkill:450, condition: 60, fatigue: 10, difficulty: 840, heavyTrack:500, temperament:"普通",temperamentValue:50,equippedTack:null,weather:"晴", going:"良", baseTime: 144000 };
+
+function setCommentary(message,reset=false){
+  if(reset)commentaryHistory=[];
+  if(!message)return;
+  if(commentaryHistory[commentaryHistory.length-1]!==message)commentaryHistory.push(message);
+  commentaryHistory=commentaryHistory.slice(-4);
+  commentaryEl.textContent=commentaryHistory.join("\n");
+}
 
 function raceRandom() {
   randomState = (randomState * 1664525 + 1013904223) >>> 0;
@@ -224,7 +233,7 @@ function resetRace() {
   phaseEl.textContent = "発走準備";
   slopeStateEl.textContent = "平坦";
   const slopeMeta=document.querySelector(".slope-status span:last-child");if(slopeMeta)slopeMeta.textContent=`${currentRaceVenue}${raceSurface} 高低差${trackProfile().elevation}m`;
-  commentaryEl.textContent = "各馬、ゲートに入りました。";
+  setCommentary("各馬、ゲートに入りました。",true);
   winnerPopup.classList.remove("show");
   winnerPopup.setAttribute("aria-hidden","true");
   pendingResultDetail=null;
@@ -347,7 +356,7 @@ function update(dt, clockDt) {
     measuredPace = classify1000mPace(split1000Time);
     split1000El.textContent = formatTime(split1000Time);
     paceDisplayEl.textContent = `実測：${measuredPace}（1000m ${formatTime(split1000Time)}）`;
-    commentaryEl.textContent = `1000m通過 ${formatTime(split1000Time)}、${measuredPace}！`;
+    setCommentary(`1000m通過 ${formatTime(split1000Time)}、${measuredPace}！`);
   }
 
   horses.forEach((h) => {
@@ -605,7 +614,7 @@ function updateCommentary(remaining) {
   const hit = marks.find(([m]) => remaining <= m && !commentaryStamp.has(m));
   if (hit) {
     commentaryStamp.add(hit[0]);
-    commentaryEl.textContent = hit[1];
+    setCommentary(hit[1]);
   }
 }
 
@@ -617,9 +626,9 @@ function finishRace() {
   const winner = order()[0];
   const isRecord=Number.isFinite(playerSetup.recordTime)&&winner.finishTime<playerSetup.recordTime;
   finishTimeEl.textContent = formatTime(winner.finishTime);
-  commentaryEl.textContent = isRecord
+  setCommentary(isRecord
     ? `レコード更新！ ${formatTime(winner.finishTime)}！ 1着は${winner.id}番 ${winner.name}！`
-    : `ゴール！ 各馬そのままゴール板を駆け抜けます。1着は${winner.id}番 ${winner.name}！`;
+    : `ゴール！ 各馬そのままゴール板を駆け抜けます。1着は${winner.id}番 ${winner.name}！`);
   renderRanking();
   setTimeout(()=>{
     state="finished";
@@ -877,20 +886,6 @@ function drawTrack() {
     ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 5px monospace";ctx.textAlign="center";ctx.fillText(h.id,Math.round(x),Math.round(y+2));
   });
 
-  // 実況は高低差図の下へ表示。DOM側の文章を描くので実況更新と常に同期する。
-  const liveComment=(commentaryEl?.textContent||"各馬、ゲートに入りました。").trim();
-  const commentLines=[];
-  for(let i=0;i<liveComment.length&&commentLines.length<2;i+=23)commentLines.push(liveComment.slice(i,i+23));
-  ctx.fillStyle="#071019";ctx.fillRect(84,379,192,43);
-  ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(84,379,192,43);
-  // 小さなドット実況者
-  ctx.fillStyle="#e2ad78";ctx.fillRect(91,385,11,9);
-  ctx.fillStyle="#263f67";ctx.fillRect(89,394,15,17);
-  ctx.fillStyle="#e7d65f";ctx.fillRect(102,397,7,3);
-  ctx.fillStyle="#fff3a6";ctx.font="bold 7px monospace";ctx.textAlign="left";ctx.fillText("実況",89,418);
-  ctx.fillStyle="#f7f3df";ctx.font="bold 8px monospace";
-  commentLines.forEach((line,i)=>ctx.fillText(line,113,396+i*13));
-
   // ターフビジョンは内柵より大きいため、柵を最後に重ねて一周つなげる。
   traceCourse(8.7,"#fffdf0",3);
   for(let i=0;i<36;i++){
@@ -1023,9 +1018,9 @@ startButton.addEventListener("click", () => {
     startButton.disabled = true;
     pauseButton.disabled = false;
     phaseEl.textContent = "スタート";
-    commentaryEl.textContent = racePace.escapeCount >= 2
+    setCommentary(racePace.escapeCount >= 2
       ? `スタート！ 逃げ${racePace.escapeCount}頭が先手を争います！`
-      : "スタート！ 逃げ馬がすんなり先頭へ立ちました。";
+      : "スタート！ 逃げ馬がすんなり先頭へ立ちました。");
     lastTime = 0;
     raf = requestAnimationFrame(loop);
   }
@@ -1050,7 +1045,7 @@ winnerReplayButton.addEventListener("click",()=>{
   startButton.disabled=true;
   pauseButton.disabled=false;
   phaseEl.textContent="リプレイ";
-  commentaryEl.textContent="保存された展開でレースを再現します。";
+  setCommentary("保存された展開でレースを再現します。",true);
   lastTime=0;
   raf=requestAnimationFrame(loop);
 });

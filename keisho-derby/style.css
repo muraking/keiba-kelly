@@ -902,8 +902,19 @@ button:disabled { opacity: .45; cursor: default; }
   line-height: 1.5;
 }
 
-/* 実況はレースキャンバス内の内馬場下部へ表示する。DOMは読み上げ・状態保持用。 */
-.race-panel > .commentary { display:none; }
+/* キャンバス下を横幅いっぱいの実況ログとして使う。 */
+.race-panel > .commentary {
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  min-height:82px;
+  padding:7px 9px;
+}
+.race-panel > .commentary .announcer { width:30px;height:54px; }
+.race-panel > .commentary p {
+  white-space:pre-line;
+  font-size:10px;
+  line-height:1.45;
+}
 
 /* 凡例・区間表示・大きな高低差図はキャンバス内へ統合。 */
 .course-wrap > .legend,
