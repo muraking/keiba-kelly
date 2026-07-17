@@ -811,7 +811,9 @@ function drawTrack() {
   const leaderVisionDistance=raceDistance(visionOrder[0]);
   const visibleVisionHorses=visionOrder.filter(h=>leaderVisionDistance-raceDistance(h)<=65).slice(0,5);
   visibleVisionHorses.forEach((h,i)=>{
-    const lead=leaderVisionDistance-raceDistance(h),x=Math.round(252-lead*2.55),y=175+(i%3)*9+(i>=3?4:0),legPhase=(Math.floor(raceClock/180)+h.id)%2;
+    const lead=Math.max(0,leaderVisionDistance-raceDistance(h));
+    const x=Math.max(84,Math.min(257,Math.round(252-lead*2.55)));
+    const y=176+(i%3)*8,legPhase=(Math.floor(raceClock/180)+h.id)%2;
     ctx.fillStyle=h.player?"#ffe15a":"#bd7137";ctx.fillRect(x,y,18,7);ctx.fillRect(x+14,y-5,7,7);ctx.fillRect(x-5,y+1,7,3);
     ctx.fillRect(x+(legPhase?3:1),y+7,3,5);ctx.fillRect(x+(legPhase?12:14),y+7,3,5);
     ctx.fillStyle=h.color;ctx.fillRect(x+6,y+1,7,5);ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 5px monospace";ctx.fillText(h.id,x+9,y+6);
@@ -828,16 +830,28 @@ function drawTrack() {
   if(raceClock-visionRankStamp>700){visionOrder.forEach((h,i)=>visionRanks.set(h.id,i+1));visionRankStamp=raceClock}
   ctx.textAlign="center";
   const leaderForCheer=visionOrder[0];
-  if(leaderForCheer&&state==="running"&&raceDistance(leaderForCheer)/TOTAL>.72){
-    const calls=["ワー！！","ガンバレー！","差せー！","そのまま！","いけー！","負けるな！"];
-    const callIndex=Math.floor(raceClock/720)%calls.length;
-    const bubbles=[{x:270,y:78,w:70,call:calls[callIndex]},{x:274,y:224,w:66,call:calls[(callIndex+2)%calls.length]},{x:267,y:386,w:73,call:calls[(callIndex+4)%calls.length]}];
-    bubbles.forEach((bubble,index)=>{
-      if((Math.floor(raceClock/520)+index)%3===0)return;
-      ctx.fillStyle="#fffbe7";ctx.fillRect(bubble.x,bubble.y,bubble.w,17);
-      ctx.beginPath();ctx.moveTo(bubble.x+bubble.w,bubble.y+7);ctx.lineTo(345,bubble.y+11);ctx.lineTo(bubble.x+bubble.w,bubble.y+14);ctx.closePath();ctx.fill();
-      ctx.fillStyle="#262015";ctx.font="bold 8px monospace";ctx.fillText(bubble.call,bubble.x+bubble.w/2,bubble.y+11);
-    });
+  if(leaderForCheer&&state==="running"&&raceDistance(leaderForCheer)/TOTAL>.34){
+    const ratio=raceDistance(leaderForCheer)/TOTAL;
+    const midCalls=["いいぞー！","前を追え！","落ち着いて！","その位置！","いい手応え！","まだ我慢！","行けるぞ！","頑張れー！","ナイス騎乗！","ついていけ！","ここからだ！","負けるな！"];
+    const turnCalls=["外から来た！","内を突け！","回ってこい！","前が開いた！","進路を取れ！","動き出した！","まくれー！","差を詰めろ！","先頭を狙え！","いい脚だ！","馬群を割れ！","そのまま外！"];
+    const finalCalls=["差せー！","粘れー！","そのまま！","伸びろー！","届いてくれ！","逃げ切れ！","並んだ！","もう少し！","いけー！","負けるな！","突き抜けろ！","大外から来た！","首の上げ下げ！","頑張れー！","先頭だ！","ゴールまで！"];
+    const calls=ratio>.82?finalCalls:ratio>.62?turnCalls:midCalls;
+    // One spectator speaks, the bubble disappears, then a different stand
+    // position is selected. This avoids rapid text swapping in one place.
+    const cycle=1750,visibleFor=1020,slot=Math.floor(raceClock/cycle);
+    const elapsed=raceClock%cycle;
+    if(elapsed<visibleFor){
+      const spots=[
+        {x:252,y:61,w:76},{x:267,y:94,w:70},{x:238,y:126,w:82},
+        {x:260,y:216,w:74},{x:246,y:250,w:84},{x:270,y:283,w:67},
+        {x:241,y:316,w:88},{x:263,y:350,w:72},{x:248,y:383,w:82}
+      ];
+      const spot=spots[(slot*5+raceSeed)%spots.length];
+      const call=calls[(slot*7+raceSeed)%calls.length];
+      ctx.fillStyle="#fffbe7";ctx.fillRect(spot.x,spot.y,spot.w,17);
+      ctx.beginPath();ctx.moveTo(spot.x+spot.w,spot.y+7);ctx.lineTo(345,spot.y+11);ctx.lineTo(spot.x+spot.w,spot.y+14);ctx.closePath();ctx.fill();
+      ctx.fillStyle="#262015";ctx.font="bold 8px monospace";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+11);
+    }
   }
 
   drawMarker(START_PROGRESS, "#35dc5c", "START");
