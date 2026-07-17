@@ -343,8 +343,10 @@ function renderTack(){
 }
 function applyHorseAppearance(el){
   if(!el)return;
-  el.style.setProperty("--active-horse-color",game.candidate?.color||"#b96e32");
-  el.style.setProperty("--horse-color",game.candidate?.color||"#b96e32");
+  const color=game.candidate?.color||"#b96e32";
+  el.style.setProperty("--active-horse-color",color);
+  el.style.setProperty("--horse-color",color);
+  el.querySelectorAll(".candidate-pixel-horse").forEach(horse=>horse.style.setProperty("--horse-color",color));
   el.classList.toggle("has-face-mark",!!game.candidate?.faceMark);
   el.classList.toggle("has-socks",(game.candidate?.socks||0)>0);
   ["hood","blinkers","cheekpieces"].forEach(id=>el.classList.toggle(`tack-${id}`,game.equippedTack===id));
