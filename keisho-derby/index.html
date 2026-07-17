@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
   <title>ドット競馬 継承ダービー｜育成体験版</title>
-  <link rel="stylesheet" href="style.css?v=20260718-4">
+  <link rel="stylesheet" href="style.css?v=20260718-5">
 </head>
 <body>
   <main class="phone">
@@ -278,6 +278,9 @@
           <div id="elevationHorses"></div><span>高低差・全馬位置</span>
         </div>
       </section>
+      <div class="commentary race-commentary-wide" aria-live="polite">
+        <div class="announcer">実</div><p id="commentary">各馬、ゲートに入りました。</p>
+      </div>
       <section class="race-panel">
         <div class="controls">
           <button id="startButton">レース開始</button>
@@ -286,7 +289,6 @@
           <button id="resetButton">リプレイ</button>
         </div>
         <div id="ranking" class="ranking" aria-live="polite"></div>
-        <div class="commentary"><div class="announcer">実</div><p id="commentary">各馬、ゲートに入りました。</p></div>
       </section>
     </section>
 

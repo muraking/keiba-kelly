@@ -794,10 +794,7 @@ canvas {
   font-size: 11px;
 }
 
-.race-panel {
-  padding: 9px;
-  background: var(--panel);
-}
+.race-panel { display:none; }
 
 .controls {
   display: grid;
@@ -909,17 +906,22 @@ button:disabled { opacity: .45; cursor: default; }
 }
 
 /* キャンバス下を横幅いっぱいの実況ログとして使う。 */
-.race-panel > .commentary {
+.race-commentary-wide {
   display:grid;
-  grid-template-columns:34px minmax(0,1fr);
-  min-height:82px;
-  padding:7px 9px;
+  grid-template-columns:42px minmax(0,1fr);
+  width:100%;
+  min-height:104px;
+  padding:10px 12px;
+  box-sizing:border-box;
+  border-left:0;
+  border-right:0;
+  border-bottom:0;
 }
-.race-panel > .commentary .announcer { width:30px;height:54px; }
-.race-panel > .commentary p {
+.race-commentary-wide .announcer { width:36px;height:62px; }
+.race-commentary-wide p {
   white-space:pre-line;
-  font-size:10px;
-  line-height:1.45;
+  font-size:11px;
+  line-height:1.55;
 }
 
 /* 凡例・区間表示・大きな高低差図はキャンバス内へ統合。 */
