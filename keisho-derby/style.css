@@ -924,6 +924,9 @@ button:disabled { opacity: .45; cursor: default; }
   font-size:11px;
   line-height:1.55;
 }
+.horizontal-race-test .race-commentary-wide { min-height:142px;padding:12px 14px;grid-template-columns:48px minmax(0,1fr); }
+.horizontal-race-test .race-commentary-wide .announcer { width:40px;height:72px;font-size:16px; }
+.horizontal-race-test .race-commentary-wide p { font-size:14px;line-height:1.65; }
 
 /* 凡例・区間表示・大きな高低差図はキャンバス内へ統合。 */
 .course-wrap > .legend,

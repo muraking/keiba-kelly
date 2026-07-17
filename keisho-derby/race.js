@@ -67,6 +67,7 @@ let simulationAccumulator = 0;
 let resultDispatchedForRace = false;
 let pendingResultDetail = null;
 let archiveReplay = false;
+let horizontalLayout = false;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
@@ -678,6 +679,15 @@ function numberTextColor(id) {
 function coursePoint(progress, lane = 3) {
   let p = ((progress % 1) + 1) % 1;
   if(trackProfile().turn==="右")p=(1-p)%1;
+  if(horizontalLayout){
+    const inset=lane*4,left=43+inset,right=317-inset,top=34+inset,bottom=266-inset;
+    const cy=(top+bottom)/2,rx=Math.max(28,48-inset*.12),straight=.34,curve=.16;
+    if(p<straight){const t=p/straight;return{x:left+(right-left)*t,y:top,angle:0,curve:false}}
+    if(p<straight+curve){const t=(p-straight)/curve,a=-Math.PI/2+t*Math.PI;return{x:right+Math.cos(a)*rx,y:cy+Math.sin(a)*(bottom-top)/2,angle:a+Math.PI/2,curve:true}}
+    if(p<straight*2+curve){const t=(p-straight-curve)/straight;return{x:right-(right-left)*t,y:bottom,angle:Math.PI,curve:false}}
+    const t=(p-straight*2-curve)/curve,a=Math.PI/2+t*Math.PI;
+    return{x:left+Math.cos(a)*rx,y:cy+Math.sin(a)*(bottom-top)/2,angle:a+Math.PI/2,curve:true};
+  }
   // 東京競馬場の航空形状を90度回転。右が525.9mのホーム直線、
   // 左が向正面、上下は緩い大コーナーとして描く。
   const profile=trackProfile(),straightShare=profile.straightShare,curveShare=(1-straightShare*2)/2;
@@ -756,7 +766,39 @@ function drawPixelHorse(h, pos) {
   }
 }
 
+function drawVisionCandidateHorse(x,y,h,scale=.62){
+  ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+  const coat=h.player?"#d08a42":"#a9612f";
+  ctx.fillStyle=coat;ctx.strokeStyle="#3c2418";ctx.lineWidth=2;
+  ctx.fillRect(-22,-6,34,16);ctx.strokeRect(-22,-6,34,16);
+  ctx.fillRect(8,-17,10,24);ctx.strokeRect(8,-17,10,24);
+  ctx.fillRect(15,-23,18,13);ctx.strokeRect(15,-23,18,13);
+  ctx.fillRect(-28,-5,8,5);ctx.fillRect(-16,9,5,15);ctx.fillRect(5,9,5,15);
+  ctx.fillStyle=h.color;ctx.fillRect(-12,-4,14,9);
+  ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 8px monospace";ctx.textAlign="center";ctx.fillText(h.id,-5,4);
+  ctx.restore();
+}
+
+function drawHorizontalTrack(){
+  ctx.fillStyle="#2d7131";ctx.fillRect(0,0,canvas.width,canvas.height);
+  const isDirt=raceSurface==="ダート";
+  const trace=(lane,color,width)=>{ctx.beginPath();for(let i=0;i<=180;i++){const q=coursePoint(i/180,lane);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke()};
+  trace(4.5,"#fff8dd",52);trace(4.5,isDirt?"#a87549":"#43943e",43);
+  for(let lane=1;lane<=8;lane++)trace(lane,isDirt?"#b77e4e":"#56a34b",1);
+  ctx.fillStyle="#185b29";ctx.fillRect(76,63,208,174);
+  const visionOrder=order();
+  ctx.fillStyle="#0b151d";ctx.fillRect(91,69,178,143);ctx.strokeStyle="#d7c35d";ctx.lineWidth=4;ctx.strokeRect(91,69,178,143);
+  ctx.fillStyle="#293b32";ctx.fillRect(97,75,166,24);ctx.fillStyle="#fff3a6";ctx.font="bold 9px monospace";ctx.textAlign="center";ctx.fillText("TURF VISION",180,85);ctx.fillText(playerSetup.raceName||"テストレース",180,96);
+  ctx.fillStyle=isDirt?"#9a6c43":"#4a9945";ctx.fillRect(97,103,166,53);
+  const leaderDist=raceDistance(visionOrder[0]);
+  visionOrder.filter(h=>leaderDist-raceDistance(h)<=45).slice(0,3).forEach((h,i)=>drawVisionCandidateHorse(225-(leaderDist-raceDistance(h))*2.4,132+i*5,h));
+  visionOrder.slice(0,4).forEach((h,i)=>{const y=170+i*10;ctx.fillStyle=h.color;ctx.fillRect(103,y-7,9,9);ctx.fillStyle="#fff";ctx.font="bold 7px monospace";ctx.textAlign="left";ctx.fillText(`${i+1}位`,116,y);ctx.fillStyle="#26342c";ctx.fillRect(145,y-7,108,6);ctx.fillStyle=h.stamina<.3?"#df4b3f":"#53c96b";ctx.fillRect(145,y-7,108*Math.max(.02,h.stamina),6)});
+  trace(8.7,"#fffdf0",3);
+  drawMarker(START_PROGRESS,"#35dc5c","START");drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
+}
+
 function drawTrack() {
+  if(horizontalLayout){drawHorizontalTrack();return;}
   const isDirt = raceSurface === "ダート";
   ctx.fillStyle = "#2d7131";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1064,6 +1106,9 @@ showResultButton.addEventListener("click",()=>{
 window.addEventListener("dotkeiba:prepare", event => {
   playerSetup = { ...playerSetup, ...event.detail };
   archiveReplay=!!event.detail.archiveReplay;
+  horizontalLayout=!!event.detail.horizontalLayout;
+  canvas.height=horizontalLayout?320:500;
+  document.body.classList.toggle("horizontal-race-test",horizontalLayout);
   raceSeed = Number.isFinite(event.detail.replaySeed)
     ? event.detail.replaySeed
     : ((Date.now() ^ Math.floor(event.detail.ability * 1009) ^ event.detail.distance) >>> 0) || 1;
