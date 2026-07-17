@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
   <title>ドット競馬 継承ダービー｜育成体験版</title>
-  <link rel="stylesheet" href="style.css?v=20260718-3">
+  <link rel="stylesheet" href="style.css?v=20260718-4">
 </head>
 <body>
   <main class="phone">
@@ -97,7 +97,7 @@
         </div>
         <div class="white-fence front-fence"><i></i><i></i><i></i><i></i></div>
         <div id="trainingScene" class="training-scene idle" aria-hidden="true">
-          <div class="candidate-pixel-horse stable-pixel-horse">
+          <div id="homeHorse" class="candidate-pixel-horse stable-pixel-horse" role="button" tabindex="0" aria-label="愛馬の詳細を見る">
             <div class="candidate-body"></div><div class="candidate-neck"></div>
             <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
             <div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
@@ -128,7 +128,6 @@
           </div>
         </div>
       </div>
-      <button id="horseDetailButton" class="horse-detail-button">愛馬を詳しく見る</button>
       <div class="stats" id="horseStats"></div>
       <section class="coach-message">
         <span>調教師</span>
@@ -309,7 +308,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260717-26"></script>
+  <script src="app.js?v=20260718-1"></script>
   <script src="race.js?v=20260718-4"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>

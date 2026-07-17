@@ -844,7 +844,12 @@ document.querySelector("#historyList").onclick=e=>{
   if(button)replayFavoriteRace(Number(button.dataset.favoriteReplay));
 };
 document.querySelector("#galleryButton").onclick=()=>{renderGallery();showScreen("galleryScreen")};
-document.querySelector("#horseDetailButton").onclick=()=>{renderHorseDetail();showScreen("horseDetailScreen")};
+const openHorseDetail=()=>{renderHorseDetail();showScreen("horseDetailScreen")};
+document.querySelector("#homeHorse").onclick=e=>{e.stopPropagation();openHorseDetail()};
+document.querySelector("#homeHorse").onkeydown=e=>{
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  e.preventDefault();e.stopPropagation();openHorseDetail();
+};
 document.querySelector("#trainingScene").onclick=()=>{
   game.affection=Math.min(99,game.affection+1);
   const reactions=["嬉しそうに首を振りました。","こちらへ駆け寄ってきました。","小さく跳ねて喜んでいます。","鼻を寄せて甘えています。"];

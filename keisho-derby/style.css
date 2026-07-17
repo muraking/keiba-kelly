@@ -285,6 +285,12 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   animation:stableCandidateWalk 8s linear infinite;
 }
 .training-scene.idle .stable-pixel-horse { display:block; }
+.training-scene.idle .stable-pixel-horse { cursor:pointer;touch-action:manipulation; }
+.training-scene.idle .stable-pixel-horse::before {
+  content:"";position:absolute;inset:-14px;z-index:-1;
+}
+.training-scene.idle .stable-pixel-horse:active { filter:brightness(1.22); }
+.training-scene.idle .stable-pixel-horse:focus-visible { outline:4px solid #ffe45c;outline-offset:8px; }
 .training-scene.idle .horse-a { display:none; }
 .pixel-runner { position:absolute; right:48px; bottom:52px; width:58px; height:43px; animation:horseBob .42s steps(2) infinite; }
 .pixel-runner i { position:absolute; display:block; background:var(--active-horse-color); image-rendering:pixelated; }
