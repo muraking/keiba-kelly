@@ -819,6 +819,7 @@ document.querySelector("#raceTestButton").onclick=()=>{
   const c=game.candidate;game={...game,horseName:"ドットスター",week:21,speed:650,dash:620,gateSkill:600,stamina:640,power:610,guts:600,turf:660,dirt:520,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:c.potentialCaps};
   prepareRace(raceCalendar.find(r=>r.id==="n2"));
   showScreen("raceScreen");
+  dispatchEvent(new CustomEvent("dotkeiba:auto-start"));
 };
 document.querySelector("#rerollHorseButton").onclick=generateCandidate;
 document.querySelector("#continueButton").onclick=()=>{if(loadGame()){renderHome();showScreen("homeScreen")}};
@@ -877,7 +878,7 @@ document.querySelector("#raceChoices").onclick=e=>{
 };
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
 document.querySelector(".race-period-tabs").onclick=e=>{const b=e.target.closest("[data-period]");if(b){window.selectedRacePeriod=b.dataset.period;window.selectedRaceVenue="すべて";renderRaces()}};
-document.querySelector("#newspaperRaceButton").onclick=()=>showScreen("raceScreen");
+document.querySelector("#newspaperRaceButton").onclick=()=>{showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"))};
 addEventListener("dotkeiba:preview-ready",e=>{
   if(!game.selectedRace)return;
   const marks=["◎","○","▲","△","△","☆","",""];
