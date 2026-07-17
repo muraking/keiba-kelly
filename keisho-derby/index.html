@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="継承ダービー">
+  <link rel="manifest" href="manifest.json">
+  <title>ドット競馬 継承ダービー｜育成体験版</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="phone">
+    <section id="titleScreen" class="game-screen title-screen active">
+      <div class="title-sun"></div>
+      <div class="title-cloud title-cloud-one"><i></i><i></i><i></i></div>
+      <div class="title-cloud title-cloud-two"><i></i><i></i><i></i></div>
+      <div class="title-racecourse">
+        <div class="title-stand">
+          <div class="stand-roof"></div><div class="stand-glass"></div><div class="stand-crowd"></div>
+          <i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="title-track"></div>
+      </div>
+      <div class="title-barn">
+        <div class="stable-roof"></div>
+        <div class="stable-label">A</div>
+        <div class="stable-window w1"></div><div class="stable-window w2"></div>
+        <div class="stable-door d1"></div><div class="stable-door d2"></div>
+      </div>
+      <div class="title-fence"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="title-grass"></div>
+      <div class="title-horse-paddock" aria-label="白い柵の中を歩くドット絵の馬">
+        <div class="candidate-pixel-horse title-pixel-horse">
+          <div class="candidate-body"></div>
+          <div class="candidate-neck"></div>
+          <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+          <div class="candidate-tail"></div>
+          <div class="candidate-leg front"></div>
+          <div class="candidate-leg back"></div>
+        </div>
+      </div>
+      <div class="title-menu">
+        <p class="kicker">8BIT HORSE RACING</p>
+        <h1>ドット競馬<br><span>継承ダービー</span></h1>
+        <button class="primary big" id="newGameButton">はじめから</button>
+        <button id="continueButton">つづきから</button>
+        <small>育成体験版</small>
+      </div>
+    </section>
+
+    <section id="nameScreen" class="game-screen setup-screen">
+      <header class="simple-header"><b>新馬候補</b><span id="candidateNumber">候補 1</span></header>
+      <div class="horse-card hero-card">
+        <div id="candidateHorse" class="candidate-pixel-horse" aria-hidden="true">
+          <div class="candidate-body"></div>
+          <div class="candidate-neck"></div>
+          <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+          <div class="candidate-tail"></div>
+          <div class="candidate-leg front"></div>
+          <div class="candidate-leg back"></div>
+        </div>
+        <div><b id="candidateTitle">栗毛の2歳馬</b><small id="candidatePedigree"></small></div>
+      </div>
+      <div id="candidateInfo" class="candidate-info"></div>
+      <button id="rerollHorseButton">別の候補を見る</button>
+      <label class="field-label" for="horseNameInput">馬名を入力</label>
+      <input id="horseNameInput" maxlength="10" value="ドットスター" autocomplete="off">
+      <p class="hint">カタカナ2〜10文字。入厩後は変更できません。</p>
+      <button class="primary big" id="confirmNameButton">この馬を育てる</button>
+      <button data-back="titleScreen">もどる</button>
+    </section>
+
+    <section id="homeScreen" class="game-screen home-screen">
+      <header class="home-header">
+        <div><small>育成ホーム</small><b id="homeHorseName">ドットスター</b></div>
+        <div class="money">獲得賞金<br><b id="homePrize">0万円</b></div>
+      </header>
+      <div class="turn-strip">
+        <span>今週 <b id="weekDisplay">1月1週</b></span>
+        <span>調教 <b id="turnsLeft">0/2</b></span>
+        <span id="conditionText">調子：普通</span>
+      </div>
+      <div id="debutCountdown" class="debut-countdown">初出走時期を確認中</div>
+      <div class="farm-point-strip"><span>牧場ポイント</span><b id="farmPoints">0 FP</b></div>
+      <div class="stable-scene">
+        <div class="sky-sun"></div>
+        <div class="pixel-cloud cloud-one"><i></i><i></i><i></i></div>
+        <div class="pixel-cloud cloud-two"><i></i><i></i><i></i></div>
+        <div class="barn">
+          <div class="stable-roof"></div><div class="stable-label">A</div>
+          <div class="stable-window w1"></div><div class="stable-window w2"></div>
+          <div class="stable-door d1"></div><div class="stable-door d2"></div>
+        </div>
+        <div class="white-fence front-fence"><i></i><i></i><i></i><i></i></div>
+        <div id="trainingScene" class="training-scene idle" aria-hidden="true">
+          <div class="candidate-pixel-horse stable-pixel-horse">
+            <div class="candidate-body"></div><div class="candidate-neck"></div>
+            <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+            <div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
+          </div>
+          <div class="pixel-runner horse-a"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="pixel-runner horse-b"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="pool-water"></div>
+          <div class="slope-track"></div>
+        </div>
+        <div id="trainingPopup" class="training-popup" aria-hidden="true">
+          <div class="training-popup-frame">
+            <b id="trainingPopupTitle">芝・単走</b>
+            <div id="trainingPopupStage" class="training-popup-stage">
+              <div class="popup-ground"></div>
+              <div class="popup-gate">GATE</div>
+              <div class="candidate-pixel-horse popup-horse popup-horse-a">
+                <div class="candidate-body"></div><div class="candidate-neck"></div>
+                <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+                <div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
+              </div>
+              <div class="candidate-pixel-horse popup-horse popup-horse-b">
+                <div class="candidate-body"></div><div class="candidate-neck"></div>
+                <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+                <div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
+              </div>
+            </div>
+            <span id="trainingPopupResult">調教中…</span>
+          </div>
+        </div>
+      </div>
+      <button id="horseDetailButton" class="horse-detail-button">愛馬を詳しく見る</button>
+      <div class="stats" id="horseStats"></div>
+      <section class="coach-message">
+        <span>調教師</span>
+        <p id="homeMessage">今日の調教を選びましょう。</p>
+      </section>
+      <div class="fatigue-row">
+        <span>疲労</span><div class="meter"><i id="fatigueBar"></i></div><b id="fatigueValue">元気</b>
+      </div>
+      <div class="weight-row">
+        <span>馬体重</span><b id="horseWeight">--kg</b><small id="horseWeightCondition">状態確認中</small>
+      </div>
+      <section class="temperament-panel">
+        <div><span>調教師所見</span><b id="temperamentComment">気性を観察しています</b></div>
+        <div id="tackChoices" class="tack-choices"></div>
+      </section>
+      <nav class="home-actions">
+        <button data-action="turfSolo">芝・単走<br><small>疲労 +8</small></button>
+        <button data-action="turfPair">芝・併せ<br><small>疲労 +17</small></button>
+        <button data-action="dirtSolo">ダート単走<br><small>疲労 +10</small></button>
+        <button data-action="dirtPair">ダート併せ<br><small>疲労 +19</small></button>
+        <button data-action="hill">坂路<br><small>疲労 +15</small></button>
+        <button data-action="pool">プール<br><small>疲労 +3</small></button>
+        <button data-action="gate">ゲート訓練<br><small>疲労 +7</small></button>
+        <button data-action="rest">休養<br><small>1回消費・疲労 -22</small></button>
+        <button id="pastureButton" class="pasture-button" hidden>復帰までスキップ<br><small id="pastureWeeks">長期放牧</small></button>
+      </nav>
+      <button class="primary big" id="goRaceSelectButton">レースに出走</button>
+      <div class="sub-actions">
+        <button id="nextWeekButton">翌週へ進む</button>
+        <button id="shopButton">設備ショップ</button>
+        <button id="historyButton">戦歴</button>
+        <button id="galleryButton">ギャラリー</button>
+        <button id="devModeButton">開発表示</button>
+        <button id="resetGameButton">最初から</button>
+      </div>
+    </section>
+
+    <section id="horseDetailScreen" class="game-screen detail-screen">
+      <header class="simple-header"><b>愛馬詳細</b><span id="detailAge">2歳</span></header>
+      <div id="detailHorseStage" class="detail-horse-stage">
+        <div class="candidate-pixel-horse detail-pixel-horse">
+          <div class="candidate-body"></div><div class="candidate-neck"></div>
+          <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+          <div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
+        </div>
+        <p id="horseReaction">馬がこちらを見ています。タッチしてみましょう。</p>
+      </div>
+      <div id="horseDetailInfo" class="horse-detail-info"></div>
+      <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="historyScreen" class="game-screen archive-screen">
+      <header class="simple-header"><b>戦歴</b><span id="historySummary">0戦0勝</span></header>
+      <div id="historyList" class="history-list"></div>
+      <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="galleryScreen" class="game-screen archive-screen">
+      <header class="simple-header"><b>ギャラリー</b><span id="gallerySummary">0 / 0</span></header>
+      <p class="archive-intro">育成やレースで思い出のドット絵が解放されます。</p>
+      <div id="galleryGrid" class="gallery-grid"></div>
+      <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="shopScreen" class="game-screen shop-screen">
+      <header class="simple-header"><b>設備ショップ</b><span id="shopPoints">0 FP</span></header>
+      <p class="shop-intro">設備カードは購入後も牧場に残り、毎週の調教を支援します。</p>
+      <div id="equipmentCards"></div>
+      <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="raceSelectScreen" class="game-screen select-screen">
+      <header class="simple-header"><b>レース選択</b><span id="selectTurn">残り12ターン</span></header>
+      <div class="race-period-tabs"><button data-period="current" class="selected">今週開催</button><button data-period="future">未来の予定</button></div>
+      <div id="raceVenueTabs" class="race-venue-tabs"></div>
+      <div id="raceChoices"></div>
+      <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="newspaperScreen" class="game-screen newspaper-screen">
+      <header class="newspaper-masthead">
+        <div><b>ドットスポーツ</b><small>DOT SPORTS</small></div>
+        <span id="newspaperDate">1年目 6月1週</span>
+      </header>
+      <div class="newspaper-headline">
+        <small id="newspaperCourse">東京 芝1600m</small>
+        <h2 id="newspaperRaceName">2歳新馬</h2>
+        <p id="newspaperBias">コース傾向を分析中</p>
+      </div>
+      <div class="newspaper-legend">◎本命　○対抗　▲単穴　△連下　☆注目</div>
+      <div id="newspaperEntries" class="newspaper-entries"></div>
+      <div class="newspaper-actions">
+        <button class="primary" id="newspaperRaceButton">レースへ</button>
+      </div>
+    </section>
+
+    <section id="raceScreen" class="game-screen race-screen">
+      <header class="race-header">
+        <div><strong id="raceCourseTitle">東京 芝2400m・左</strong><span id="raceNameTitle">日本ダービー</span></div>
+        <div class="race-status">
+          <b id="remaining">残り --m</b>
+          <strong id="raceTime">0:00.0</strong>
+          <span id="phase">発走準備</span>
+        </div>
+        <div class="timing-row">
+          <span>1000m通過 <b id="split1000">--:--.-</b></span>
+          <span>勝ちタイム <b id="finishTime">--:--.-</b></span>
+        </div>
+        <div class="benchmark">
+          <span id="paceDisplay">展開予測：平均</span>
+          <span id="benchmarkTimes">基準 --:--.-　レコード --:--.-</span>
+          <span id="weatherDisplay">天気 --　馬場 --</span>
+        </div>
+      </header>
+      <section class="course-wrap">
+        <canvas id="raceCanvas" width="360" height="500" aria-label="東京競馬場を走る8頭のドット馬"></canvas>
+        <div id="winnerPopup" class="winner-popup" aria-hidden="true">
+          <div class="winner-card">
+            <p>WINNER</p>
+            <div class="winner-visual">
+              <div class="winner-horse">
+                <i class="wh-body"></i><i class="wh-neck"></i><i class="wh-head"></i>
+                <i class="wh-leg l1"></i><i class="wh-leg l2"></i><i class="wh-tail"></i>
+                <b id="winnerSaddle">1</b>
+              </div>
+              <div class="pixel-jockey">
+                <i class="j-head"></i><i class="j-body"></i><i class="j-arm"></i><i class="j-fist"></i>
+              </div>
+            </div>
+            <strong><span id="winnerNumber">1番</span> <b id="winnerName">ドットスター</b></strong>
+            <small id="winnerTime">2:24.0</small>
+            <div class="winner-actions">
+              <button id="winnerReplayButton">リプレイを見る</button>
+              <button id="favoriteRaceButton">☆ お気に入り保存</button>
+              <button id="showResultButton" class="primary">結果へ</button>
+            </div>
+          </div>
+        </div>
+        <div class="legend">
+          <span><i class="start"></i>START</span><span><i class="goal"></i>GOAL</span>
+          <span>芝 1周2083.1m</span><span>内← コース取り →外</span>
+        </div>
+        <div class="slope-status">
+          <span>現在区間 <b id="slopeState">平坦</b></span><span>東京芝 高低差2.7m</span>
+        </div>
+        <div class="elevation-map" aria-label="コース高低差">
+          <svg viewBox="0 0 320 38" preserveAspectRatio="none"><path id="elevationPath" d="M2 27 L318 18"/></svg>
+          <div id="elevationHorses"></div><span>高低差・全馬位置</span>
+        </div>
+      </section>
+      <section class="race-panel">
+        <div class="controls">
+          <button id="startButton">レース開始</button>
+          <button id="pauseButton" disabled>一時停止</button>
+          <button id="speedButton">速度 標準</button>
+          <button id="resetButton">リプレイ</button>
+        </div>
+        <div id="ranking" class="ranking" aria-live="polite"></div>
+        <div class="commentary"><div class="announcer">実</div><p id="commentary">各馬、ゲートに入りました。</p></div>
+      </section>
+    </section>
+
+    <section id="resultScreen" class="game-screen result-screen">
+      <p class="kicker">RACE RESULT</p>
+      <h2 id="resultPlace">1着</h2>
+      <div class="result-horse"><span id="resultFrame">1</span><b id="resultHorseName">ドットスター</b></div>
+      <div class="result-grid">
+        <div><small>走破タイム</small><b id="resultTime">2:24.0</b></div>
+        <div><small>獲得賞金</small><b id="resultPrize">30000万円</b></div>
+      </div>
+      <p id="resultComment">見事な勝利です！</p>
+      <div class="post-race-condition">
+        <span>レース後の状態</span>
+        <p id="postRaceCondition">調教師が馬の状態を確認しています。</p>
+      </div>
+      <div id="resultOrder" class="result-order"></div>
+      <button class="primary big" id="returnHomeButton">育成へ戻る</button>
+    </section>
+  </main>
+  <script src="race-time-data.js?v=20260717-16"></script>
+  <script src="app.js?v=20260717-23"></script>
+  <script src="race.js?v=20260717-22"></script>
+  <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
+</body>
+</html>
