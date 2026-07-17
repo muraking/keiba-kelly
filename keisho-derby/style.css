@@ -905,6 +905,11 @@ button:disabled { opacity: .45; cursor: default; }
 /* 実況はレースキャンバス内の内馬場下部へ表示する。DOMは読み上げ・状態保持用。 */
 .race-panel > .commentary { display:none; }
 
+/* 凡例・区間表示・大きな高低差図はキャンバス内へ統合。 */
+.course-wrap > .legend,
+.course-wrap > .slope-status,
+.course-wrap > .elevation-map { display:none; }
+
 @media (max-width: 370px) {
   body { padding: 0; }
   .phone { border-width: 0; border-radius: 0; }

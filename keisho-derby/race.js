@@ -856,19 +856,40 @@ function drawTrack() {
     }
   }
 
-  // 実況は内馬場下部へ表示。DOM側の文章を描くので実況更新と常に同期する。
+  // 高低差図をターフビジョン直下へ小さく配置し、全馬の現在位置を重ねる。
+  const elevationX=68,elevationY=343,elevationW=224,elevationH=31;
+  ctx.fillStyle="#e8edcf";ctx.fillRect(elevationX,elevationY,elevationW,elevationH);
+  ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(elevationX,elevationY,elevationW,elevationH);
+  ctx.beginPath();
+  for(let i=0;i<=48;i++){
+    const n=i/48,progress=START_PROGRESS+n*TOTAL/LAP;
+    const x=elevationX+5+n*(elevationW-10);
+    const y=elevationY+22-(courseElevation(progress)-8)*.72;
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle="#5d773c";ctx.lineWidth=3;ctx.stroke();
+  horses.forEach(h=>{
+    const n=Math.max(0,Math.min(1,raceDistance(h)/TOTAL));
+    const x=elevationX+5+n*(elevationW-10);
+    const y=elevationY+22-(courseElevation(h.progress)-8)*.72;
+    ctx.fillStyle=h.color;ctx.fillRect(Math.round(x-3),Math.round(y-3),7,7);
+    if(h.player){ctx.strokeStyle="#ffdf39";ctx.lineWidth=2;ctx.strokeRect(Math.round(x-4),Math.round(y-4),9,9)}
+    ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 5px monospace";ctx.textAlign="center";ctx.fillText(h.id,Math.round(x),Math.round(y+2));
+  });
+
+  // 実況は高低差図の下へ表示。DOM側の文章を描くので実況更新と常に同期する。
   const liveComment=(commentaryEl?.textContent||"各馬、ゲートに入りました。").trim();
   const commentLines=[];
   for(let i=0;i<liveComment.length&&commentLines.length<2;i+=23)commentLines.push(liveComment.slice(i,i+23));
-  ctx.fillStyle="#071019";ctx.fillRect(84,350,192,48);
-  ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(84,350,192,48);
+  ctx.fillStyle="#071019";ctx.fillRect(84,379,192,43);
+  ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(84,379,192,43);
   // 小さなドット実況者
-  ctx.fillStyle="#e2ad78";ctx.fillRect(91,358,11,10);
-  ctx.fillStyle="#263f67";ctx.fillRect(89,368,15,18);
-  ctx.fillStyle="#e7d65f";ctx.fillRect(102,371,7,3);
-  ctx.fillStyle="#fff3a6";ctx.font="bold 7px monospace";ctx.textAlign="left";ctx.fillText("実況",89,394);
+  ctx.fillStyle="#e2ad78";ctx.fillRect(91,385,11,9);
+  ctx.fillStyle="#263f67";ctx.fillRect(89,394,15,17);
+  ctx.fillStyle="#e7d65f";ctx.fillRect(102,397,7,3);
+  ctx.fillStyle="#fff3a6";ctx.font="bold 7px monospace";ctx.textAlign="left";ctx.fillText("実況",89,418);
   ctx.fillStyle="#f7f3df";ctx.font="bold 8px monospace";
-  commentLines.forEach((line,i)=>ctx.fillText(line,113,369+i*13));
+  commentLines.forEach((line,i)=>ctx.fillText(line,113,396+i*13));
 
   // ターフビジョンは内柵より大きいため、柵を最後に重ねて一周つなげる。
   traceCourse(8.7,"#fffdf0",3);
