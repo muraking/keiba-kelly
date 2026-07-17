@@ -798,8 +798,6 @@ function drawTrack() {
     const x=345+(i%3)*4,y=116+((i*17)%252);
     ctx.fillStyle=crowdColors[i%crowdColors.length];ctx.fillRect(x,y,3,4);
   }
-  // 内ラチは内馬場施設の上から一周描き直し、白線を途切れさせない。
-  traceCourse(8.7,"#fffdf0",3);
   const player=horses.find(h=>h.player),visionOrder=order();
   ctx.fillStyle="#101a21";ctx.fillRect(68,132,224,211);ctx.strokeStyle="#d7c35d";ctx.lineWidth=4;ctx.strokeRect(68,132,224,211);
   ctx.fillStyle="#263a2e";ctx.fillRect(75,139,210,26);
@@ -852,6 +850,27 @@ function drawTrack() {
       ctx.beginPath();ctx.moveTo(spot.x+spot.w,spot.y+7);ctx.lineTo(345,spot.y+11);ctx.lineTo(spot.x+spot.w,spot.y+14);ctx.closePath();ctx.fill();
       ctx.fillStyle="#262015";ctx.font="bold 8px monospace";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+11);
     }
+  }
+
+  // 実況は内馬場下部へ表示。DOM側の文章を描くので実況更新と常に同期する。
+  const liveComment=(commentaryEl?.textContent||"各馬、ゲートに入りました。").trim();
+  const commentLines=[];
+  for(let i=0;i<liveComment.length&&commentLines.length<2;i+=23)commentLines.push(liveComment.slice(i,i+23));
+  ctx.fillStyle="#071019";ctx.fillRect(84,350,192,48);
+  ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(84,350,192,48);
+  // 小さなドット実況者
+  ctx.fillStyle="#e2ad78";ctx.fillRect(91,358,11,10);
+  ctx.fillStyle="#263f67";ctx.fillRect(89,368,15,18);
+  ctx.fillStyle="#e7d65f";ctx.fillRect(102,371,7,3);
+  ctx.fillStyle="#fff3a6";ctx.font="bold 7px monospace";ctx.textAlign="left";ctx.fillText("実況",89,394);
+  ctx.fillStyle="#f7f3df";ctx.font="bold 8px monospace";
+  commentLines.forEach((line,i)=>ctx.fillText(line,113,369+i*13));
+
+  // ターフビジョンは内柵より大きいため、柵を最後に重ねて一周つなげる。
+  traceCourse(8.7,"#fffdf0",3);
+  for(let i=0;i<36;i++){
+    const post=coursePoint(i/36,8.7);
+    ctx.fillStyle="#fffdf0";ctx.fillRect(Math.round(post.x-1),Math.round(post.y-1),3,3);
   }
 
   drawMarker(START_PROGRESS, "#35dc5c", "START");

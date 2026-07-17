@@ -20,13 +20,6 @@ body {
   font-family: "Yu Gothic", "MS Gothic", monospace;
 }
 
-@media (max-width: 480px) {
-  body { display:block; padding:0; background:#02060b; overscroll-behavior:none; }
-  .phone { width:100%; min-height:100dvh; border:0; border-radius:0; box-shadow:none; }
-  .game-screen { min-height:100dvh; padding-bottom:max(20px,env(safe-area-inset-bottom)); }
-  button { min-height:44px; touch-action:manipulation; }
-}
-
 .phone {
   width: min(100%, 430px);
   min-height: min(860px, calc(100vh - 24px));
@@ -908,6 +901,9 @@ button:disabled { opacity: .45; cursor: default; }
   font-size: 12px;
   line-height: 1.5;
 }
+
+/* 実況はレースキャンバス内の内馬場下部へ表示する。DOMは読み上げ・状態保持用。 */
+.race-panel > .commentary { display:none; }
 
 @media (max-width: 370px) {
   body { padding: 0; }
