@@ -50,6 +50,7 @@ let state = "ready";
 let multiplier = 1;
 let lastTime = 0;
 let raceClock = 0;
+let cheerClock = 0;
 let commentaryStamp = new Set();
 let raf = 0;
 let racePace = { name: "平均", escapeCount: 1, timeFactor: 1 };
@@ -211,6 +212,7 @@ function resetRace() {
   }}));
   state = "ready";
   raceClock = 0;
+  cheerClock = 0;
   split1000Time = null;
   measuredPace = "未確定";
   lastTime = 0;
@@ -828,7 +830,7 @@ function drawTrack() {
   if(raceClock-visionRankStamp>700){visionOrder.forEach((h,i)=>visionRanks.set(h.id,i+1));visionRankStamp=raceClock}
   ctx.textAlign="center";
   const leaderForCheer=visionOrder[0];
-  if(leaderForCheer&&state==="running"&&raceDistance(leaderForCheer)/TOTAL>.34){
+  if(leaderForCheer&&state==="running"&&raceDistance(leaderForCheer)/TOTAL>.50){
     const ratio=raceDistance(leaderForCheer)/TOTAL;
     const midCalls=["いいぞー！","前を追え！","落ち着いて！","その位置！","いい手応え！","まだ我慢！","行けるぞ！","頑張れー！","ナイス騎乗！","ついていけ！","ここからだ！","負けるな！"];
     const turnCalls=["外から来た！","内を突け！","回ってこい！","前が開いた！","進路を取れ！","動き出した！","まくれー！","差を詰めろ！","先頭を狙え！","いい脚だ！","馬群を割れ！","そのまま外！"];
@@ -836,8 +838,10 @@ function drawTrack() {
     const calls=ratio>.82?finalCalls:ratio>.62?turnCalls:midCalls;
     // One spectator speaks, the bubble disappears, then a different stand
     // position is selected. This avoids rapid text swapping in one place.
-    const cycle=1750,visibleFor=1020,slot=Math.floor(raceClock/cycle);
-    const elapsed=raceClock%cycle;
+    // 歓声は4倍速のレース時間ではなく実時間で制御する。
+    // 約2.4秒表示し、その後約2.8秒空けるため読みやすく連発しない。
+    const cycle=5200,visibleFor=2400,slot=Math.floor(cheerClock/cycle);
+    const elapsed=cheerClock%cycle;
     if(elapsed<visibleFor){
       const spots=[
         {x:252,y:61,w:76},{x:267,y:94,w:70},{x:238,y:126,w:82},
@@ -977,6 +981,7 @@ function loop(time) {
   const clockDt = simulationDt;
   lastTime = time;
   if (state === "running") {
+    cheerClock += realDt;
     simulationAccumulator += simulationDt;
     while (simulationAccumulator >= 16 && state === "running") {
       update(16, 16);
