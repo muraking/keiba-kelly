@@ -34,9 +34,13 @@ const STYLE_PATTERNS = [
   ["逃げ", "先行", "先行", "先行", "差し", "差し", "差し", "追込"],
 ];
 let TOTAL = 2400;
-const LAP = 2083.1;
-const START_PROGRESS = .845;
-let FINISH_PROGRESS = START_PROGRESS + TOTAL / LAP;
+// The finish line is fixed. Each start is calculated backwards from the
+// official lap length, so different distances no longer share one start.
+// On this path, .349 is the end of the home straight (just before turn 1).
+const FINISH_LINE_PROGRESS = .349;
+let LAP = 2083.1;
+let FINISH_PROGRESS = FINISH_LINE_PROGRESS;
+let START_PROGRESS = FINISH_PROGRESS - TOTAL / LAP;
 // 東京芝2400mを約2分24秒で走破する基礎速度。
 // 2:20.3のコースレコードから通常のダービー水準2:23〜2:26を想定。
 let BASE_PROGRESS_PER_MS = (TOTAL / LAP) / 144000;
@@ -86,6 +90,26 @@ const TRACK_PROFILES={
   "小倉":{turn:"右",straight:293,elevation:3.0,straightShare:.29,roundness:.90,facility:"garden",innerBias:.014,frontBias:.013},
 };
 function trackProfile(){return TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"]}
+// JRA course lap lengths (metres). Turf uses the rail/course normally used by
+// the races currently in the prototype (e.g. Hanshin 1800m = outer course).
+const COURSE_LAPS = {
+  "札幌": { "芝": 1640.9, "ダート": 1487.0 },
+  "函館": { "芝": 1626.6, "ダート": 1475.8 },
+  "福島": { "芝": 1600.0, "ダート": 1444.6 },
+  "新潟": { "芝": 2223.0, "ダート": 1472.5 },
+  "東京": { "芝": 2083.1, "ダート": 1899.0 },
+  "中山": { "芝": 1667.1, "ダート": 1493.0 },
+  "中京": { "芝": 1705.9, "ダート": 1530.0 },
+  "京都": { "芝": 1894.3, "ダート": 1607.6 },
+  "阪神": { "芝": 2089.0, "ダート": 1517.6 },
+  "小倉": { "芝": 1615.1, "ダート": 1445.4 },
+};
+function configureCourseDistance(){
+  const laps=COURSE_LAPS[currentRaceVenue]||COURSE_LAPS["東京"];
+  LAP=laps[raceSurface]||laps["芝"];
+  FINISH_PROGRESS=FINISH_LINE_PROGRESS;
+  START_PROGRESS=FINISH_PROGRESS-TOTAL/LAP;
+}
 function trackBiasFor(number,style){
   const profile=trackProfile();
   const shortFactor=TOTAL<=1400?1.35:TOTAL<=1800?1.12:TOTAL>=2400?.72:1;
@@ -1000,7 +1024,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   raceSurface = event.detail.surface || "芝";
   currentRaceVenue = event.detail.venue || "東京";
   TOTAL = event.detail.distance || 2400;
-  FINISH_PROGRESS = START_PROGRESS + TOTAL / LAP;
+  configureCourseDistance();
   BASE_PROGRESS_PER_MS = (TOTAL / LAP) / (event.detail.baseTime || TOTAL * 62);
   resetRace();
 });
