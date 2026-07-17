@@ -812,6 +812,12 @@ function showResult(detail){
 document.querySelector("#continueButton").disabled=!localStorage.getItem(SAVE_KEY);
 document.querySelector("#devModeButton").textContent=developerMode?"開発表示 ON":"開発表示";
 document.querySelector("#newGameButton").onclick=()=>{game=defaultGame();generateCandidate();showScreen("nameScreen")};
+document.querySelector("#raceTestButton").onclick=()=>{
+  game=defaultGame();generateCandidate();
+  const c=game.candidate;game={...game,horseName:"ドットスター",week:21,speed:650,dash:620,gateSkill:600,stamina:640,power:610,guts:600,turf:660,dirt:520,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:c.potentialCaps};
+  prepareRace(raceCalendar.find(r=>r.id==="n2"));
+  showScreen("raceScreen");
+};
 document.querySelector("#rerollHorseButton").onclick=generateCandidate;
 document.querySelector("#continueButton").onclick=()=>{if(loadGame()){renderHome();showScreen("homeScreen")}};
 document.querySelector("#confirmNameButton").onclick=()=>{

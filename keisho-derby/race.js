@@ -773,18 +773,25 @@ function drawTrack() {
     const x=345+(i%3)*4,y=116+((i*17)%252)+(i%2&&state==="running"?Math.round(Math.sin(raceClock*.01+i)*2):0);
     ctx.fillStyle=crowdColors[i%crowdColors.length];ctx.fillRect(x,y,3,4);
   }
+  // 内ラチは内馬場施設の上から一周描き直し、白線を途切れさせない。
+  traceCourse(8.7,"#fffdf0",3);
   const player=horses.find(h=>h.player),visionOrder=order();
-  ctx.fillStyle="#101a21";ctx.fillRect(101,190,158,116);ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(101,190,158,116);
+  ctx.fillStyle="#101a21";ctx.fillRect(73,164,214,166);ctx.strokeStyle="#d7c35d";ctx.lineWidth=4;ctx.strokeRect(73,164,214,166);
+  ctx.fillStyle="#263a2e";ctx.fillRect(80,171,200,27);
   ctx.fillStyle="#fff3a6";ctx.font="bold 8px monospace";ctx.textAlign="center";
-  ctx.fillText(playerSetup.raceName||document.querySelector("#raceNameTitle")?.textContent||"TURF VISION",180,201);
+  ctx.fillText("TURF VISION",180,181);
+  ctx.font="bold 10px monospace";ctx.fillText(playerSetup.raceName||document.querySelector("#raceNameTitle")?.textContent||"レース名",180,194);
   visionOrder.forEach((h,index)=>{
-    const y=213+index*11;
-    if(h.player){ctx.fillStyle="#5b451d";ctx.fillRect(105,y-8,150,10)}
-    ctx.fillStyle=h.color;ctx.fillRect(108,y-7,8,8);
-    ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 6px monospace";ctx.fillText(h.id,112,y);
+    const y=211+index*14;
+    if(h.player){ctx.fillStyle="#5b451d";ctx.fillRect(80,y-10,200,13)}
+    ctx.fillStyle=h.color;ctx.fillRect(84,y-9,11,11);
+    ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 7px monospace";ctx.fillText(h.id,89,y);
     const previous=visionRanks.get(h.id)??index+1,arrow=previous>index+1?"▲":previous<index+1?"▼":"・";
-    ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.font="bold 7px monospace";ctx.textAlign="left";ctx.fillText(`${index+1}位${arrow} ${h.name.slice(0,7)}`,121,y);
-    ctx.fillStyle="#26342c";ctx.fillRect(205,y-6,44,5);ctx.fillStyle=h.stamina<.3?"#df4b3f":h.stamina<.55?"#e4bf3f":"#53c96b";ctx.fillRect(205,y-6,44*Math.max(.02,h.stamina),5);
+    ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.font="bold 8px monospace";ctx.textAlign="left";ctx.fillText(`${index+1}位${arrow} ${h.name.slice(0,8)}`,101,y);
+    ctx.fillStyle="#26342c";ctx.fillRect(213,y-8,61,7);ctx.fillStyle=h.stamina<.3?"#df4b3f":h.stamina<.55?"#e4bf3f":"#53c96b";ctx.fillRect(213,y-8,61*Math.max(.02,h.stamina),7);
+    // ビジョン内でも小さな馬が走り、順位変化を視覚的に伝える。
+    const runX=197+Math.round(Math.sin(raceClock*.014+h.id)*2);
+    ctx.fillStyle=h.player?"#ffe56b":"#d7c29b";ctx.fillRect(runX,y-8,7,4);ctx.fillRect(runX+5,y-11,4,4);ctx.fillRect(runX+1,y-4,2,3);ctx.fillRect(runX+5,y-4,2,3);
   });
   if(raceClock-visionRankStamp>700){visionOrder.forEach((h,i)=>visionRanks.set(h.id,i+1));visionRankStamp=raceClock}
   ctx.textAlign="center";
