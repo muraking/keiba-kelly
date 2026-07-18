@@ -288,13 +288,13 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 }
 .stable-board::before,.stable-board::after { content:"";position:absolute;width:5px;height:5px;border:1px solid #5e452b;background:#b99962; }
 .stable-board::before { left:3px;top:3px; }.stable-board::after { right:3px;bottom:3px; }
-.horse-board { left:9px;top:9px;width:190px;min-height:88px; }
+.horse-board { left:9px;top:9px;width:190px;min-height:101px; }
 .horse-board>small { display:block;margin-bottom:2px;color:#76502b;font-size:9px;font-weight:800; }
 .horse-board>div { display:flex;align-items:baseline;justify-content:space-between;gap:5px;margin-bottom:3px; }
 .horse-board>div b { flex:1;min-width:0;white-space:nowrap;font-size:16px;letter-spacing:-.3px; }
-.horse-board .horse-age-class { display:flex;flex:none;align-items:center;gap:2px;font-size:inherit; }
-.horse-board>div em { flex:none;padding:1px 4px;border:2px solid #79542d;background:#fff0bd;font-size:9px;font-style:normal;font-weight:900;white-space:nowrap; }
-.horse-board>div #homeHorseClass { color:#7d321d;background:#ffe5a3; }
+.horse-board .horse-age-class { display:flex;flex:none;align-items:center;justify-content:flex-start;gap:3px;margin:1px 0 4px;font-size:inherit; }
+.horse-board .horse-age-class em { flex:none;padding:1px 5px;border:2px solid #79542d;background:#fff0bd;font-size:9px;font-style:normal;font-weight:900;white-space:nowrap; }
+.horse-board #homeHorseClass { color:#7d321d;background:#ffe5a3; }
 .horse-board span { display:flex;justify-content:space-between;gap:5px;font-size:10px; }
 .horse-board strong { color:#8f3e1d;font-size:11px; }
 .sky-sun { position:absolute; top:22px; right:31px; width:32px; height:32px; border-radius:50%; background:#ffe66d; box-shadow:0 0 0 5px #f9c94c,0 0 18px #fff2a0; }
@@ -316,7 +316,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .stable-scene.weather-snow .stable-precipitation { opacity:.85;background:radial-gradient(circle,#fff 0 2px,transparent 3px);background-size:25px 31px;animation-duration:1.8s; }
 @keyframes stableRain { to { background-position:-18px 54px; } }
 .barn {
-  position:absolute; z-index:4; left:18px; right:auto; bottom:75px; width:230px; height:76px;
+  position:absolute; z-index:1; left:18px; right:auto; bottom:75px; width:230px; height:76px;
   border:4px solid #765b50;
   background:repeating-linear-gradient(0deg,#e3d7ca 0 8px,#d2c1b2 8px 10px);
   box-shadow:6px 6px #31552e;

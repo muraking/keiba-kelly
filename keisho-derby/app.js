@@ -466,13 +466,13 @@ function nextTrainingAdvice(){
     ["power","パワー","坂路単走"],
     ["guts","勝負根性","芝・ダート・坂路の併せ馬"]
   ];
-  const className=displayClassLabel(),target=classAbilityTarget();
+  const target=classAbilityTarget();
   const [stat,label,menu]=targets.sort((a,b)=>(game[a[0]]-target)-(game[b[0]]-target))[0];
-  if(game[stat]<target-70)return `この${className}で戦うには${label}がまだ不足しています。${menu}を中心に鍛えましょう。`;
-  if(game[stat]<target)return `この${className}で安定して走るには${label}がもう少し欲しいですね。${menu}で補強しましょう。`;
+  if(game[stat]<target-70)return `このクラスで戦うには${label}がまだ不足しています。${menu}を中心に鍛えましょう。`;
+  if(game[stat]<target)return `このクラスで安定して走るには${label}がもう少し欲しいですね。${menu}で補強しましょう。`;
   const nextTarget=target+55;
   const [nextStat,nextLabel,nextMenu]=targets.sort((a,b)=>(game[a[0]]-nextTarget)-(game[b[0]]-nextTarget))[0];
-  return `この${className}で戦う力は整いつつあります。次のクラスを考えるなら${nextLabel}を${nextMenu}で伸ばしたいですね。`;
+  return `このクラスで戦う力は整いつつあります。次のクラスを考えるなら${nextLabel}を${nextMenu}で伸ばしたいですね。`;
 }
 function raceSuitabilityAdvice(race,place){
   if(!race)return "次走へ向けて、全体の底上げを続けましょう。";
@@ -499,7 +499,7 @@ function raceSuitabilityAdvice(race,place){
     const shortage=basics[0][0]<classAbilityTarget()
       ? `${basics[0][1]}がまだ不足しています`
       : `${basics[0][1]}をもう少し伸ばしたいところです`;
-    hints.push(`この${displayClassLabel()}で戦うには${shortage}。ここを重点的に鍛えると、内容が変わってきそうです`);
+    hints.push(`このクラスで戦うには${shortage}。ここを重点的に鍛えると、内容が変わってきそうです`);
   }
   return hints.join("。")+"。";
 }
