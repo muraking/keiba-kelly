@@ -828,7 +828,15 @@ function train(type){
   const rawLegLoad={turfSolo:3,turfPair:8,dirtSolo:4,dirtPair:9,hillSolo:9,hillPair:12,pool:-5,gate:2}[type]||0;
   const legLoad=game.equipment.includes("iceBath")?Math.max(-5,rawLegLoad-2):rawLegLoad;
   game.legCondition=Math.max(0,Math.min(100,game.legCondition-legLoad+rnd(-1,1)));
-  const weightLoss=type==="pool"?rnd(1,2):type==="gate"?rnd(1,2):type.includes("Pair")?rnd(3,5):type==="hillSolo"?rnd(3,4):rnd(2,4);
+  const weightDiffBefore=game.weight-bestWeight();
+  let weightLoss;
+  if(weightDiffBefore<=-4){
+    weightLoss=type.includes("Pair")?rnd(0,1):0;
+  }else if(weightDiffBefore<=3){
+    weightLoss=type.includes("Pair")?rnd(1,2):type==="hillSolo"?rnd(1,2):rnd(0,1);
+  }else{
+    weightLoss=type==="pool"?rnd(0,1):type==="gate"?rnd(0,1):type.includes("Pair")?rnd(2,3):type==="hillSolo"?rnd(2,3):rnd(1,2);
+  }
   game.weight=Math.max(330,game.weight-weightLoss);
   game.condition=Math.max(20,Math.min(100,game.condition+(outcome==="大成功"?5:outcome==="失敗"?-10:-1)));
   const injury=sufferInjury(type);
@@ -903,6 +911,7 @@ function autoTrainingChoice(mode,raceSoon=false){
   }else if(mode==="balanced"){
     if(game.fatigue>=45)return "rest";
     if(weightDiff>=12)return "hillSolo";
+    if(weightDiff<=-4)return game.trainingsUsed===0?"pool":"rest";
   }else if(mode==="race"){
     if(game.fatigue>=40)return "pool";
     if(weightDiff>=8)return "hillSolo";
@@ -911,6 +920,7 @@ function autoTrainingChoice(mode,raceSoon=false){
   const candidates=[
     {stat:"speed",type:"turfSolo"},{stat:"dash",type:"gate"},{stat:"stamina",type:"dirtSolo"},{stat:"power",type:"hillSolo"},{stat:"guts",type:mode==="safe"?"turfSolo":"turfPair"}
   ].sort((a,b)=>game[a.stat]-game[b.stat]);
+  if(mode==="balanced"&&weightDiff<=2&&candidates[0].type.includes("Pair"))return "turfSolo";
   if(mode!=="safe"&&game.fatigue<22&&game.trainingsUsed===0&&candidates[0].stat==="guts")return "turfPair";
   return candidates[0].type;
 }
