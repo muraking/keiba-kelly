@@ -334,10 +334,12 @@ function raceDistance(h) {
 }
 
 function order() {
-  return [...horses].sort((a, b) =>
-    (b.finished ? FINISH_PROGRESS + (1000 - b.finishTime) / 100000 : b.progress) -
-    (a.finished ? FINISH_PROGRESS + (1000 - a.finishTime) / 100000 : a.progress)
-  );
+  return [...horses].sort((a,b)=>{
+    if(a.finished&&b.finished)return a.finishTime-b.finishTime;
+    if(a.finished)return-1;
+    if(b.finished)return 1;
+    return b.progress-a.progress;
+  });
 }
 
 function update(dt, clockDt) {
@@ -898,16 +900,21 @@ function drawTrackV2(){
   ctx.fillStyle="#263a2e";ctx.fillRect(vx+3,vy+3,vw-6,18);
   ctx.fillStyle="#fff3a6";ctx.font="bold 11px monospace";ctx.textAlign="center";
   ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m（${playerSetup.going}）`,180,vy+16);
-  // 中継カメラ：先頭集団を実距離差で配置。
+  // 中継カメラ：全馬の実走距離とコース取りをそのまま投影する。
   const camY=vy+23,camH=52;
   ctx.fillStyle=isDirt?"#9a6c43":"#4a9945";ctx.fillRect(vx+3,camY,vw-6,camH);
   ctx.fillStyle=isDirt?"#8a5f3a":"#3f8a3b";
   for(let i=0;i<12;i++)ctx.fillRect(vx+8+i*29,camY+6+(i*17)%40,18,2);
   const leaderDist=raceDistance(leader);
-  visionOrder.filter(h=>leaderDist-raceDistance(h)<=55).slice(0,4).forEach((h,i)=>{
-    const lead=leaderDist-raceDistance(h);
-    const x=Math.max(vx+46,Math.min(vx+vw-30,Math.round(vx+vw-38-lead*3.4)));
-    drawVisionCandidateHorse(x,camY+28+(i%2)*9,h,.5);
+  const visionDistances=horses.map(h=>raceDistance(h));
+  const visionFront=Math.max(...visionDistances),visionRear=Math.min(...visionDistances);
+  const visionSpan=Math.max(55,visionFront-visionRear);
+  [...horses].sort((a,b)=>b.lane-a.lane).forEach(h=>{
+    const distance=raceDistance(h);
+    const x=Math.round(vx+30+(distance-visionRear)/visionSpan*(vw-60));
+    const lane=Math.max(1,Math.min(8,h.lane));
+    const y=Math.round(camY+11+(lane-1)*(camH-20)/7);
+    drawVisionCandidateHorse(x,y,h,.38);
   });
   // 馬名タグ：先頭と自分の馬（仕様：ビジョンに愛馬の馬番と馬名を表示）。
   // 全頭順位ボード：枠色チップ＋馬番＋馬名フル表示＋着差。
