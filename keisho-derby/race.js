@@ -62,6 +62,7 @@ let multiplier = 1;
 let lastTime = 0;
 let raceClock = 0;
 let preRaceClock = 0;
+let weatherClock = 0;
 let waitingMotionClock = 0;
 let gateDifficultHorseId = null;
 let cheerClock = 0;
@@ -314,6 +315,7 @@ function resetRace() {
   state = "ready";
   raceClock = 0;
   preRaceClock = 0;
+  weatherClock = 0;
   waitingMotionClock = 0;
   gateDifficultHorseId = null;
   cheerClock = 0;
@@ -1412,13 +1414,13 @@ function drawWeather(){
   ctx.save();
   // レイアウトV2ではビジョン・高低差パネルに雨雪を重ねず、コース帯だけに降らせる。
   if(layoutV2){ctx.beginPath();ctx.rect(0,20,360,232);ctx.clip();}
-  ctx.globalAlpha=snow?.82:.52;
+  ctx.globalAlpha=snow?.9:.68;
   ctx.strokeStyle=snow?"#ffffff":"#bce8ff";
   ctx.fillStyle="#ffffff";
   ctx.lineWidth=snow?1:2;
   for(let i=0;i<count;i++){
-    const x=(i*47+(raceClock*.035*(snow?.35:1)))%380-10;
-    const y=(i*83+(raceClock*.06*(snow?.45:1)))%530-15;
+    const x=(i*47+(weatherClock*.035*(snow?.35:1)))%380-10;
+    const y=(i*83+(weatherClock*.06*(snow?.45:1)))%530-15;
     if(snow){
       const size=2+(i%3);
       ctx.fillRect(Math.round(x),Math.round(y),size,size);
@@ -1451,6 +1453,8 @@ function loop(time) {
   const simulationDt = realDt * BASE_PLAYBACK_RATE * multiplier;
   const clockDt = simulationDt;
   lastTime = time;
+  // 雨雪はレース倍速と切り離し、ゲート演出中から一定速度で動かす。
+  if(state!=="paused"&&state!=="ready"&&state!=="finished")weatherClock+=realDt;
   if(state==="parade"||state==="gates"||state==="gateBreak"){
     preRaceClock+=realDt;
     if(state==="parade"||state==="gates")waitingMotionClock+=realDt;
