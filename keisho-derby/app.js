@@ -393,7 +393,7 @@ function generateCandidate(){
   document.querySelector("#candidateInfo").innerHTML=[
     ["スピード",game.candidate.speed],["ダッシュ",game.candidate.dash],["スタミナ",game.candidate.stamina],["パワー",game.candidate.power],
     ["勝負根性",game.candidate.guts],["馬体重",`${game.candidate.weight}kg`],["芝適性",turf],["ダート適性",dirt],["道悪適性",game.candidate.heavyTrack]
-  ].map(([k,v])=>`<span>${k}<b>${typeof v==="number"?(developerMode?`${Math.round(v)} / 1000`:scoutComment(k,v)):v}</b></span>`).join("");
+  ].map(([k,v])=>`<span>${k}<b>${typeof v==="number"?scoutComment(k,v):v}</b></span>`).join("");
 }
 function renderRetirement(){
   document.querySelector("#retirementHorseName").textContent=game.horseName;
@@ -452,7 +452,7 @@ function beginNextGeneration(partner){
   document.querySelector("#candidateTitle").textContent=`${child.coat}の2歳${child.sex}`;
   document.querySelector("#candidateHorse").style.setProperty("--horse-color",child.color);
   document.querySelector("#candidatePedigree").innerHTML=`父 ${sire[0]}（${sire[1]}）<br>得意 ${sire[2]}／成長型 ${sire[3]}<br>母 ${dam[0]}（${dam[1]}）<br>得意 ${dam[2]}／成長型 ${dam[3]}`;
-  document.querySelector("#candidateInfo").innerHTML=[["スピード",child.speed],["ダッシュ",child.dash],["スタミナ",child.stamina],["パワー",child.power],["勝負根性",child.guts],["馬体重",`${child.weight}kg`],["芝適性",child.turf],["ダート適性",child.dirt],["道悪適性",child.heavyTrack]].map(([k,v])=>`<span>${k}<b>${typeof v==="number"?(developerMode?`${Math.round(v)} / 1000`:scoutComment(k,v)):v}</b></span>`).join("");
+  document.querySelector("#candidateInfo").innerHTML=[["スピード",child.speed],["ダッシュ",child.dash],["スタミナ",child.stamina],["パワー",child.power],["勝負根性",child.guts],["馬体重",`${child.weight}kg`],["芝適性",child.turf],["ダート適性",child.dirt],["道悪適性",child.heavyTrack]].map(([k,v])=>`<span>${k}<b>${typeof v==="number"?scoutComment(k,v):v}</b></span>`).join("");
   document.querySelector("#rerollHorseButton").hidden=true;
   document.querySelector("#horseNameInput").value="";
   document.querySelector("#birthHorse").style.setProperty("--horse-color",child.color);
