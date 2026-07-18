@@ -756,7 +756,7 @@ function prepareRace(race){
     };
     game.currentRaceWeather=raceWeather;
     saveGame();
-    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,surface:race.surface,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,horizontalLayout:!!race.horizontalTest}}));
+    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,surface:race.surface,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,horizontalLayout:!!race.horizontalTest,layoutV2:!!race.horizontalTest2}}));
   }catch(error){
     console.error("race preparation failed",error);
     document.querySelector("#commentary").textContent="レースの読み込みを再試行しています。";
@@ -846,6 +846,13 @@ document.querySelector("#raceTestButton").onclick=()=>{
   game=defaultGame();generateCandidate();
   const c=game.candidate;game={...game,horseName:"ドットスター",week:21,speed:650,dash:620,gateSkill:600,stamina:640,power:610,guts:600,turf:660,dirt:520,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:c.potentialCaps};
   prepareRace({...raceCalendar.find(r=>r.id==="n2"),horizontalTest:true});
+  showScreen("raceScreen");
+  dispatchEvent(new CustomEvent("dotkeiba:auto-start"));
+};
+document.querySelector("#raceTest2Button").onclick=()=>{
+  game=defaultGame();generateCandidate();
+  const c=game.candidate;game={...game,horseName:"ドットスター",week:21,speed:650,dash:620,gateSkill:600,stamina:640,power:610,guts:600,turf:660,dirt:520,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:c.potentialCaps};
+  prepareRace({...raceCalendar.find(r=>r.id==="n2"),horizontalTest2:true});
   showScreen("raceScreen");
   dispatchEvent(new CustomEvent("dotkeiba:auto-start"));
 };
