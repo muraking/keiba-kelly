@@ -93,6 +93,13 @@ function setCommentary(message,reset=false){
   commentaryHistory=commentaryHistory.slice(-4);
   commentaryEl.textContent=commentaryHistory.join("\n");
 }
+function wrappedCommentaryLines(messages,maxChars=28){
+  return messages.flatMap(message=>{
+    const chars=Array.from(message),lines=[];
+    for(let i=0;i<chars.length;i+=maxChars)lines.push(chars.slice(i,i+maxChars).join(""));
+    return lines.length?lines:[""];
+  }).slice(-4);
+}
 
 function raceRandom() {
   randomState = (randomState * 1664525 + 1013904223) >>> 0;
@@ -900,16 +907,17 @@ function drawTrackV2(){
   ctx.fillStyle="#25201d";ctx.fillRect(16,commentaryY+20,2,2);ctx.fillRect(23,commentaryY+20,2,2);
   ctx.fillStyle="#a96644";ctx.fillRect(20,commentaryY+23,2,2);
   ctx.fillStyle="#6f2d28";ctx.fillRect(17,commentaryY+27,7,Math.floor(raceClock/260)%2===0?2:1);
-  ctx.fillStyle="#f3f0df";ctx.fillRect(11,commentaryY+32,18,28);
-  ctx.fillStyle="#285a91";ctx.fillRect(11,commentaryY+41,18,19);
+  ctx.fillStyle="#172d4b";ctx.fillRect(10,commentaryY+32,20,29);
+  ctx.fillStyle="#f3f0df";ctx.fillRect(17,commentaryY+33,6,13);
+  ctx.fillStyle="#294a73";ctx.fillRect(11,commentaryY+34,6,18);ctx.fillRect(23,commentaryY+34,6,18);
+  ctx.fillStyle="#a93632";ctx.fillRect(19,commentaryY+38,2,10);
   ctx.fillStyle="#d7c35d";ctx.fillRect(26,commentaryY+44,7,2);
-  const commentaryLines=commentaryHistory.slice(-4);
+  const commentaryLines=wrappedCommentaryLines(commentaryHistory);
   ctx.font="bold 11px sans-serif";ctx.textAlign="left";
   commentaryLines.forEach((line,index)=>{
     const aboutPlayer=line.includes(playerSetup.horseName)||line.includes("愛馬");
     ctx.fillStyle=aboutPlayer?"#ffe45c":"#f4f6f2";
-    const clipped=line.length>28?`${line.slice(0,27)}…`:line;
-    ctx.fillText(clipped,38,commentaryY+15+index*17);
+    ctx.fillText(line,38,commentaryY+15+index*17);
   });
 
   // ターフビジョン（コース外・独立パネル）。
