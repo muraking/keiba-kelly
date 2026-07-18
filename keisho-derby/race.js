@@ -74,6 +74,7 @@ let split1000Time = null;
 let measuredPace = "未確定";
 let raceSurface = "芝";
 let currentRaceVenue = "東京";
+let currentCourseSpec = {route:"",lap:2083.1,straight:525.9,elevation:2.7};
 let opponentAbilities = [];
 let fieldAverageAbility = 920;
 let raceSeed = 1;
@@ -134,7 +135,13 @@ const TRACK_PROFILES={
   "高知":{turn:"右",straight:200,elevation:1.58,straightShare:.24,roundness:.75,facility:"hill",innerBias:-.004,frontBias:.018},
   "佐賀":{turn:"右",straight:200,elevation:1.0,straightShare:.24,roundness:.75,facility:"garden",innerBias:.018,frontBias:.019},
 };
-function trackProfile(){return TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"]}
+function trackProfile(){
+  const base=TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"];
+  const route=currentCourseSpec.route;
+  return {...base,straight:currentCourseSpec.straight??base.straight,elevation:currentCourseSpec.elevation??base.elevation,
+    straightShare:route==="外回り"?Math.max(base.straightShare,.36):route==="内回り"?Math.min(base.straightShare,.30):base.straightShare,
+    roundness:route==="外回り"?base.roundness*1.08:route==="内回り"?base.roundness*.94:base.roundness};
+}
 // JRA course lap lengths (metres). Turf uses the rail/course normally used by
 // the races currently in the prototype (e.g. Hanshin 1800m = outer course).
 const COURSE_LAPS = {
@@ -160,11 +167,39 @@ const COURSE_LAPS = {
   "高知": { "ダート": 1100 },
   "佐賀": { "ダート": 1100 },
 };
+// JRA公式コースデータ（Aコース）に基づく、距離別の内・外回り。
+// 混合はスタート後に外回りから内回りへ合流する長距離専用形態。
+const TURF_ROUTE_BY_DISTANCE={
+  "新潟":{1000:"直線",1200:"内回り",1400:"外回り",1600:"外回り",1800:"外回り",2000:"外回り",2200:"内回り",2400:"内回り",3000:"外回り",3200:"外回り"},
+  "中山":{1200:"外回り",1600:"外回り",1800:"内回り",2000:"内回り",2200:"外回り",2500:"内回り",2600:"外回り",3200:"外→内",3600:"内回り",4000:"外回り"},
+  "京都":{1100:"内回り",1200:"内回り",1400:"外回り",1600:"外回り",1800:"外回り",2000:"内回り",2200:"外回り",2400:"外回り",3000:"外回り",3200:"外回り"},
+  "阪神":{1200:"内回り",1400:"内回り",1600:"外回り",1800:"外回り",2000:"内回り",2200:"内回り",2400:"外回り",2600:"外回り",3000:"内回り",3200:"外→内"}
+};
+const TURF_ROUTE_SPECS={
+  "新潟":{内回り:{lap:1623,straight:358.7,elevation:.8},外回り:{lap:2223,straight:658.7,elevation:2.2},直線:{lap:1000,straight:1000,elevation:0}},
+  "中山":{内回り:{lap:1667.1,straight:310,elevation:5.3},外回り:{lap:1839.7,straight:310,elevation:5.3},"外→内":{lap:1667.1,straight:310,elevation:5.3}},
+  "京都":{内回り:{lap:1782.8,straight:328.4,elevation:3.1},外回り:{lap:1894.3,straight:403.7,elevation:4.3}},
+  "阪神":{内回り:{lap:1689,straight:356.5,elevation:1.9},外回り:{lap:2089,straight:473.6,elevation:2.4},"外→内":{lap:1689,straight:356.5,elevation:2.4}}
+};
+function courseSpec(){
+  const route=raceSurface==="芝"?TURF_ROUTE_BY_DISTANCE[currentRaceVenue]?.[TOTAL]:"ダート";
+  const routed=route&&TURF_ROUTE_SPECS[currentRaceVenue]?.[route];
+  const profile=TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"];
+  const lap=(COURSE_LAPS[currentRaceVenue]||COURSE_LAPS["東京"])[raceSurface]||2083.1;
+  return routed?{route,...routed}:{route:route||raceSurface,lap,straight:profile.straight,elevation:profile.elevation};
+}
 function configureCourseDistance(){
-  const laps=COURSE_LAPS[currentRaceVenue]||COURSE_LAPS["東京"];
-  LAP=laps[raceSurface]||laps["芝"];
+  currentCourseSpec=courseSpec();
+  LAP=currentCourseSpec.lap;
   FINISH_PROGRESS=FINISH_LINE_PROGRESS;
   START_PROGRESS=FINISH_PROGRESS-TOTAL/LAP;
+}
+function finishMarkerVisible(){
+  if(TOTAL<=LAP)return true;
+  const leader=order()[0];
+  if(!leader)return false;
+  // 長距離戦では途中のゴール板をゴールと誤認しないよう、最終周に入ってから表示する。
+  return raceDistance(leader)>=Math.max(0,TOTAL-LAP)-2;
 }
 function trackBiasFor(number,style){
   const profile=trackProfile();
@@ -619,11 +654,12 @@ function update(dt, clockDt) {
     const normalized=Math.max(0,Math.min(1,raceDistance(h)/TOTAL));
     dot.style.left=`${1+normalized*98}%`;dot.style.bottom=`${5+courseElevation(h.progress)}px`;
   });
+  const homeStraight=Math.round(trackProfile().straight);
   phaseEl.textContent =
     remaining === 0 ? "確定" :
-    remaining <= 525 ? "最後の直線" :
-    remaining <= 850 ? "4コーナー" :
-    remaining <= 1200 ? "向正面" : "レース中";
+    remaining <= homeStraight ? "最後の直線" :
+    remaining <= homeStraight+330 ? "4コーナー" :
+    remaining <= homeStraight+760 ? "向正面" : "レース中";
   const leaderGradient = courseGradient(leader.progress);
   slopeStateEl.textContent =
     leaderGradient.type === "up" ? `上り坂 ▲${leaderGradient.label}` :
@@ -740,6 +776,14 @@ function numberTextColor(id) {
 }
 
 function coursePoint(progress, lane = 3) {
+  if(currentCourseSpec.route==="直線"){
+    const ratio=Math.max(0,Math.min(1,(progress-START_PROGRESS)/(TOTAL/LAP)));
+    return horizontalLayout
+      ? {x:24+ratio*312,y:102+lane*5,angle:0,curve:false}
+      : layoutV2
+        ? {x:18+ratio*324,y:88+lane*10,angle:0,curve:false}
+        : {x:36+ratio*288,y:145+lane*12,angle:0,curve:false};
+  }
   let p = ((progress % 1) + 1) % 1;
   if(trackProfile().turn==="右")p=(1-p)%1;
   if(horizontalLayout){
@@ -948,7 +992,7 @@ function drawHorizontalTrack(){
   visionOrder.slice(0,4).forEach((h,i)=>{const y=164+i*9;ctx.fillStyle=h.color;ctx.fillRect(103,y-7,9,9);ctx.fillStyle="#fff";ctx.font="bold 7px sans-serif";ctx.textAlign="left";ctx.fillText(`${i+1}位`,116,y);ctx.fillStyle="#26342c";ctx.fillRect(145,y-7,108,6);ctx.fillStyle=h.stamina<.3?"#df4b3f":"#53c96b";ctx.fillRect(145,y-7,108*Math.max(.02,h.stamina),6)});
   ctx.fillStyle="#ffe46d";ctx.font="bold 8px sans-serif";ctx.textAlign="left";ctx.fillText("横向きレイアウト TEST",8,14);
   trace(8.7,"#fffdf0",3);
-  drawMarker(START_PROGRESS,"#35dc5c","START");drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
+  drawMarker(START_PROGRESS,"#35dc5c","START");if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 }
 
 // レイアウトV2用の着差表示。ゴール後は時計差、道中は実距離差から換算する。
@@ -982,7 +1026,7 @@ function drawTrackV2(){
   // コース上部のレース情報。
   ctx.fillStyle="#101a21";ctx.fillRect(0,0,360,20);
   ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
-  ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m　${playerSetup.going}`,180,14);
+  ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m ${currentCourseSpec.route}　${playerSetup.going}`,180,14);
   // ホーム直線沿いの大型スタンド（上辺）。
   ctx.fillStyle="#6e8492";ctx.fillRect(4,20,352,5);
   ctx.fillStyle="#506574";ctx.fillRect(4,25,352,7);
@@ -993,18 +1037,23 @@ function drawTrackV2(){
     ctx.fillStyle=crowdColors[i%5];
     ctx.fillRect(6+(i*6.1)%348,23+((i*13)%4)*4,3,3);
   }
+  const straightCourse=currentCourseSpec.route==="直線";
   const trace=(lane,color,width)=>{
     ctx.beginPath();
-    for(let i=0;i<=180;i++){const q=coursePoint(i/180,lane);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
-    ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke();
+    if(straightCourse){
+      const a=coursePoint(START_PROGRESS,lane),b=coursePoint(FINISH_PROGRESS,lane);ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+    }else for(let i=0;i<=180;i++){const q=coursePoint(i/180,lane);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
+    if(!straightCourse)ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke();
   };
   trace(4.5,"#f1ead2",40);
   trace(4.5,isDirt?"#a87549":"#43943e",33);
   for(let lane=1;lane<=8;lane++)trace(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
   // 内馬場。
-  ctx.beginPath();
-  for(let i=0;i<=120;i++){const q=coursePoint(i/120,9.4);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
-  ctx.closePath();ctx.fillStyle="#1e5d28";ctx.fill();
+  if(!straightCourse){
+    ctx.beginPath();
+    for(let i=0;i<=120;i++){const q=coursePoint(i/120,9.4);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
+    ctx.closePath();ctx.fillStyle="#1e5d28";ctx.fill();
+  }
   const profile=trackProfile();
   if(["museum","pond","sea"].includes(profile.facility)){
     ctx.fillStyle="#4d9dc1";ctx.fillRect(96,120,34,12);ctx.fillRect(104,116,18,4);
@@ -1012,7 +1061,7 @@ function drawTrackV2(){
   ctx.fillStyle="#9fd6a0";ctx.font="bold 9px sans-serif";ctx.textAlign="center";
   trace(8.7,"#fffdf0",2);
   drawMarker(START_PROGRESS,"#35dc5c","START");
-  drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
+  if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 
   // コース直下の実況帯（最新4行）。
   const commentaryY=254;
@@ -1263,7 +1312,7 @@ function drawTrack() {
   }
 
   drawMarker(START_PROGRESS, "#35dc5c", "START");
-  drawMarker(FINISH_PROGRESS % 1, "#ec3d35", "GOAL");
+  if(finishMarkerVisible())drawMarker(FINISH_PROGRESS % 1, "#ec3d35", "GOAL");
   ctx.fillStyle = "#ffe068";
   ctx.font = "bold 9px sans-serif";
   ctx.textAlign = "center";
