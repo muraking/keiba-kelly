@@ -144,10 +144,10 @@ const PROGRAM_RACES=[
   [6,"新馬","新馬","ダート",1800,750,63],
   [7,"1勝クラス","1勝","芝",1400,800,69],
   [8,"1勝クラス","1勝","ダート",1400,800,69],
-  [9,"長距離1勝クラス","1勝","芝","long",800,72],
-  [10,"2勝クラス","2勝","芝",2000,1140,76],
-  [11,"長距離特別","3勝","芝","long",1840,82],
-  [12,"オープン特別","オープン","ダート",1800,2200,85],
+  [9,"1勝クラス","1勝","mixed","long",800,72],
+  [10,"2勝クラス","2勝","mixed",2000,1140,76],
+  [11,"3勝クラス特別","3勝","mixed","long",1840,82],
+  [12,"オープン特別","オープン","mixed",1800,2200,85],
 ];
 function classMoneyEligible(raceClass,g){
   if(raceClass==="1勝")return !g.maiden&&g.classMoney<=500;
@@ -172,7 +172,9 @@ function programAgeLabel(week){
 }
 for(let week=1;week<=240;week++){
   const calendarAge=horseAgeAtWeek(week),yearWeek=(week-1)%48,ageLimitedSeason=calendarAge===2||(calendarAge===3&&yearWeek<21),venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
-  venues.forEach(venue=>PROGRAM_RACES.forEach(([number,baseName,baseClass,surface,requestedDistance,prize,difficulty])=>{
+  venues.forEach(venue=>PROGRAM_RACES.forEach(([number,baseName,baseClass,baseSurface,requestedDistance,prize,difficulty])=>{
+    // 後半4競走は週ごとに芝・ダートを2競走ずつ配置し、固定的な芝偏重を防ぐ。
+    const surface=baseSurface==="mixed"?((week+number)%2===0?"芝":"ダート"):baseSurface;
     let raceClass=baseClass,name=baseName,raceDistanceRequest=requestedDistance;
     const newRaceClosed=calendarAge>3||(calendarAge===3&&yearWeek>12);
     const maidenClosed=calendarAge>3||(calendarAge===3&&yearWeek>36);
@@ -182,6 +184,7 @@ for(let week=1;week<=240;week++){
     }else if(raceClass==="新馬"||raceClass==="未勝利")name=`${calendarAge}歳${raceClass}`;
     else if(raceClass==="1勝"&&number!==9)name=`${programAgeLabel(week)}1勝クラス`;
     if(number===9&&calendarAge===2){name="2歳1勝クラス";raceDistanceRequest=1800}
+    if(raceDistanceRequest==="long"&&surface==="ダート")raceDistanceRequest=1800;
     if(number>=10&&ageLimitedSeason){raceClass="オープン";name=`${calendarAge}歳オープン`}
     const niigataStraight=venue==="新潟"&&surface==="芝"&&number===7;
     const distance=niigataStraight?1000:venueRaceDistance(venue,surface,raceDistanceRequest,week);
@@ -191,7 +194,7 @@ for(let week=1;week<=240;week++){
       course:`${venue} ${surface}${distance}m`,surface,distance,
       baseTime:Math.round(basePer1000*distance/1000),prize,difficulty,
       age:raceClass==="新馬"||raceClass==="未勝利"?`${calendarAge}歳`:programAgeLabel(week),
-      condition:g=>ageLimitedSeason&&raceClass==="オープン"?!g.maiden&&g.classMoney>500:generatedRaceCondition(raceClass,week,g)});
+      condition:g=>ageLimitedSeason&&raceClass==="オープン"?!g.maiden&&g.classMoney>=400:generatedRaceCondition(raceClass,week,g)});
   }));
 }
 const OFFICIAL_GRADE_LABEL={G1:"GⅠ",G2:"GⅡ",G3:"GⅢ",Jpn1:"JpnⅠ",Jpn2:"JpnⅡ",Jpn3:"JpnⅢ"};
@@ -225,9 +228,9 @@ function addOfficialRaces(source,prefix){
     const official={...raw,age:raw.age||narAgeText(raw.name)};
     const raceWeek=officialWeek(raw.date,year);
     const normalizedClass=raw.grade.endsWith("1")?"G1":raw.grade.endsWith("2")?"G2":"G3";
-    // Two- and three-year-old G1s must remain reachable before older-horse earnings accumulate.
-    const ageLimitedG1=normalizedClass==="G1"&&/^(2歳|3歳)(?!以上)/.test(official.age);
-    const classThreshold=normalizedClass==="G1"?(ageLimitedG1?400:1600):normalizedClass==="G2"?1000:400;
+    // 2・3歳限定重賞は勝ち上がり馬に門戸を残す。古馬重賞はオープン馬だけを対象にする。
+    const ageLimitedGraded=/^(2歳|3歳)(?!以上)/.test(official.age);
+    const classThreshold=ageLimitedGraded?400:1601;
     raceCalendar.push({id:`${prefix}-${year}-${index}`,program:true,official:true,officialDate:raw.date,number:11,
       week:raceWeek,name:`${raw.name} ${OFFICIAL_GRADE_LABEL[raw.grade]}`,raceClass:normalizedClass,
       course:`${raw.venue} ${raw.surface}${raw.distance}m`,surface:raw.surface,distance:raw.distance,
@@ -239,6 +242,40 @@ function addOfficialRaces(source,prefix){
 for(let i=raceCalendar.length-1;i>=0;i--)if(!raceCalendar[i].program&&["G1","G2","G3"].includes(raceCalendar[i].raceClass))raceCalendar.splice(i,1);
 addOfficialRaces(window.OFFICIAL_JRA_GRADED_2026||[],"jra26");
 addOfficialRaces(window.OFFICIAL_NAR_GRADED_2026||[],"nar26");
+// 公式重賞の開催場が月4週の簡易開催表から漏れた週も、1〜12Rの通常番組を補完する。
+const centralJraVenues=new Set(["札幌","函館","福島","新潟","東京","中山","中京","京都","阪神","小倉"]);
+const officialJraKeys=new Set(raceCalendar.filter(r=>r.official&&centralJraVenues.has(r.course.split(" ")[0])).map(r=>`${r.week}|${r.course.split(" ")[0]}`));
+officialJraKeys.forEach(key=>{
+  const [weekText,venue]=key.split("|"),week=Number(weekText);
+  if(raceCalendar.some(r=>!r.official&&r.program&&r.week===week&&r.course.startsWith(`${venue} `)))return;
+  const templateVenue=raceCalendar.find(r=>!r.official&&r.program&&r.week===week)?.course.split(" ")[0];
+  const templates=raceCalendar.filter(r=>!r.official&&r.program&&r.week===week&&r.course.startsWith(`${templateVenue} `));
+  templates.forEach(r=>{
+    const distance=venueRaceDistance(venue,r.surface,r.distance,week);
+    raceCalendar.push({...r,id:`supplement-${week}-${venue}-${r.number}`,course:`${venue} ${r.surface}${distance}m`,distance,
+      baseTime:Math.round((r.surface==="芝"?60000:63000)*distance/1000)});
+  });
+});
+// 月4週へ圧縮して同週・同場に重賞が複数ある場合は9〜11Rへ割り振り、仮番組と差し替える。
+const officialRaceNumbers=new Map();
+raceCalendar.filter(r=>r.official).forEach(r=>{
+  const key=`${r.week}|${r.course.split(" ")[0]}`,group=officialRaceNumbers.get(key)||[];
+  group.push(r);officialRaceNumbers.set(key,group);
+});
+officialRaceNumbers.forEach(group=>{
+  const used=new Set(),key=`${group[0].week}|${group[0].course.split(" ")[0]}`;
+  group.sort((a,b)=>a.officialDate.localeCompare(b.officialDate)).forEach(race=>{
+    const candidates=[11,10,9,12];
+    const sameSurface=candidates.find(number=>!used.has(number)&&raceCalendar.some(r=>!r.official&&r.program&&`${r.week}|${r.course.split(" ")[0]}`===key&&r.number===number&&r.surface===race.surface));
+    race.number=sameSurface??candidates.find(number=>!used.has(number))??11;
+    used.add(race.number);
+  });
+});
+for(let i=raceCalendar.length-1;i>=0;i--){
+  const race=raceCalendar[i];
+  const officialNumbers=officialRaceNumbers.get(`${race.week}|${race.course.split(" ")[0]}`)?.map(r=>r.number)||[];
+  if(!race.official&&race.program&&officialNumbers.includes(race.number))raceCalendar.splice(i,1);
+}
 const CLASS_TIME_ADJUST={
   "新馬":{芝:2.6,ダート:3.3},
   "未勝利":{芝:2.2,ダート:3.0},
