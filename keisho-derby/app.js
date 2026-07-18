@@ -311,6 +311,11 @@ function advanceConditionCycle(actionBonus=0){
   game.condition=Math.max(20,Math.min(100,game.condition+natural+actionBonus));
 }
 function classLabel(){return game.maiden?"未勝利":game.classMoney<=400?"1勝クラス":game.classMoney<=1000?"2勝クラス":game.classMoney<=1600?"3勝クラス":"オープン"}
+function displayClassLabel(){return game.races===0?"新馬":classLabel()}
+function classAbilityTarget(){
+  const label=displayClassLabel();
+  return label==="新馬"?500:label==="未勝利"?530:label==="1勝クラス"?610:label==="2勝クラス"?680:label==="3勝クラス"?750:820;
+}
 function legLabel(){return game.legCondition>=85?"良好":game.legCondition>=65?"少し張り":game.legCondition>=45?"注意":"危険"}
 function raceConditionModifier(){
   if(game.condition>=85)return 30;
@@ -373,9 +378,13 @@ function nextTrainingAdvice(){
     ["power","パワー","坂路単走"],
     ["guts","勝負根性","芝・ダート・坂路の併せ馬"]
   ];
-  const [stat,label,menu]=targets.sort((a,b)=>game[a[0]]/(game.potentialCaps?.[a[0]]||1000)-game[b[0]]/(game.potentialCaps?.[b[0]]||1000))[0];
-  const level=game[stat]<470?"まだ不足しています":game[stat]<620?"もう少し欲しいところです":"他の能力に比べて伸びしろがあります";
-  return `今後は${label}が${level}。${menu}を中心にするとよいでしょう。`;
+  const className=displayClassLabel(),target=classAbilityTarget();
+  const [stat,label,menu]=targets.sort((a,b)=>(game[a[0]]-target)-(game[b[0]]-target))[0];
+  if(game[stat]<target-70)return `この${className}で戦うには${label}がまだ不足しています。${menu}を中心に鍛えましょう。`;
+  if(game[stat]<target)return `この${className}で安定して走るには${label}がもう少し欲しいですね。${menu}で補強しましょう。`;
+  const nextTarget=target+55;
+  const [nextStat,nextLabel,nextMenu]=targets.sort((a,b)=>(game[a[0]]-nextTarget)-(game[b[0]]-nextTarget))[0];
+  return `この${className}で戦う力は整いつつあります。次のクラスを考えるなら${nextLabel}を${nextMenu}で伸ばしたいですね。`;
 }
 function raceSuitabilityAdvice(race,place){
   if(!race)return "次走へ向けて、全体の底上げを続けましょう。";
@@ -399,7 +408,10 @@ function raceSuitabilityAdvice(race,place){
   else hints.push(`${race.surface}はこなせそうです`);
   if(place>3){
     const basics=[[game.speed,"スピード"],[game.dash,"ダッシュ"],[game.stamina,"スタミナ"],[game.power,"パワー"],[game.guts,"勝負根性"]].sort((a,b)=>a[0]-b[0]);
-    hints.push(`次は${basics[0][1]}を重点的に鍛えると、内容が変わってきそうです`);
+    const shortage=basics[0][0]<classAbilityTarget()
+      ? `${basics[0][1]}がまだ不足しています`
+      : `${basics[0][1]}をもう少し伸ばしたいところです`;
+    hints.push(`この${displayClassLabel()}で戦うには${shortage}。ここを重点的に鍛えると、内容が変わってきそうです`);
   }
   return hints.join("。")+"。";
 }
@@ -457,7 +469,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   const horseNameLength=Array.from(game.horseName).length;
   homeHorseName.style.fontSize=horseNameLength>=11?"10px":horseNameLength>=9?"12px":horseNameLength>=7?"14px":"16px";
   document.querySelector("#homeHorseAge").textContent=`${horseAge()}歳`;
-  document.querySelector("#homeHorseClass").textContent=game.races===0?"新馬":classLabel();
+  document.querySelector("#homeHorseClass").textContent=displayClassLabel();
   document.querySelector("#homePrize").textContent=`${game.prize.toLocaleString()}万円`;
   document.querySelector("#weekDisplay").textContent=weekLabel();
   document.querySelector("#turnsLeft").textContent=`${game.trainingsUsed}/2`;
