@@ -848,7 +848,7 @@ function drawTrackV2(){
   }
   // コース上部のレース情報。
   ctx.fillStyle="#101a21";ctx.fillRect(0,0,360,20);
-  ctx.fillStyle="#fff3a6";ctx.font="bold 10px sans-serif";ctx.textAlign="center";
+  ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
   ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m　${playerSetup.going}`,180,14);
   // ホーム直線沿いの大型スタンド（上辺）。
   ctx.fillStyle="#6e8492";ctx.fillRect(4,20,352,5);
@@ -885,27 +885,31 @@ function drawTrackV2(){
   const commentaryY=254;
   ctx.fillStyle="#071018";ctx.fillRect(4,commentaryY,352,74);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=2;ctx.strokeRect(4,commentaryY,352,74);
-  ctx.fillStyle="#d8a06e";ctx.fillRect(14,commentaryY+7,12,9);
-  ctx.fillStyle="#35251c";ctx.fillRect(12,commentaryY+5,16,4);ctx.fillRect(12,commentaryY+9,3,7);
-  ctx.fillStyle="#f3f0df";ctx.fillRect(12,commentaryY+17,16,16);
-  ctx.fillStyle="#285a91";ctx.fillRect(12,commentaryY+22,16,11);
-  ctx.fillStyle="#d7c35d";ctx.fillRect(24,commentaryY+24,8,3);
+  ctx.fillStyle="#35251c";ctx.fillRect(9,commentaryY+5,23,7);ctx.fillRect(8,commentaryY+10,4,15);
+  ctx.fillStyle="#d8a06e";ctx.fillRect(11,commentaryY+11,19,21);
+  ctx.fillStyle="#fff";ctx.fillRect(14,commentaryY+18,5,4);ctx.fillRect(23,commentaryY+18,5,4);
+  ctx.fillStyle="#25201d";ctx.fillRect(16,commentaryY+19,2,3);ctx.fillRect(25,commentaryY+19,2,3);
+  ctx.fillStyle="#a96644";ctx.fillRect(20,commentaryY+23,3,4);
+  ctx.fillStyle="#6f2d28";ctx.fillRect(16,commentaryY+28,10,Math.floor(raceClock/220)%2===0?4:2);
+  ctx.fillStyle="#f3f0df";ctx.fillRect(9,commentaryY+34,24,34);
+  ctx.fillStyle="#285a91";ctx.fillRect(9,commentaryY+43,24,25);
+  ctx.fillStyle="#d7c35d";ctx.fillRect(28,commentaryY+47,8,3);
   const commentaryLines=commentaryHistory.slice(-4);
-  ctx.font="bold 10px sans-serif";ctx.textAlign="left";
+  ctx.font="bold 11px sans-serif";ctx.textAlign="left";
   commentaryLines.forEach((line,index)=>{
     const aboutPlayer=line.includes(playerSetup.horseName)||line.includes("愛馬");
     ctx.fillStyle=aboutPlayer?"#ffe45c":"#f4f6f2";
-    const clipped=line.length>31?`${line.slice(0,30)}…`:line;
+    const clipped=line.length>28?`${line.slice(0,27)}…`:line;
     ctx.fillText(clipped,38,commentaryY+15+index*17);
   });
 
   // ターフビジョン（コース外・独立パネル）。
   const visionOrder=order(),leader=visionOrder[0];
-  const vx=4,vy=330,vw=352,vh=212;
+  const vx=4,vy=330,vw=352,vh=228;
   ctx.fillStyle="#101a21";ctx.fillRect(vx,vy,vw,vh);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(vx,vy,vw,vh);
   ctx.fillStyle="#263a2e";ctx.fillRect(vx+3,vy+3,vw-6,18);
-  ctx.fillStyle="#fff3a6";ctx.font="bold 11px sans-serif";ctx.textAlign="center";
+  ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
   ctx.fillText("TURF VISION　中継映像",180,vy+16);
   // 中継カメラ：全馬の実走距離とコース取りをそのまま投影する。
   const camY=vy+23,camH=52;
@@ -926,18 +930,18 @@ function drawTrackV2(){
   // 全頭順位ボード：枠色チップ＋馬番＋馬名フル表示＋着差。
   const boardY=camY+camH+4;
   visionOrder.forEach((h,index)=>{
-    const y=boardY+10+index*12;
-    if(h.player){ctx.fillStyle="#5b451d";ctx.fillRect(vx+3,y-10,vw-6,12)}
+    const y=boardY+12+index*14;
+    if(h.player){ctx.fillStyle="#5b451d";ctx.fillRect(vx+3,y-12,vw-6,14)}
     const prevRank=visionRanks.get(h.id)??index+1;
     const arrow=prevRank>index+1?"▲":prevRank<index+1?"▼":"・";
-    ctx.font="bold 11px sans-serif";ctx.textAlign="left";
+    ctx.font="bold 12px sans-serif";ctx.textAlign="left";
     ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.fillText(`${index+1}位`,vx+8,y);
     ctx.fillStyle=arrow==="▲"?"#7be08a":arrow==="▼"?"#e08a7b":"#7d919e";ctx.fillText(arrow,vx+34,y);
-    ctx.fillStyle=h.color;ctx.fillRect(vx+48,y-10,12,12);
-    if(h.id===1){ctx.strokeStyle="#666";ctx.lineWidth=1;ctx.strokeRect(vx+48,y-10,12,12)}
-    ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 9px sans-serif";ctx.textAlign="center";
+    ctx.fillStyle=h.color;ctx.fillRect(vx+48,y-11,13,13);
+    if(h.id===1){ctx.strokeStyle="#666";ctx.lineWidth=1;ctx.strokeRect(vx+48,y-11,13,13)}
+    ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 10px sans-serif";ctx.textAlign="center";
     ctx.fillText(h.id,vx+54,y-1);
-    ctx.font="bold 11px sans-serif";ctx.textAlign="left";
+    ctx.font="bold 12px sans-serif";ctx.textAlign="left";
     ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.fillText(h.name,vx+66,y);
     ctx.textAlign="right";ctx.fillStyle=h.player?"#ffe56b":"#a9c2b4";
     ctx.fillText(index===0?(h.finished?formatTime(h.finishTime):""):marginLabel(visionOrder[index-1],h),vx+vw-8,y);
@@ -948,16 +952,16 @@ function drawTrackV2(){
   ctx.fillStyle="#263a2e";ctx.fillRect(vx+3,footY,vw-6,28);
   const remaining=Math.max(0,Math.ceil(TOTAL-Math.min(TOTAL,leaderDist)));
   const grad=courseGradient(leader.progress);
-  ctx.fillStyle="#fff3a6";ctx.font="bold 10px sans-serif";ctx.textAlign="center";
+  ctx.fillStyle="#fff3a6";ctx.font="bold 11px sans-serif";ctx.textAlign="center";
   ctx.fillText(`残り${remaining}m　TIME ${formatTime(raceClock)}　1000m ${split1000Time?formatTime(split1000Time):"--:--.-"}　${grad.type==="up"?"▲上り":grad.type==="down"?"▼下り":"平坦"}`,180,footY+11);
-  ctx.font="bold 8px sans-serif";
+  ctx.font="bold 9px sans-serif";
   ctx.fillText(`実測 ${measuredPace}　基準 ${formatTime(playerSetup.benchmarkTime||playerSetup.baseTime)}　レコード ${formatTime(playerSetup.recordTime||playerSetup.baseTime*.965)}　${playerSetup.weather}/${playerSetup.going}`,180,footY+23);
 
   // 高低差・全馬位置（維持）。
-  const ex=4,ey=548,ew=352,eh=56;
+  const ex=4,ey=564,ew=352,eh=56;
   ctx.fillStyle="#e8edcf";ctx.fillRect(ex,ey,ew,eh);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(ex,ey,ew,eh);
-  ctx.fillStyle="#3c5220";ctx.font="bold 9px sans-serif";ctx.textAlign="left";
+  ctx.fillStyle="#3c5220";ctx.font="bold 10px sans-serif";ctx.textAlign="left";
   ctx.fillText("高低差・全馬位置",ex+6,ey+11);
   ctx.textAlign="right";ctx.fillStyle="#6b4c14";
   ctx.fillText(`現在:${grad.label}　${currentRaceVenue}${raceSurface} 高低差${trackProfile().elevation}m`,ex+ew-6,ey+11);
@@ -973,7 +977,7 @@ function drawTrackV2(){
     const x=ex+8+n*(ew-16),y=ey+eh-8-(courseElevation(h.progress)-6)*1.35;
     if(h.player){ctx.strokeStyle="#b8860b";ctx.lineWidth=2;ctx.strokeRect(Math.round(x-5),Math.round(y-5),10,10)}
     ctx.fillStyle=h.color;ctx.fillRect(Math.round(x-4),Math.round(y-4),8,8);
-    ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 7px sans-serif";ctx.textAlign="center";
+    ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 8px sans-serif";ctx.textAlign="center";
     ctx.fillText(h.id,Math.round(x),Math.round(y+3));
   });
   ctx.textAlign="center";
@@ -1172,7 +1176,7 @@ function drawCrowdCheer(){
   if(layoutV2){const tx=spot.x+spot.w/2;ctx.moveTo(tx-7,spot.y+24);ctx.lineTo(tx,49);ctx.lineTo(tx+7,spot.y+24)}
   else{ctx.moveTo(spot.x+spot.w,spot.y+9);ctx.lineTo(349,spot.y+15);ctx.lineTo(spot.x+spot.w,spot.y+19)}
   ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.shadowColor="transparent";ctx.fillStyle="#111";ctx.font="bold 10px sans-serif";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+16);
+  ctx.shadowColor="transparent";ctx.fillStyle="#111";ctx.font="bold 11px sans-serif";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+17);
   ctx.restore();
 }
 
@@ -1304,7 +1308,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   archiveReplay=!!event.detail.archiveReplay;
   horizontalLayout=!!event.detail.horizontalLayout;
   layoutV2=event.detail.layoutV2!==undefined?!!event.detail.layoutV2:!horizontalLayout;
-  canvas.height=layoutV2?606:horizontalLayout?280:500;
+  canvas.height=layoutV2?622:horizontalLayout?280:500;
   document.body.classList.toggle("horizontal-race-test",horizontalLayout);
   document.body.classList.toggle("race-layout2",layoutV2);
   raceSeed = Number.isFinite(event.detail.replaySeed)

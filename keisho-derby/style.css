@@ -257,15 +257,15 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .stable-board::before { left:3px;top:3px; }.stable-board::after { right:3px;bottom:3px; }
 .horse-board { left:9px;top:9px;width:calc(50% - 14px);min-height:66px; }
 .horse-board>b { display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:16px; }
-.horse-board span,.horse-board small { display:flex;justify-content:space-between;gap:5px;font-size:9px; }
-.horse-board strong { color:#8f3e1d;font-size:10px; }
+.horse-board span,.horse-board small { display:flex;justify-content:space-between;gap:5px;font-size:10px; }
+.horse-board strong { color:#8f3e1d;font-size:11px; }
 .week-board { right:9px;top:9px;width:calc(50% - 14px);min-height:66px;text-align:center; }
-.week-board>span { display:block;font-weight:900;font-size:11px; }
-.week-board small { display:block;margin-top:7px;font-size:9px; }
+.week-board>span { display:block;font-weight:900;font-size:12px; }
+.week-board small { display:block;margin-top:7px;font-size:10px; }
 .week-board b { color:#8f3e1d; }
 .next-board { left:9px;right:9px;top:83px;height:40px;display:grid;grid-template-columns:38px 1fr;align-items:center;gap:6px;padding-top:4px;padding-bottom:4px; }
-.next-board small { font-size:9px;color:#76502b; }.next-board b { overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px; }
-.condition-board { left:9px;right:9px;top:130px;height:27px;padding:3px 8px;text-align:center;font-size:9px;font-weight:800; }
+.next-board small { font-size:10px;color:#76502b; }.next-board b { overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:11px; }
+.condition-board { left:9px;right:9px;top:130px;height:27px;padding:3px 8px;text-align:center;font-size:10px;font-weight:800; }
 .sky-sun { position:absolute; top:22px; right:31px; width:32px; height:32px; border-radius:50%; background:#ffe66d; box-shadow:0 0 0 5px #f9c94c,0 0 18px #fff2a0; }
 .pixel-cloud { position:absolute; width:66px; height:24px; animation:cloudDrift 14s linear infinite; }
 .pixel-cloud i { position:absolute; display:block; background:#f6fbf3; box-shadow:3px 3px #cfe4df; }
@@ -444,7 +444,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   padding:9px 10px;
   background:none;
   color:#44351d;
-  font-size:11px;
+  font-size:12px;
   line-height:1.65;
   text-align:left;
 }
@@ -455,7 +455,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   gap:7px;
   margin:7px 0;
   color:#203525;
-  font-size:11px;
+  font-size:12px;
   font-weight:700;
 }
 .stats .trainer-stat { grid-template-columns:82px 1fr; padding:6px 2px; border-bottom:1px dashed #bdc8b8; }
@@ -470,7 +470,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   border: 1px solid #a7b7a1;
   background: #f7f2dc;
 }
-.weight-row { display:grid; grid-template-columns:60px 65px 1fr; align-items:center; gap:7px; margin:4px 10px 8px; padding:8px 10px; border:2px solid #b99461; background:#fff2cf; color:#48351d; font-size:11px; }
+.weight-row { display:grid; grid-template-columns:60px 65px 1fr; align-items:center; gap:7px; margin:4px 10px 8px; padding:8px 10px; border:2px solid #b99461; background:#fff2cf; color:#48351d; font-size:12px; }
 .weight-row b { font-size:15px; }
 .weight-row small { color:#755936; text-align:right; }
 .temperament-panel { margin:5px 10px; padding:8px; border:2px solid #758a79; background:#edf5e9; color:#26382b; }
@@ -560,7 +560,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .home-actions button>small,.home-actions button>br { position:relative; z-index:1; }
 .home-actions button:active { background:#eadb9e; }
 .home-actions button:disabled { background:#d8ddd4; color:#738077; }
-.home-actions small { font-size:8px; color:#53675a; }
+.home-actions small { font-size:9px; color:#53675a; }
 .home-actions .pasture-button { grid-column:1/-1; background:#8e5039; color:#fff; border-color:#e7bd72; }
 .home-actions .pasture-button small { color:#ffe8b8; }
 .home-screen > .big { width:calc(100% - 20px); margin:7px 10px; }
@@ -832,13 +832,13 @@ canvas {
 }
 
 button {
-  min-height: 36px;
-  padding: 5px 3px;
+  min-height: 40px;
+  padding: 6px 4px;
   border: 2px solid var(--gold);
   border-radius: 2px;
   background: #111b28;
   color: #fff3c5;
-  font: 700 11px "Yu Gothic", sans-serif;
+  font: 700 12px "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
   cursor: pointer;
   touch-action: manipulation;
 }
