@@ -88,8 +88,10 @@ let layoutV2 = false;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
-const BASE_PLAYBACK_RATE = 1;
-const PLAYBACK_RATES=[1,2,4,8];
+// 「通常」を従来シミュレーションの4倍速として扱う。
+// 画面表示の2倍・4倍は通常速度を基準に、それぞれ内部8倍・16倍になる。
+const BASE_PLAYBACK_RATE = 4;
+const PLAYBACK_RATES=[1,2,4];
 let playerSetup = { horseName: "ドットスター", ability: 940, dash: 550, gateSkill:450, condition: 60, fatigue: 10, difficulty: 840, heavyTrack:500, temperament:"普通",temperamentValue:50,equippedTack:null,weather:"晴", going:"良", baseTime: 144000 };
 
 function setCommentary(message,reset=false){
