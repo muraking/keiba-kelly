@@ -952,7 +952,8 @@ canvas {
 
 .race-panel { display:none; }
 .course-wrap { position:relative; }
-.gate-skip-button { position:absolute;z-index:9;right:8px;top:8px;width:auto;min-height:30px;padding:6px 9px;border:2px solid #f3d36a;background:#172b32e8;color:#fff2aa;box-shadow:3px 3px #071218;font-size:9px;font-weight:900; }
+.gate-skip-button { display:block;width:calc(100% - 16px);min-height:40px;margin:7px 8px;padding:8px;border:3px solid #6a4b11;background:#ffd85c;color:#2e230d;box-shadow:3px 3px #071218;font-size:12px;font-weight:900; }
+.gate-skip-button[hidden] { display:none; }
 
 .controls {
   display: grid;
