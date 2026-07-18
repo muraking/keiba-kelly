@@ -51,9 +51,22 @@ const raceCalendar = [
   {id:"derby",week:68,name:"日本ダービー GⅠ",raceClass:"G1",course:"東京 芝2400m",surface:"芝",distance:2400,baseTime:143500,prize:30000,difficulty:96,condition:g=>g.priorityRights.includes("日本ダービー")||g.classMoney>=1600},
 ];
 
-// 簡易版の開催番組。各週2会場・各12Rを必ず用意し、番組切れを防ぐ。
+// 2026年のJRA開催日割をゲーム内の月4週へ対応させた開催場テーブル。
 // 新馬は初出走のみ。未出走馬を含む未勝利馬は未勝利戦へ出走できる。
-const PROGRAM_VENUE_PAIRS=[["東京","阪神"],["福島","小倉"],["新潟","札幌"],["中山","中京"],["京都","阪神"]];
+const JRA_2026_VENUES=[
+  [["中山","京都"],["中山","京都"],["中山","京都"],["東京","京都","小倉"]],
+  [["東京","京都","小倉"],["東京","京都","小倉"],["東京","京都","小倉"],["中山","阪神","小倉"]],
+  [["中山","阪神","小倉"],["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神","中京"]],
+  [["中山","阪神","福島"],["中山","阪神","福島"],["東京","京都","福島"],["東京","京都","新潟"]],
+  [["東京","京都","新潟"],["東京","京都","新潟"],["東京","京都","新潟"],["東京","京都"]],
+  [["東京","阪神"],["東京","阪神","函館"],["東京","阪神","函館"],["福島","小倉","函館"]],
+  [["福島","小倉","函館"],["福島","小倉","函館"],["福島","小倉","札幌"],["新潟","中京","札幌"]],
+  [["新潟","中京","札幌"],["新潟","中京","札幌"],["新潟","中京","札幌"],["新潟","中京","札幌"]],
+  [["中山","阪神","札幌"],["中山","阪神"],["中山","阪神"],["中山","阪神"]],
+  [["東京","京都"],["東京","京都"],["東京","京都","新潟"],["東京","京都","新潟"]],
+  [["東京","京都","福島"],["東京","京都","福島"],["東京","京都","福島"],["東京","京都","福島"]],
+  [["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神"]]
+];
 const PROGRAM_RACES=[
   [1,"2歳未勝利","未勝利","ダート",1200,560,64,g=>g.maiden],
   [2,"2歳未勝利","未勝利","芝",1400,560,64,g=>g.maiden],
@@ -68,8 +81,8 @@ const PROGRAM_RACES=[
   [11,"2歳特別","オープン","芝",1800,2000,84,g=>g.classMoney>=400],
   [12,"2歳1勝クラス","1勝","ダート",1800,800,70,g=>!g.maiden&&g.classMoney<=400],
 ];
-for(let week=21;week<=96;week++){
-  const venues=PROGRAM_VENUE_PAIRS[Math.floor((week-21)/4)%PROGRAM_VENUE_PAIRS.length];
+for(let week=1;week<=240;week++){
+  const yearWeek=(week-1)%48,venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
   venues.forEach(venue=>PROGRAM_RACES.forEach(([number,name,raceClass,surface,distance,prize,difficulty,condition])=>{
     const basePer1000=surface==="芝"?60000:63000;
     raceCalendar.push({id:`p-${week}-${venue}-${number}`,program:true,number,week,name,raceClass,
@@ -657,22 +670,31 @@ function buyEquipment(id){
   game.farmPoints-=item.cost; game.equipment.push(id); saveGame(); renderShop();
 }
 function renderRaces(){
-  document.querySelector("#selectTurn").textContent=weekLabel();
-  if(!window.selectedRacePeriod)window.selectedRacePeriod="current";
-  const futureStart=Math.min(...raceCalendar.filter(r=>r.week>game.week&&r.program).map(r=>r.week));
-  const periodRaces=raceCalendar.filter(r=>(window.selectedRacePeriod==="current"?r.week===game.week:(r.week>=futureStart&&r.week<=futureStart+3))&&(r.program||["G1","G2","G3","オープン"].includes(r.raceClass)));
-  const venues=["すべて",...new Set(periodRaces.map(raceVenue))];
-  if(!venues.includes(window.selectedRaceVenue))window.selectedRaceVenue=venues[1]||"すべて";
-  document.querySelectorAll("[data-period]").forEach(b=>b.classList.toggle("selected",b.dataset.period===window.selectedRacePeriod));
+  if(!Number.isFinite(window.selectedRaceWeek))window.selectedRaceWeek=game.week;
+  const displayWeek=Math.max(1,Math.min(240,window.selectedRaceWeek));
+  window.selectedRaceWeek=displayWeek;
+  const year=Math.floor((displayWeek-1)/48)+1,yearWeek=(displayWeek-1)%48;
+  const displayLabel=`${year}年目 ${Math.floor(yearWeek/4)+1}月${yearWeek%4+1}週`;
+  document.querySelector("#selectTurn").textContent=displayWeek===game.week?"今週":displayWeek>game.week?`今から${displayWeek-game.week}週後`:"開催終了";
+  document.querySelector("#raceWeekLabel").textContent=displayLabel;
+  document.querySelector("#previousRaceWeek").disabled=displayWeek<=1;
+  const periodRaces=raceCalendar.filter(r=>r.week===displayWeek&&r.program);
+  const venues=[...new Set(periodRaces.map(raceVenue))];
+  if(window.selectedRaceVenue&&!venues.includes(window.selectedRaceVenue))window.selectedRaceVenue="";
   document.querySelector("#raceVenueTabs").innerHTML=venues.map(v=>`<button data-venue="${v}" class="${window.selectedRaceVenue===v?"selected":""}">${v}</button>`).join("");
-  const shown=periodRaces.filter(r=>window.selectedRaceVenue==="すべて"||raceVenue(r)===window.selectedRaceVenue).sort((a,b)=>a.week-b.week||raceVenue(a).localeCompare(raceVenue(b))||(a.number||11)-(b.number||11));
+  if(!window.selectedRaceVenue){
+    document.querySelector("#raceChoices").innerHTML=`<p class="empty-races">${venues.join("・")}で開催されます。<br>上の開催場を選ぶと1R〜12Rを表示します。</p>`;
+    return;
+  }
+  const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue).sort((a,b)=>(a.number||11)-(b.number||11));
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
-    const arrived=r.week===game.week,eligible=arrived&&r.condition(game),surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
+    const arrived=r.week===game.week,debutSeasonOpen=game.week>=21,eligible=arrived&&debutSeasonOpen&&r.condition(game),surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
     const raceYear=Math.floor((r.week-1)/48)+1,raceYearWeek=(r.week-1)%48;
     const date=`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
     let reason="出走条件外";
     if(eligible)reason="出走する";
     else if(!arrived)reason="未来の予定";
+    else if(!debutSeasonOpen)reason="2歳新馬戦の開始前";
     else if(r.raceClass==="新馬"&&game.races>0)reason="新馬戦は初戦のみ";
     else if(r.raceClass==="未勝利"&&game.races===0)reason="新馬戦出走後";
     else if(r.raceClass==="未勝利"&&!game.maiden)reason="勝ち上がり済み";
@@ -684,7 +706,7 @@ function renderRaces(){
     return `<article class="race-choice ${eligible?"":"locked"} ${reserved?"reserved":""}"><b class="race-number">${r.number||11}R</b><div><small>${date}　${r.course}${reserved?"　★出走予定":""}</small>
     <h3>${wonBefore?"🏆 ":""}${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p></div>
     <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${!arrived?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
-  }).join("")||`<p class="empty-races">${window.selectedRacePeriod==="current"?"今週、この条件で開催されるレースはありません。未来の予定から予約できます。":"今後の登録レースはありません。"}</p>`;
+  }).join("")||`<p class="empty-races">この開催場の番組はありません。</p>`;
 }
 function playerAbility(race){
   const surface=race.surface==="芝"?game.turf:game.dirt;
@@ -933,14 +955,15 @@ document.querySelector("#tackChoices").onclick=e=>{
   game.equippedTack=button.dataset.tack||null;
   renderHome(game.equippedTack?`${tackCatalog[game.equippedTack].name}を装着しました。`:"馬具を外しました。");
 };
-document.querySelector("#goRaceSelectButton").onclick=()=>{window.selectedRacePeriod="current";window.selectedRaceVenue="";renderRaces();showScreen("raceSelectScreen")};
+document.querySelector("#goRaceSelectButton").onclick=()=>{window.selectedRaceWeek=game.week;window.selectedRaceVenue="";renderRaces();showScreen("raceSelectScreen")};
 document.querySelector("#raceChoices").onclick=e=>{
   const reserve=e.target.closest("[data-reserve]");
   if(reserve){game.reservedRaceId=game.reservedRaceId===reserve.dataset.reserve?null:reserve.dataset.reserve;saveGame();renderRaces();return}
   const button=e.target.closest("[data-race]");if(button)prepareRace(raceCalendar.find(r=>r.id===button.dataset.race));
 };
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
-document.querySelector(".race-period-tabs").onclick=e=>{const b=e.target.closest("[data-period]");if(b){window.selectedRacePeriod=b.dataset.period;window.selectedRaceVenue="";renderRaces()}};
+document.querySelector("#previousRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.max(1,(window.selectedRaceWeek||game.week)-1);window.selectedRaceVenue="";renderRaces()};
+document.querySelector("#nextRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.min(240,(window.selectedRaceWeek||game.week)+1);window.selectedRaceVenue="";renderRaces()};
 document.querySelector("#newspaperRaceButton").onclick=()=>{showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"))};
 addEventListener("dotkeiba:preview-ready",e=>{
   if(!game.selectedRace)return;
