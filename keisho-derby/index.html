@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.2.2</title>
-  <link rel="stylesheet" href="style.css?v=20260718-15">
+  <title>ドット競馬 継承ダービー｜Ver. 0.2.3</title>
+  <link rel="stylesheet" href="style.css?v=20260718-16">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.2.2</b>
+        <b class="build-version">Ver. 0.2.3</b>
       </div>
     </section>
 
@@ -80,10 +80,7 @@
         <div class="sky-sun"></div>
         <div class="pixel-cloud cloud-one"><i></i><i></i><i></i></div>
         <div class="pixel-cloud cloud-two"><i></i><i></i><i></i></div>
-        <div class="stable-board horse-board"><b id="homeHorseName">ドットスター</b><span>獲得賞金 <strong id="homePrize">0万円</strong></span><small>育成ポイント <strong id="farmPoints">0 FP</strong></small></div>
-        <div class="stable-board week-board"><span id="weekDisplay">2歳 1年目 1月1週</span><small>今週の調教 <b id="turnsLeft">0/2</b></small></div>
-        <div class="stable-board next-board"><small>次走</small><b id="debutCountdown">初出走時期を確認中</b></div>
-        <div class="stable-board condition-board" id="conditionText">調子：普通</div>
+        <div class="stable-board horse-board"><small id="weekDisplay">1年目 1月1週</small><div><b id="homeHorseName">ドットスター</b><em id="homeHorseAge">2歳</em></div><span>獲得賞金 <strong id="homePrize">0万円</strong></span><span>育成ポイント <strong id="farmPoints">0 FP</strong></span></div>
         <div class="barn">
           <div class="stable-roof"></div><div class="stable-label">A</div>
           <div class="stable-window w1"></div><div class="stable-window w2"></div>
@@ -124,19 +121,10 @@
       </div>
       <div class="stats" id="horseStats"></div>
       <section class="coach-message">
-        <span class="pixel-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i><small>調教師</small></span>
-        <p id="homeMessage">今日の調教を選びましょう。</p>
+        <span class="pixel-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i></span>
+        <div class="coach-copy"><b>調教師</b><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b></div><div id="tackChoices" class="tack-choices"></div></div>
       </section>
-      <div class="fatigue-row">
-        <span>疲労</span><div class="meter"><i id="fatigueBar"></i></div><b id="fatigueValue">元気</b>
-      </div>
-      <div class="weight-row">
-        <span>馬体重</span><b id="horseWeight">--kg</b><small id="horseWeightCondition">状態確認中</small>
-      </div>
-      <section class="temperament-panel">
-        <div><span>調教師所見</span><b id="temperamentComment">気性を観察しています</b></div>
-        <div id="tackChoices" class="tack-choices"></div>
-      </section>
+      <div class="training-menu-head"><b>調教メニュー</b><span>今週 <strong id="turnsLeft">0/2</strong></span></div>
       <nav class="home-actions">
         <button data-action="turfSolo">芝・単走<br><small>疲労 +8</small></button>
         <button data-action="turfPair">芝・併せ<br><small>疲労 +17</small></button>
@@ -148,7 +136,7 @@
         <button data-action="rest">休養<br><small>1回消費・疲労 -22</small></button>
         <button id="pastureButton" class="pasture-button" hidden>復帰までスキップ<br><small id="pastureWeeks">長期放牧</small></button>
       </nav>
-      <button class="primary big" id="goRaceSelectButton">レースに出走</button>
+      <button class="primary big race-select-main" id="goRaceSelectButton"><span>レースに出走</span><small id="nextRaceButtonText">次走予定を確認</small></button>
       <div class="sub-actions">
         <button id="nextWeekButton">翌週へ進む</button>
         <button id="shopButton">設備ショップ</button>
@@ -304,7 +292,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-7"></script>
+  <script src="app.js?v=20260718-8"></script>
   <script src="race.js?v=20260718-17"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>

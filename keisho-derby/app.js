@@ -390,16 +390,18 @@ function renderHorseDetail(){
 }
 function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#homeHorseName").textContent=game.horseName;
+  document.querySelector("#homeHorseAge").textContent=`${horseAge()}歳`;
   document.querySelector("#homePrize").textContent=`${game.prize.toLocaleString()}万円`;
-  document.querySelector("#weekDisplay").textContent=`${horseAge()}歳 ${weekLabel()}`;
+  document.querySelector("#weekDisplay").textContent=weekLabel();
   document.querySelector("#turnsLeft").textContent=`${game.trainingsUsed}/2`;
   document.querySelector("#farmPoints").textContent=`${game.farmPoints} FP`;
   document.querySelector("#conditionText").textContent=`調子：${conditionLabel()}／脚元：${legLabel()}／${classLabel()}`;
   const debutWeek=Math.min(...raceCalendar.filter(r=>r.raceClass==="新馬").map(r=>r.week));
   const reservedRace=raceCalendar.find(r=>r.id===game.reservedRaceId);
-  document.querySelector("#debutCountdown").textContent=reservedRace
-    ? `${reservedRace.name}（${Math.max(0,reservedRace.week-game.week)}週後）`
-    : game.races>0?"現在、出走予約はありません":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
+  const weeksToRace=reservedRace?Math.max(0,reservedRace.week-game.week):null;
+  document.querySelector("#nextRaceButtonText").textContent=reservedRace
+    ? `次走：${reservedRace.name}（${weeksToRace===0?"今週":`${weeksToRace}週後`}）`
+    : game.races>0?"次走予約なし":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
   document.querySelector("#homeMessage").textContent=message;
   applyHorseAppearance(document.querySelector("#trainingScene"));
   const statsEl=document.querySelector("#horseStats");
@@ -414,8 +416,9 @@ function renderHome(message="今週の予定を決めましょう。"){
     : "";
   document.querySelector("#horseWeight").textContent=`${game.weight}kg`;
   document.querySelector("#horseWeightCondition").textContent=weightComment();
-  document.querySelector("#fatigueBar").style.width=`${game.fatigue}%`;
-  document.querySelector("#fatigueValue").textContent=game.fatigue<20?"元気":game.fatigue<45?"少し疲れ":game.fatigue<70?"疲れている":"かなり疲労";
+  const trainingScene=document.querySelector("#trainingScene");
+  trainingScene.classList.remove("horse-vigorous","horse-normal","horse-tired","horse-exhausted");
+  trainingScene.classList.add(game.fatigue>=75?"horse-exhausted":game.fatigue>=45?"horse-tired":game.fatigue<20&&game.condition>=55?"horse-vigorous":"horse-normal");
   renderTack();
   const injured=!!game.injury;
   document.querySelectorAll("[data-action]").forEach(b=>b.disabled=injured||game.trainingsUsed>=2);
