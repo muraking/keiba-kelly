@@ -1235,7 +1235,7 @@ function showResult(detail){
   game.week++;game.trainingsUsed=0;saveGame();
   document.querySelector("#resultPlace").textContent=`${place}着`;document.querySelector("#resultHorseName").textContent=game.horseName;
   document.querySelector("#resultFrame").textContent=player.id;document.querySelector("#resultFrame").style.background=player.color;
-  document.querySelector("#resultTime").textContent=player.finishTime;document.querySelector("#resultPrize").textContent=`${earned.toLocaleString()}万円／+${fpEarned} FP${classMoneyAdd?`／収得+${classMoneyAdd}`:""}`;
+  document.querySelector("#resultTime").textContent=player.finishTime;document.querySelector("#resultPrize").textContent=`獲得賞金 ${earned.toLocaleString()}万円／育成ポイント +${fpEarned} FP`;
   document.querySelector("#resultComment").textContent=(place===1?"見事な勝利です！":place<=3?"好走しました。次は勝利を狙いましょう。":"調教を重ねて巻き返しましょう。")+
     (playerTrouble?` 調教師「今日は${playerTrouble}がありました。馬具を検討しましょう」`:"");
   document.querySelector("#postRaceCondition").textContent=resultRaceReview(r,player,place,detail.measuredPace);
