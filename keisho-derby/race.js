@@ -61,6 +61,7 @@ let multiplier = 1;
 let lastTime = 0;
 let raceClock = 0;
 let preRaceClock = 0;
+let gateDifficultHorseId = null;
 let cheerClock = 0;
 let commentaryStamp = new Set();
 let commentaryHistory = [];
@@ -244,6 +245,7 @@ function resetRace() {
   state = "ready";
   raceClock = 0;
   preRaceClock = 0;
+  gateDifficultHorseId = null;
   cheerClock = 0;
   split1000Time = null;
   measuredPace = "未確定";
@@ -830,21 +832,28 @@ function drawVisionGoalBoard(x,y){
 }
 
 function drawVisionGate(vx,camY,vw,camH){
-  const gateLeft=vx+67,stallW=34,gateY=camY+14;
-  ctx.fillStyle="#d9e1dc";ctx.fillRect(gateLeft,gateY-6,stallW*8,5);
-  horses.forEach((h,i)=>{
-    const stallX=gateLeft+i*stallW;
-    ctx.strokeStyle="#d9e1dc";ctx.lineWidth=2;ctx.strokeRect(stallX,gateY,stallW-2,camH-17);
-    ctx.fillStyle="#263b47";ctx.font="bold 7px sans-serif";ctx.textAlign="center";ctx.fillText(h.id,stallX+15,gateY+9);
-    const temperamental=(h.temperamentValue>=65||h.temperamentValue<=35)&&h.temperamentRoll<.58;
-    const delay=i*65+(temperamental?560:0);
-    let travel=Math.max(0,Math.min(1,(preRaceClock-delay)/720));
-    if(temperamental&&travel>.18&&travel<.62)travel=.18+Math.abs(Math.sin(preRaceClock/95))*.08;
-    const horseX=vx+12+travel*(stallX+14-(vx+12));
-    const horseY=gateY+22+(temperamental&&travel<.65?Math.sin(preRaceClock/70)*2:0);
-    if(travel>0)drawVisionCandidateHorse(horseX,horseY,h,.27);
-    if(temperamental&&travel<.7){ctx.fillStyle="#f0b05d";ctx.fillRect(horseX-10,horseY+5,3,7);ctx.fillStyle="#315b84";ctx.fillRect(horseX-11,horseY+11,5,5)}
-  });
+  const gateX=vx+vw-92,gateY=camY+7,gateW=76,gateH=41;
+  ctx.fillStyle="#d9e1dc";ctx.fillRect(gateX,gateY,gateW,5);ctx.fillRect(gateX,gateY+gateH-5,gateW,5);
+  ctx.fillStyle="#647b7b";ctx.fillRect(gateX+7,gateY+5,5,gateH-10);ctx.fillRect(gateX+29,gateY+5,5,gateH-10);ctx.fillRect(gateX+51,gateY+5,5,gateH-10);ctx.fillRect(gateX+71,gateY+5,5,gateH-10);
+  ctx.fillStyle="#eef2e7";ctx.font="bold 7px sans-serif";ctx.textAlign="center";ctx.fillText("STARTING GATE",gateX+gateW/2,gateY-2);
+  const difficult=horses.find(h=>h.id===gateDifficultHorseId);
+  const sequenceIndex=Math.min(horses.length-1,Math.floor(preRaceClock/250));
+  const focus=difficult||horses[sequenceIndex];
+  let travel=Math.max(0,Math.min(1,difficult?preRaceClock/1250:(preRaceClock%250)/210));
+  if(difficult&&travel>.38&&travel<.78)travel=.38+Math.abs(Math.sin(preRaceClock/100))*.035;
+  const horseX=vx+34+travel*(gateX-vx-46),horseY=camY+35+(difficult&&travel<.8?Math.sin(preRaceClock/75)*2:0);
+  drawVisionCandidateHorse(horseX,horseY,focus,.42);
+  if(difficult&&travel<.82){ctx.fillStyle="#efb05d";ctx.fillRect(horseX-18,horseY+4,4,8);ctx.fillStyle="#315b84";ctx.fillRect(horseX-19,horseY+11,7,6)}
+  ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";ctx.fillText(difficult&&travel<.82?"ゲート入りを嫌がっています":"順番に枠内へ収まります",vx+8,camY+9);
+}
+
+function drawVisionGateBreak(vx,camY,vw,camH){
+  const gateX=vx+38,gateY=camY+7,gateW=108,gateH=41;
+  ctx.fillStyle="#d9e1dc";ctx.fillRect(gateX,gateY,gateW,5);ctx.fillRect(gateX,gateY+gateH-5,gateW,5);
+  for(let i=0;i<=8;i++){ctx.fillStyle="#647b7b";ctx.fillRect(gateX+i*(gateW/8)-2,gateY+5,3,gateH-10)}
+  const burst=Math.max(0,Math.min(1,(preRaceClock-230)/570));
+  horses.forEach((h,i)=>drawVisionCandidateHorse(gateX+gateW-4+burst*(vw-gateW-65)+(i%3)*5,camY+18+(i%4)*8,h,.27));
+  if(burst===0){ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText("全馬、枠内に収まりました",vx+vw/2,camY+10)}
 }
 
 function drawHorizontalTrack(){
@@ -975,6 +984,8 @@ function drawTrackV2(){
     });
   }else if(state==="gates"){
     drawVisionGate(vx,camY,vw,camH);
+  }else if(state==="gateBreak"){
+    drawVisionGateBreak(vx,camY,vw,camH);
   }else{
     const visionDistances=horses.map(h=>raceDistance(h));
     const visionFront=Math.max(...visionDistances);
@@ -1290,7 +1301,7 @@ function loop(time) {
   const simulationDt = realDt * BASE_PLAYBACK_RATE * multiplier;
   const clockDt = simulationDt;
   lastTime = time;
-  if(state==="parade"||state==="gates"){
+  if(state==="parade"||state==="gates"||state==="gateBreak"){
     preRaceClock+=realDt;
     draw();
   } else if (state === "running") {
@@ -1322,17 +1333,23 @@ startButton.addEventListener("click", () => {
       if(state!=="parade")return;
       state="gates";preRaceClock=0;phaseEl.textContent="全馬ゲートイン";
       const difficultHorse=horses.find(h=>(h.temperamentValue>=65||h.temperamentValue<=35)&&h.temperamentRoll<.58);
+      gateDifficultHorseId=difficultHorse?.id??null;
       setCommentary(difficultHorse
         ? `${difficultHorse.id}番${difficultHorse.name}、ゲート入りを嫌がっています。係員に促され、ゆっくりと収まりました。`
         : "各馬、順調にゲートへ。全馬ゲートイン、場内が静まり返ります。");
       gateStartTimer=setTimeout(()=>{
         if(state!=="gates")return;
-        state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
+        state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
+        setCommentary("全馬、枠内に収まりました。スタートを待ちます。");
+        gateStartTimer=setTimeout(()=>{
+          if(state!=="gateBreak")return;
+          state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
         setCommentary(racePace.escapeCount >= 2
           ? `ゲートオープン！ 逃げ${racePace.escapeCount}頭が先手を争います！`
           : "ゲートオープン！ 逃げ馬がすんなり先頭へ立ちました。");
-        lastTime=0;
-      },1800);
+          lastTime=0;
+        },900);
+      },2100);
     },2400);
   }
 });
