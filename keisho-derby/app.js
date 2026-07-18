@@ -396,7 +396,10 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#farmPoints").textContent=`${game.farmPoints} FP`;
   document.querySelector("#conditionText").textContent=`調子：${conditionLabel()}／脚元：${legLabel()}／${classLabel()}`;
   const debutWeek=Math.min(...raceCalendar.filter(r=>r.raceClass==="新馬").map(r=>r.week));
-  document.querySelector("#debutCountdown").textContent=game.races>0?"初戦出走済み":game.week<debutWeek?`新馬戦開始まであと${debutWeek-game.week}週（${Math.floor((debutWeek-1)/4)+1}月${(debutWeek-1)%4+1}週から）`:"新馬戦へ出走できます";
+  const reservedRace=raceCalendar.find(r=>r.id===game.reservedRaceId);
+  document.querySelector("#debutCountdown").textContent=reservedRace
+    ? `${reservedRace.name}（${Math.max(0,reservedRace.week-game.week)}週後）`
+    : game.races>0?"現在、出走予約はありません":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
   document.querySelector("#homeMessage").textContent=message;
   applyHorseAppearance(document.querySelector("#trainingScene"));
   const statsEl=document.querySelector("#horseStats");

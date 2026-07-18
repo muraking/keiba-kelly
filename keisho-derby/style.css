@@ -248,7 +248,24 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .turn-strip b { color: #ffe16a; }
 .farm-point-strip { display:flex; justify-content:space-between; padding:6px 14px; background:#fff1b6; color:#4c3b18; font-size:10px; }
 .farm-point-strip b { color:#a14b22; font-size:12px; }
-.stable-scene { position:relative; height:250px; overflow:hidden; border-bottom:5px solid #315222; background:linear-gradient(#67bde0 0 52%,#74ad54 52% 72%,#4f8d3d 72%); }
+.stable-scene { position:relative; height:330px; overflow:hidden; border-bottom:5px solid #315222; background:linear-gradient(#67bde0 0 52%,#74ad54 52% 72%,#4f8d3d 72%); }
+.stable-board {
+  position:absolute;z-index:5;padding:6px 9px;border:4px solid #6b451f;background:#e7bd72;
+  box-shadow:inset 0 0 0 3px #f6d99a,4px 4px #47321d;color:#3d2714;line-height:1.35;
+}
+.stable-board::before,.stable-board::after { content:"";position:absolute;width:5px;height:5px;border:1px solid #5e452b;background:#b99962; }
+.stable-board::before { left:3px;top:3px; }.stable-board::after { right:3px;bottom:3px; }
+.horse-board { left:9px;top:9px;width:calc(50% - 14px);min-height:66px; }
+.horse-board>b { display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:16px; }
+.horse-board span,.horse-board small { display:flex;justify-content:space-between;gap:5px;font-size:9px; }
+.horse-board strong { color:#8f3e1d;font-size:10px; }
+.week-board { right:9px;top:9px;width:calc(50% - 14px);min-height:66px;text-align:center; }
+.week-board>span { display:block;font-weight:900;font-size:11px; }
+.week-board small { display:block;margin-top:7px;font-size:9px; }
+.week-board b { color:#8f3e1d; }
+.next-board { left:9px;right:9px;top:83px;height:40px;display:grid;grid-template-columns:38px 1fr;align-items:center;gap:6px;padding-top:4px;padding-bottom:4px; }
+.next-board small { font-size:9px;color:#76502b; }.next-board b { overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px; }
+.condition-board { left:9px;right:9px;top:130px;height:27px;padding:3px 8px;text-align:center;font-size:9px;font-weight:800; }
 .sky-sun { position:absolute; top:22px; right:31px; width:32px; height:32px; border-radius:50%; background:#ffe66d; box-shadow:0 0 0 5px #f9c94c,0 0 18px #fff2a0; }
 .pixel-cloud { position:absolute; width:66px; height:24px; animation:cloudDrift 14s linear infinite; }
 .pixel-cloud i { position:absolute; display:block; background:#f6fbf3; box-shadow:3px 3px #cfe4df; }
@@ -280,7 +297,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   display:none;
   position:absolute;
   left:115px;
-  top:127px;
+  top:207px;
   margin:0;
   transform:scale(.72);
   animation:stableCandidateWalk 8s linear infinite;
@@ -394,7 +411,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .stats[hidden] { display:none; }
 .coach-message {
   display:grid;
-  grid-template-columns:54px 1fr;
+  grid-template-columns:72px 1fr;
   align-items:stretch;
   margin:9px 10px 7px;
   border:3px solid #927538;
@@ -411,6 +428,16 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   font-size:9px;
   font-weight:900;
 }
+.pixel-trainer { position:relative;min-height:72px;overflow:hidden; }
+.pixel-trainer i { position:absolute;display:block;image-rendering:pixelated; }
+.pixel-trainer .trainer-hair { left:21px;top:8px;width:30px;height:12px;background:#30231d;box-shadow:-5px 6px #30231d,5px 4px #30231d; }
+.pixel-trainer .trainer-face { left:22px;top:17px;width:29px;height:25px;background:#d99a65;box-shadow:-3px 6px #d99a65,3px 4px #d99a65; }
+.pixel-trainer .trainer-eye { top:24px;width:5px;height:5px;background:#fff;box-shadow:2px 1px #25201d;z-index:2; }
+.pixel-trainer .eye-left { left:27px; }.pixel-trainer .eye-right { left:43px; }
+.pixel-trainer .trainer-nose { left:37px;top:30px;width:3px;height:5px;background:#a96644;z-index:2; }
+.pixel-trainer .trainer-mouth { left:33px;top:38px;width:12px;height:3px;background:#6f2d28;z-index:2; }
+.pixel-trainer .trainer-body { left:14px;top:46px;width:45px;height:25px;background:#24466e;box-shadow:inset 0 5px #f2ead8; }
+.pixel-trainer small { position:absolute;z-index:3;left:0;right:0;bottom:1px;padding:1px;background:#173326;color:#ffe68b;font-size:8px;text-align:center; }
 .coach-message p {
   min-height:42px;
   margin:0;

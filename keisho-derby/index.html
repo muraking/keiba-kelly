@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.2.0</title>
-  <link rel="stylesheet" href="style.css?v=20260718-13">
+  <title>ドット競馬 継承ダービー｜Ver. 0.2.1</title>
+  <link rel="stylesheet" href="style.css?v=20260718-14">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.2.0</b>
+        <b class="build-version">Ver. 0.2.1</b>
       </div>
     </section>
 
@@ -76,21 +76,14 @@
     </section>
 
     <section id="homeScreen" class="game-screen home-screen">
-      <header class="home-header">
-        <div><small>育成ホーム</small><b id="homeHorseName">ドットスター</b></div>
-        <div class="money">獲得賞金<br><b id="homePrize">0万円</b></div>
-      </header>
-      <div class="turn-strip">
-        <span>今週 <b id="weekDisplay">1月1週</b></span>
-        <span>調教 <b id="turnsLeft">0/2</b></span>
-        <span id="conditionText">調子：普通</span>
-      </div>
-      <div id="debutCountdown" class="debut-countdown">初出走時期を確認中</div>
-      <div class="farm-point-strip"><span>牧場ポイント</span><b id="farmPoints">0 FP</b></div>
       <div class="stable-scene">
         <div class="sky-sun"></div>
         <div class="pixel-cloud cloud-one"><i></i><i></i><i></i></div>
         <div class="pixel-cloud cloud-two"><i></i><i></i><i></i></div>
+        <div class="stable-board horse-board"><b id="homeHorseName">ドットスター</b><span>獲得賞金 <strong id="homePrize">0万円</strong></span><small>育成ポイント <strong id="farmPoints">0 FP</strong></small></div>
+        <div class="stable-board week-board"><span id="weekDisplay">2歳 1年目 1月1週</span><small>今週の調教 <b id="turnsLeft">0/2</b></small></div>
+        <div class="stable-board next-board"><small>次走</small><b id="debutCountdown">初出走時期を確認中</b></div>
+        <div class="stable-board condition-board" id="conditionText">調子：普通</div>
         <div class="barn">
           <div class="stable-roof"></div><div class="stable-label">A</div>
           <div class="stable-window w1"></div><div class="stable-window w2"></div>
@@ -131,7 +124,7 @@
       </div>
       <div class="stats" id="horseStats"></div>
       <section class="coach-message">
-        <span>調教師</span>
+        <span class="pixel-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i><small>調教師</small></span>
         <p id="homeMessage">今日の調教を選びましょう。</p>
       </section>
       <div class="fatigue-row">
@@ -311,7 +304,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-6"></script>
+  <script src="app.js?v=20260718-7"></script>
   <script src="race.js?v=20260718-16"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
