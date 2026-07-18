@@ -136,29 +136,62 @@ function venueRaceDistance(venue,surface,requested,week){
   return distances.reduce((best,distance)=>Math.abs(distance-requested)<Math.abs(best-requested)?distance:best,distances[0]);
 }
 const PROGRAM_RACES=[
-  [1,"2歳未勝利","未勝利","ダート",1200,560,64,g=>g.maiden],
-  [2,"2歳未勝利","未勝利","芝",1400,560,64,g=>g.maiden],
-  [3,"2歳未勝利","未勝利","ダート",1400,560,64,g=>g.maiden],
-  [4,"2歳未勝利","未勝利","芝",1600,560,64,g=>g.maiden],
-  [5,"2歳新馬","新馬","芝",1600,750,63,g=>g.races===0],
-  [6,"2歳新馬","新馬","ダート",1800,750,63,g=>g.races===0],
-  [7,"2歳1勝クラス","1勝","芝",1400,800,69,g=>!g.maiden&&g.classMoney<=400],
-  [8,"2歳1勝クラス","1勝","ダート",1400,800,69,g=>!g.maiden&&g.classMoney<=400],
-  [9,"長距離1勝クラス","1勝","芝","long",800,72,g=>horseAge()>=3&&!g.maiden&&g.classMoney<=400],
-  [10,"2勝クラス","2勝","芝",2000,1140,76,g=>horseAge()>=3&&g.classMoney>=500],
-  [11,"長距離特別","3勝","芝","long",1840,82,g=>horseAge()>=3&&g.classMoney>=1000],
-  [12,"オープン特別","オープン","ダート",1800,2200,85,g=>horseAge()>=3&&g.classMoney>=1600],
+  [1,"未勝利","未勝利","ダート",1200,560,64],
+  [2,"未勝利","未勝利","芝",1400,560,64],
+  [3,"未勝利","未勝利","ダート",1400,560,64],
+  [4,"未勝利","未勝利","芝",1600,560,64],
+  [5,"新馬","新馬","芝",1600,750,63],
+  [6,"新馬","新馬","ダート",1800,750,63],
+  [7,"1勝クラス","1勝","芝",1400,800,69],
+  [8,"1勝クラス","1勝","ダート",1400,800,69],
+  [9,"長距離1勝クラス","1勝","芝","long",800,72],
+  [10,"2勝クラス","2勝","芝",2000,1140,76],
+  [11,"長距離特別","3勝","芝","long",1840,82],
+  [12,"オープン特別","オープン","ダート",1800,2200,85],
 ];
+function classMoneyEligible(raceClass,g){
+  if(raceClass==="1勝")return !g.maiden&&g.classMoney<=500;
+  if(raceClass==="2勝")return !g.maiden&&g.classMoney>=501&&g.classMoney<=1000;
+  if(raceClass==="3勝")return !g.maiden&&g.classMoney>=1001&&g.classMoney<=1600;
+  if(raceClass==="オープン")return !g.maiden&&g.classMoney>1600;
+  return false;
+}
+function generatedRaceCondition(raceClass,week,g){
+  const age=2+Math.floor((week-1)/48),yearWeek=(week-1)%48;
+  if(raceClass==="新馬")return age<=3&&!(age===3&&yearWeek>12)&&g.races===0;
+  if(raceClass==="未勝利")return age<=3&&!(age===3&&yearWeek>36)&&g.maiden;
+  return classMoneyEligible(raceClass,g);
+}
+function horseAgeAtWeek(week){return Math.min(9,2+Math.floor((week-1)/48))}
+function programAgeLabel(week){
+  const age=2+Math.floor((week-1)/48),yearWeek=(week-1)%48;
+  if(age===2)return "2歳";
+  if(age===3&&yearWeek<21)return "3歳";
+  if(age===3)return "3歳以上";
+  return yearWeek<21?"4歳以上":"3歳以上";
+}
 for(let week=1;week<=240;week++){
-  const yearWeek=(week-1)%48,venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
-  venues.forEach(venue=>PROGRAM_RACES.forEach(([number,name,raceClass,surface,requestedDistance,prize,difficulty,condition])=>{
+  const calendarAge=horseAgeAtWeek(week),yearWeek=(week-1)%48,ageLimitedSeason=calendarAge===2||(calendarAge===3&&yearWeek<21),venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
+  venues.forEach(venue=>PROGRAM_RACES.forEach(([number,baseName,baseClass,surface,requestedDistance,prize,difficulty])=>{
+    let raceClass=baseClass,name=baseName,raceDistanceRequest=requestedDistance;
+    const newRaceClosed=calendarAge>3||(calendarAge===3&&yearWeek>12);
+    const maidenClosed=calendarAge>3||(calendarAge===3&&yearWeek>36);
+    if((raceClass==="新馬"&&newRaceClosed)||(raceClass==="未勝利"&&maidenClosed)){
+      raceClass=calendarAge>=4&&number>=4?number===6?"3勝":"2勝":"1勝";
+      name=`${raceClass}クラス`;
+    }else if(raceClass==="新馬"||raceClass==="未勝利")name=`${calendarAge}歳${raceClass}`;
+    else if(raceClass==="1勝"&&number!==9)name=`${programAgeLabel(week)}1勝クラス`;
+    if(number===9&&calendarAge===2){name="2歳1勝クラス";raceDistanceRequest=1800}
+    if(number>=10&&ageLimitedSeason){raceClass="オープン";name=`${calendarAge}歳オープン`}
     const niigataStraight=venue==="新潟"&&surface==="芝"&&number===7;
-    const distance=niigataStraight?1000:venueRaceDistance(venue,surface,requestedDistance,week);
-    const raceName=niigataStraight?"直線1000m 1勝クラス":name;
+    const distance=niigataStraight?1000:venueRaceDistance(venue,surface,raceDistanceRequest,week);
+    const raceName=niigataStraight?`${programAgeLabel(week)}直線1000m 1勝クラス`:name;
     const basePer1000=niigataStraight?57000:surface==="芝"?60000:63000;
     raceCalendar.push({id:`p-${week}-${venue}-${number}`,program:true,number,week,name:raceName,raceClass,
       course:`${venue} ${surface}${distance}m`,surface,distance,
-      baseTime:Math.round(basePer1000*distance/1000),prize,difficulty,condition});
+      baseTime:Math.round(basePer1000*distance/1000),prize,difficulty,
+      age:raceClass==="新馬"||raceClass==="未勝利"?`${calendarAge}歳`:programAgeLabel(week),
+      condition:g=>ageLimitedSeason&&raceClass==="オープン"?!g.maiden&&g.classMoney>500:generatedRaceCondition(raceClass,week,g)});
   }));
 }
 const OFFICIAL_GRADE_LABEL={G1:"GⅠ",G2:"GⅡ",G3:"GⅢ",Jpn1:"JpnⅠ",Jpn2:"JpnⅡ",Jpn3:"JpnⅢ"};
@@ -168,12 +201,16 @@ function officialWeek(date,year){
   const [,month,day]=date.split("-").map(Number),days=new Date(2026,month,0).getDate();
   return (year-1)*48+(month-1)*4+Math.min(4,Math.max(1,Math.ceil(day/days*4)));
 }
-function officialRaceAgeEligible(race,g){
-  const age=horseAge(),text=race.age||"";
+function raceAgeTextEligible(text,age){
   if(text.includes("2歳")&&age!==2)return false;
   if(text.includes("3歳")&&!text.includes("以上")&&age!==3)return false;
   if(text.includes("4歳以上")&&age<4)return false;
   if(text.includes("3歳以上")&&age<3)return false;
+  return true;
+}
+function officialRaceAgeEligible(race,g,raceWeek=game.week){
+  const text=race.age||"";
+  if(!raceAgeTextEligible(text,horseAgeAtWeek(raceWeek)))return false;
   if(text.includes("牝")&&g.candidate?.sex!=="牝馬")return false;
   return true;
 }
@@ -186,13 +223,14 @@ function narAgeText(name){
 function addOfficialRaces(source,prefix){
   for(let year=1;year<=5;year++)source.forEach((raw,index)=>{
     const official={...raw,age:raw.age||narAgeText(raw.name)};
+    const raceWeek=officialWeek(raw.date,year);
     const normalizedClass=raw.grade.endsWith("1")?"G1":raw.grade.endsWith("2")?"G2":"G3";
     const classThreshold=normalizedClass==="G1"?1600:normalizedClass==="G2"?1000:400;
     raceCalendar.push({id:`${prefix}-${year}-${index}`,program:true,official:true,officialDate:raw.date,number:11,
-      week:officialWeek(raw.date,year),name:`${raw.name} ${OFFICIAL_GRADE_LABEL[raw.grade]}`,raceClass:normalizedClass,
+      week:raceWeek,name:`${raw.name} ${OFFICIAL_GRADE_LABEL[raw.grade]}`,raceClass:normalizedClass,
       course:`${raw.venue} ${raw.surface}${raw.distance}m`,surface:raw.surface,distance:raw.distance,
       baseTime:Math.round((raw.surface==="芝"?60000:63000)*raw.distance/1000),prize:OFFICIAL_PRIZE[raw.grade],difficulty:OFFICIAL_DIFFICULTY[raw.grade],
-      condition:g=>officialRaceAgeEligible(official,g)&&!g.maiden&&g.classMoney>=classThreshold});
+      age:official.age,condition:g=>officialRaceAgeEligible(official,g,raceWeek)&&!g.maiden&&g.classMoney>=classThreshold});
   });
 }
 // 手作業の仮重賞は公式2026日程へ置き換える。
@@ -501,7 +539,12 @@ function advanceConditionCycle(actionBonus=0){
   }
   game.condition=Math.max(20,Math.min(100,nextCondition));
 }
-function classLabel(){return game.maiden?"未勝利":game.classMoney<=400?"1勝クラス":game.classMoney<=1000?"2勝クラス":game.classMoney<=1600?"3勝クラス":"オープン"}
+function classLabel(){
+  if(game.maiden)return "未勝利";
+  const age=horseAge(),yearWeek=(game.week-1)%48;
+  if((age===2||(age===3&&yearWeek<21))&&game.classMoney>500)return "オープン";
+  return game.classMoney<=500?"1勝クラス":game.classMoney<=1000?"2勝クラス":game.classMoney<=1600?"3勝クラス":"オープン";
+}
 function displayClassLabel(){return game.races===0?"新馬":classLabel()}
 function classAbilityTarget(){
   const label=displayClassLabel();
@@ -1084,24 +1127,28 @@ function renderRaces(){
   document.querySelector("#raceVenueTabs").innerHTML=venues.map(v=>`<button data-venue="${v}" class="${window.selectedRaceVenue===v?"selected":""}">${v}</button>`).join("");
   const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue).sort((a,b)=>(a.number||11)-(b.number||11));
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
-    const arrived=r.week===game.week,debutSeasonOpen=game.week>=21,eligible=arrived&&debutSeasonOpen&&r.condition(game),surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
+    const arrived=r.week===game.week,debutSeasonOpen=game.week>=21;
+    const targetAge=horseAgeAtWeek(r.week),ageEligible=raceAgeTextEligible(r.age||"",targetAge),sexEligible=!String(r.age||"").includes("牝")||game.candidate?.sex==="牝馬";
+    const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&r.condition(game),surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
     const raceYear=Math.floor((r.week-1)/48)+1,raceYearWeek=(r.week-1)%48;
     const officialDate=r.officialDate?`${Number(r.officialDate.slice(5,7))}月${Number(r.officialDate.slice(8,10))}日（2026公式）`:`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
     let reason="出走条件外";
     if(eligible)reason="出走する";
     else if(!arrived)reason="未来の予定";
     else if(!debutSeasonOpen)reason="2歳新馬戦の開始前";
+    else if(!ageEligible)reason=`${r.age}限定`;
+    else if(!sexEligible)reason="牝馬限定";
     else if(r.raceClass==="新馬"&&game.races>0)reason="新馬戦は初戦のみ";
-    else if(r.raceClass==="未勝利"&&game.races===0)reason="新馬戦出走後";
     else if(r.raceClass==="未勝利"&&!game.maiden)reason="勝ち上がり済み";
     else if(r.id==="derby")reason="優先権・収得賞金不足";
     else if(game.maiden)reason="未勝利馬条件";
-    else reason="獲得賞金不足";
+    else if(["1勝","2勝","3勝","オープン"].includes(r.raceClass))reason=`現在は${classLabel()}`;
+    else reason="収得賞金・出走条件外";
     const reserved=game.reservedRaceId===r.id;
     const wonBefore=game.raceHistory.some(x=>x.raceName===r.name&&x.place===1);
     return `<article class="race-choice ${eligible?"":"locked"} ${reserved?"reserved":""}"><b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
     <h3>${wonBefore?"🏆 ":""}${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p></div>
-    <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${!arrived?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
+    <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${!arrived&&ageEligible&&sexEligible?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
   }).join("")||`<p class="empty-races">この開催場の番組はありません。</p>`;
 }
 function playerAbility(race){
