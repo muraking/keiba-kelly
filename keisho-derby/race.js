@@ -384,15 +384,21 @@ function calculateOdds(entries) {
 
 function analyzePace(entries) {
   const escapeCount = entries.filter(h => h.style === "逃げ").length;
-  const splitNoise = (raceRandom() - .5) * 700;
+  const splitNoise = (raceRandom() - .5) * 500;
   const finishNoise = (raceRandom() - .5) * 1800;
   const distanceBase = playerSetup.baseTime || TOTAL * 62;
   const baseSplit = distanceBase * 1000 / TOTAL;
+  const ageTwo=playerSetup.age===2;
+  const minSplit=TOTAL<=1000
+    ? (["G1","G2","G3","オープン"].includes(playerSetup.raceClass)?54500:55500)
+    : raceSurface==="芝"?(ageTwo?59500:58500):(ageTwo?61500:60200);
+  const maxSplit=TOTAL<=1000?60500:raceSurface==="芝"?64500:66500;
+  const boundedSplit=value=>Math.max(minSplit,Math.min(maxSplit,value));
   if (escapeCount >= 3) {
     return {
       name: "ハイペース",
       escapeCount,
-      targetSplit: baseSplit - 1200 + splitNoise,
+      targetSplit: boundedSplit(baseSplit - 900 + splitNoise),
       targetFinish: distanceBase - 300 + finishNoise,
     };
   }
@@ -400,7 +406,7 @@ function analyzePace(entries) {
     return {
       name: "ややハイ",
       escapeCount,
-      targetSplit: baseSplit - 500 + splitNoise,
+      targetSplit: boundedSplit(baseSplit - 400 + splitNoise),
       targetFinish: distanceBase + finishNoise,
     };
   }
@@ -408,14 +414,14 @@ function analyzePace(entries) {
     return {
       name: "スローペース",
       escapeCount,
-      targetSplit: baseSplit + 500 + splitNoise,
+      targetSplit: boundedSplit(baseSplit + 500 + splitNoise),
       targetFinish: distanceBase + 600 + finishNoise,
     };
   }
   return {
     name: "超スロー",
     escapeCount,
-    targetSplit: baseSplit + 1400 + splitNoise,
+    targetSplit: boundedSplit(baseSplit + 1300 + splitNoise),
     targetFinish: distanceBase + 1400 + finishNoise,
   };
 }
@@ -447,13 +453,13 @@ function update(dt, clockDt) {
   // 想定ラップから大きく外れないよう、先頭の速度を緩やかに補正する。
   // 脚質は着順と位置取りへ効かせ、時計だけが毎回暴走するのを防ぐ。
   const paceError = expectedDistance - leaderDistance;
-  const paceControl = Math.max(.74, Math.min(1.20, 1 + paceError / 240));
+  const paceControl = Math.max(.48, Math.min(1.12, 1 + paceError / 105));
   if (split1000Time === null && leaderDistance >= 1000) {
     split1000Time = raceClock;
     measuredPace = classify1000mPace(split1000Time);
     split1000El.textContent = formatTime(split1000Time);
     paceDisplayEl.textContent = `実測：${measuredPace}（1000m ${formatTime(split1000Time)}）`;
-    setCommentary(`1000m通過 ${formatTime(split1000Time)}、${measuredPace}！`);
+    setCommentary(`${TOTAL===1000?"1000m走破":"1000m通過"} ${formatTime(split1000Time)}、${measuredPace}！`);
   }
 
   horses.forEach((h) => {

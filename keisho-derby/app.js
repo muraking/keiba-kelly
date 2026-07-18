@@ -67,7 +67,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], candidate:null,
-  reservedRaceId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:""
+  reservedRaceId:null,reservationNotifiedId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:""
 });
 let game = defaultGame();
 let autoTrainingActive=false;
@@ -749,6 +749,19 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#pastureButton").hidden=!injured;
   if(injured)document.querySelector("#pastureWeeks").textContent=`${game.injury.name}・${game.injury.weeks}週間を一括進行`;
   saveGame();
+  const arrivedReservation=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
+  if(arrivedReservation&&game.reservationNotifiedId!==arrivedReservation.id)queueMicrotask(()=>showReservationArrival(arrivedReservation));
+}
+function closeReservationArrival(){
+  const modal=document.querySelector("#reservationArrivalModal");modal.classList.remove("show");modal.setAttribute("aria-hidden","true");
+}
+function showReservationArrival(race){
+  game.reservationNotifiedId=race.id;saveGame();
+  document.querySelector("#reservationArrivalRace").textContent=`${race.course}　${race.name}`;
+  const modal=document.querySelector("#reservationArrivalModal");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+}
+function openReservedRaceWeek(race){
+  window.selectedRaceWeek=race.week;window.selectedRaceVenue=raceVenue(race);renderRaces();showScreen("raceSelectScreen");closeReservationArrival();
 }
 const training={
   turfSolo:{label:"芝・単走",fatigue:6,stats:{speed:1,turf:1}},
@@ -1304,12 +1317,12 @@ function prepareRace(race){
     };
     game.currentRaceWeather=raceWeather;
     saveGame();
-    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,surface:race.surface,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
+    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,surface:race.surface,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
   }catch(error){
     console.error("race preparation failed",error);
     document.querySelector("#commentary").textContent="レースの読み込みを再試行しています。";
     dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{
-      horseName:game.horseName,raceName:race.name,ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,
+      horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,
       condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,
       raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,
       surface:race.surface,heavyTrack:game.heavyTrack,weather:"晴",going:"良",
@@ -1491,10 +1504,18 @@ document.querySelector("#tackChoices").onclick=e=>{
   game.equippedTack=button.dataset.tack||null;
   renderHome(game.equippedTack?`${tackCatalog[game.equippedTack].name}を装着しました。`:"馬具を外しました。");
 };
-document.querySelector("#goRaceSelectButton").onclick=()=>{window.selectedRaceWeek=game.week;window.selectedRaceVenue="";renderRaces();showScreen("raceSelectScreen")};
+document.querySelector("#goRaceSelectButton").onclick=()=>{
+  const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
+  window.selectedRaceWeek=game.week;window.selectedRaceVenue=reserved?raceVenue(reserved):"";renderRaces();showScreen("raceSelectScreen");
+};
+document.querySelector("#reservationArrivalOpen").onclick=()=>{
+  const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
+  if(reserved)openReservedRaceWeek(reserved);else closeReservationArrival();
+};
+document.querySelector("#reservationArrivalClose").onclick=closeReservationArrival;
 document.querySelector("#raceChoices").onclick=e=>{
   const reserve=e.target.closest("[data-reserve]");
-  if(reserve){game.reservedRaceId=game.reservedRaceId===reserve.dataset.reserve?null:reserve.dataset.reserve;saveGame();renderRaces();return}
+  if(reserve){game.reservedRaceId=game.reservedRaceId===reserve.dataset.reserve?null:reserve.dataset.reserve;game.reservationNotifiedId=null;saveGame();renderRaces();return}
   const button=e.target.closest("[data-race]");if(button)prepareRace(raceCalendar.find(r=>r.id===button.dataset.race));
 };
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
