@@ -1,5 +1,7 @@
 # 2026 race data sources
 
+- JRA racecourse course data: https://www.jra.go.jp/facilities/
+
 - JRA開催日割・重賞: https://www.jra.go.jp/news/202509/092201.html
 - JRA 2026重賞一覧: https://www.jra.go.jp/datafile/seiseki/replay/2026/jyusyo.html
 - NAR 2026ダートグレード一覧: https://www.keiba.go.jp/dirtgraderace/2026/racelist/index.html

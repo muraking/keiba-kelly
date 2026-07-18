@@ -115,6 +115,26 @@ const JRA_2026_VENUES=[
   [["東京","京都","福島"],["東京","京都","福島"],["東京","京都","福島"],["東京","京都","福島"]],
   [["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神"]]
 ];
+const JRA_COURSE_DISTANCES={
+  "札幌":{芝:[1000,1200,1500,1800,2000,2600],ダート:[1000,1700,2400]},
+  "函館":{芝:[1000,1200,1700,1800,2000,2600],ダート:[1000,1700,2400]},
+  "福島":{芝:[1000,1200,1700,1800,2000,2600],ダート:[1000,1150,1700,2400]},
+  "新潟":{芝:[1000,1200,1400,1600,1800,2000,2200,2400,3000,3200],ダート:[1200,1800,2500]},
+  "東京":{芝:[1400,1600,1800,2000,2300,2400,2500,2600,3400],ダート:[1300,1400,1600,2100,2400]},
+  "中山":{芝:[1200,1600,1800,2000,2200,2500,2600,3200,3600,4000],ダート:[1000,1200,1700,1800,2400,2500]},
+  "中京":{芝:[1200,1400,1600,2000,2200,3000],ダート:[1200,1400,1800,1900,2500]},
+  "京都":{芝:[1200,1400,1600,1800,2000,2200,2400,3000,3200],ダート:[1200,1400,1800,1900,2600]},
+  "阪神":{芝:[1200,1400,1600,1800,2000,2200,2400,2600,3000,3200],ダート:[1200,1400,1800,2000,2600]},
+  "小倉":{芝:[1000,1200,1700,1800,2000,2600],ダート:[1000,1700,2400]}
+};
+function venueRaceDistance(venue,surface,requested,week){
+  const distances=JRA_COURSE_DISTANCES[venue]?.[surface]||[requested];
+  if(requested==="long"){
+    const long=distances.filter(distance=>distance>=2400);
+    return long.length?long[(week+venue.length)%long.length]:distances.at(-1);
+  }
+  return distances.reduce((best,distance)=>Math.abs(distance-requested)<Math.abs(best-requested)?distance:best,distances[0]);
+}
 const PROGRAM_RACES=[
   [1,"2歳未勝利","未勝利","ダート",1200,560,64,g=>g.maiden],
   [2,"2歳未勝利","未勝利","芝",1400,560,64,g=>g.maiden],
@@ -124,14 +144,15 @@ const PROGRAM_RACES=[
   [6,"2歳新馬","新馬","ダート",1800,750,63,g=>g.races===0],
   [7,"2歳1勝クラス","1勝","芝",1400,800,69,g=>!g.maiden&&g.classMoney<=400],
   [8,"2歳1勝クラス","1勝","ダート",1400,800,69,g=>!g.maiden&&g.classMoney<=400],
-  [9,"2歳1勝クラス","1勝","芝",1800,800,70,g=>!g.maiden&&g.classMoney<=400],
-  [10,"2歳オープン","オープン","ダート",1600,1600,82,g=>g.classMoney>=400],
-  [11,"2歳特別","オープン","芝",1800,2000,84,g=>g.classMoney>=400],
-  [12,"2歳1勝クラス","1勝","ダート",1800,800,70,g=>!g.maiden&&g.classMoney<=400],
+  [9,"長距離1勝クラス","1勝","芝","long",800,72,g=>horseAge()>=3&&!g.maiden&&g.classMoney<=400],
+  [10,"2勝クラス","2勝","芝",2000,1140,76,g=>horseAge()>=3&&g.classMoney>=500],
+  [11,"長距離特別","3勝","芝","long",1840,82,g=>horseAge()>=3&&g.classMoney>=1000],
+  [12,"オープン特別","オープン","ダート",1800,2200,85,g=>horseAge()>=3&&g.classMoney>=1600],
 ];
 for(let week=1;week<=240;week++){
   const yearWeek=(week-1)%48,venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
-  venues.forEach(venue=>PROGRAM_RACES.forEach(([number,name,raceClass,surface,distance,prize,difficulty,condition])=>{
+  venues.forEach(venue=>PROGRAM_RACES.forEach(([number,name,raceClass,surface,requestedDistance,prize,difficulty,condition])=>{
+    const distance=venueRaceDistance(venue,surface,requestedDistance,week);
     const basePer1000=surface==="芝"?60000:63000;
     raceCalendar.push({id:`p-${week}-${venue}-${number}`,program:true,number,week,name,raceClass,
       course:`${venue} ${surface}${distance}m`,surface,distance,
