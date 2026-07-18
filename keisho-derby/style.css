@@ -272,7 +272,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .pixel-cloud i { position:absolute; display:block; background:#f6fbf3; box-shadow:3px 3px #cfe4df; }
 .pixel-cloud i:nth-child(1){left:0;top:11px;width:62px;height:12px}.pixel-cloud i:nth-child(2){left:14px;top:4px;width:23px;height:14px}.pixel-cloud i:nth-child(3){left:38px;top:7px;width:18px;height:12px}
 .cloud-one{top:24px;left:145px}.cloud-two{top:62px;left:-75px;transform:scale(.7);animation-duration:19s;animation-delay:-7s}
-.stable-weather-label { position:absolute;z-index:6;right:8px;top:75px;padding:3px 7px;border:2px solid #735327;background:#fff2bd;color:#49361f;font-size:9px;font-weight:900;box-shadow:2px 2px #5b4930; }
+.stable-date-label { position:absolute;z-index:6;right:8px;top:75px;padding:4px 9px;border:2px solid #735327;background:#fff2bd;color:#49361f;font-size:12px;font-weight:900;box-shadow:2px 2px #5b4930;white-space:nowrap; }
 .stable-precipitation { display:none;position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.32;background:repeating-linear-gradient(105deg,transparent 0 30px,#d9f2ff 31px 32px,transparent 33px 61px);background-size:74px 78px;animation:stableRain .9s steps(4) infinite; }
 .stable-scene.weather-cloudy { background:linear-gradient(#91aeb8 0 52%,#6f9a57 52% 72%,#4b803c 72%); }
 .stable-scene.weather-cloudy .sky-sun { opacity:.25;filter:grayscale(.4); }
