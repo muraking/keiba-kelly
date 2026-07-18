@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.6.6</title>
-  <link rel="stylesheet" href="style.css?v=20260718-45">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.6.7</title>
+  <link rel="stylesheet" href="style.css?v=20260718-46">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.6.6</b>
+        <b class="build-version">Ver. 0.6.7</b>
       </div>
     </section>
 
@@ -321,6 +321,7 @@
         </div>
       </section>
       <button id="gateSkipButton" class="gate-skip-button" hidden>ゲート演出をスキップして発走へ</button>
+      <button id="speedButton" class="race-speed-button" hidden>レース速度：標準</button>
       <div class="commentary race-commentary-wide" aria-live="polite">
         <div class="announcer" aria-label="実況アナウンサー"><i class="ann-hair"></i><i class="ann-face"></i><i class="ann-body"></i><i class="ann-mic"></i></div><p id="commentary">各馬、ゲートに入りました。</p>
       </div>
@@ -328,7 +329,6 @@
         <div class="controls">
           <button id="startButton">レース開始</button>
           <button id="pauseButton" disabled>一時停止</button>
-          <button id="speedButton">速度 標準</button>
           <button id="resetButton">リプレイ</button>
         </div>
         <div id="ranking" class="ranking" aria-live="polite"></div>
@@ -354,7 +354,7 @@
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
   <script src="app.js?v=20260718-34"></script>
-  <script src="race.js?v=20260718-34"></script>
+  <script src="race.js?v=20260718-35"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>

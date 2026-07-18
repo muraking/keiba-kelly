@@ -277,9 +277,10 @@ function resetRace() {
   startButton.disabled = false;
   pauseButton.disabled = true;
   gateSkipButton.hidden = true;
+  speedButton.hidden = true;
   pauseButton.textContent = "一時停止";
   multiplier = 1;
-  speedButton.textContent = "速度 標準";
+  speedButton.textContent = "レース速度：標準";
   draw();
   renderRanking();
 }
@@ -658,6 +659,7 @@ function finishRace() {
   state = "runout";
   startButton.disabled = true;
   pauseButton.disabled = true;
+  speedButton.hidden = true;
   const winner = order()[0];
   const isRecord=Number.isFinite(playerSetup.recordTime)&&winner.finishTime<playerSetup.recordTime;
   finishTimeEl.textContent = formatTime(winner.finishTime);
@@ -1376,6 +1378,7 @@ function beginRaceAfterGate(){
   if(state!=="gateBreak")return;
   state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
   gateSkipButton.hidden=true;
+  speedButton.hidden=false;
   const late=horses.filter(h=>h.startReaction==="出遅れ"),sharp=horses.filter(h=>h.startReaction==="好スタート");
   setCommentary(late.length
     ? `スタート！ ${late.map(h=>`${h.id}番${h.name}`).join("、")}は出遅れ！`
@@ -1429,8 +1432,8 @@ pauseButton.addEventListener("click", () => {
 });
 
 speedButton.addEventListener("click", () => {
-  multiplier = multiplier === 1 ? 2 : multiplier === 2 ? 4 : 1;
-  speedButton.textContent = multiplier === 1 ? "速度 標準" : `速度 ×${multiplier}`;
+  multiplier = multiplier === 1 ? 2 : 1;
+  speedButton.textContent = multiplier === 1 ? "レース速度：標準" : "レース速度：2倍";
 });
 
 resetButton.addEventListener("click", resetRace);
@@ -1440,6 +1443,7 @@ winnerReplayButton.addEventListener("click",()=>{
   state="running";
   startButton.disabled=true;
   pauseButton.disabled=false;
+  speedButton.hidden=false;
   phaseEl.textContent="リプレイ";
   setCommentary("保存された展開でレースを再現します。",true);
   lastTime=0;
