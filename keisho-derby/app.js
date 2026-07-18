@@ -12,19 +12,50 @@ const dams = [
 const breedingPartners={
   "牡馬":[
     {name:"ゼロスタリオン",cost:0,record:"未勝利",surface:"芝・ダート不明",distance:"1200〜2000m",growth:"普通",level:430},
+    {name:"ノーマネーボルト",cost:0,record:"未出走",surface:"ダート向き",distance:"1000〜1800m",growth:"早熟",level:420},
+    {name:"フリーチップ",cost:0,record:"未勝利",surface:"芝向き",distance:"1400〜2200m",growth:"晩成",level:435},
+    {name:"ハジマリロード",cost:0,record:"未勝利",surface:"芝・ダート不明",distance:"1200〜2400m",growth:"普通",level:425},
     {name:"ローカルエース",cost:500,record:"1勝クラス",surface:"ダート向き",distance:"1200〜1800m",growth:"早熟",level:500},
+    {name:"ミドルダッシュ",cost:500,record:"1勝クラス",surface:"芝向き",distance:"1000〜1600m",growth:"早熟",level:505},
+    {name:"ブラウンギア",cost:500,record:"1勝クラス",surface:"ダート向き",distance:"1600〜2200m",growth:"普通",level:495},
+    {name:"スロースター",cost:500,record:"1勝クラス",surface:"芝向き",distance:"1800〜2600m",growth:"晩成",level:510},
     {name:"ターフメモリー",cost:1500,record:"3勝クラス",surface:"芝向き",distance:"1600〜2200m",growth:"普通",level:570},
+    {name:"ダートブレイヴ",cost:1500,record:"3勝クラス",surface:"ダート向き",distance:"1400〜2000m",growth:"普通",level:575},
+    {name:"スプリントキー",cost:1500,record:"2勝クラス",surface:"芝向き",distance:"1000〜1600m",growth:"早熟",level:565},
+    {name:"ロングパス",cost:1500,record:"3勝クラス",surface:"芝向き",distance:"2000〜3000m",growth:"晩成",level:580},
     {name:"グランドチップ",cost:5000,record:"オープン",surface:"芝向き",distance:"1800〜2600m",growth:"晩成",level:650},
+    {name:"サンドコマンド",cost:5000,record:"オープン",surface:"ダート向き",distance:"1200〜2000m",growth:"普通",level:645},
+    {name:"マイルピクセル",cost:5000,record:"重賞 1勝",surface:"芝向き",distance:"1400〜1800m",growth:"早熟",level:655},
+    {name:"ステイヤードット",cost:5000,record:"オープン",surface:"芝向き",distance:"2200〜3200m",growth:"晩成",level:660},
     {name:"レジェンドドット",cost:15000,record:"GⅠ 2勝",surface:"芝・万能",distance:"1600〜3000m",growth:"普通",level:735}
+    ,{name:"キングオブチップ",cost:15000,record:"GⅠ 1勝",surface:"芝向き",distance:"1200〜2000m",growth:"早熟",level:725}
+    ,{name:"ダートエンペラー",cost:15000,record:"GⅠ 2勝",surface:"ダート向き",distance:"1400〜2400m",growth:"晩成",level:730}
+    ,{name:"エターナルビット",cost:15000,record:"GⅠ 1勝",surface:"芝向き",distance:"2000〜3200m",growth:"晩成",level:740}
   ],
   "牝馬":[
     {name:"ゼロメア",cost:0,record:"未出走",surface:"芝・ダート不明",distance:"1200〜2000m",growth:"普通",level:425},
+    {name:"フリーベル",cost:0,record:"未勝利",surface:"芝向き",distance:"1200〜1800m",growth:"早熟",level:430},
+    {name:"ノーコストラブ",cost:0,record:"未出走",surface:"ダート向き",distance:"1400〜2200m",growth:"普通",level:420},
+    {name:"ハジマリメモリ",cost:0,record:"未勝利",surface:"芝・ダート不明",distance:"1600〜2400m",growth:"晩成",level:435},
     {name:"ローカルベル",cost:500,record:"1勝クラス",surface:"ダート向き",distance:"1400〜1800m",growth:"晩成",level:495},
+    {name:"ターフスイート",cost:500,record:"1勝クラス",surface:"芝向き",distance:"1200〜1800m",growth:"早熟",level:500},
+    {name:"サンドリボン",cost:500,record:"1勝クラス",surface:"ダート向き",distance:"1600〜2200m",growth:"普通",level:505},
+    {name:"ロングメロディ",cost:500,record:"1勝クラス",surface:"芝向き",distance:"1800〜2600m",growth:"晩成",level:510},
     {name:"ターフリボン",cost:1500,record:"2勝クラス",surface:"芝向き",distance:"1400〜2200m",growth:"早熟",level:560},
+    {name:"ダートパール",cost:1500,record:"3勝クラス",surface:"ダート向き",distance:"1200〜1800m",growth:"普通",level:570},
+    {name:"ミドルハート",cost:1500,record:"3勝クラス",surface:"芝向き",distance:"1600〜2400m",growth:"普通",level:575},
+    {name:"ステイヤーミスト",cost:1500,record:"2勝クラス",surface:"芝向き",distance:"2000〜3000m",growth:"晩成",level:580},
     {name:"クイーンメモリ",cost:5000,record:"オープン",surface:"芝向き",distance:"1600〜2400m",growth:"普通",level:640},
+    {name:"サンドクイーン",cost:5000,record:"重賞 1勝",surface:"ダート向き",distance:"1400〜2000m",growth:"普通",level:650},
+    {name:"スプリントベル",cost:5000,record:"オープン",surface:"芝向き",distance:"1000〜1600m",growth:"早熟",level:645},
+    {name:"ロングティアラ",cost:5000,record:"オープン",surface:"芝向き",distance:"2000〜3000m",growth:"晩成",level:655},
     {name:"ダービーハート",cost:15000,record:"GⅠ 1勝",surface:"芝・万能",distance:"1600〜2800m",growth:"晩成",level:725}
+    ,{name:"グランプリローズ",cost:15000,record:"GⅠ 2勝",surface:"芝向き",distance:"1800〜2600m",growth:"普通",level:735}
+    ,{name:"ダートヴィーナス",cost:15000,record:"GⅠ 1勝",surface:"ダート向き",distance:"1200〜2200m",growth:"早熟",level:730}
+    ,{name:"エンドレスメア",cost:15000,record:"GⅠ 1勝",surface:"芝向き",distance:"2200〜3200m",growth:"晩成",level:740}
   ]
 };
+let currentBreedingChoices=[];
 const defaultGame = () => ({
   horseName:"", week:1, trainingsUsed:0, prize:0, farmPoints:0, equipment:[], classMoney:0, priorityRights:[],
   speed:0, dash:0, gateSkill:450, stamina:0, power:0, guts:0, turf:0, dirt:0, heavyTrack:500, condition:60, fatigue:10,
@@ -232,7 +263,11 @@ function renderRetirement(){
   document.querySelector("#breedingBudget").textContent=`配合予算 ${game.prize.toLocaleString()}万円`;
   const partnerSex=game.candidate?.sex==="牝馬"?"牡馬":"牝馬";
   document.querySelector("#breedingGuide").textContent=`${game.candidate?.sex||"牡馬"}として引退します。相手となる${partnerSex}を選んでください。獲得賞金以内の相手を選べます。`;
-  document.querySelector("#breedingPartners").innerHTML=breedingPartners[partnerSex].map((partner,index)=>{
+  currentBreedingChoices=[...new Set(breedingPartners[partnerSex].map(partner=>partner.cost))].sort((a,b)=>a-b).map(cost=>{
+    const tier=breedingPartners[partnerSex].filter(partner=>partner.cost===cost);
+    return tier[rnd(0,tier.length-1)];
+  });
+  document.querySelector("#breedingPartners").innerHTML=currentBreedingChoices.map((partner,index)=>{
     const affordable=game.prize>=partner.cost;
     return `<article class="breeding-card ${affordable?"":"locked"}"><div><small>${partner.record}</small><h3>${partner.name}</h3><p>${partner.surface}／${partner.distance}／${partner.growth}</p></div><button data-breeding-partner="${index}" data-partner-sex="${partnerSex}" ${affordable?"":"disabled"}>${partner.cost.toLocaleString()}万円</button></article>`;
   }).join("");
@@ -1242,7 +1277,7 @@ document.querySelector("#retireHorseButton").onclick=()=>{renderRetirement();sho
 document.querySelector("#breedingPartners").onclick=e=>{
   const button=e.target.closest("[data-breeding-partner]");
   if(!button)return;
-  const partner=breedingPartners[button.dataset.partnerSex][Number(button.dataset.breedingPartner)];
+  const partner=currentBreedingChoices[Number(button.dataset.breedingPartner)];
   if(!partner||game.prize<partner.cost)return;
   if(confirm(`${game.horseName}を引退させ、${partner.name}との子で次世代を始めますか？`))beginNextGeneration(partner);
 };
