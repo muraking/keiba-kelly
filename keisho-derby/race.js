@@ -832,7 +832,7 @@ function drawVisionGoalBoard(x,y){
 }
 
 function drawVisionGate(vx,camY,vw,camH){
-  const gateX=vx+vw-91,gateY=camY+7,gateW=76,gateH=41;
+  const gateX=vx+vw-64,gateY=camY+7,gateW=49,gateH=41;
   ctx.fillStyle="#f5f5ed";ctx.fillRect(gateX,gateY,gateW,gateH);
   ctx.strokeStyle="#7f918f";ctx.lineWidth=3;ctx.strokeRect(gateX,gateY,gateW,gateH);
   ctx.fillStyle="#d4ddd8";ctx.fillRect(gateX+7,gateY+5,5,gateH-10);
@@ -854,7 +854,7 @@ function drawVisionGate(vx,camY,vw,camH){
 }
 
 function drawVisionGateBreak(vx,camY,vw,camH){
-  const gateX=vx+38,gateY=camY+7,gateW=108,gateH=41;
+  const gateX=vx+62,gateY=camY+7,gateW=64,gateH=41;
   ctx.fillStyle="#f5f5ed";ctx.fillRect(gateX,gateY,gateW,gateH);
   ctx.strokeStyle="#7f918f";ctx.lineWidth=3;ctx.strokeRect(gateX,gateY,gateW,gateH);
   const burst=Math.max(0,Math.min(1,(preRaceClock-360)/500));
