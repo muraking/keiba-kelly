@@ -1003,6 +1003,36 @@ function playTrainingAnimation(type,label,outcome){
     popup.setAttribute("aria-hidden","true");
   },2200);
 }
+function playAutoTrainingSequence(steps,modeName,finishText){
+  const popup=document.querySelector("#trainingPopup"),stage=document.querySelector("#trainingPopupStage");
+  const title=document.querySelector("#trainingPopupTitle"),result=document.querySelector("#trainingPopupResult");
+  const compact=steps.filter((step,index)=>index===0||step.type!==steps[index-1].type).slice(0,5);
+  const sequence=compact.length?compact:[{type:"rest",label:"休養"}];
+  popup.style.setProperty("--popup-horse-color",game.candidate?.color||"#b96e32");
+  popup.classList.add("show","auto-sequence");popup.setAttribute("aria-hidden","false");
+  clearTimeout(playAutoTrainingSequence.timer);
+  let index=0;
+  const showNext=()=>{
+    if(index>=sequence.length){
+      title.textContent=`おまかせ調教（${modeName}）完了`;
+      result.textContent=finishText;
+      stage.className="training-popup-stage rest auto-finish";
+      playAutoTrainingSequence.timer=setTimeout(()=>{
+        popup.classList.remove("show","auto-sequence");popup.setAttribute("aria-hidden","true");
+      },1200);
+      return;
+    }
+    const step=sequence[index];
+    title.textContent=`おまかせ調教 ${index+1}/${sequence.length}`;
+    result.textContent=step.label;
+    stage.className="training-popup-stage";
+    void stage.offsetWidth;
+    stage.className=`training-popup-stage ${step.type}`;
+    index++;
+    playAutoTrainingSequence.timer=setTimeout(showNext,720);
+  };
+  showNext();
+}
 function advanceWeek(rest=false){
   game.week++; game.trainingsUsed=0;
   const recoveryEquipment=(game.equipment.includes("walker")?8:0)+(game.equipment.includes("massage")?3:0);
@@ -1059,7 +1089,7 @@ function runAutoTraining(mode){
   if(game.injury)return renderHome("故障中はおまかせ調教を利用できません。復帰を待ちましょう。");
   const modeName=mode==="safe"?"安全":mode==="balanced"?"バランス":"レース仕上げ";
   const beforeStats=Object.fromEntries(["speed","dash","stamina","power","guts","turf","dirt"].map(stat=>[stat,game[stat]]));
-  const beforeEquipment=[...game.equipment],counts={},startWeek=game.week;
+  const beforeEquipment=[...game.equipment],counts={},animationSteps=[],startWeek=game.week;
   let completed=0,stoppedForRace=false;
   autoTrainingActive=true;
   for(let i=0;i<4;i++){
@@ -1069,6 +1099,7 @@ function runAutoTraining(mode){
     while(game.trainingsUsed<2&&!game.injury){
       const type=autoTrainingChoice(mode,raceSoon),label=training[type]?.label||"休養";
       counts[label]=(counts[label]||0)+1;
+      animationSteps.push({type,label});
       train(type);
     }
     if(game.injury)break;
@@ -1084,6 +1115,7 @@ function runAutoTraining(mode){
   const menu=Object.entries(counts).map(([label,count])=>`${label}${count}回`).join("、");
   const stopText=game.injury?`${game.injury.name}を発症したため途中で中止しました。`:stoppedForRace?"予約レースの週になったため停止しました。":"4週間を終えました。";
   renderHome(`おまかせ調教（${modeName}）で${game.week-startWeek}週間進めました。${menu||"調教なし"}。${stopText}${broken.length?` ${broken.join("、")}が故障しました。`:""} ${nextTrainingAdvice()}`);
+  playAutoTrainingSequence(animationSteps,modeName,stopText);
   saveGame();
 }
 function renderShop(){

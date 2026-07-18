@@ -435,6 +435,8 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 @keyframes sleepMarks { 0%{opacity:0;transform:translate(0,4px)} 50%,100%{opacity:1;transform:translate(8px,-5px)} }
 .training-popup { --popup-horse-color:#b96e32; display:none; position:absolute; inset:0; z-index:8; place-items:center; background:#07131bb8; }
 .training-popup.show { display:grid; animation:trainingPopupIn .18s steps(3); }
+.training-popup.auto-sequence .training-popup-frame { border-color:#9bd07c; }
+.training-popup-stage.auto-finish::after { content:"完了!";position:absolute;z-index:5;left:50%;top:13px;transform:translateX(-50%);padding:5px 9px;border:3px solid #6c4b25;background:#fff0a8;color:#49320f;font-weight:900;font-size:15px; }
 .training-popup-frame { width:82%; padding:8px; border:5px solid #f1d26c; background:#102738; box-shadow:7px 7px #061018; color:#fff; text-align:center; }
 .training-popup-frame>b { display:block; padding:4px; font-size:14px; color:#ffe78a; }
 .training-popup-frame>span { display:block; padding:5px 2px 1px; font-size:11px; }
