@@ -643,7 +643,9 @@ function train(type){
     game.trainingsUsed++;
     game.fatigue=Math.max(0,game.fatigue-22);
     game.condition=Math.min(100,game.condition+4);
-    game.weight=Math.min(600,game.weight+rnd(4,7));
+    const restWeightDiff=game.weight-bestWeight();
+    const restWeightGain=restWeightDiff<=-9?rnd(2,4):restWeightDiff<4?rnd(1,2):rnd(0,1);
+    game.weight=Math.min(600,game.weight+restWeightGain);
     game.legCondition=Math.min(100,game.legCondition+rnd(8,14));
     playTrainingAnimation("rest","休養","回復");
     return renderHome(`${conditionTrendComment()} 休養後は${game.weight}kg、${weightComment()}。`);
@@ -707,7 +709,11 @@ function advanceWeek(rest=false){
   game.fatigue=Math.max(0,game.fatigue-(rest?38:14)-walker);
   game.legCondition=Math.min(100,game.legCondition+(rest?rnd(12,20):rnd(4,8)));
   advanceConditionCycle(rest?5:0);
-  game.weight=Math.min(600,game.weight+(rest?rnd(6,10):rnd(2,4)));
+  const weeklyWeightDiff=game.weight-bestWeight();
+  const weeklyWeightChange=rest
+    ? (weeklyWeightDiff<=-9?rnd(3,5):weeklyWeightDiff<4?rnd(1,3):rnd(0,1))
+    : weeklyWeightDiff>=9?rnd(-1,0):weeklyWeightDiff>=4?rnd(0,1):weeklyWeightDiff<=-9?rnd(3,5):weeklyWeightDiff<=-4?rnd(2,3):rnd(1,2);
+  game.weight=Math.max(330,Math.min(600,game.weight+weeklyWeightChange));
   const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
   const notice=reserved&&reserved.week===game.week?` 予約していた「${reserved.name}」の開催週です。`:reserved&&reserved.week-game.week===1?` 来週は予約した「${reserved.name}」です。`:"";
   renderHome(`${notice} ${conditionTrendComment()}`.trim());
