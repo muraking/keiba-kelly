@@ -885,15 +885,14 @@ function drawTrackV2(){
   const commentaryY=254;
   ctx.fillStyle="#071018";ctx.fillRect(4,commentaryY,352,74);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=2;ctx.strokeRect(4,commentaryY,352,74);
-  ctx.fillStyle="#35251c";ctx.fillRect(9,commentaryY+5,23,7);ctx.fillRect(8,commentaryY+10,4,15);
-  ctx.fillStyle="#d8a06e";ctx.fillRect(11,commentaryY+11,19,21);
-  ctx.fillStyle="#fff";ctx.fillRect(14,commentaryY+18,5,4);ctx.fillRect(23,commentaryY+18,5,4);
-  ctx.fillStyle="#25201d";ctx.fillRect(16,commentaryY+19,2,3);ctx.fillRect(25,commentaryY+19,2,3);
-  ctx.fillStyle="#a96644";ctx.fillRect(20,commentaryY+23,3,4);
-  ctx.fillStyle="#6f2d28";ctx.fillRect(16,commentaryY+28,10,Math.floor(raceClock/220)%2===0?4:2);
-  ctx.fillStyle="#f3f0df";ctx.fillRect(9,commentaryY+34,24,34);
-  ctx.fillStyle="#285a91";ctx.fillRect(9,commentaryY+43,24,25);
-  ctx.fillStyle="#d7c35d";ctx.fillRect(28,commentaryY+47,8,3);
+  ctx.fillStyle="#35251c";ctx.fillRect(12,commentaryY+10,17,5);ctx.fillRect(11,commentaryY+14,3,10);
+  ctx.fillStyle="#d8a06e";ctx.fillRect(13,commentaryY+15,14,15);
+  ctx.fillStyle="#25201d";ctx.fillRect(16,commentaryY+20,2,2);ctx.fillRect(23,commentaryY+20,2,2);
+  ctx.fillStyle="#a96644";ctx.fillRect(20,commentaryY+23,2,2);
+  ctx.fillStyle="#6f2d28";ctx.fillRect(17,commentaryY+27,7,Math.floor(raceClock/260)%2===0?2:1);
+  ctx.fillStyle="#f3f0df";ctx.fillRect(11,commentaryY+32,18,28);
+  ctx.fillStyle="#285a91";ctx.fillRect(11,commentaryY+41,18,19);
+  ctx.fillStyle="#d7c35d";ctx.fillRect(26,commentaryY+44,7,2);
   const commentaryLines=commentaryHistory.slice(-4);
   ctx.font="bold 11px sans-serif";ctx.textAlign="left";
   commentaryLines.forEach((line,index)=>{
