@@ -50566,49 +50566,49 @@
           },
           "2": {
             "1": {
-              "tan": 3.1,
-              "fuku_min": 1.2,
-              "fuku_max": 1.8
+              "tan": 2.7,
+              "fuku_min": 1.1,
+              "fuku_max": 1.6
             },
             "2": {
-              "tan": 3.1,
+              "tan": 2.2,
               "fuku_min": 1.1,
-              "fuku_max": 1.3
+              "fuku_max": 1.1
             },
             "3": {
-              "tan": 6,
+              "tan": 7.8,
               "fuku_min": 1.6,
-              "fuku_max": 2.7
+              "fuku_max": 3.5
             },
             "4": {
-              "tan": 10.7,
-              "fuku_min": 3.1,
-              "fuku_max": 5.7
+              "tan": 10.9,
+              "fuku_min": 1.6,
+              "fuku_max": 3.7
             },
             "5": {
-              "tan": 36.6,
-              "fuku_min": 8.4,
-              "fuku_max": 15.9
+              "tan": 76.7,
+              "fuku_min": 7.8,
+              "fuku_max": 20.7
             },
             "6": {
-              "tan": 5.3,
-              "fuku_min": 1.7,
-              "fuku_max": 2.9
+              "tan": 11.1,
+              "fuku_min": 2.2,
+              "fuku_max": 5.5
             },
             "7": {
-              "tan": 84.2,
-              "fuku_min": 21.5,
-              "fuku_max": 41.1
+              "tan": 139.9,
+              "fuku_min": 10.0,
+              "fuku_max": 26.9
             },
             "8": {
-              "tan": 18.5,
-              "fuku_min": 1.8,
-              "fuku_max": 3.1
+              "tan": 45.3,
+              "fuku_min": 3.6,
+              "fuku_max": 9.2
             },
             "9": {
-              "tan": 13.9,
-              "fuku_min": 2.1,
-              "fuku_max": 3.7
+              "tan": 10.9,
+              "fuku_min": 1.7,
+              "fuku_max": 4.0
             }
           },
           "3": {
@@ -52917,7 +52917,7 @@
         "小倉(日)": {},
         "函館(日)": {}
       },
-      "jra_odds_updated": "2026-07-18T10:23:25.678863+09:00"
+      "jra_odds_updated": "2026-07-18T10:33:21.343477+09:00"
     },
     "2026-07-17": {
       "races": [
@@ -55560,7 +55560,7 @@
     "stop_loss_amount": 3000,
     "skip_local_maiden": false,
     "skip_local_2yo": true,
-    "skip_local_3yo": true,
+    "skip_local_3yo": false,
     "skip_jra_maiden": false,
     "skip_jra_2yo": true,
     "skip_jra_3yo": false,
@@ -55643,15 +55643,15 @@
   "_settings_local": {
     "sm_winrate_filter": 4,
     "ev_min": 125,
-    "ev_max": 160,
+    "ev_max": 155,
     "odds_min": 8,
-    "max_bets": 1,
+    "max_bets": 2,
     "popularity_min_rank": 5,
     "auto_buy_max": 500,
     "auto_buy_skip_fav": true,
     "auto_buy_skip_fav_odds": 1.2,
     "buy_place_bet": true,
-    "place_bet_odds_min": 15,
+    "place_bet_odds_min": 20,
     "place_amount": 200,
     "place_amount_mode": "kelly",
     "place_kelly_mult": 2,
@@ -55663,12 +55663,12 @@
     "exacta_ana1": true,
     "exacta_ana2": false,
     "exacta_ana3": false,
-    "wide_hon1": false,
+    "wide_hon1": true,
     "wide_hon2": false,
-    "wide_hon3": true,
-    "wide_ana1": false,
+    "wide_hon3": false,
+    "wide_ana1": true,
     "wide_ana2": false,
-    "wide_ana3": true,
+    "wide_ana3": false,
     "exacta_amount": 100,
     "exacta_top1": false,
     "exacta_top2": true,
@@ -55690,18 +55690,17 @@
     "wide_winrate_filter": 10,
     "entropy_skip_labels": [
       "激固",
-      "固",
-      "稍固",
-      "荒"
+      "稍荒",
+      "荒",
+      "激荒"
     ],
     "odds_max": 30,
     "exacta_tan_n": 5,
     "wide_tan_n": 1,
     "place_bet_independent": true,
-    "place_bet_max_n": 2,
+    "place_bet_max_n": 1,
     "place_bet_ev_max": 140,
-    "place_bet_winrate_filter": 5,
-    "place_bet_ev_min": 110
+    "place_bet_ev_min": 130
   },
   "_perf_jra": {
     "updated_at": "2026-07-12",
@@ -55718,17 +55717,17 @@
     "max_consecutive_loss": 11
   },
   "_perf_local": {
-    "updated_at": "2026-07-16",
-    "is_roi": 120.1,
-    "oos_roi": 120,
-    "oos_bets": 126,
-    "train_days": 30,
+    "updated_at": "2026-07-17",
+    "is_roi": 130.7,
+    "oos_roi": 121.0,
+    "oos_bets": 146,
+    "train_days": 31,
     "oos_days": 11,
-    "bets": 400,
-    "profit_days": 16,
-    "total_days": 30,
-    "max_drawdown": 60.3,
-    "sharpe": 0.63,
-    "max_consecutive_loss": 57
+    "bets": 435,
+    "profit_days": 15,
+    "total_days": 31,
+    "max_drawdown": 49.3,
+    "sharpe": 2.1,
+    "max_consecutive_loss": 51
   }
 }
