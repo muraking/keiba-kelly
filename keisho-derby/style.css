@@ -261,7 +261,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .horse-board { left:9px;top:9px;width:190px;min-height:88px; }
 .horse-board>small { display:block;margin-bottom:2px;color:#76502b;font-size:9px;font-weight:800; }
 .horse-board>div { display:flex;align-items:baseline;justify-content:space-between;gap:5px;margin-bottom:3px; }
-.horse-board>div b { overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:16px; }
+.horse-board>div b { flex:1;min-width:0;white-space:nowrap;font-size:16px;letter-spacing:-.3px; }
 .horse-board>div em { flex:none;padding:1px 5px;border:2px solid #79542d;background:#fff0bd;font-size:10px;font-style:normal;font-weight:900; }
 .horse-board span { display:flex;justify-content:space-between;gap:5px;font-size:10px; }
 .horse-board strong { color:#8f3e1d;font-size:11px; }

@@ -410,7 +410,10 @@ function renderHorseDetail(){
     <dt>戦績</dt><dd>${game.races}戦${game.wins}勝・${game.prize.toLocaleString()}万円</dd><dt>好感度</dt><dd>${game.affection<3?"まだ少し緊張":game.affection<8?"心を開いてきた":"とても懐いている"}</dd></dl>`;
 }
 function renderHome(message="今週の予定を決めましょう。"){
-  document.querySelector("#homeHorseName").textContent=game.horseName;
+  const homeHorseName=document.querySelector("#homeHorseName");
+  homeHorseName.textContent=game.horseName;
+  const horseNameLength=Array.from(game.horseName).length;
+  homeHorseName.style.fontSize=horseNameLength>=11?"10px":horseNameLength>=9?"12px":horseNameLength>=7?"14px":"16px";
   document.querySelector("#homeHorseAge").textContent=`${horseAge()}歳`;
   document.querySelector("#homePrize").textContent=`${game.prize.toLocaleString()}万円`;
   document.querySelector("#weekDisplay").textContent=weekLabel();
