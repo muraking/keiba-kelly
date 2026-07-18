@@ -69,6 +69,19 @@ body {
 .breeding-card h3 { margin:2px 0 4px;font-size:14px; }.breeding-card small { color:#8d4c28;font-size:8px;font-weight:800; }.breeding-card p { margin:0;font-size:8px;line-height:1.5; }
 .breeding-card button { min-height:46px;padding:5px;font-size:10px;font-weight:900; }.breeding-card.locked { opacity:.48;filter:grayscale(.7); }
 .retirement-screen>button { width:calc(100% - 28px);margin:0 14px; }
+.birth-screen { position:relative;overflow:hidden;padding:0 18px 28px;background:#17263d;color:#fff;text-align:center; }
+.birth-sky { position:absolute;inset:0 0 48%;background:linear-gradient(#14213b,#604f69 72%,#dc9664); }
+.birth-star { position:absolute;width:4px;height:4px;background:#fff4b8;box-shadow:0 0 6px #fff;animation:birthTwinkle 1.1s steps(2) infinite; }.birth-star.s1{left:18%;top:18%}.birth-star.s2{right:22%;top:12%;animation-delay:.3s}.birth-star.s3{left:68%;top:29%;animation-delay:.7s}
+.birth-stall { position:relative;height:430px;margin:0 -18px;background:linear-gradient(transparent 0 57%,#7e4d35 57% 59%,#af7951 59% 79%,#684832 79%);border-bottom:7px solid #412f26; }
+.birth-stall::before { content:"";position:absolute;left:10%;right:10%;bottom:56px;height:160px;border:12px solid #5d3828;border-bottom:0;background:repeating-linear-gradient(90deg,#7e4b30 0 24px,#94603e 24px 47px);clip-path:polygon(0 100%,0 28%,12% 0,88% 0,100% 28%,100% 100%); }
+.birth-foal { left:50%;top:278px;transform:translateX(-50%) scale(.86);animation:foalArrive 2.2s steps(10) 1 both,foalBreathe .9s steps(2) 2.2s infinite;z-index:2; }
+.birth-copy { position:relative;margin:-2px 0 18px;padding:14px;border:3px solid #d2a84f;background:#fff4cf;color:#432e1c;box-shadow:5px 5px #0b1320;animation:birthCopyIn .7s steps(5) 1.6s both; }
+.birth-copy small { font-size:8px;letter-spacing:.2em;color:#9a6332; }.birth-copy h2 { margin:5px 0;font-size:24px; }.birth-copy p { margin:0;font-size:11px; }
+.birth-screen>button { position:relative;width:100%;animation:birthCopyIn .5s steps(4) 2.2s both; }
+@keyframes foalArrive { 0%{opacity:0;transform:translateX(-50%) translateY(22px) scale(.55)} 45%{opacity:1} 100%{opacity:1;transform:translateX(-50%) translateY(0) scale(.86)} }
+@keyframes foalBreathe { 50%{transform:translateX(-50%) translateY(-3px) scale(.86)} }
+@keyframes birthCopyIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes birthTwinkle { 50%{opacity:.25;transform:scale(.5)} }
 .detail-horse-stage { position:relative; height:245px; overflow:hidden; background:linear-gradient(#72c6e5 0 59%,#75ac50 59%); border-bottom:5px solid #fff; cursor:pointer; }
 .detail-pixel-horse { position:absolute; left:50%; top:70px; transform:translateX(-50%) scale(1.65); }
 .detail-horse-stage p { position:absolute; left:15px; right:15px; bottom:13px; margin:0; padding:9px; background:#10221ddd; color:#fff; text-align:center; font-size:10px; }

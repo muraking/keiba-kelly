@@ -36,7 +36,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], candidate:null,
-  reservedRaceId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{}
+  reservedRaceId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:""
 });
 let game = defaultGame();
 let developerMode=localStorage.getItem("dotKeibaDeveloperMode")==="1";
@@ -239,6 +239,19 @@ function renderRetirement(){
 function inheritedStat(parentValue,partnerLevel,variation=55){
   return Math.max(350,Math.min(760,Math.round(parentValue*.38+partnerLevel*.37+rnd(390,540)*.25+rnd(-variation,variation))));
 }
+function inheritanceComparison(child,parent){
+  const labels={speed:"スピード",dash:"ダッシュ",stamina:"スタミナ",power:"パワー",guts:"勝負根性",turf:"芝適性",dirt:"ダート適性"};
+  const differences=Object.keys(labels).map(stat=>({label:labels[stat],diff:(child.potentialCaps?.[stat]||child[stat])-(parent.potentialCaps?.[stat]||parent[stat])})).sort((a,b)=>b.diff-a.diff);
+  const better=differences.find(x=>x.diff>=18),weaker=[...differences].reverse().find(x=>x.diff<=-18);
+  const comments=[];
+  if(better)comments.push(`${better.label}の素質は親より優れていそうです`);
+  else comments.push("全体の素質は親とよく似ています");
+  if(weaker)comments.push(`一方で${weaker.label}は、まだ親に及ばないかもしれません`);
+  if(child.distanceMax>parent.distanceMax+200)comments.push("親より長い距離にも対応できる可能性があります");
+  else if(child.distanceMax<parent.distanceMax-200)comments.push("距離は親より短めの方が合いそうです");
+  if(child.growthType!==parent.growthType)comments.push(`成長の仕方は親の${parent.growthType}型とは違い、${child.growthType}型に出ています`);
+  return comments.join("。")+"。これからの調教で見極めていきましょう。";
+}
 function beginNextGeneration(partner){
   const retired={name:game.horseName,sex:game.candidate?.sex||"牡馬",generation:game.generation,races:game.races,wins:game.wins,prize:game.prize,growthType:game.growthType,distanceMin:game.distanceMin,distanceMax:effectiveDistanceRange().max,coat:game.candidate?.coat||"栗毛"};
   const partnerTuple=[partner.name,partner.record,partner.distance,partner.growth];
@@ -258,6 +271,7 @@ function beginNextGeneration(partner){
   child.temperament=temperamentType(child.temperamentValue);
   child.weight=child.baseBestWeight+rnd(12,20);
   child.potentialCaps=createPotentialCaps(child);
+  child.inheritanceComment=inheritanceComparison(child,{...game,potentialCaps:game.potentialCaps,distanceMax:effectiveDistanceRange().max});
   const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired]};
   game={...defaultGame(),...legacy,candidate:child};
   document.querySelector("#candidateNumber").textContent=`${game.generation}世代目`;
@@ -267,7 +281,10 @@ function beginNextGeneration(partner){
   document.querySelector("#candidateInfo").innerHTML=[["スピード",child.speed],["ダッシュ",child.dash],["スタミナ",child.stamina],["パワー",child.power],["勝負根性",child.guts],["馬体重",`${child.weight}kg`],["芝適性",child.turf],["ダート適性",child.dirt],["道悪適性",child.heavyTrack]].map(([k,v])=>`<span>${k}<b>${typeof v==="number"?(developerMode?`${Math.round(v)} / 1000`:scoutComment(k,v)):v}</b></span>`).join("");
   document.querySelector("#rerollHorseButton").hidden=true;
   document.querySelector("#horseNameInput").value="";
-  showScreen("nameScreen");
+  document.querySelector("#birthHorse").style.setProperty("--horse-color",child.color);
+  document.querySelector("#birthGeneration").textContent=`${game.generation}世代目 誕生`;
+  document.querySelector("#birthMessage").textContent=`${child.coat}の${child.sex}が元気に産まれました。`;
+  showScreen("birthScreen");
 }
 function gameYear(){return Math.floor((game.week-1)/48)+1}
 function weekLabel(){const yearWeek=(game.week-1)%48,month=Math.floor(yearWeek/4)+1,w=yearWeek%4+1;return `${gameYear()}年目 ${month}月${w}週`;}
@@ -1099,6 +1116,7 @@ document.querySelector("#raceTestButton").onclick=()=>{
   dispatchEvent(new CustomEvent("dotkeiba:auto-start"));
 };
 document.querySelector("#rerollHorseButton").onclick=generateCandidate;
+document.querySelector("#birthContinueButton").onclick=()=>showScreen("nameScreen");
 document.querySelector("#continueButton").onclick=()=>{if(loadGame()){renderHome();showScreen("homeScreen")}};
 document.querySelector("#confirmNameButton").onclick=()=>{
   const input=document.querySelector("#horseNameInput"),name=input.value.trim();
@@ -1107,8 +1125,8 @@ document.querySelector("#confirmNameButton").onclick=()=>{
     document.querySelector("#nameScreen .hint").textContent="馬名はカタカナ2〜10文字で、使用できない表現を含まない名前にしてください。";
     input.focus();return;
   }
-  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords]};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
-  renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。まずは馬体を整えましょう。`);showScreen("homeScreen");
+  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
+  renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。${game.generation>1?game.inheritanceComment:"まずは馬体を整えましょう。"}`);showScreen("homeScreen");
 };
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.dataset.back));
 document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>train(b.dataset.action));
