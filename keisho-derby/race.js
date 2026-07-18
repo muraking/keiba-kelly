@@ -168,6 +168,10 @@ function configureCourseDistance(){
 }
 function trackBiasFor(number,style){
   const profile=trackProfile();
+  if(currentRaceVenue==="新潟"&&raceSurface==="芝"&&TOTAL===1000){
+    // 新潟芝直線1000mは外枠ほど進路を取りやすい傾向を再現する。
+    return 1+(number-4.5)*.006;
+  }
   const shortFactor=TOTAL<=1400?1.35:TOTAL<=1800?1.12:TOTAL>=2400?.72:1;
   const dirtFactor=raceSurface==="ダート"?1.18:1;
   const insideScore=(4.5-number)/3.5;
@@ -176,6 +180,7 @@ function trackBiasFor(number,style){
 }
 function trackBiasLabel(){
   const profile=trackProfile();
+  if(currentRaceVenue==="新潟"&&raceSurface==="芝"&&TOTAL===1000)return "外枠有利・直線競馬";
   const frame=profile.innerBias>=.011?"内枠有利":profile.innerBias<=.003?"枠差小":"やや内枠向き";
   const run=profile.frontBias>=.009?"前有利":profile.frontBias<=-.004?"差し向き":"脚質差小";
   return `${frame}・${run}`;

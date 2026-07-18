@@ -152,9 +152,11 @@ const PROGRAM_RACES=[
 for(let week=1;week<=240;week++){
   const yearWeek=(week-1)%48,venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
   venues.forEach(venue=>PROGRAM_RACES.forEach(([number,name,raceClass,surface,requestedDistance,prize,difficulty,condition])=>{
-    const distance=venueRaceDistance(venue,surface,requestedDistance,week);
-    const basePer1000=surface==="芝"?60000:63000;
-    raceCalendar.push({id:`p-${week}-${venue}-${number}`,program:true,number,week,name,raceClass,
+    const niigataStraight=venue==="新潟"&&surface==="芝"&&number===7;
+    const distance=niigataStraight?1000:venueRaceDistance(venue,surface,requestedDistance,week);
+    const raceName=niigataStraight?"直線1000m 1勝クラス":name;
+    const basePer1000=niigataStraight?57000:surface==="芝"?60000:63000;
+    raceCalendar.push({id:`p-${week}-${venue}-${number}`,program:true,number,week,name:raceName,raceClass,
       course:`${venue} ${surface}${distance}m`,surface,distance,
       baseTime:Math.round(basePer1000*distance/1000),prize,difficulty,condition});
   }));
