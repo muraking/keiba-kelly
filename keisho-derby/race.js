@@ -868,12 +868,9 @@ function drawTrackV2(){
     ctx.fillStyle="#4d9dc1";ctx.fillRect(96,120,34,12);ctx.fillRect(104,116,18,4);
   }
   ctx.fillStyle="#9fd6a0";ctx.font="bold 9px monospace";ctx.textAlign="center";
-  ctx.fillText(`${currentRaceVenue}競馬場`,214,134);
   trace(8.7,"#fffdf0",2);
   drawMarker(START_PROGRESS,"#35dc5c","START");
   drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
-  ctx.fillStyle="#fff3c5";ctx.font="bold 9px monospace";ctx.textAlign="center";
-  ctx.fillText("外",13,131);ctx.fillText("内",49,131);
 
   // ターフビジョン（コース外・独立パネル）。
   const visionOrder=order(),leader=visionOrder[0];

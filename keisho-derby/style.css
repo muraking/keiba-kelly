@@ -927,10 +927,7 @@ button:disabled { opacity: .45; cursor: default; }
 .horizontal-race-test .race-commentary-wide { min-height:142px;padding:12px 14px;grid-template-columns:48px minmax(0,1fr); }
 .horizontal-race-test .race-commentary-wide .announcer { width:40px;height:72px;font-size:16px; }
 .horizontal-race-test .race-commentary-wide p { font-size:14px;line-height:1.65; }
-.race-layout2 .race-header .race-status,
-.race-layout2 .race-header .timing-row,
-.race-layout2 .race-header .benchmark { display:none; }
-.race-layout2 .race-header { padding-bottom:10px; }
+.race-layout2 .race-header { display:none; }
 .race-layout2 .race-commentary-wide { min-height:126px; }
 .race-layout2 .race-commentary-wide p { font-size:13px;line-height:1.6; }
 
