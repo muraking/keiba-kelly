@@ -247,7 +247,7 @@ function trainingGain(stat,base,mult,type){
   const remaining=Math.max(0,cap-game[stat]);
   if(remaining<=0||mult<=0)return 0;
   const capFactor=remaining>=120?1:remaining>=70?.72:remaining>=30?.45:.22;
-  const equipmentBonus=stat==="power"&&type==="hill"&&game.equipment.includes("treadmill")?5:0;
+  const equipmentBonus=stat==="power"&&type.startsWith("hill")&&game.equipment.includes("treadmill")?5:0;
   return Math.min(remaining,(base*6+equipmentBonus)*mult*(.72+maturityRate()*.33)*capFactor);
 }
 function bestWeight(){
@@ -455,7 +455,8 @@ const training={
   turfPair:{label:"芝・併せ馬",fatigue:17,stats:{speed:1,guts:1,turf:1}},
   dirtSolo:{label:"ダート・単走",fatigue:10,stats:{stamina:1,dirt:1}},
   dirtPair:{label:"ダート・併せ馬",fatigue:19,stats:{power:1,guts:1,dirt:1}},
-  hill:{label:"坂路",fatigue:15,stats:{power:2}},
+  hillSolo:{label:"坂路単走",fatigue:14,stats:{power:2,stamina:1}},
+  hillPair:{label:"坂路併せ",fatigue:21,stats:{power:2,guts:1,dash:1}},
   pool:{label:"プール",fatigue:3,stats:{stamina:1}},
   gate:{label:"ゲート訓練",fatigue:7,stats:{dash:1}},
 };
@@ -471,7 +472,7 @@ function weightedInjury(){
   return injuries.find(x=>(roll-=x.weight)<=0)||injuries[0];
 }
 function injuryRisk(type){
-  const intensity={turfSolo:.55,turfPair:1,dirtSolo:.65,dirtPair:1.08,hill:1.15,pool:.08,gate:.35}[type]||0;
+  const intensity={turfSolo:.55,turfPair:1,dirtSolo:.65,dirtPair:1.08,hillSolo:1.05,hillPair:1.22,pool:.08,gate:.35}[type]||0;
   if(game.fatigue<55||intensity===0)return 0;
   const fatigueRisk=Math.pow((game.fatigue-50)/50,2);
   const legRisk=game.legCondition>=65?1:game.legCondition>=45?1.45:2.1;
@@ -503,8 +504,8 @@ function sendToPasture(){
   });
   game.injury=null;
   const recoveryComment=lost.length
-    ? `調教師「長い休養の影響でしょう。${lost.join("や")}の動きに、まだ少し物足りなさがあります。焦らず戻していきましょう」`
-    : "調教師「休養は長くなりましたが、動きに大きな衰えは見られません。ここから慎重に仕上げましょう」";
+    ? `長い休養の影響でしょう。${lost.join("や")}の動きに、まだ少し物足りなさがあります。焦らず戻していきましょう。`
+    : "休養は長くなりましたが、動きに大きな衰えは見られません。ここから慎重に仕上げましょう。";
   renderHome(`${injury.name}から復帰しました。${weeks}週間の放牧を終えました。 ${recoveryComment}`);
 }
 const equipmentCatalog=[
@@ -587,7 +588,7 @@ function train(type){
     game.weight=Math.min(600,game.weight+rnd(4,7));
     game.legCondition=Math.min(100,game.legCondition+rnd(8,14));
     playTrainingAnimation("rest","休養","回復");
-    return renderHome(`調教師「${conditionTrendComment()}」 休養しました。現在${game.weight}kg、${weightComment()}。`);
+    return renderHome(`${conditionTrendComment()} 休養後は${game.weight}kg、${weightComment()}。`);
   }
   const t=training[type];
   const beforeStats=Object.fromEntries(Object.keys(t.stats).map(stat=>[stat,game[stat]]));
@@ -602,9 +603,9 @@ function train(type){
   if(type==="gate"&&mult>0)game.gateSkill=Math.min(1000,game.gateSkill+rnd(mult===2?24:12,mult===2?40:22));
   const gains=Object.fromEntries(Object.keys(t.stats).map(stat=>[stat,game[stat]-beforeStats[stat]]));
   game.trainingsUsed++; game.fatigue=Math.min(100,game.fatigue+t.fatigue);
-  const legLoad={turfSolo:3,turfPair:8,dirtSolo:4,dirtPair:9,hill:10,pool:-5,gate:2}[type]||0;
+  const legLoad={turfSolo:3,turfPair:8,dirtSolo:4,dirtPair:9,hillSolo:9,hillPair:12,pool:-5,gate:2}[type]||0;
   game.legCondition=Math.max(0,Math.min(100,game.legCondition-legLoad+rnd(-1,1)));
-  const weightLoss=type==="pool"?rnd(1,2):type==="gate"?rnd(1,2):type.includes("Pair")||type==="hill"?rnd(3,5):rnd(2,4);
+  const weightLoss=type==="pool"?rnd(1,2):type==="gate"?rnd(1,2):type.includes("Pair")?rnd(3,5):type==="hillSolo"?rnd(3,4):rnd(2,4);
   game.weight=Math.max(330,game.weight-weightLoss);
   game.condition=Math.max(20,Math.min(100,game.condition+(outcome==="大成功"?5:outcome==="失敗"?-10:-1)));
   const injury=sufferInjury(type);
@@ -617,7 +618,7 @@ function train(type){
   let tackMessage="";
   if(!game.temperamentKnown&&game.temperamentObservations>=2){
     game.temperamentKnown=true;
-    tackMessage=` 調教師「${trainerTemperamentComment()}」`;
+    tackMessage=` ${trainerTemperamentComment()}`;
   }
   const proposed=game.temperament==="荒い"||game.temperament==="前向き"?"blinkers":game.temperament==="臆病"?"hood":game.temperamentObservations>=4?"cheekpieces":null;
   if(proposed&&!game.tackUnlocked.includes(proposed)&&Math.random()<.38){
@@ -625,7 +626,7 @@ function train(type){
     tackMessage+=` 調教師から${tackCatalog[proposed].name}を試す提案がありました。`;
   }
   const coachComment=trainingCoachComment(type,outcome,gains);
-  renderHome(`調教師「${coachComment} ${conditionTrendComment()}」 現在${game.weight}kg、${weightComment()}。${tackMessage}`);
+  renderHome(`${coachComment} ${conditionTrendComment()} 現在${game.weight}kg、${weightComment()}。${tackMessage}`);
 }
 function playTrainingAnimation(type,label,outcome){
   const popup=document.querySelector("#trainingPopup");
@@ -651,7 +652,7 @@ function advanceWeek(rest=false){
   game.weight=Math.min(600,game.weight+(rest?rnd(6,10):rnd(2,4)));
   const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
   const notice=reserved&&reserved.week===game.week?` 予約していた「${reserved.name}」の開催週です。`:reserved&&reserved.week-game.week===1?` 来週は予約した「${reserved.name}」です。`:"";
-  renderHome(`${rest?"休養して翌週へ進みました。":"翌週へ進みました。"}${notice} 調教師「${conditionTrendComment()}」`);
+  renderHome(`${notice} ${conditionTrendComment()}`.trim());
 }
 function renderShop(){
   document.querySelector("#shopPoints").textContent=`${game.farmPoints} FP`;
@@ -976,7 +977,7 @@ addEventListener("dotkeiba:preview-ready",e=>{
   }).join("");
 });
 document.querySelector("#resetGameButton").onclick=()=>{if(confirm("育成データを消しますか？")){localStorage.removeItem(SAVE_KEY);game=defaultGame();showScreen("titleScreen")}};
-document.querySelector("#returnHomeButton").onclick=()=>{renderHome("レースを終えて翌週になりました。");showScreen("homeScreen")};
+document.querySelector("#returnHomeButton").onclick=()=>{renderHome(postRaceTrainerComment().replace(/^調教師「|」$/g,""));showScreen("homeScreen")};
 addEventListener("dotkeiba:finished",e=>showResult(e.detail));
 addEventListener("dotkeiba:favorite",e=>{
   const favorite={...e.detail,savedAt:Date.now()};

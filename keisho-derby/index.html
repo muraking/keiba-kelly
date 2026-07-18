@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.3.3</title>
-  <link rel="stylesheet" href="style.css?v=20260718-22">
+  <title>ドット競馬 継承ダービー｜Ver. 0.3.4</title>
+  <link rel="stylesheet" href="style.css?v=20260718-23">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.3.3</b>
+        <b class="build-version">Ver. 0.3.4</b>
       </div>
     </section>
 
@@ -128,14 +128,18 @@
       </section>
       <div class="training-menu-head"><b>調教メニュー</b><span>今週 <strong id="turnsLeft">0/2</strong></span></div>
       <nav class="home-actions">
-        <button data-action="turfSolo">芝・単走<br><small>疲労 小</small></button>
-        <button data-action="turfPair">芝・併せ<br><small>疲労 大</small></button>
+        <b class="training-group-title">単走</b>
         <button data-action="dirtSolo">ダート単走<br><small>疲労 中</small></button>
+        <button data-action="turfSolo">芝単走<br><small>疲労 小</small></button>
+        <button data-action="hillSolo">坂路単走<br><small>疲労 中</small></button>
+        <b class="training-group-title">併せ</b>
         <button data-action="dirtPair">ダート併せ<br><small>疲労 大</small></button>
-        <button data-action="hill">坂路<br><small>疲労 中</small></button>
-        <button data-action="pool">プール<br><small>疲労 小</small></button>
-        <button data-action="gate">ゲート訓練<br><small>疲労 小</small></button>
-        <button data-action="rest">休養<br><small>1回消費・疲労回復 大</small></button>
+        <button data-action="turfPair">芝併せ<br><small>疲労 大</small></button>
+        <button data-action="hillPair">坂路併せ<br><small>疲労 大</small></button>
+        <b class="training-group-title support-title">ケア・基礎</b>
+        <button class="training-support" data-action="pool">プール<br><small>疲労 小</small></button>
+        <button class="training-support" data-action="gate">ゲート訓練<br><small>疲労 小</small></button>
+        <button class="training-support" data-action="rest">休養<br><small>疲労回復 大</small></button>
         <button id="pastureButton" class="pasture-button" hidden>復帰までスキップ<br><small id="pastureWeeks">長期放牧</small></button>
       </nav>
       <button class="primary big race-select-main" id="goRaceSelectButton"><span>レースに出走</span><small id="nextRaceButtonText">次走予定を確認</small></button>
@@ -295,7 +299,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-12"></script>
+  <script src="app.js?v=20260718-13"></script>
   <script src="race.js?v=20260718-21"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
