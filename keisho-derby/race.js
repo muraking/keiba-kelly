@@ -88,7 +88,8 @@ let layoutV2 = false;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
-const BASE_PLAYBACK_RATE = 4;
+const BASE_PLAYBACK_RATE = 1;
+const PLAYBACK_RATES=[1,2,4,8];
 let playerSetup = { horseName: "ドットスター", ability: 940, dash: 550, gateSkill:450, condition: 60, fatigue: 10, difficulty: 840, heavyTrack:500, temperament:"普通",temperamentValue:50,equippedTack:null,weather:"晴", going:"良", baseTime: 144000 };
 
 function setCommentary(message,reset=false){
@@ -343,7 +344,7 @@ function resetRace() {
   speedButton.hidden = true;
   pauseButton.textContent = "一時停止";
   multiplier = 1;
-  speedButton.textContent = "レース速度：4倍";
+  speedButton.textContent = "レース速度：通常";
   draw();
   renderRanking();
 }
@@ -1520,8 +1521,9 @@ pauseButton.addEventListener("click", () => {
 });
 
 speedButton.addEventListener("click", () => {
-  multiplier = multiplier === 1 ? 2 : 1;
-  speedButton.textContent = multiplier === 1 ? "レース速度：4倍" : "レース速度：8倍";
+  const currentIndex=PLAYBACK_RATES.indexOf(multiplier);
+  multiplier=PLAYBACK_RATES[(currentIndex+1)%PLAYBACK_RATES.length];
+  speedButton.textContent=`レース速度：${multiplier===1?"通常":`${multiplier}倍`}`;
 });
 
 resetButton.addEventListener("click", resetRace);
