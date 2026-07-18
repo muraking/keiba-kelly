@@ -9,6 +9,7 @@
 }
 
 * { box-sizing: border-box; }
+.tester-build #raceTestButton,.tester-build #devModeButton { display:none !important; }
 
 body {
   margin: 0;
