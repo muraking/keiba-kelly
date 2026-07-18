@@ -594,6 +594,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .home-actions { display:grid; grid-template-columns:46px repeat(3,1fr); gap:5px; padding:7px 10px 6px; }
 .home-actions .training-group-title { display:grid;place-items:center;padding:3px;border-left:4px solid #8b6b31;background:#f2e8c8;color:#65502d;font-size:8px;line-height:1.35;text-align:center; }
 .home-actions .training-group-title.support-title { border-color:#4f7180;color:#3e6472; }
+.home-actions .training-group-title.condition-title { border-color:#66843d;color:#4f692e; }
 .home-actions button {
   position:relative;
   z-index:0;
@@ -672,6 +673,10 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   bottom:4px;
   transform:rotate(8deg) scaleX(-1);
 }
+.home-actions button[data-action="light"]::before { background:linear-gradient(#9ed8e8 0 52%,#9fc77c 52% 100%); }
+.home-actions button[data-action="forest"]::before { background:repeating-linear-gradient(90deg,#376b3d 0 8px,#5f8e4b 8px 14px,#b4cf80 14px 18px); }
+.home-actions .training-condition { border-color:#66843d;box-shadow:inset 0 3px #dcebc5; }
+.training-slot-empty { min-height:1px; }
 .home-actions .training-support { border-color:#4f7180;box-shadow:inset 0 3px #d9edf0; }
 .home-actions button>small,.home-actions button>br { position:relative; z-index:1; }
 .home-actions button:active { background:#eadb9e; }

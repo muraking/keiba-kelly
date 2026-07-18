@@ -655,6 +655,8 @@ const training={
   hillPair:{label:"坂路併せ",fatigue:17,stats:{power:2,guts:1,dash:1}},
   pool:{label:"プール",fatigue:3,stats:{stamina:1}},
   gate:{label:"ゲート訓練",fatigue:5,stats:{dash:1}},
+  light:{label:"軽め調整",fatigue:0,stats:{}},
+  forest:{label:"森林馬道",fatigue:0,stats:{}},
 };
 const injuries=[
   {name:"骨膜炎",minWeeks:6,maxWeeks:10,weight:44,lossChance:.18,maxLoss:1},
@@ -808,6 +810,21 @@ function renderGallery(){
 function train(type){
   if(game.injury)return renderHome(`${game.injury.name}のため調教できません。長期放牧が必要です。`);
   if(game.trainingsUsed>=2)return renderHome("今週の調教は2回終了しました。レースか翌週を選びましょう。");
+  if(type==="light"||type==="forest"){
+    const forest=type==="forest",before=game.condition;
+    game.trainingsUsed++;
+    game.fatigue=Math.max(0,game.fatigue-(forest?12:7));
+    game.legCondition=Math.min(100,game.legCondition+rnd(forest?3:2,forest?7:5));
+    const turnChance=forest ? .68 : .42;
+    const turned=game.conditionDirection<0&&Math.random()<turnChance;
+    if(turned){game.conditionDirection=1;game.conditionPhaseWeeks=forest?rnd(3,5):rnd(2,4)}
+    const conditionGain=forest?rnd(2,5):rnd(1,3);
+    game.condition=Math.min(100,game.condition+conditionGain);
+    if(game.weight<bestWeight()-4&&Math.random()<.55)game.weight++;
+    playTrainingAnimation("rest",forest?"森林馬道":"軽め調整",turned?"上向き":"調整");
+    const trend=turned?"調子の下降が止まり、上向く気配が出てきました。":game.condition>before?"気分転換になり、表情が少し明るくなりました。":"大きな変化はありませんが、無理なく整えられました。";
+    return renderHome(`${trend} 疲れも少し抜けています。現在${game.weight}kg、${weightComment()}。`);
+  }
   if(type==="rest"){
     game.trainingsUsed++;
     game.fatigue=Math.max(0,game.fatigue-28);
@@ -908,14 +925,17 @@ function autoTrainingChoice(mode,raceSoon=false){
   if(game.fatigue>=55)return "rest";
   if(raceSoon){
     if(game.fatigue>=30)return "rest";
+    if(game.condition<38)return "light";
     if(Math.abs(weightDiff)>8)return weightDiff>0?"hillSolo":"pool";
     return game.trainingsUsed===0?"turfSolo":"gate";
   }
   if(mode==="safe"){
+    if(game.condition<35)return "light";
     if(game.fatigue>=35)return game.trainingsUsed===0?"pool":"rest";
     if(weightDiff>=10)return "dirtSolo";
     if(weightDiff<=-10)return "pool";
   }else if(mode==="balanced"){
+    if(game.condition<38)return game.trainingsUsed===0?"forest":"light";
     if(game.fatigue>=45)return "rest";
     if(weightDiff>=12)return "hillSolo";
     if(weightDiff<=-4)return game.trainingsUsed===0?"pool":"rest";

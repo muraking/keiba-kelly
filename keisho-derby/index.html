@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.6.2</title>
-  <link rel="stylesheet" href="style.css?v=20260718-42">
+  <title>ドット競馬 継承ダービー｜Ver. 0.6.3</title>
+  <link rel="stylesheet" href="style.css?v=20260718-43">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.6.2</b>
+        <b class="build-version">Ver. 0.6.3</b>
       </div>
     </section>
 
@@ -152,6 +152,10 @@
         <button class="training-support" data-action="pool">プール<br><small>疲労 小</small></button>
         <button class="training-support" data-action="gate">ゲート訓練<br><small>疲労 小</small></button>
         <button class="training-support" data-action="rest">休養<br><small>疲労回復 大</small></button>
+        <b class="training-group-title condition-title">調整</b>
+        <button class="training-condition" data-action="light">軽め調整<br><small>下降を抑える</small></button>
+        <button class="training-condition" data-action="forest">森林馬道<br><small>上向き期待</small></button>
+        <span class="training-slot-empty"></span>
         <button id="pastureButton" class="pasture-button" hidden>復帰までスキップ<br><small id="pastureWeeks">長期放牧</small></button>
       </nav>
       <button class="primary big race-select-main" id="goRaceSelectButton"><span>レースに出走</span><small id="nextRaceButtonText">次走予定を確認</small></button>
@@ -348,7 +352,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-33"></script>
+  <script src="app.js?v=20260718-34"></script>
   <script src="race.js?v=20260718-33"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
