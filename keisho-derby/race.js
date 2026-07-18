@@ -195,7 +195,9 @@ function courseSpec(){
 function configureCourseDistance(){
   currentCourseSpec=courseSpec();
   LAP=currentCourseSpec.lap;
-  FINISH_PROGRESS=FINISH_LINE_PROGRESS;
+  // 描画時に右回りは進行座標を反転するため、決勝線の内部座標も反転する。
+  // これで全競馬場のゴールがホームスタンド前の同じ決勝線位置になる。
+  FINISH_PROGRESS=trackProfile().turn==="右"?1-FINISH_LINE_PROGRESS:FINISH_LINE_PROGRESS;
   START_PROGRESS=FINISH_PROGRESS-TOTAL/LAP;
 }
 function finishMarkerVisible(){
@@ -797,7 +799,8 @@ function coursePoint(progress, lane = 3) {
         : {x:36+ratio*288,y:145+lane*12,angle:0,curve:false};
   }
   let p = ((progress % 1) + 1) % 1;
-  if(trackProfile().turn==="右")p=(1-p)%1;
+  const rightTurn=trackProfile().turn==="右";
+  if(rightTurn)p=(1-p)%1;
   if(horizontalLayout){
     const inset=lane*4,left=43+inset,right=317-inset,top=50+lane*3,bottom=230-lane*3;
     const cy=(top+bottom)/2,rx=Math.max(28,48-inset*.12),straight=.39,curve=.11;
@@ -808,6 +811,8 @@ function coursePoint(progress, lane = 3) {
     return{x:left+Math.cos(a)*rx,y:cy+Math.sin(a)*(bottom-top)/2,angle:a+Math.PI/2,curve:true};
   }
   const pt=verticalCoursePoint(p,lane);
+  // 座標だけでなく馬体の向きも実際の右回り進行方向へ反転する。
+  if(rightTurn)pt.angle+=Math.PI;
   if(!layoutV2)return pt;
   // レイアウトV2：縦画面のまま、実測ベースの縦型コース形状を90度回転して
   // 画面上部の横長コースへ写像する。ホーム直線（縦型では右端）が上辺＝スタンド側。
