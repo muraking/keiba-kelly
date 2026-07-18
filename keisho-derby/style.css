@@ -302,6 +302,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .white-fence i { position:absolute; top:0; width:8px; height:45px; background:#fffbe5; box-shadow:3px 0 #aaa88f; }
 .white-fence i:nth-child(1){left:0}.white-fence i:nth-child(2){left:33%}.white-fence i:nth-child(3){left:66%}.white-fence i:nth-child(4){right:0}
 .front-fence{left:0;right:0;bottom:31px}
+.stable-next-week { position:absolute;right:9px;bottom:4px;z-index:7;width:86px;min-height:25px;padding:4px 6px;border:2px solid #6b5429;background:#fff0ad;color:#49351b;font-size:9px;font-weight:900;box-shadow:2px 2px #58462a; }
 .stable-scene p { position:absolute; inset:auto 12px 8px; margin:0; padding:6px; background:#061018dd; color:white; font-size:11px; text-align:center; }
 .training-scene { --active-horse-color:#b96e32; position:absolute; inset:0; z-index:2; overflow:hidden; }
 .stable-pixel-horse {
@@ -447,7 +448,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .stats[hidden] { display:none; }
 .coach-message {
   display:grid;
-  grid-template-columns:58px 1fr;
+  grid-template-columns:52px 1fr;
   align-items:stretch;
   margin:9px 10px 7px;
   border:3px solid #927538;
@@ -458,13 +459,14 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .coach-message>span {
   display:grid;
   place-items:center;
-  padding:8px 4px;
+  padding:4px 2px;
   background:transparent;
   color:#ffe68b;
   font-size:9px;
   font-weight:900;
 }
-.pixel-trainer { position:relative;min-height:62px;overflow:hidden; }
+.pixel-trainer { position:relative;min-height:69px;overflow:hidden; }
+.pixel-trainer .trainer-caption { position:absolute;left:2px;right:2px;bottom:1px;padding:2px 0;background:#253e35;color:#ffe68b;font-size:8px;text-align:center; }
 .pixel-trainer i { position:absolute;display:block;image-rendering:pixelated; }
 .pixel-trainer .trainer-hair { left:17px;top:10px;width:23px;height:7px;background:#30231d;box-shadow:-3px 4px #30231d,3px 3px #30231d; }
 .pixel-trainer .trainer-face { left:18px;top:16px;width:21px;height:19px;background:#d99a65;box-shadow:-2px 4px #d99a65,2px 3px #d99a65; }
@@ -473,16 +475,16 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .pixel-trainer .trainer-nose { left:28px;top:26px;width:2px;height:3px;background:#a96644;z-index:2; }
 .pixel-trainer .trainer-mouth { left:25px;top:31px;width:8px;height:2px;background:#6f2d28;z-index:2; }
 .pixel-trainer .trainer-body { left:12px;top:39px;width:34px;height:22px;background:#24466e;box-shadow:inset 0 4px #f2ead8; }
-.coach-copy { min-width:0;padding:7px 9px 8px; }
+.coach-copy { min-width:0;padding:5px 7px 6px; }
 .coach-copy>b { color:#75511f;font-size:10px; }
 .coach-message p {
-  min-height:42px;
+  min-height:30px;
   margin:0;
   padding:3px 0 6px;
   background:none;
   color:#44351d;
   font-size:12px;
-  line-height:1.65;
+  line-height:1.45;
   text-align:left;
 }
 .coach-vitals { display:grid;gap:3px;padding:5px 7px;border:1px solid #c5ab6b;background:#fffdf0;color:#4f3b20;font-size:10px; }
@@ -526,15 +528,14 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .tack-choices button { min-height:35px; padding:5px; background:#fff; color:#344638; border:2px solid #91a695; font-size:9px; }
 .tack-choices button.selected { background:#ffe9a4; border-color:#a97c26; }
 .tack-choices button small { display:block; margin-top:3px; color:#68766c; font-size:7px; }
-.home-actions { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; padding:10px 10px 7px; }
-.home-actions .training-group-title { grid-column:1/-1;padding:2px 6px;border-left:5px solid #8b6b31;color:#65502d;font-size:9px;line-height:1;text-align:left; }
-.home-actions .training-group-title:not(:first-child) { margin-top:5px; }
-.home-actions .training-group-title.support-title { margin-top:10px;border-color:#4f7180;color:#3e6472; }
+.home-actions { display:grid; grid-template-columns:46px repeat(3,1fr); gap:5px; padding:7px 10px 6px; }
+.home-actions .training-group-title { display:grid;place-items:center;padding:3px;border-left:4px solid #8b6b31;background:#f2e8c8;color:#65502d;font-size:8px;line-height:1.35;text-align:center; }
+.home-actions .training-group-title.support-title { border-color:#4f7180;color:#3e6472; }
 .home-actions button {
   position:relative;
   z-index:0;
   overflow:hidden;
-  min-height:58px;
+  min-height:53px;
   border-color:#715b27;
   background:#fff7d8;
   color:#263a2b;

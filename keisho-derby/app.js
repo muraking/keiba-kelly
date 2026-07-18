@@ -777,7 +777,9 @@ function raceDayWeather(race){
 function updateStableWeather(){
   const scene=document.querySelector(".stable-scene");
   if(!scene)return;
-  const stableForecast=raceDayWeather({id:`stable-${game.week}`,week:game.week,course:"東京 芝1600m"});
+  const stableForecast=game.week===1
+    ? {weather:"晴",going:"良",month:1,region:"kanto"}
+    : raceDayWeather({id:`stable-${game.week}-${game.generation||1}`,week:game.week,course:"東京 芝1600m"});
   scene.classList.remove("weather-cloudy","weather-rain","weather-heavy-rain","weather-snow");
   if(stableForecast.weather==="曇")scene.classList.add("weather-cloudy");
   if(stableForecast.weather==="雨")scene.classList.add("weather-rain");

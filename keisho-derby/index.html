@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.4.5</title>
-  <link rel="stylesheet" href="style.css?v=20260718-24">
+  <title>ドット競馬 継承ダービー｜Ver. 0.4.6</title>
+  <link rel="stylesheet" href="style.css?v=20260718-25">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.4.5</b>
+        <b class="build-version">Ver. 0.4.6</b>
       </div>
     </section>
 
@@ -89,6 +89,7 @@
           <div class="stable-door d1"></div><div class="stable-door d2"></div>
         </div>
         <div class="white-fence front-fence"><i></i><i></i><i></i><i></i></div>
+        <button id="nextWeekButton" class="stable-next-week">翌週へ ▶</button>
         <div id="trainingScene" class="training-scene idle" aria-hidden="true">
           <div id="homeHorse" class="candidate-pixel-horse stable-pixel-horse" role="button" tabindex="0" aria-label="愛馬の詳細を見る">
             <div class="candidate-body"></div><div class="candidate-neck"></div>
@@ -123,8 +124,8 @@
       </div>
       <div class="stats" id="horseStats"></div>
       <section class="coach-message">
-        <span class="pixel-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i></span>
-        <div class="coach-copy"><b>調教師</b><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b></div><div id="tackChoices" class="tack-choices"></div></div>
+        <span class="pixel-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i><b class="trainer-caption">調教師</b></span>
+        <div class="coach-copy"><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b></div><div id="tackChoices" class="tack-choices"></div></div>
       </section>
       <div class="training-menu-head"><b>調教メニュー</b><span>今週 <strong id="turnsLeft">0/2</strong></span></div>
       <nav class="home-actions">
@@ -144,7 +145,6 @@
       </nav>
       <button class="primary big race-select-main" id="goRaceSelectButton"><span>レースに出走</span><small id="nextRaceButtonText">次走予定を確認</small></button>
       <div class="sub-actions">
-        <button id="nextWeekButton">翌週へ進む</button>
         <button id="shopButton">設備ショップ</button>
         <button id="historyButton">戦歴</button>
         <button id="galleryButton">ギャラリー</button>
@@ -299,7 +299,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-13"></script>
+  <script src="app.js?v=20260718-14"></script>
   <script src="race.js?v=20260718-31"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
