@@ -80,7 +80,7 @@ function setCommentary(message,reset=false){
   if(reset)commentaryHistory=[];
   if(!message)return;
   if(commentaryHistory[commentaryHistory.length-1]!==message)commentaryHistory.push(message);
-  commentaryHistory=commentaryHistory.slice(-4);
+  commentaryHistory=commentaryHistory.slice(-2);
   commentaryEl.textContent=commentaryHistory.join("\n");
 }
 
@@ -872,9 +872,27 @@ function drawTrackV2(){
   drawMarker(START_PROGRESS,"#35dc5c","START");
   drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 
+  // コース直下の実況帯（最新2行）。
+  const commentaryY=238;
+  ctx.fillStyle="#071018";ctx.fillRect(4,commentaryY,352,42);
+  ctx.strokeStyle="#d7c35d";ctx.lineWidth=2;ctx.strokeRect(4,commentaryY,352,42);
+  ctx.fillStyle="#d8a06e";ctx.fillRect(14,commentaryY+7,12,9);
+  ctx.fillStyle="#35251c";ctx.fillRect(12,commentaryY+5,16,4);ctx.fillRect(12,commentaryY+9,3,7);
+  ctx.fillStyle="#f3f0df";ctx.fillRect(12,commentaryY+17,16,16);
+  ctx.fillStyle="#285a91";ctx.fillRect(12,commentaryY+22,16,11);
+  ctx.fillStyle="#d7c35d";ctx.fillRect(24,commentaryY+24,8,3);
+  const commentaryLines=commentaryHistory.slice(-2);
+  ctx.font="bold 10px monospace";ctx.textAlign="left";
+  commentaryLines.forEach((line,index)=>{
+    const aboutPlayer=line.includes(playerSetup.horseName)||line.includes("愛馬");
+    ctx.fillStyle=aboutPlayer?"#ffe45c":"#f4f6f2";
+    const clipped=line.length>31?`${line.slice(0,30)}…`:line;
+    ctx.fillText(clipped,38,commentaryY+15+index*17);
+  });
+
   // ターフビジョン（コース外・独立パネル）。
   const visionOrder=order(),leader=visionOrder[0];
-  const vx=4,vy=240,vw=352,vh=212;
+  const vx=4,vy=282,vw=352,vh=212;
   ctx.fillStyle="#101a21";ctx.fillRect(vx,vy,vw,vh);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(vx,vy,vw,vh);
   ctx.fillStyle="#263a2e";ctx.fillRect(vx+3,vy+3,vw-6,18);
@@ -907,7 +925,7 @@ function drawTrackV2(){
     ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 9px monospace";ctx.textAlign="center";
     ctx.fillText(h.id,vx+54,y-1);
     ctx.font="bold 11px monospace";ctx.textAlign="left";
-    ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.fillText(h.player?"愛馬":"出走馬",vx+66,y);
+    ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.fillText(h.name,vx+66,y);
     ctx.textAlign="right";ctx.fillStyle=h.player?"#ffe56b":"#a9c2b4";
     ctx.fillText(index===0?(h.finished?formatTime(h.finishTime):""):marginLabel(visionOrder[index-1],h),vx+vw-8,y);
   });
@@ -923,7 +941,7 @@ function drawTrackV2(){
   ctx.fillText(`実測 ${measuredPace}　基準 ${formatTime(playerSetup.benchmarkTime||playerSetup.baseTime)}　レコード ${formatTime(playerSetup.recordTime||playerSetup.baseTime*.965)}　${playerSetup.weather}/${playerSetup.going}`,180,footY+23);
 
   // 高低差・全馬位置（維持）。
-  const ex=4,ey=458,ew=352,eh=56;
+  const ex=4,ey=500,ew=352,eh=56;
   ctx.fillStyle="#e8edcf";ctx.fillRect(ex,ey,ew,eh);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(ex,ey,ew,eh);
   ctx.fillStyle="#3c5220";ctx.font="bold 9px monospace";ctx.textAlign="left";
@@ -1130,7 +1148,7 @@ function drawCrowdCheer(){
   if(cheerClock%cycle>=visibleFor)return;
   // レイアウトV2はコースが上部の横長帯なので、吹き出しもコース帯の中に収める。
   const spots=layoutV2
-    ?[{x:10,y:30,w:108},{x:126,y:30,w:108},{x:242,y:30,w:108}]
+    ?[{x:8,y:0,w:104},{x:128,y:0,w:104},{x:248,y:0,w:104}]
     :[{x:226,y:54,w:108},{x:232,y:96,w:102},{x:218,y:220,w:116},{x:225,y:285,w:109},{x:216,y:350,w:118}];
   const spot=spots[(slot*3+raceSeed)%spots.length],call=calls[(slot*7+raceSeed)%calls.length];
   ctx.save();
@@ -1138,7 +1156,7 @@ function drawCrowdCheer(){
   ctx.fillStyle="#ffffff";ctx.strokeStyle="#262015";ctx.lineWidth=3;
   ctx.fillRect(spot.x,spot.y,spot.w,24);ctx.strokeRect(spot.x,spot.y,spot.w,24);
   ctx.beginPath();
-  if(layoutV2){const tx=spot.x+spot.w/2;ctx.moveTo(tx-7,spot.y);ctx.lineTo(tx,20);ctx.lineTo(tx+7,spot.y)}
+  if(layoutV2){const tx=spot.x+spot.w/2;ctx.moveTo(tx-7,spot.y+24);ctx.lineTo(tx,29);ctx.lineTo(tx+7,spot.y+24)}
   else{ctx.moveTo(spot.x+spot.w,spot.y+9);ctx.lineTo(349,spot.y+15);ctx.lineTo(spot.x+spot.w,spot.y+19)}
   ctx.closePath();ctx.fill();ctx.stroke();
   ctx.shadowColor="transparent";ctx.fillStyle="#111";ctx.font="bold 10px monospace";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+16);
@@ -1273,7 +1291,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   archiveReplay=!!event.detail.archiveReplay;
   horizontalLayout=!!event.detail.horizontalLayout;
   layoutV2=event.detail.layoutV2!==undefined?!!event.detail.layoutV2:!horizontalLayout;
-  canvas.height=layoutV2?520:horizontalLayout?280:500;
+  canvas.height=layoutV2?558:horizontalLayout?280:500;
   document.body.classList.toggle("horizontal-race-test",horizontalLayout);
   document.body.classList.toggle("race-layout2",layoutV2);
   raceSeed = Number.isFinite(event.detail.replaySeed)

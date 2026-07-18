@@ -888,16 +888,21 @@ button:disabled { opacity: .45; cursor: default; }
 }
 
 .announcer {
+  position: relative;
   display: grid;
   place-items: center;
   width: 38px;
   height: 38px;
   border: 3px solid #d6b86b;
   background: #274e79;
-  color: white;
-  font-weight: 900;
+  color: transparent;
   image-rendering: pixelated;
 }
+.announcer i { position:absolute;display:block;image-rendering:pixelated; }
+.announcer .ann-hair { width:20px;height:7px;left:7px;top:7px;background:#30231d;box-shadow:-3px 4px 0 #30231d; }
+.announcer .ann-face { width:16px;height:13px;left:10px;top:12px;background:#d99d69;box-shadow:3px 4px 0 #d99d69; }
+.announcer .ann-body { width:22px;height:17px;left:7px;bottom:4px;background:#f0eee4;box-shadow:0 6px 0 #285a91 inset; }
+.announcer .ann-mic { width:11px;height:4px;right:0;top:24px;background:#d4b64f;box-shadow:7px 3px 0 #333; }
 
 .commentary p {
   margin: 0;
@@ -928,6 +933,7 @@ button:disabled { opacity: .45; cursor: default; }
 .horizontal-race-test .race-commentary-wide .announcer { width:40px;height:72px;font-size:16px; }
 .horizontal-race-test .race-commentary-wide p { font-size:14px;line-height:1.65; }
 .race-layout2 .race-header { display:none; }
+.race-layout2 .race-commentary-wide { display:none; }
 .race-layout2 .race-commentary-wide { min-height:126px; }
 .race-layout2 .race-commentary-wide p { font-size:13px;line-height:1.6; }
 
