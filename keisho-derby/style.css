@@ -262,7 +262,9 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .horse-board>small { display:block;margin-bottom:2px;color:#76502b;font-size:9px;font-weight:800; }
 .horse-board>div { display:flex;align-items:baseline;justify-content:space-between;gap:5px;margin-bottom:3px; }
 .horse-board>div b { flex:1;min-width:0;white-space:nowrap;font-size:16px;letter-spacing:-.3px; }
-.horse-board>div em { flex:none;padding:1px 5px;border:2px solid #79542d;background:#fff0bd;font-size:10px;font-style:normal;font-weight:900; }
+.horse-board .horse-age-class { display:flex;flex:none;align-items:center;gap:2px;font-size:inherit; }
+.horse-board>div em { flex:none;padding:1px 4px;border:2px solid #79542d;background:#fff0bd;font-size:9px;font-style:normal;font-weight:900;white-space:nowrap; }
+.horse-board>div #homeHorseClass { color:#7d321d;background:#ffe5a3; }
 .horse-board span { display:flex;justify-content:space-between;gap:5px;font-size:10px; }
 .horse-board strong { color:#8f3e1d;font-size:11px; }
 .sky-sun { position:absolute; top:22px; right:31px; width:32px; height:32px; border-radius:50%; background:#ffe66d; box-shadow:0 0 0 5px #f9c94c,0 0 18px #fff2a0; }

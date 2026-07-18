@@ -415,12 +415,13 @@ function renderHome(message="今週の予定を決めましょう。"){
   const horseNameLength=Array.from(game.horseName).length;
   homeHorseName.style.fontSize=horseNameLength>=11?"10px":horseNameLength>=9?"12px":horseNameLength>=7?"14px":"16px";
   document.querySelector("#homeHorseAge").textContent=`${horseAge()}歳`;
+  document.querySelector("#homeHorseClass").textContent=game.races===0?"新馬":classLabel();
   document.querySelector("#homePrize").textContent=`${game.prize.toLocaleString()}万円`;
   document.querySelector("#weekDisplay").textContent=weekLabel();
   document.querySelector("#turnsLeft").textContent=`${game.trainingsUsed}/2`;
   document.querySelector("#farmPoints").textContent=`${game.farmPoints} FP`;
   updateStableWeather();
-  document.querySelector("#conditionText").textContent=`調子：${conditionLabel()}／脚元：${legLabel()}／${classLabel()}`;
+  document.querySelector("#conditionText").textContent=`調子：${conditionLabel()}／脚元：${legLabel()}`;
   const debutWeek=Math.min(...raceCalendar.filter(r=>r.raceClass==="新馬").map(r=>r.week));
   const reservedRace=raceCalendar.find(r=>r.id===game.reservedRaceId);
   const weeksToRace=reservedRace?Math.max(0,reservedRace.week-game.week):null;
