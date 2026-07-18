@@ -361,6 +361,48 @@ function trainingCoachComment(type,outcome,gains){
   const secondary=improved[1]&&improved[1][1]>.1?` ${STAT_LABELS[improved[1][0]]}にも良い変化があります。`:"";
   return `${growth}${secondary} ${advice}`;
 }
+function nextTrainingAdvice(){
+  if(game.fatigue>=65)return "今は能力を伸ばすより、休養で疲れを抜くことを優先しましょう。";
+  const weightDiff=game.weight-bestWeight();
+  if(weightDiff>=12)return "まだ太めです。坂路単走かダート単走で馬体を絞るのがよさそうです。";
+  if(weightDiff<=-12)return "馬体が細いので、強い併せ馬は避けて休養を挟みましょう。";
+  const targets=[
+    ["speed","スピード","芝単走"],
+    ["dash","ダッシュ","ゲート訓練か坂路併せ"],
+    ["stamina","スタミナ","ダート単走"],
+    ["power","パワー","坂路単走"],
+    ["guts","勝負根性","芝・ダート・坂路の併せ馬"]
+  ];
+  const [stat,label,menu]=targets.sort((a,b)=>game[a[0]]/(game.potentialCaps?.[a[0]]||1000)-game[b[0]]/(game.potentialCaps?.[b[0]]||1000))[0];
+  const level=game[stat]<470?"まだ不足しています":game[stat]<620?"もう少し欲しいところです":"他の能力に比べて伸びしろがあります";
+  return `今後は${label}が${level}。${menu}を中心にするとよいでしょう。`;
+}
+function raceSuitabilityAdvice(race,place){
+  if(!race)return "次走へ向けて、全体の底上げを続けましょう。";
+  const range=effectiveDistanceRange();
+  const hints=[];
+  if(race.distance>range.max){
+    hints.push("今回は距離が長かったようです。スタミナを鍛えれば、もう少し長い距離にも対応できそうです");
+  }else if(race.distance<range.min){
+    hints.push("今回は距離が短く、追走に忙しかったようです。ダッシュとスピードを伸ばしたいですね");
+  }else if(race.distance>=range.max-200){
+    hints.push("距離はこなせますが、終いに余裕を持たせるにはスタミナがもう少し欲しいです");
+  }else if(race.distance<=range.min+200){
+    hints.push("距離はこなせます。短い距離で安定させるならダッシュを磨きたいですね");
+  }else{
+    hints.push("距離は合っていそうです");
+  }
+  const used= race.surface==="芝"?game.turf:game.dirt;
+  const other=race.surface==="芝"?game.dirt:game.turf;
+  if(used+90<other)hints.push(`${race.surface}より${race.surface==="芝"?"ダート":"芝"}の方が向いている可能性があります`);
+  else if(used<500)hints.push(`${race.surface}への適性はまだ心もとない印象です`);
+  else hints.push(`${race.surface}はこなせそうです`);
+  if(place>3){
+    const basics=[[game.speed,"スピード"],[game.dash,"ダッシュ"],[game.stamina,"スタミナ"],[game.power,"パワー"],[game.guts,"勝負根性"]].sort((a,b)=>a[0]-b[0]);
+    hints.push(`次は${basics[0][1]}を重点的に鍛えると、内容が変わってきそうです`);
+  }
+  return hints.join("。")+"。";
+}
 const tackCatalog={
   hood:{name:"メンコ",desc:"音への反応と出遅れを軽減"},
   blinkers:{name:"ブリンカー",desc:"前方へ集中。掛かりには注意"},
@@ -630,7 +672,7 @@ function train(type){
     tackMessage+=` 調教師から${tackCatalog[proposed].name}を試す提案がありました。`;
   }
   const coachComment=trainingCoachComment(type,outcome,gains);
-  renderHome(`${coachComment} ${conditionTrendComment()} 現在${game.weight}kg、${weightComment()}。${tackMessage}`);
+  renderHome(`${coachComment} ${nextTrainingAdvice()} ${conditionTrendComment()} 現在${game.weight}kg、${weightComment()}。${tackMessage}`);
 }
 function playTrainingAnimation(type,label,outcome){
   const popup=document.querySelector("#trainingPopup");
@@ -828,7 +870,7 @@ function prepareRace(race){
 }
 function postRaceTrainerComment(){
   const comments=[];
-  if(game.injury)return `調教師「レース後に${game.injury.name}が判明しました。無理はできません。${game.injury.weeks}週間の長期放牧が必要です。」`;
+  if(game.injury)return `調教師「レース後に${game.injury.name}が判明しました。無理はできません。${game.injury.weeks}週間の長期放牧が必要です。 ${game.lastRaceAdvice||""}」`;
   if(game.fatigue>=75)comments.push("かなり疲れが残っています。次週は休養を優先した方がいいでしょう");
   else if(game.fatigue>=52)comments.push("レースの疲れが見えます。強い調教は避けたいところです");
   else comments.push("レース後としては疲れも軽く、回復は早そうです");
@@ -843,6 +885,7 @@ function postRaceTrainerComment(){
   else comments.push("脚元に大きな問題はありません");
 
   comments.push(conditionTrendComment());
+  if(game.lastRaceAdvice)comments.push(game.lastRaceAdvice);
   return `調教師「${comments.join("。")}。」`;
 }
 function sufferPostRaceInjury(race,going){
@@ -884,6 +927,7 @@ function showResult(detail){
   game.legCondition=Math.max(0,game.legCondition-rnd(4,9));
   game.weight=Math.max(330,game.weight-rnd(4,7));
   sufferPostRaceInjury(r,weather.going);
+  game.lastRaceAdvice=raceSuitabilityAdvice(r,place);
   game.week++;game.trainingsUsed=0;saveGame();
   document.querySelector("#resultPlace").textContent=`${place}着`;document.querySelector("#resultHorseName").textContent=game.horseName;
   document.querySelector("#resultFrame").textContent=player.id;document.querySelector("#resultFrame").style.background=player.color;
