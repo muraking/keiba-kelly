@@ -27,6 +27,7 @@ const startButton = document.querySelector("#startButton");
 const pauseButton = document.querySelector("#pauseButton");
 const speedButton = document.querySelector("#speedButton");
 const resetButton = document.querySelector("#resetButton");
+const gateSkipButton = document.querySelector("#gateSkipButton");
 const winnerPopup = document.querySelector("#winnerPopup");
 const benchmarkTimesEl = document.querySelector("#benchmarkTimes");
 const weatherDisplayEl = document.querySelector("#weatherDisplay");
@@ -275,6 +276,7 @@ function resetRace() {
   startButton.textContent = "レース開始";
   startButton.disabled = false;
   pauseButton.disabled = true;
+  gateSkipButton.hidden = true;
   pauseButton.textContent = "一時停止";
   multiplier = 1;
   speedButton.textContent = "速度 標準";
@@ -1370,12 +1372,25 @@ function loop(time) {
   raf = requestAnimationFrame(loop);
 }
 
+function beginRaceAfterGate(){
+  if(state!=="gateBreak")return;
+  state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
+  gateSkipButton.hidden=true;
+  const late=horses.filter(h=>h.startReaction==="出遅れ"),sharp=horses.filter(h=>h.startReaction==="好スタート");
+  setCommentary(late.length
+    ? `スタート！ ${late.map(h=>`${h.id}番${h.name}`).join("、")}は出遅れ！`
+    : sharp.length?`スタート！ ${sharp.map(h=>`${h.id}番${h.name}`).join("、")}が好スタート！`
+    : racePace.escapeCount>=2?`スタート！ 逃げ${racePace.escapeCount}頭が先手を争います！`:"スタート！ 各馬そろった飛び出しです。");
+  lastTime=0;
+}
+
 startButton.addEventListener("click", () => {
   if (state === "ready") {
     state = "parade";
     preRaceClock=0;
     startButton.disabled = true;
     pauseButton.disabled = true;
+    gateSkipButton.hidden = false;
     phaseEl.textContent = "本馬場入場";
     setCommentary("各馬がパドックを後にして、本馬場へ入ってきました。");
     lastTime=0;raf=requestAnimationFrame(loop);
@@ -1389,20 +1404,22 @@ startButton.addEventListener("click", () => {
         if(state!=="gates")return;
         assignStartReactions();
         state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
+        gateSkipButton.hidden=true;
         setCommentary("全馬、枠内に収まりました。スタートを待ちます。");
-        gateStartTimer=setTimeout(()=>{
-          if(state!=="gateBreak")return;
-          state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
-          const late=horses.filter(h=>h.startReaction==="出遅れ"),sharp=horses.filter(h=>h.startReaction==="好スタート");
-          setCommentary(late.length
-            ? `スタート！ ${late.map(h=>`${h.id}番${h.name}`).join("、")}は出遅れ！`
-            : sharp.length?`スタート！ ${sharp.map(h=>`${h.id}番${h.name}`).join("、")}が好スタート！`
-            : racePace.escapeCount>=2?`スタート！ 逃げ${racePace.escapeCount}頭が先手を争います！`:"スタート！ 各馬そろった飛び出しです。");
-          lastTime=0;
-        },900);
+        gateStartTimer=setTimeout(beginRaceAfterGate,900);
       },8100);
     },5000);
   }
+});
+
+gateSkipButton.addEventListener("click",()=>{
+  if(state!=="parade"&&state!=="gates")return;
+  clearTimeout(gateStartTimer);
+  assignStartReactions();
+  state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
+  gateSkipButton.hidden=true;
+  setCommentary("ゲート入りをスキップしました。全馬収容、スタートを待ちます。");
+  gateStartTimer=setTimeout(beginRaceAfterGate,700);
 });
 
 pauseButton.addEventListener("click", () => {

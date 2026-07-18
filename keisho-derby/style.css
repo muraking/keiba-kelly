@@ -951,6 +951,8 @@ canvas {
 }
 
 .race-panel { display:none; }
+.course-wrap { position:relative; }
+.gate-skip-button { position:absolute;z-index:9;right:8px;top:8px;width:auto;min-height:30px;padding:6px 9px;border:2px solid #f3d36a;background:#172b32e8;color:#fff2aa;box-shadow:3px 3px #071218;font-size:9px;font-weight:900; }
 
 .controls {
   display: grid;
