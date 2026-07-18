@@ -844,7 +844,7 @@ function drawVisionGate(vx,camY,vw,camH){
   const enteredIds=new Set(entryOrder.slice(0,sequenceIndex));
   horses.filter(h=>h.id!==focus?.id&&!enteredIds.has(h.id)).forEach((h,i)=>{
     const angle=preRaceClock*.0022+i*Math.PI*2/7;
-    const circleX=gateX-58+Math.cos(angle)*30,circleY=camY+30+Math.sin(angle)*12;
+    const circleX=vx+176+Math.cos(angle)*31,circleY=camY+30+Math.sin(angle)*12;
     drawVisionCandidateHorse(circleX,circleY,h,.23);
   });
   const local=preRaceClock-sequenceIndex*step;
@@ -854,7 +854,8 @@ function drawVisionGate(vx,camY,vw,camH){
     if(travel>.34&&travel<.74)travel=.34+Math.abs(Math.sin(local/55))*.035;
     else if(travel>=.74)travel=.34+(travel-.74)/.26*.66;
   }
-  const horseX=vx+34+travel*(gateX-vx-45),horseY=camY+35+(difficult&&travel<.8?Math.sin(local/60)*2:0);
+  const entryStartX=vx+207;
+  const horseX=entryStartX+travel*(gateX-11-entryStartX),horseY=camY+35+(difficult&&travel<.8?Math.sin(local/60)*2:0);
   if(focus&&local<900)drawVisionCandidateHorse(horseX,horseY,focus,.42);
   if(difficult&&local<820){ctx.fillStyle="#efb05d";ctx.fillRect(horseX-18,horseY+4,4,8);ctx.fillStyle="#315b84";ctx.fillRect(horseX-19,horseY+11,7,6)}
   ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";
@@ -1009,9 +1010,14 @@ function drawTrackV2(){
     ctx.fillStyle="#342d28";ctx.fillRect(vx+10,camY+13,20,camH-17);
     ctx.fillStyle="#f5f5ed";ctx.fillRect(vx+vw-49,camY+7,34,41);ctx.strokeStyle="#7f918f";ctx.lineWidth=3;ctx.strokeRect(vx+vw-49,camY+7,34,41);
     ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";ctx.fillText("本馬場入場",vx+39,camY+10);
-    horses.slice(0,6).forEach((h,i)=>{
-      const travel=Math.max(0,Math.min(1,(preRaceClock-i*230)/1250));
-      if(travel>0)drawVisionCandidateHorse(vx+22+travel*(vw-70),camY+21+(i%3)*10,h,.38);
+    horses.forEach((h,i)=>{
+      const travel=Math.max(0,Math.min(1,(preRaceClock-i*300)/1800));
+      if(travel<=0)return;
+      if(travel<1)drawVisionCandidateHorse(vx+20+travel*145,camY+21+(i%3)*10,h,.34);
+      else{
+        const angle=(preRaceClock-i*300-1800)*.002+i*Math.PI/4;
+        drawVisionCandidateHorse(vx+176+Math.cos(angle)*31,camY+30+Math.sin(angle)*12,h,.23);
+      }
     });
   }else if(state==="gates"){
     drawVisionGate(vx,camY,vw,camH);
@@ -1384,7 +1390,7 @@ startButton.addEventListener("click", () => {
           lastTime=0;
         },900);
       },8100);
-    },2400);
+    },5000);
   }
 });
 
