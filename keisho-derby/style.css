@@ -248,7 +248,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .turn-strip b { color: #ffe16a; }
 .farm-point-strip { display:flex; justify-content:space-between; padding:6px 14px; background:#fff1b6; color:#4c3b18; font-size:10px; }
 .farm-point-strip b { color:#a14b22; font-size:12px; }
-.stable-scene { position:relative; height:330px; overflow:hidden; border-bottom:5px solid #315222; background:linear-gradient(#67bde0 0 52%,#74ad54 52% 72%,#4f8d3d 72%); }
+.stable-scene { position:relative; height:285px; overflow:hidden; border-bottom:5px solid #315222; background:linear-gradient(#67bde0 0 52%,#74ad54 52% 72%,#4f8d3d 72%); }
 .stable-board {
   position:absolute;z-index:5;padding:6px 9px;border:4px solid #6b451f;background:#e7bd72;
   box-shadow:inset 0 0 0 3px #f6d99a,4px 4px #47321d;color:#3d2714;line-height:1.35;
@@ -293,7 +293,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   display:none;
   position:absolute;
   left:115px;
-  top:207px;
+  top:162px;
   margin:0;
   transform:scale(.72);
   animation:stableCandidateWalk 8s linear infinite;
@@ -310,7 +310,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .training-scene.idle.horse-tired .stable-pixel-horse { animation:stableTired 13s steps(20) infinite; }
 .training-scene.idle.horse-tired .candidate-head { animation:none;transform:rotate(20deg) translateY(4px); }
 .training-scene.idle.horse-tired .candidate-tail { animation-duration:3s; }
-.training-scene.idle.horse-exhausted .stable-pixel-horse { top:220px;animation:stableExhausted 5s steps(4) infinite; }
+.training-scene.idle.horse-exhausted .stable-pixel-horse { top:175px;animation:stableExhausted 5s steps(4) infinite; }
 .training-scene.idle.horse-exhausted .candidate-head { animation:none;transform:rotate(34deg) translateY(7px); }
 .training-scene.idle.horse-exhausted .candidate-leg { height:11px; }
 .training-scene.idle.horse-exhausted .stable-pixel-horse::after { content:"Z z";position:absolute;left:76px;top:-5px;color:#fff8bd;font-size:12px;font-weight:900;animation:sleepMarks 2s steps(3) infinite; }
@@ -362,11 +362,11 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   100%{left:105px;transform:scaleX(.96) scaleY(.96)}
 }
 @keyframes stableVigorous {
-  0%{left:92px;top:207px;transform:scaleX(.96)} 18%{left:165px;top:207px;transform:scaleX(.96)}
-  25%{left:195px;top:190px;transform:scaleX(.96) rotate(-3deg)} 32%{left:225px;top:207px;transform:scaleX(.96)}
-  45%{left:302px;top:207px;transform:scaleX(.96)} 50%{left:302px;top:207px;transform:scaleX(-.96)}
-  70%{left:210px;top:207px;transform:scaleX(-.96)} 77%{left:180px;top:188px;transform:scaleX(-.96) rotate(3deg)}
-  84%{left:145px;top:207px;transform:scaleX(-.96)} 95%,100%{left:92px;top:207px;transform:scaleX(.96)}
+  0%{left:92px;top:162px;transform:scaleX(.96)} 18%{left:165px;top:162px;transform:scaleX(.96)}
+  25%{left:195px;top:145px;transform:scaleX(.96) rotate(-3deg)} 32%{left:225px;top:162px;transform:scaleX(.96)}
+  45%{left:302px;top:162px;transform:scaleX(.96)} 50%{left:302px;top:162px;transform:scaleX(-.96)}
+  70%{left:210px;top:162px;transform:scaleX(-.96)} 77%{left:180px;top:143px;transform:scaleX(-.96) rotate(3deg)}
+  84%{left:145px;top:162px;transform:scaleX(-.96)} 95%,100%{left:92px;top:162px;transform:scaleX(.96)}
 }
 @keyframes stableTired {
   0%{left:115px;transform:scaleX(.96)} 42%{left:245px;transform:scaleX(.96)} 50%{left:245px;transform:scaleX(-.96)}
@@ -667,7 +667,8 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .gallery-card h3 { margin:7px 0 3px; color:#463718; font-size:11px; }
 .gallery-card p { min-height:22px; margin:0; color:#6d6043; font-size:8px; }
 .trophy-winner { display:block; margin-top:5px; padding:5px; background:#4f3f20; color:#fff1a6; font-size:7px; line-height:1.5; }
-.coach-message { padding-left:54px; position:relative; }
+.coach-message { position:relative; }
+.coach-message::before { display:none; }
 .coach-message::before { content:"調"; position:absolute; left:10px; top:12px; display:grid; place-items:center; width:32px; height:38px; border:3px solid #322617; background:linear-gradient(#e8c49c 0 42%,#314a6d 42%); color:#21170f; font-weight:900; box-shadow:4px 4px #7b692f; }
 
 .result-screen { padding-top: 55px; }
