@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.6.1</title>
-  <link rel="stylesheet" href="style.css?v=20260718-41">
+  <title>ドット競馬 継承ダービー｜Ver. 0.6.2</title>
+  <link rel="stylesheet" href="style.css?v=20260718-42">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.6.1</b>
+        <b class="build-version">Ver. 0.6.2</b>
       </div>
     </section>
 
@@ -175,8 +175,17 @@
         <p id="horseReaction">馬がこちらを見ています。タッチしてみましょう。</p>
       </div>
       <div id="horseDetailInfo" class="horse-detail-info"></div>
+      <button id="lineageButton">血統図を見る</button>
       <button class="retire-button" id="retireHorseButton">引退して次世代へ</button>
       <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="lineageScreen" class="game-screen lineage-screen">
+      <header class="simple-header"><b>血統図</b><span id="lineageGeneration">現在1代目</span></header>
+      <div class="lineage-current" id="lineageCurrent"></div>
+      <div class="lineage-tree" id="lineageTree"></div>
+      <p class="lineage-note">金色の線は、育ててきた愛馬から次世代へ受け継がれた流れです。</p>
+      <button data-back="horseDetailScreen">愛馬詳細へもどる</button>
     </section>
 
     <section id="retirementScreen" class="game-screen retirement-screen">
@@ -339,7 +348,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-32"></script>
+  <script src="app.js?v=20260718-33"></script>
   <script src="race.js?v=20260718-33"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>

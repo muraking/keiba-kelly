@@ -289,7 +289,7 @@ function inheritanceComparison(child,parent){
   return comments.join("。")+"。これからの調教で見極めていきましょう。";
 }
 function beginNextGeneration(partner){
-  const retired={name:game.horseName,sex:game.candidate?.sex||"牡馬",generation:game.generation,races:game.races,wins:game.wins,prize:game.prize,growthType:game.growthType,distanceMin:game.distanceMin,distanceMax:effectiveDistanceRange().max,coat:game.candidate?.coat||"栗毛"};
+  const retired={name:game.horseName,sex:game.candidate?.sex||"牡馬",generation:game.generation,races:game.races,wins:game.wins,prize:game.prize,growthType:game.growthType,distanceMin:game.distanceMin,distanceMax:effectiveDistanceRange().max,coat:game.candidate?.coat||"栗毛",sire:game.candidate?.sire?.[0]||"不明",dam:game.candidate?.dam?.[0]||"不明"};
   const partnerTuple=[partner.name,partner.record,partner.distance,partner.growth];
   const currentTuple=[game.horseName,`${game.races}戦${game.wins}勝`,`${game.distanceMin}〜${effectiveDistanceRange().max}m`,game.growthType];
   const sire=retired.sex==="牡馬"?currentTuple:partnerTuple;
@@ -592,6 +592,13 @@ function renderHorseDetail(){
     <dt>目つき</dt><dd>${game.candidate?.eyeType||"穏やか"}</dd><dt>性格</dt><dd>${trainerTemperamentComment()}</dd>
     <dt>馬体</dt><dd>${game.weight}kg・${weightComment()}</dd><dt>馬具</dt><dd>${game.equippedTack?tackCatalog[game.equippedTack].name:"なし"}</dd>
     <dt>戦績</dt><dd>${game.races}戦${game.wins}勝・${game.prize.toLocaleString()}万円</dd><dt>好感度</dt><dd>${game.affection<3?"まだ少し緊張":game.affection<8?"心を開いてきた":"とても懐いている"}</dd></dl>`;
+}
+function renderLineage(){
+  const sire=game.candidate?.sire?.[0]||"不明",dam=game.candidate?.dam?.[0]||"不明";
+  document.querySelector("#lineageGeneration").textContent=`現在${game.generation}代目`;
+  document.querySelector("#lineageCurrent").innerHTML=`<small>CURRENT HORSE・${game.generation}代目</small><h2>${game.horseName}</h2><p>${game.candidate?.sex||"牡馬"}・${game.candidate?.coat||"栗毛"}　${game.races}戦${game.wins}勝</p><div class="lineage-parents"><span><small>父</small><b>${sire}</b></span><span><small>母</small><b>${dam}</b></span></div>`;
+  const history=[...game.lineage].sort((a,b)=>b.generation-a.generation);
+  document.querySelector("#lineageTree").innerHTML=history.length?history.map(horse=>`<article class="lineage-horse"><i></i><div><small>${horse.generation}代目・${horse.sex||"--"}・${horse.coat||"--"}</small><h3>${horse.name}</h3><p>${horse.races}戦${horse.wins}勝　${Number(horse.prize||0).toLocaleString()}万円</p><p class="lineage-parent-names">父 ${horse.sire||"記録なし"} ／ 母 ${horse.dam||"記録なし"}</p></div></article>`).join(""):`<p class="lineage-empty">まだ継承前です。この愛馬から血統の歴史が始まります。</p>`;
 }
 function renderHome(message="今週の予定を決めましょう。"){
   const homeHorseName=document.querySelector("#homeHorseName");
@@ -1266,6 +1273,7 @@ document.querySelector("#historyList").onclick=e=>{
 };
 document.querySelector("#galleryButton").onclick=()=>{renderGallery();showScreen("galleryScreen")};
 const openHorseDetail=()=>{renderHorseDetail();showScreen("horseDetailScreen")};
+document.querySelector("#lineageButton").onclick=()=>{renderLineage();showScreen("lineageScreen")};
 document.querySelector("#homeHorse").onclick=e=>{e.stopPropagation();openHorseDetail()};
 document.querySelector("#homeHorse").onkeydown=e=>{
   if(e.key!=="Enter"&&e.key!==" ")return;
