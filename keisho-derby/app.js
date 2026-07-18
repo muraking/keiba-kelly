@@ -225,7 +225,9 @@ function addOfficialRaces(source,prefix){
     const official={...raw,age:raw.age||narAgeText(raw.name)};
     const raceWeek=officialWeek(raw.date,year);
     const normalizedClass=raw.grade.endsWith("1")?"G1":raw.grade.endsWith("2")?"G2":"G3";
-    const classThreshold=normalizedClass==="G1"?1600:normalizedClass==="G2"?1000:400;
+    // Two- and three-year-old G1s must remain reachable before older-horse earnings accumulate.
+    const ageLimitedG1=normalizedClass==="G1"&&/^(2歳|3歳)(?!以上)/.test(official.age);
+    const classThreshold=normalizedClass==="G1"?(ageLimitedG1?400:1600):normalizedClass==="G2"?1000:400;
     raceCalendar.push({id:`${prefix}-${year}-${index}`,program:true,official:true,officialDate:raw.date,number:11,
       week:raceWeek,name:`${raw.name} ${OFFICIAL_GRADE_LABEL[raw.grade]}`,raceClass:normalizedClass,
       course:`${raw.venue} ${raw.surface}${raw.distance}m`,surface:raw.surface,distance:raw.distance,

@@ -164,6 +164,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
   },
   {
     "date": "2026-02-22",
+    "name": "フェブラリーS",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "4歳以上",
+    "surface": "ダート",
+    "distance": 1600
+  },
+  {
+    "date": "2026-02-22",
     "name": "小倉大賞典",
     "venue": "小倉",
     "grade": "G3",
@@ -307,6 +316,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1800
   },
   {
+    "date": "2026-03-29",
+    "name": "高松宮記念",
+    "venue": "中京",
+    "grade": "G1",
+    "age": "4歳以上",
+    "surface": "芝",
+    "distance": 1200
+  },
+  {
     "date": "2026-04-04",
     "name": "ダービー卿チャレンジT",
     "venue": "中山",
@@ -323,6 +341,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "3歳",
     "surface": "芝",
     "distance": 1600
+  },
+  {
+    "date": "2026-04-05",
+    "name": "大阪杯",
+    "venue": "阪神",
+    "grade": "G1",
+    "age": "4歳以上",
+    "surface": "芝",
+    "distance": 2000
   },
   {
     "date": "2026-04-11",
@@ -343,6 +370,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1600
   },
   {
+    "date": "2026-04-12",
+    "name": "桜花賞",
+    "venue": "阪神",
+    "grade": "G1",
+    "age": "3歳牝",
+    "surface": "芝",
+    "distance": 1600
+  },
+  {
     "date": "2026-04-18",
     "name": "アンタレスS",
     "venue": "阪神",
@@ -350,6 +386,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "4歳以上",
     "surface": "ダート",
     "distance": 1800
+  },
+  {
+    "date": "2026-04-19",
+    "name": "皐月賞",
+    "venue": "中山",
+    "grade": "G1",
+    "age": "3歳牡・牝",
+    "surface": "芝",
+    "distance": 2000
   },
   {
     "date": "2026-04-19",
@@ -406,6 +451,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1900
   },
   {
+    "date": "2026-05-03",
+    "name": "天皇賞（春）",
+    "venue": "京都",
+    "grade": "G1",
+    "age": "4歳以上",
+    "surface": "芝",
+    "distance": 3200
+  },
+  {
     "date": "2026-05-09",
     "name": "エプソムC",
     "venue": "東京",
@@ -424,6 +478,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 2200
   },
   {
+    "date": "2026-05-10",
+    "name": "NHKマイルC",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "3歳牡・牝",
+    "surface": "芝",
+    "distance": 1600
+  },
+  {
     "date": "2026-05-16",
     "name": "新潟大賞典",
     "venue": "新潟",
@@ -433,6 +496,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 2000
   },
   {
+    "date": "2026-05-17",
+    "name": "ヴィクトリアマイル",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "4歳以上牝",
+    "surface": "芝",
+    "distance": 1600
+  },
+  {
     "date": "2026-05-23",
     "name": "平安S",
     "venue": "京都",
@@ -440,6 +512,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "4歳以上",
     "surface": "ダート",
     "distance": 1900
+  },
+  {
+    "date": "2026-05-24",
+    "name": "オークス",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "3歳牝",
+    "surface": "芝",
+    "distance": 2400
   },
   {
     "date": "2026-05-30",
@@ -452,12 +533,30 @@ window.OFFICIAL_JRA_GRADED_2026=[
   },
   {
     "date": "2026-05-31",
+    "name": "日本ダービー",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "3歳牡・牝",
+    "surface": "芝",
+    "distance": 2400
+  },
+  {
+    "date": "2026-05-31",
     "name": "目黒記念",
     "venue": "東京",
     "grade": "G2",
     "age": "4歳以上",
     "surface": "芝",
     "distance": 2500
+  },
+  {
+    "date": "2026-06-07",
+    "name": "安田記念",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "芝",
+    "distance": 1600
   },
   {
     "date": "2026-06-13",
@@ -467,6 +566,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "3歳以上",
     "surface": "芝",
     "distance": 1200
+  },
+  {
+    "date": "2026-06-14",
+    "name": "宝塚記念",
+    "venue": "阪神",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "芝",
+    "distance": 2200
   },
   {
     "date": "2026-06-21",
@@ -748,6 +856,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 2000
   },
   {
+    "date": "2026-09-27",
+    "name": "スプリンターズS",
+    "venue": "中山",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "芝",
+    "distance": 1200
+  },
+  {
     "date": "2026-10-04",
     "name": "毎日王冠",
     "venue": "東京",
@@ -802,6 +919,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1600
   },
   {
+    "date": "2026-10-18",
+    "name": "秋華賞",
+    "venue": "京都",
+    "grade": "G1",
+    "age": "3歳牝",
+    "surface": "芝",
+    "distance": 2000
+  },
+  {
     "date": "2026-10-24",
     "name": "アルテミスS",
     "venue": "東京",
@@ -811,6 +937,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1600
   },
   {
+    "date": "2026-10-25",
+    "name": "菊花賞",
+    "venue": "京都",
+    "grade": "G1",
+    "age": "3歳牡・牝",
+    "surface": "芝",
+    "distance": 3000
+  },
+  {
     "date": "2026-10-31",
     "name": "ファンタジーS",
     "venue": "京都",
@@ -818,6 +953,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "2歳牝",
     "surface": "芝",
     "distance": 1400
+  },
+  {
+    "date": "2026-11-01",
+    "name": "天皇賞（秋）",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "芝",
+    "distance": 2000
   },
   {
     "date": "2026-11-07",
@@ -865,6 +1009,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1600
   },
   {
+    "date": "2026-11-15",
+    "name": "エリザベス女王杯",
+    "venue": "京都",
+    "grade": "G1",
+    "age": "3歳以上牝",
+    "surface": "芝",
+    "distance": 2200
+  },
+  {
     "date": "2026-11-21",
     "name": "福島記念",
     "venue": "福島",
@@ -872,6 +1025,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "3歳以上",
     "surface": "芝",
     "distance": 2000
+  },
+  {
+    "date": "2026-11-22",
+    "name": "マイルチャンピオンシップ",
+    "venue": "京都",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "芝",
+    "distance": 1600
   },
   {
     "date": "2026-11-23",
@@ -890,6 +1052,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "2歳",
     "surface": "芝",
     "distance": 2000
+  },
+  {
+    "date": "2026-11-29",
+    "name": "ジャパンC",
+    "venue": "東京",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "芝",
+    "distance": 2400
   },
   {
     "date": "2026-11-29",
@@ -919,6 +1090,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1800
   },
   {
+    "date": "2026-12-06",
+    "name": "チャンピオンズC",
+    "venue": "中京",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "ダート",
+    "distance": 1800
+  },
+  {
     "date": "2026-12-12",
     "name": "中日新聞杯",
     "venue": "中京",
@@ -937,6 +1117,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1200
   },
   {
+    "date": "2026-12-13",
+    "name": "阪神ジュベナイルF",
+    "venue": "阪神",
+    "grade": "G1",
+    "age": "2歳牝",
+    "surface": "芝",
+    "distance": 1600
+  },
+  {
     "date": "2026-12-19",
     "name": "ターコイズS",
     "venue": "中山",
@@ -946,6 +1135,24 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 1600
   },
   {
+    "date": "2026-12-20",
+    "name": "朝日杯フューチュリティS",
+    "venue": "阪神",
+    "grade": "G1",
+    "age": "2歳牡・牝",
+    "surface": "芝",
+    "distance": 1600
+  },
+  {
+    "date": "2026-12-26",
+    "name": "ホープフルS",
+    "venue": "中山",
+    "grade": "G1",
+    "age": "2歳牡・牝",
+    "surface": "芝",
+    "distance": 2000
+  },
+  {
     "date": "2026-12-26",
     "name": "阪神C",
     "venue": "阪神",
@@ -953,6 +1160,15 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "age": "3歳以上",
     "surface": "芝",
     "distance": 1400
+  },
+  {
+    "date": "2026-12-27",
+    "name": "有馬記念",
+    "venue": "中山",
+    "grade": "G1",
+    "age": "3歳以上",
+    "surface": "芝",
+    "distance": 2500
   }
 ];
 window.OFFICIAL_NAR_GRADED_2026=[
