@@ -873,10 +873,9 @@ function autoTrainingChoice(mode,raceSoon=false){
   if(mode!=="safe"&&game.fatigue<22&&game.trainingsUsed===0&&candidates[0].stat==="guts")return "turfPair";
   return candidates[0].type;
 }
-function runAutoTraining(){
+function runAutoTraining(mode){
   if(game.injury)return renderHome("故障中はおまかせ調教を利用できません。復帰を待ちましょう。");
-  const mode=document.querySelector("#autoTrainingMode").value;
-  const modeName=mode==="safe"?"安全重視":mode==="balanced"?"バランス":"レース仕上げ";
+  const modeName=mode==="safe"?"安全":mode==="balanced"?"バランス":"レース仕上げ";
   const beforeStats=Object.fromEntries(["speed","dash","stamina","power","guts","turf","dirt"].map(stat=>[stat,game[stat]]));
   const beforeEquipment=[...game.equipment],counts={},startWeek=game.week;
   let completed=0,stoppedForRace=false;
@@ -1193,9 +1192,18 @@ document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.d
 document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>train(b.dataset.action));
 document.querySelector("#pastureButton").onclick=sendToPasture;
 document.querySelector("#nextWeekButton").onclick=()=>advanceWeek(false);
+const autoTrainingModal=document.querySelector("#autoTrainingModal");
+const closeAutoTrainingModal=()=>{autoTrainingModal.classList.remove("show");autoTrainingModal.setAttribute("aria-hidden","true")};
 document.querySelector("#autoTrainingButton").onclick=()=>{
-  if(confirm("選択した方針で最大4週間、おまかせ調教を進めますか？"))runAutoTraining();
+  autoTrainingModal.classList.add("show");autoTrainingModal.setAttribute("aria-hidden","false");
 };
+document.querySelector("#autoTrainingCancel").onclick=closeAutoTrainingModal;
+autoTrainingModal.onclick=e=>{if(e.target===autoTrainingModal)closeAutoTrainingModal()};
+document.querySelectorAll("[data-auto-mode]").forEach(button=>button.onclick=()=>{
+  const mode=button.dataset.autoMode;
+  closeAutoTrainingModal();
+  runAutoTraining(mode);
+});
 document.querySelector("#shopButton").onclick=()=>{renderShop();showScreen("shopScreen")};
 const openStableEquipment=()=>{renderEquipmentStatus();showScreen("stableEquipmentScreen")};
 document.querySelector("#stableBuilding").onclick=openStableEquipment;
