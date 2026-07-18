@@ -1,6 +1,16 @@
 const canvas = document.querySelector("#raceCanvas");
 const ctx = canvas.getContext("2d");
-ctx.imageSmoothingEnabled = false;
+const LOGICAL_WIDTH = 360;
+const RENDER_SCALE = 2;
+let logicalHeight = 500;
+function configureCanvas(height){
+  logicalHeight=height;
+  canvas.width=LOGICAL_WIDTH*RENDER_SCALE;
+  canvas.height=height*RENDER_SCALE;
+  ctx.setTransform(RENDER_SCALE,0,0,RENDER_SCALE,0,0);
+  ctx.imageSmoothingEnabled=false;
+}
+configureCanvas(logicalHeight);
 
 const remainingEl = document.querySelector("#remaining");
 const raceTimeEl = document.querySelector("#raceTime");
@@ -800,7 +810,7 @@ function drawVisionCandidateHorse(x,y,h,scale=.62){
 }
 
 function drawHorizontalTrack(){
-  ctx.fillStyle="#2d7131";ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#2d7131";ctx.fillRect(0,0,LOGICAL_WIDTH,logicalHeight);
   const isDirt=raceSurface==="ダート";
   const trace=(lane,color,width)=>{ctx.beginPath();for(let i=0;i<=180;i++){const q=coursePoint(i/180,lane);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke()};
   trace(4.5,"#fff8dd",52);trace(4.5,isDirt?"#a87549":"#43943e",43);
@@ -839,7 +849,7 @@ function marginLabel(prev,h){
 // ビジョンはコースの外に独立させ、走路とは重ねない。スタミナバーは表示しない。
 function drawTrackV2(){
   const isDirt=raceSurface==="ダート";
-  ctx.fillStyle="#0d1a26";ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#0d1a26";ctx.fillRect(0,0,LOGICAL_WIDTH,logicalHeight);
   // コース帯の芝生下地。
   ctx.fillStyle="#2d7131";ctx.fillRect(0,42,360,208);
   for(let i=0;i<44;i++){
@@ -987,7 +997,7 @@ function drawTrack() {
   if(horizontalLayout){drawHorizontalTrack();return;}
   const isDirt = raceSurface === "ダート";
   ctx.fillStyle = "#2d7131";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, LOGICAL_WIDTH, logicalHeight);
 
   for (let i = 0; i < 60; i++) {
     const x = (i * 83) % 356;
@@ -1307,7 +1317,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   archiveReplay=!!event.detail.archiveReplay;
   horizontalLayout=!!event.detail.horizontalLayout;
   layoutV2=event.detail.layoutV2!==undefined?!!event.detail.layoutV2:!horizontalLayout;
-  canvas.height=layoutV2?622:horizontalLayout?280:500;
+  configureCanvas(layoutV2?622:horizontalLayout?280:500);
   document.body.classList.toggle("horizontal-race-test",horizontalLayout);
   document.body.classList.toggle("race-layout2",layoutV2);
   raceSeed = Number.isFinite(event.detail.replaySeed)

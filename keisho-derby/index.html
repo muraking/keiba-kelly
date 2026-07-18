@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.2.4</title>
-  <link rel="stylesheet" href="style.css?v=20260718-17">
+  <title>ドット競馬 継承ダービー｜Ver. 0.2.5</title>
+  <link rel="stylesheet" href="style.css?v=20260718-18">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.2.4</b>
+        <b class="build-version">Ver. 0.2.5</b>
       </div>
     </section>
 
@@ -225,7 +225,7 @@
         </div>
       </header>
       <section class="course-wrap">
-        <canvas id="raceCanvas" width="360" height="500" aria-label="東京競馬場を走る8頭のドット馬"></canvas>
+        <canvas id="raceCanvas" width="720" height="1000" aria-label="東京競馬場を走る8頭のドット馬"></canvas>
         <div id="winnerPopup" class="winner-popup" aria-hidden="true">
           <div class="winner-card">
             <p>WINNER</p>
@@ -293,7 +293,7 @@
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
   <script src="app.js?v=20260718-8"></script>
-  <script src="race.js?v=20260718-18"></script>
+  <script src="race.js?v=20260718-19"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>
