@@ -465,9 +465,19 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .training-popup-stage.hillPair .popup-horse-b { animation:popupHillPairB 1.45s steps(12) 1 forwards; }
 .training-popup-stage.rest .popup-ground { background:#78a957; }
 .training-popup-stage.rest .popup-horse { left:38%; top:42px; animation:popupRest 1.2s steps(3) infinite; }
-.popup-gate { display:none; position:absolute; right:18px; bottom:29px; z-index:2; width:67px; height:72px; border:6px solid #dce5df; background:repeating-linear-gradient(90deg,#617978 0 7px,#bfcac5 7px 11px); box-sizing:border-box; color:#fff; font:bold 9px sans-serif; }
+.popup-gate { display:none; position:absolute; left:18px; bottom:29px; z-index:3; width:67px; height:72px; border:6px solid #dce5df; background:repeating-linear-gradient(90deg,#617978 0 7px,#bfcac5 7px 11px); box-sizing:border-box; color:#fff; font:bold 9px sans-serif; }
+.popup-gate::after { content:"";position:absolute;inset:0;border-right:5px solid #edf3ef;background:repeating-linear-gradient(90deg,#718784 0 5px,transparent 5px 10px);transform-origin:right center;animation:popupGateDoor 1.65s steps(4) 1 forwards; }
 .training-popup-stage.gate .popup-gate { display:block; }
-.training-popup-stage.gate .popup-horse { top:38px; animation:popupGateDash 1.65s steps(12) 1 forwards; }
+.training-popup-stage.gate .popup-horse { z-index:2;top:38px;animation:popupGateDash 1.65s steps(12) 1 forwards; }
+.training-popup-stage.forest { background:linear-gradient(#8bc0c4 0 38%,#476b3e 38% 100%); }
+.training-popup-stage.forest::before { content:"";position:absolute;inset:4px 0 38px;background:repeating-linear-gradient(90deg,transparent 0 22px,#68482c 22px 28px,transparent 28px 50px),radial-gradient(ellipse at 14% 20%,#315d37 0 18px,transparent 19px),radial-gradient(ellipse at 48% 12%,#477943 0 24px,transparent 25px),radial-gradient(ellipse at 82% 22%,#2e6038 0 22px,transparent 23px); }
+.training-popup-stage.forest::after { content:"";position:absolute;z-index:3;right:18px;bottom:25px;width:9px;height:67px;background:#573b26;box-shadow:6px -14px 0 10px #315c35; }
+.training-popup-stage.forest .popup-ground { height:40px;border-top:4px solid #78945c;background:linear-gradient(100deg,#517547 0 28%,#bc9b68 29% 70%,#517547 71%); }
+.training-popup-stage.forest .popup-horse { z-index:2;top:45px;animation:popupForestWalk 1.9s steps(10) 1 forwards; }
+.training-popup-stage.forest .popup-horse .candidate-leg.front { animation-duration:.48s; }
+.training-popup-stage.forest .popup-horse .candidate-leg.back { animation-duration:.48s; }
+.training-popup-stage.light .popup-ground { background:#86ad63; }
+.training-popup-stage.light .popup-horse { left:38%;top:42px;animation:popupRest 1.2s steps(3) infinite; }
 @keyframes trainingPopupIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
 @keyframes popupHorseRun { 0%{left:-18%;transform:scale(.72)} 88%,100%{left:105%;transform:scale(.72)} }
 @keyframes popupPairRun {
@@ -488,7 +498,9 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   0%{left:-31%;top:42px;transform:scale(.68)}
   88%,100%{left:96%;top:-7px;transform:scale(.68)}
 }
-@keyframes popupGateDash { 0%{left:-18%;transform:scale(.72)} 30%{left:22%;transform:scale(.72)} 88%,100%{left:105%;transform:scale(.72)} }
+@keyframes popupGateDash { 0%,35%{left:19px;transform:scale(.72)} 43%{left:25px;transform:scale(.72)} 88%,100%{left:108%;transform:scale(.72)} }
+@keyframes popupGateDoor { 0%,34%{transform:scaleX(1)} 44%,100%{transform:scaleX(.08)} }
+@keyframes popupForestWalk { 0%{left:-22%;transform:scale(.72) translateY(0)} 48%{transform:scale(.72) translateY(2px)} 88%,100%{left:102%;transform:scale(.72) translateY(0)} }
 @keyframes popupRest { 0%,100%{transform:scale(.72) rotate(0)} 50%{transform:scale(.72) rotate(3deg) translateY(3px)} }
 @keyframes cloudDrift { from{translate:-95px 0} to{translate:390px 0} }
 .stats {

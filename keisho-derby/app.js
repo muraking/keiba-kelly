@@ -859,7 +859,7 @@ function train(type){
     const conditionGain=forest?rnd(2,5):rnd(1,3);
     game.condition=Math.min(100,game.condition+conditionGain);
     if(game.weight<bestWeight()-4&&Math.random()<.55)game.weight++;
-    playTrainingAnimation("rest",forest?"森林馬道":"軽め調整",turned?"上向き":"調整");
+    playTrainingAnimation(forest?"forest":"light",forest?"森林馬道":"軽め調整",turned?"上向き":"調整");
     const trend=turned?"調子の下降が止まり、上向く気配が出てきました。":game.condition>before?"気分転換になり、表情が少し明るくなりました。":"大きな変化はありませんが、無理なく整えられました。";
     return renderHome(`${trend} 疲れも少し抜けています。現在${game.weight}kg、${weightComment()}。`);
   }
