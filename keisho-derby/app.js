@@ -39,6 +39,7 @@ const defaultGame = () => ({
   reservedRaceId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:""
 });
 let game = defaultGame();
+let autoTrainingActive=false;
 let developerMode=localStorage.getItem("dotKeibaDeveloperMode")==="1";
 const ABILITY_STATS=["speed","dash","stamina","power","guts","turf","dirt","heavyTrack"];
 
@@ -592,6 +593,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelectorAll("[data-action]").forEach(b=>b.disabled=injured||game.trainingsUsed>=2);
   document.querySelector("#goRaceSelectButton").disabled=injured;
   document.querySelector("#nextWeekButton").disabled=injured;
+  document.querySelector("#autoTrainingButton").disabled=injured;
   document.querySelector("#pastureButton").hidden=!injured;
   if(injured)document.querySelector("#pastureWeeks").textContent=`${game.injury.name}・${game.injury.weeks}週間を一括進行`;
   saveGame();
@@ -809,6 +811,7 @@ function train(type){
   renderHome(`${coachComment} ${nextTrainingAdvice()} ${conditionTrendComment()} 現在${game.weight}kg、${weightComment()}。${tackMessage}`);
 }
 function playTrainingAnimation(type,label,outcome){
+  if(autoTrainingActive)return;
   const popup=document.querySelector("#trainingPopup");
   const stage=document.querySelector("#trainingPopupStage");
   document.querySelector("#trainingPopupTitle").textContent=label;
@@ -843,6 +846,64 @@ function advanceWeek(rest=false){
   const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
   const notice=reserved&&reserved.week===game.week?` 予約していた「${reserved.name}」の開催週です。`:reserved&&reserved.week-game.week===1?` 来週は予約した「${reserved.name}」です。`:"";
   renderHome(`${notice} ${equipmentNotice} ${conditionTrendComment()}`.trim());
+}
+function autoTrainingChoice(mode,raceSoon=false){
+  const weightDiff=game.weight-bestWeight();
+  if(game.fatigue>=55)return "rest";
+  if(raceSoon){
+    if(game.fatigue>=30)return "rest";
+    if(Math.abs(weightDiff)>8)return weightDiff>0?"hillSolo":"pool";
+    return game.trainingsUsed===0?"turfSolo":"gate";
+  }
+  if(mode==="safe"){
+    if(game.fatigue>=35)return game.trainingsUsed===0?"pool":"rest";
+    if(weightDiff>=10)return "dirtSolo";
+    if(weightDiff<=-10)return "pool";
+  }else if(mode==="balanced"){
+    if(game.fatigue>=45)return "rest";
+    if(weightDiff>=12)return "hillSolo";
+  }else if(mode==="race"){
+    if(game.fatigue>=40)return "pool";
+    if(weightDiff>=8)return "hillSolo";
+    if(weightDiff<=-8)return "rest";
+  }
+  const candidates=[
+    {stat:"speed",type:"turfSolo"},{stat:"dash",type:"gate"},{stat:"stamina",type:"dirtSolo"},{stat:"power",type:"hillSolo"},{stat:"guts",type:mode==="safe"?"turfSolo":"turfPair"}
+  ].sort((a,b)=>game[a.stat]-game[b.stat]);
+  if(mode!=="safe"&&game.fatigue<22&&game.trainingsUsed===0&&candidates[0].stat==="guts")return "turfPair";
+  return candidates[0].type;
+}
+function runAutoTraining(){
+  if(game.injury)return renderHome("故障中はおまかせ調教を利用できません。復帰を待ちましょう。");
+  const mode=document.querySelector("#autoTrainingMode").value;
+  const modeName=mode==="safe"?"安全重視":mode==="balanced"?"バランス":"レース仕上げ";
+  const beforeStats=Object.fromEntries(["speed","dash","stamina","power","guts","turf","dirt"].map(stat=>[stat,game[stat]]));
+  const beforeEquipment=[...game.equipment],counts={},startWeek=game.week;
+  let completed=0,stoppedForRace=false;
+  autoTrainingActive=true;
+  for(let i=0;i<4;i++){
+    const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
+    if(reserved&&reserved.week===game.week){stoppedForRace=true;break}
+    const raceSoon=!!reserved&&reserved.week===game.week+1;
+    while(game.trainingsUsed<2&&!game.injury){
+      const type=autoTrainingChoice(mode,raceSoon),label=training[type]?.label||"休養";
+      counts[label]=(counts[label]||0)+1;
+      train(type);
+    }
+    if(game.injury)break;
+    advanceWeek(false);completed++;
+    if(raceSoon){stoppedForRace=true;break}
+  }
+  autoTrainingActive=false;
+  Object.keys(beforeStats).forEach(stat=>{
+    const gain=Math.max(0,game[stat]-beforeStats[stat]);
+    game[stat]=Math.round((beforeStats[stat]+gain*.8)*10)/10;
+  });
+  const broken=beforeEquipment.filter(id=>!game.equipment.includes(id)).map(id=>equipmentCatalog.find(x=>x.id===id)?.name).filter(Boolean);
+  const menu=Object.entries(counts).map(([label,count])=>`${label}${count}回`).join("、");
+  const stopText=game.injury?`${game.injury.name}を発症したため途中で中止しました。`:stoppedForRace?"予約レースの週になったため停止しました。":"4週間を終えました。";
+  renderHome(`おまかせ調教（${modeName}）で${game.week-startWeek}週間進めました。${menu||"調教なし"}。${stopText}${broken.length?` ${broken.join("、")}が故障しました。`:""} ${nextTrainingAdvice()}`);
+  saveGame();
 }
 function renderShop(){
   document.querySelector("#shopPoints").textContent=`${game.farmPoints} FP`;
@@ -1132,6 +1193,9 @@ document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.d
 document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>train(b.dataset.action));
 document.querySelector("#pastureButton").onclick=sendToPasture;
 document.querySelector("#nextWeekButton").onclick=()=>advanceWeek(false);
+document.querySelector("#autoTrainingButton").onclick=()=>{
+  if(confirm("選択した方針で最大4週間、おまかせ調教を進めますか？"))runAutoTraining();
+};
 document.querySelector("#shopButton").onclick=()=>{renderShop();showScreen("shopScreen")};
 const openStableEquipment=()=>{renderEquipmentStatus();showScreen("stableEquipmentScreen")};
 document.querySelector("#stableBuilding").onclick=openStableEquipment;

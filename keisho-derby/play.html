@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.5.5</title>
-  <link rel="stylesheet" href="style.css?v=20260718-39">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.5.6</title>
+  <link rel="stylesheet" href="style.css?v=20260718-40">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.5.5</b>
+        <b class="build-version">Ver. 0.5.6</b>
       </div>
     </section>
 
@@ -128,6 +128,7 @@
         <div class="coach-copy"><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b></div><div id="tackChoices" class="tack-choices"></div></div>
       </section>
       <div class="training-menu-head"><b>調教メニュー</b><span>今週 <strong id="turnsLeft">0/2</strong></span></div>
+      <div class="auto-training-panel"><select id="autoTrainingMode" aria-label="おまかせ調教の方針"><option value="safe">安全重視</option><option value="balanced">バランス</option><option value="race">レース仕上げ</option></select><button id="autoTrainingButton">おまかせ調教 4週間</button></div>
       <nav class="home-actions">
         <b class="training-group-title">単走</b>
         <button data-action="dirtSolo">ダート単走<br><small>疲労 中</small></button>
@@ -328,7 +329,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-27"></script>
+  <script src="app.js?v=20260718-28"></script>
   <script src="race.js?v=20260718-32"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
