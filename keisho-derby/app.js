@@ -397,7 +397,13 @@ function advanceConditionCycle(actionBonus=0){
       game.conditionPhaseWeeks=game.conditionStability==="安定"?rnd(5,8):game.conditionStability==="ムラ"?rnd(2,4):rnd(3,6);
     }
   }
-  game.condition=Math.max(20,Math.min(100,game.condition+natural+actionBonus));
+  let nextCondition=game.condition+natural+actionBonus;
+  if(game.conditionDirection<0&&nextCondition<=27){
+    nextCondition=27;
+    game.conditionDirection=1;
+    game.conditionPhaseWeeks=game.conditionStability==="ムラ"?rnd(2,3):game.conditionStability==="安定"?rnd(4,6):rnd(3,4);
+  }
+  game.condition=Math.max(20,Math.min(100,nextCondition));
 }
 function classLabel(){return game.maiden?"未勝利":game.classMoney<=400?"1勝クラス":game.classMoney<=1000?"2勝クラス":game.classMoney<=1600?"3勝クラス":"オープン"}
 function displayClassLabel(){return game.races===0?"新馬":classLabel()}
