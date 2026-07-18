@@ -676,9 +676,9 @@ function finishRace() {
     winnerPopup.setAttribute("aria-hidden","false");
     pendingResultDetail={
       winnerTime:formatTime(winner.finishTime),isRecord,
-      raceSeed,setup:{...playerSetup},
+      raceSeed,setup:{...playerSetup},measuredPace,
       order:order().map(h=>({
-        id:h.id,name:h.name,color:h.color,odds:h.odds,
+        id:h.id,name:h.name,color:h.color,odds:h.odds,style:h.style,
         finishTime:formatTime(h.finishTime),player:h.player,
         isRecord:Number.isFinite(playerSetup.recordTime)&&h.finishTime<playerSetup.recordTime,
         temperamentTrouble:h.temperamentTrouble,

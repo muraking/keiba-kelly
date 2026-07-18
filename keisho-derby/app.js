@@ -886,6 +886,19 @@ function prepareRace(race){
     }}));
   }
 }
+function resultRaceReview(race,player,place,pace){
+  const comments=[];
+  if(place===1)comments.push(player.style==="逃げ"?"自分のリズムで運び、最後までよく粘り切りました":player.style==="先行"?"好位から安定した競馬ができました":player.style==="差し"?"道中で脚をため、直線でしっかり伸びました":"後方で我慢し、終いの脚を生かせました");
+  else if(place<=3)comments.push("勝ち切れませんでしたが、内容のある競馬でした");
+  else comments.push(player.style==="逃げ"?"前半に脚を使い、最後は苦しくなりました":player.style==="先行"?"好位にはつけましたが、直線でもうひと伸びが必要です":player.style==="差し"?"直線では伸びましたが、前との差を詰め切れませんでした":"後方から運びましたが、追い出してから届きませんでした");
+  if(player.temperamentTrouble==="出遅れ")comments.push("スタートの遅れが位置取りに響きました。ゲート訓練を続けたいですね");
+  else if(player.temperamentTrouble==="掛かり")comments.push("道中で掛かって余計な力を使いました。折り合いが今後の課題です");
+  else if(player.temperamentTrouble==="物見")comments.push("物見をして集中を欠く場面がありました。馬具も含めて対策を考えます");
+  else if(pace&&pace.includes("ハイ")&&player.style==="逃げ")comments.push("速い流れを先頭で受けた分、終いが厳しくなりました");
+  else if(pace&&pace.includes("スロー")&&(player.style==="差し"||player.style==="追込"))comments.push("前が止まらない流れで、脚質的にも厳しい展開でした");
+  comments.push(raceSuitabilityAdvice(race,place));
+  return comments.join("。 ");
+}
 function postRaceTrainerComment(){
   const comments=[];
   if(game.injury)return `調教師「レース後に${game.injury.name}が判明しました。無理はできません。${game.injury.weeks}週間の長期放牧が必要です。 ${game.lastRaceAdvice||""}」`;
@@ -952,7 +965,7 @@ function showResult(detail){
   document.querySelector("#resultTime").textContent=player.finishTime;document.querySelector("#resultPrize").textContent=`${earned.toLocaleString()}万円／+${fpEarned} FP${classMoneyAdd?`／収得+${classMoneyAdd}`:""}`;
   document.querySelector("#resultComment").textContent=(place===1?"見事な勝利です！":place<=3?"好走しました。次は勝利を狙いましょう。":"調教を重ねて巻き返しましょう。")+
     (playerTrouble?` 調教師「今日は${playerTrouble}がありました。馬具を検討しましょう」`:"");
-  document.querySelector("#postRaceCondition").textContent=postRaceTrainerComment();
+  document.querySelector("#postRaceCondition").textContent=resultRaceReview(r,player,place,detail.measuredPace);
   document.querySelector("#resultOrder").innerHTML=detail.order.slice(0,5).map((h,i)=>`<div><span>${i+1}</span><b>${h.name}</b><small>${h.odds.toFixed(1)}倍</small></div>`).join("");
   showScreen("resultScreen");
 }
