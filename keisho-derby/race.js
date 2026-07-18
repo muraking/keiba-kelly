@@ -53,6 +53,7 @@ let raceClock = 0;
 let cheerClock = 0;
 let commentaryStamp = new Set();
 let commentaryHistory = [];
+let gateStartTimer = 0;
 let raf = 0;
 let racePace = { name: "平均", escapeCount: 1, timeFactor: 1 };
 let split1000Time = null;
@@ -193,6 +194,7 @@ function buildOpponentAbilities() {
 }
 
 function resetRace() {
+  clearTimeout(gateStartTimer);
   cancelAnimationFrame(raf);
   randomState = raceSeed;
   simulationAccumulator = 0;
@@ -874,7 +876,7 @@ function drawTrackV2(){
   ctx.fillText("外",13,131);ctx.fillText("内",49,131);
 
   // ターフビジョン（コース外・独立パネル）。
-  const visionOrder=order(),leader=visionOrder[0],playerHorse=horses.find(h=>h.player);
+  const visionOrder=order(),leader=visionOrder[0];
   const vx=4,vy=240,vw=352,vh=212;
   ctx.fillStyle="#101a21";ctx.fillRect(vx,vy,vw,vh);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(vx,vy,vw,vh);
@@ -893,20 +895,11 @@ function drawTrackV2(){
     drawVisionCandidateHorse(x,camY+28+(i%2)*9,h,.5);
   });
   // 馬名タグ：先頭と自分の馬（仕様：ビジョンに愛馬の馬番と馬名を表示）。
-  ctx.font="bold 9px monospace";ctx.textAlign="left";
-  const tagRows=[[`先頭 ${leader.id} ${leader.name}`,"#ffffff"]];
-  if(playerHorse&&playerHorse!==leader)
-    tagRows.push([`${visionOrder.indexOf(playerHorse)+1}位 ${playerHorse.id} ${playerHorse.name}`,"#ffe15a"]);
-  tagRows.forEach((tag,i)=>{
-    const w=ctx.measureText(tag[0]).width+8;
-    ctx.fillStyle="rgba(0,0,0,.55)";ctx.fillRect(vx+7,camY+4+i*13,w,11);
-    ctx.fillStyle=tag[1];ctx.fillText(tag[0],vx+11,camY+13+i*13);
-  });
   // 全頭順位ボード：枠色チップ＋馬番＋馬名フル表示＋着差。
   const boardY=camY+camH+4;
   visionOrder.forEach((h,index)=>{
-    const y=boardY+11+index*14;
-    if(h.player){ctx.fillStyle="#5b451d";ctx.fillRect(vx+3,y-11,vw-6,14)}
+    const y=boardY+10+index*12;
+    if(h.player){ctx.fillStyle="#5b451d";ctx.fillRect(vx+3,y-10,vw-6,12)}
     const prevRank=visionRanks.get(h.id)??index+1;
     const arrow=prevRank>index+1?"▲":prevRank<index+1?"▼":"・";
     ctx.font="bold 11px monospace";ctx.textAlign="left";
@@ -917,18 +910,20 @@ function drawTrackV2(){
     ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 9px monospace";ctx.textAlign="center";
     ctx.fillText(h.id,vx+54,y-1);
     ctx.font="bold 11px monospace";ctx.textAlign="left";
-    ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.fillText(h.name,vx+66,y);
+    ctx.fillStyle=h.player?"#ffe56b":"#eef4ed";ctx.fillText(h.player?"愛馬":"出走馬",vx+66,y);
     ctx.textAlign="right";ctx.fillStyle=h.player?"#ffe56b":"#a9c2b4";
     ctx.fillText(index===0?(h.finished?formatTime(h.finishTime):""):marginLabel(visionOrder[index-1],h),vx+vw-8,y);
   });
   if(raceClock-visionRankStamp>700){visionOrder.forEach((h,i)=>visionRanks.set(h.id,i+1));visionRankStamp=raceClock}
   // フッター：タイム・1000m通過・残り距離・現在区間。
-  const footY=vy+vh-17;
-  ctx.fillStyle="#263a2e";ctx.fillRect(vx+3,footY,vw-6,14);
+  const footY=vy+vh-31;
+  ctx.fillStyle="#263a2e";ctx.fillRect(vx+3,footY,vw-6,28);
   const remaining=Math.max(0,Math.ceil(TOTAL-Math.min(TOTAL,leaderDist)));
   const grad=courseGradient(leader.progress);
   ctx.fillStyle="#fff3a6";ctx.font="bold 10px monospace";ctx.textAlign="center";
-  ctx.fillText(`TIME ${formatTime(raceClock)}　1000m ${split1000Time?formatTime(split1000Time):"--:--.-"}　残り${remaining}m ${grad.type==="up"?"▲上り":grad.type==="down"?"▼下り":"平坦"}`,180,footY+11);
+  ctx.fillText(`残り${remaining}m　TIME ${formatTime(raceClock)}　1000m ${split1000Time?formatTime(split1000Time):"--:--.-"}　${grad.type==="up"?"▲上り":grad.type==="down"?"▼下り":"平坦"}`,180,footY+11);
+  ctx.font="bold 8px monospace";
+  ctx.fillText(`実測 ${measuredPace}　基準 ${formatTime(playerSetup.benchmarkTime||playerSetup.baseTime)}　レコード ${formatTime(playerSetup.recordTime||playerSetup.baseTime*.965)}　${playerSetup.weather}/${playerSetup.going}`,180,footY+23);
 
   // 高低差・全馬位置（維持）。
   const ex=4,ey=458,ew=352,eh=56;
@@ -1138,14 +1133,17 @@ function drawCrowdCheer(){
   if(cheerClock%cycle>=visibleFor)return;
   // レイアウトV2はコースが上部の横長帯なので、吹き出しもコース帯の中に収める。
   const spots=layoutV2
-    ?[{x:16,y:32,w:108},{x:132,y:40,w:102},{x:36,y:198,w:116},{x:186,y:202,w:109},{x:226,y:32,w:118}]
+    ?[{x:10,y:30,w:108},{x:126,y:30,w:108},{x:242,y:30,w:108}]
     :[{x:226,y:54,w:108},{x:232,y:96,w:102},{x:218,y:220,w:116},{x:225,y:285,w:109},{x:216,y:350,w:118}];
   const spot=spots[(slot*3+raceSeed)%spots.length],call=calls[(slot*7+raceSeed)%calls.length];
   ctx.save();
   ctx.shadowColor="#000b";ctx.shadowBlur=0;ctx.shadowOffsetX=3;ctx.shadowOffsetY=3;
   ctx.fillStyle="#ffffff";ctx.strokeStyle="#262015";ctx.lineWidth=3;
   ctx.fillRect(spot.x,spot.y,spot.w,24);ctx.strokeRect(spot.x,spot.y,spot.w,24);
-  ctx.beginPath();ctx.moveTo(spot.x+spot.w,spot.y+9);ctx.lineTo(349,spot.y+15);ctx.lineTo(spot.x+spot.w,spot.y+19);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.beginPath();
+  if(layoutV2){const tx=spot.x+spot.w/2;ctx.moveTo(tx-7,spot.y);ctx.lineTo(tx,20);ctx.lineTo(tx+7,spot.y)}
+  else{ctx.moveTo(spot.x+spot.w,spot.y+9);ctx.lineTo(349,spot.y+15);ctx.lineTo(spot.x+spot.w,spot.y+19)}
+  ctx.closePath();ctx.fill();ctx.stroke();
   ctx.shadowColor="transparent";ctx.fillStyle="#111";ctx.font="bold 10px monospace";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+16);
   ctx.restore();
 }
@@ -1214,15 +1212,20 @@ function loop(time) {
 
 startButton.addEventListener("click", () => {
   if (state === "ready") {
-    state = "running";
+    state = "gates";
     startButton.disabled = true;
-    pauseButton.disabled = false;
-    phaseEl.textContent = "スタート";
-    setCommentary(racePace.escapeCount >= 2
-      ? `スタート！ 逃げ${racePace.escapeCount}頭が先手を争います！`
-      : "スタート！ 逃げ馬がすんなり先頭へ立ちました。");
-    lastTime = 0;
-    raf = requestAnimationFrame(loop);
+    pauseButton.disabled = true;
+    phaseEl.textContent = "全馬ゲートイン";
+    setCommentary("全馬ゲートイン。場内が静まり返ります。まもなくスタートです。");
+    draw();
+    gateStartTimer=setTimeout(()=>{
+      if(state!=="gates")return;
+      state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
+      setCommentary(racePace.escapeCount >= 2
+        ? `ゲートオープン！ 逃げ${racePace.escapeCount}頭が先手を争います！`
+        : "ゲートオープン！ 逃げ馬がすんなり先頭へ立ちました。");
+      lastTime=0;raf=requestAnimationFrame(loop);
+    },1800);
   }
 });
 
@@ -1272,7 +1275,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   playerSetup = { ...playerSetup, ...event.detail };
   archiveReplay=!!event.detail.archiveReplay;
   horizontalLayout=!!event.detail.horizontalLayout;
-  layoutV2=!!event.detail.layoutV2;
+  layoutV2=event.detail.layoutV2!==undefined?!!event.detail.layoutV2:!horizontalLayout;
   canvas.height=layoutV2?520:horizontalLayout?280:500;
   document.body.classList.toggle("horizontal-race-test",horizontalLayout);
   document.body.classList.toggle("race-layout2",layoutV2);
