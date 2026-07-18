@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.4.19</title>
-  <link rel="stylesheet" href="style.css?v=20260718-33">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.5.0</title>
+  <link rel="stylesheet" href="style.css?v=20260718-34">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.4.19</b>
+        <b class="build-version">Ver. 0.5.0</b>
       </div>
     </section>
 
@@ -164,7 +164,16 @@
         <p id="horseReaction">馬がこちらを見ています。タッチしてみましょう。</p>
       </div>
       <div id="horseDetailInfo" class="horse-detail-info"></div>
+      <button class="retire-button" id="retireHorseButton">引退して次世代へ</button>
       <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="retirementScreen" class="game-screen retirement-screen">
+      <header class="simple-header"><b>引退・配合</b><span id="breedingBudget">配合予算 0万円</span></header>
+      <div class="retirement-hero"><small>現役生活を終えます</small><h2 id="retirementHorseName">ドットスター</h2><p id="retirementSummary">1世代目　0戦0勝　獲得賞金 0万円</p></div>
+      <p id="breedingGuide" class="breeding-guide"></p>
+      <div id="breedingPartners" class="breeding-partners"></div>
+      <button data-back="horseDetailScreen">引退せずにもどる</button>
     </section>
 
     <section id="historyScreen" class="game-screen archive-screen">
@@ -299,7 +308,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-22"></script>
+  <script src="app.js?v=20260718-23"></script>
   <script src="race.js?v=20260718-32"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>

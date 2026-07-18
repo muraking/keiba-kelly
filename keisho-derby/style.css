@@ -59,6 +59,16 @@ body {
 .newspaper-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px; }
 .horse-detail-button { width:calc(100% - 20px); margin:7px 10px 0; background:#fff3c7; color:#3f321a; border-color:#b48a36; }
 .detail-screen { padding-bottom:22px; background:#e9f0df; color:#243127; }
+.retire-button { width:calc(100% - 24px);margin:12px;background:#6d3528;color:#fff2c8;border-color:#d0a34d; }
+.retirement-screen { padding-bottom:22px;background:#eee6ce;color:#2f291d; }
+.retirement-hero { margin:14px;padding:16px;border:4px solid #6b451f;background:#e7bd72;box-shadow:inset 0 0 0 3px #f6d99a,5px 5px #5a4931;text-align:center; }
+.retirement-hero small { font-size:9px;color:#684b29; }.retirement-hero h2 { margin:5px 0;font-size:22px; }.retirement-hero p { margin:0;font-size:10px; }
+.breeding-guide { margin:15px 14px 8px;padding:10px;border:2px solid #7b765f;background:#fffdf1;font-size:10px;line-height:1.7; }
+.breeding-partners { display:grid;gap:8px;margin:10px 14px 16px; }
+.breeding-card { display:grid;grid-template-columns:1fr 82px;align-items:center;gap:8px;padding:10px;border:3px solid #6d5b35;background:#fffdf2;box-shadow:3px 3px #a79a79; }
+.breeding-card h3 { margin:2px 0 4px;font-size:14px; }.breeding-card small { color:#8d4c28;font-size:8px;font-weight:800; }.breeding-card p { margin:0;font-size:8px;line-height:1.5; }
+.breeding-card button { min-height:46px;padding:5px;font-size:10px;font-weight:900; }.breeding-card.locked { opacity:.48;filter:grayscale(.7); }
+.retirement-screen>button { width:calc(100% - 28px);margin:0 14px; }
 .detail-horse-stage { position:relative; height:245px; overflow:hidden; background:linear-gradient(#72c6e5 0 59%,#75ac50 59%); border-bottom:5px solid #fff; cursor:pointer; }
 .detail-pixel-horse { position:absolute; left:50%; top:70px; transform:translateX(-50%) scale(1.65); }
 .detail-horse-stage p { position:absolute; left:15px; right:15px; bottom:13px; margin:0; padding:9px; background:#10221ddd; color:#fff; text-align:center; font-size:10px; }
