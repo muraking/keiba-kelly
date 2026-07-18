@@ -188,6 +188,7 @@ function makeHorse(i, styles) {
     equippedTack:isPlayer?playerSetup.equippedTack:null,
     temperamentTrouble:null,
     gateChecked:false,
+    startReaction:"普通",
     temperamentRoll:raceRandom(),
     flowFit: 1,
     trackBias:trackBiasFor(i+1,styles[i]),
@@ -514,6 +515,7 @@ function update(dt, clockDt) {
     // 高いほど前へ行きやすいが、終盤の走力そのものは直接強化しない。
     const dashStage = Math.max(0, 1 - normalized / Math.min(.30, 400 / TOTAL));
     const dashFactor = 1 + (h.dash - 540) * .00018 * dashStage;
+    const startFactor=h.startReaction==="好スタート"&&normalized<.08?1.014:1;
     const temperamentFactor=
       h.temperamentTrouble==="出遅れ"&&normalized<.22?.955:
       h.temperamentTrouble==="物見"&&normalized>.25&&normalized<.72?.978:
@@ -530,7 +532,7 @@ function update(dt, clockDt) {
     const flowStage = Math.max(0, Math.min(1, (normalized - .38) / .42));
     const flowFactor = 1 + (h.flowFit - 1) * flowStage;
     let velocity = BASE_PROGRESS_PER_MS * paceControl * abilityFactor * eliteFactor * goingFactor * h.condition * h.trackBias *
-      styleFactor * dashFactor * temperamentFactor * tackFactor * curvePenalty * slopePenalty * kick * noise * troubleFactor * flowFactor;
+      styleFactor * dashFactor * startFactor * temperamentFactor * tackFactor * curvePenalty * slopePenalty * kick * noise * troubleFactor * flowFactor;
 
     // 3～4コーナーまでは全馬が内寄り。差し・追込は勝負所で外へ出すか、
     // 内を突いて直線勝負を選ぶ。逃げ馬は最内を維持する。
@@ -832,13 +834,19 @@ function drawVisionGoalBoard(x,y){
 }
 
 function drawVisionGate(vx,camY,vw,camH){
-  const gateX=vx+vw-64,gateY=camY+7,gateW=49,gateH=41;
+  const gateX=vx+vw-49,gateY=camY+7,gateW=34,gateH=41;
   ctx.fillStyle="#f5f5ed";ctx.fillRect(gateX,gateY,gateW,gateH);
   ctx.strokeStyle="#7f918f";ctx.lineWidth=3;ctx.strokeRect(gateX,gateY,gateW,gateH);
   ctx.fillStyle="#d4ddd8";ctx.fillRect(gateX+7,gateY+5,5,gateH-10);
   const entryOrder=[1,3,5,7,2,4,6,8],step=1000;
   const sequenceIndex=Math.min(7,Math.floor(preRaceClock/step));
   const focus=horses.find(h=>h.id===entryOrder[sequenceIndex]);
+  const enteredIds=new Set(entryOrder.slice(0,sequenceIndex));
+  horses.filter(h=>h.id!==focus?.id&&!enteredIds.has(h.id)).forEach((h,i)=>{
+    const angle=preRaceClock*.0022+i*Math.PI*2/7;
+    const circleX=gateX-58+Math.cos(angle)*30,circleY=camY+30+Math.sin(angle)*12;
+    drawVisionCandidateHorse(circleX,circleY,h,.23);
+  });
   const local=preRaceClock-sequenceIndex*step;
   const difficult=focus?.id===gateDifficultHorseId;
   let travel=Math.max(0,Math.min(1,local/850));
@@ -854,12 +862,28 @@ function drawVisionGate(vx,camY,vw,camH){
 }
 
 function drawVisionGateBreak(vx,camY,vw,camH){
-  const gateX=vx+62,gateY=camY+7,gateW=64,gateH=41;
+  const burst=Math.max(0,Math.min(1,(preRaceClock-360)/500));
+  const gateX=vx+178-burst*155,gateY=camY+7,gateW=38,gateH=41;
   ctx.fillStyle="#f5f5ed";ctx.fillRect(gateX,gateY,gateW,gateH);
   ctx.strokeStyle="#7f918f";ctx.lineWidth=3;ctx.strokeRect(gateX,gateY,gateW,gateH);
-  const burst=Math.max(0,Math.min(1,(preRaceClock-360)/500));
-  if(burst>0)horses.forEach((h,i)=>drawVisionCandidateHorse(gateX+gateW-4+burst*(vw-gateW-65)+(i%3)*5,camY+18+(i%4)*8,h,.27));
+  if(burst>0)horses.forEach((h,i)=>drawVisionCandidateHorse(vx+220+burst*32+(i%3)*5,camY+18+(i%4)*8,h,.27));
+  if(burst>0){
+    const notable=horses.filter(h=>h.startReaction!=="普通").map(h=>`${h.id}番 ${h.startReaction}`).join("　");
+    ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(notable||"各馬そろったスタート",vx+vw/2,camY+10);
+  }
   if(burst===0){ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText("8番が入り、全馬収容",vx+vw/2,camY+10)}
+}
+
+function assignStartReactions(){
+  horses.forEach(h=>{
+    const lowDash=Math.max(0,(560-h.dash)/560),lowGate=Math.max(0,(620-h.gateSkill)/620),timidness=Math.max(0,(45-h.temperamentValue)/45);
+    const hoodReduction=h.equippedTack==="hood"?.42:1;
+    const lateRisk=Math.min(.14,(.012+lowDash*.045+lowGate*.065+timidness*.035)*hoodReduction);
+    const roll=raceRandom(),sharpChance=Math.max(.035,Math.min(.18,.055+(h.dash+h.gateSkill-1100)*.00012));
+    h.startReaction=roll<lateRisk?"出遅れ":roll>1-sharpChance?"好スタート":"普通";
+    h.gateChecked=true;
+    if(h.startReaction==="出遅れ")h.temperamentTrouble="出遅れ";
+  });
 }
 
 function drawHorizontalTrack(){
@@ -983,6 +1007,7 @@ function drawTrackV2(){
   if(state==="parade"){
     ctx.fillStyle="#d8d0b9";ctx.fillRect(vx+5,camY+4,30,camH-8);
     ctx.fillStyle="#342d28";ctx.fillRect(vx+10,camY+13,20,camH-17);
+    ctx.fillStyle="#f5f5ed";ctx.fillRect(vx+vw-49,camY+7,34,41);ctx.strokeStyle="#7f918f";ctx.lineWidth=3;ctx.strokeRect(vx+vw-49,camY+7,34,41);
     ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";ctx.fillText("本馬場入場",vx+39,camY+10);
     horses.slice(0,6).forEach((h,i)=>{
       const travel=Math.max(0,Math.min(1,(preRaceClock-i*230)/1250));
@@ -1345,14 +1370,17 @@ startButton.addEventListener("click", () => {
         : "各馬、順調にゲートへ。全馬ゲートイン、場内が静まり返ります。");
       gateStartTimer=setTimeout(()=>{
         if(state!=="gates")return;
+        assignStartReactions();
         state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
         setCommentary("全馬、枠内に収まりました。スタートを待ちます。");
         gateStartTimer=setTimeout(()=>{
           if(state!=="gateBreak")return;
           state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
-        setCommentary(racePace.escapeCount >= 2
-          ? `ゲートオープン！ 逃げ${racePace.escapeCount}頭が先手を争います！`
-          : "ゲートオープン！ 逃げ馬がすんなり先頭へ立ちました。");
+          const late=horses.filter(h=>h.startReaction==="出遅れ"),sharp=horses.filter(h=>h.startReaction==="好スタート");
+          setCommentary(late.length
+            ? `スタート！ ${late.map(h=>`${h.id}番${h.name}`).join("、")}は出遅れ！`
+            : sharp.length?`スタート！ ${sharp.map(h=>`${h.id}番${h.name}`).join("、")}が好スタート！`
+            : racePace.escapeCount>=2?`スタート！ 逃げ${racePace.escapeCount}頭が先手を争います！`:"スタート！ 各馬そろった飛び出しです。");
           lastTime=0;
         },900);
       },8100);
