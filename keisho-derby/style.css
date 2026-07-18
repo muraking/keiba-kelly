@@ -401,7 +401,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .training-popup-stage.dirtSolo .popup-ground,.training-popup-stage.dirtPair .popup-ground { background:#a8764d; border-color:#d4aa75; }
 .training-popup-stage.hillSolo .popup-ground,.training-popup-stage.hillPair .popup-ground { height:67px; background:#986b42; clip-path:polygon(0 100%,100% 15%,100% 100%); }
 .training-popup-stage.pool .popup-ground { height:52px; background:repeating-linear-gradient(0deg,#369bc9 0 7px,#73d0e9 7px 13px); border-color:#e9f7ef; }
-.popup-horse { --horse-color:var(--popup-horse-color); position:absolute; left:12%; top:39px; margin:0; transform:scale(.72); animation:popupHorseRun 1.05s steps(8) infinite; }
+.popup-horse { --horse-color:var(--popup-horse-color); position:absolute; left:12%; top:39px; margin:0; transform:scale(.72); animation:popupHorseRun 1.45s steps(12) 1 forwards; }
 .popup-horse .candidate-leg.front { animation:popupLeg .24s steps(2) infinite; }
 .popup-horse .candidate-leg.back { animation:popupLeg .24s steps(2) infinite reverse; }
 .popup-horse-b { display:none; --horse-color:#754629; left:48%; top:25px; animation-delay:-.25s; }
@@ -423,9 +423,9 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .training-popup-stage.rest .popup-horse { left:38%; top:42px; animation:popupRest 1.2s steps(3) infinite; }
 .popup-gate { display:none; position:absolute; right:18px; bottom:29px; z-index:2; width:67px; height:72px; border:6px solid #dce5df; background:repeating-linear-gradient(90deg,#617978 0 7px,#bfcac5 7px 11px); box-sizing:border-box; color:#fff; font:bold 9px sans-serif; }
 .training-popup-stage.gate .popup-gate { display:block; }
-.training-popup-stage.gate .popup-horse { top:38px; animation:popupGateDash 1.15s steps(8) infinite; }
+.training-popup-stage.gate .popup-horse { top:38px; animation:popupGateDash 1.65s steps(12) 1 forwards; }
 @keyframes trainingPopupIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
-@keyframes popupHorseRun { 0%{left:-15%;transform:scale(.72)} 100%{left:90%;transform:scale(.72)} }
+@keyframes popupHorseRun { 0%{left:-18%;transform:scale(.72)} 88%,100%{left:105%;transform:scale(.72)} }
 @keyframes popupPairRun {
   0%{left:-25%;transform:scale(.72)}
   88%,100%{left:105%;transform:scale(.72)}
@@ -436,7 +436,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   0%{left:-18%;top:62px;transform:scale(.72)}
   88%,100%{left:105%;top:10px;transform:scale(.72)}
 }
-@keyframes popupGateDash { 0%,35%{left:62%;transform:scale(.72)} 100%{left:-20%;transform:scaleX(-.72) scaleY(.72)} }
+@keyframes popupGateDash { 0%{left:-18%;transform:scale(.72)} 30%{left:22%;transform:scale(.72)} 88%,100%{left:105%;transform:scale(.72)} }
 @keyframes popupRest { 0%,100%{transform:scale(.72) rotate(0)} 50%{transform:scale(.72) rotate(3deg) translateY(3px)} }
 @keyframes cloudDrift { from{translate:-95px 0} to{translate:390px 0} }
 .stats {
