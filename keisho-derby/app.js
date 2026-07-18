@@ -884,7 +884,7 @@ function renderHistory(){
         <div class="history-place"><b>★</b></div>
         <div><small>${x.course}　${x.weather}／${x.going}</small><h3>${x.raceName}</h3>
         <p>勝ちタイム ${x.winnerTime}　勝ち馬 ${x.order?.[0]?.name||"--"}</p></div>
-        <button class="favorite-play" data-favorite-replay="${index}">再生</button>
+        <div class="favorite-actions"><button class="favorite-play" data-favorite-replay="${index}">再生</button><button class="favorite-delete" data-favorite-delete="${index}">削除</button></div>
       </article>`).join("")}`
     : "";
   const history=game.raceHistory.length
@@ -905,6 +905,14 @@ function replayFavoriteRace(index){
   document.querySelector("#raceNameTitle").textContent=`${saved.raceName}・保存リプレイ`;
   showScreen("raceScreen");
   dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:setup}));
+}
+function deleteFavoriteRace(index){
+  const saved=game.favoriteRaces[index];
+  if(!saved)return;
+  if(!confirm(`「${saved.raceName}」をお気に入りから削除しますか？`))return;
+  game.favoriteRaces.splice(index,1);
+  saveGame();
+  renderHistory();
 }
 function renderGallery(){
   refreshGalleryUnlocks();
@@ -1462,8 +1470,10 @@ document.querySelector("#stableBuilding").onclick=openStableEquipment;
 document.querySelector("#stableBuilding").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openStableEquipment()}};
 document.querySelector("#historyButton").onclick=()=>{renderHistory();showScreen("historyScreen")};
 document.querySelector("#historyList").onclick=e=>{
-  const button=e.target.closest("[data-favorite-replay]");
-  if(button)replayFavoriteRace(Number(button.dataset.favoriteReplay));
+  const deleteButton=e.target.closest("[data-favorite-delete]");
+  if(deleteButton){deleteFavoriteRace(Number(deleteButton.dataset.favoriteDelete));return}
+  const replayButton=e.target.closest("[data-favorite-replay]");
+  if(replayButton)replayFavoriteRace(Number(replayButton.dataset.favoriteReplay));
 };
 document.querySelector("#galleryButton").onclick=()=>{renderGallery();showScreen("galleryScreen")};
 const openHorseDetail=()=>{renderHorseDetail();showScreen("horseDetailScreen")};

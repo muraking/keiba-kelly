@@ -751,6 +751,8 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .history-card p,.history-card small { margin:0; color:#657369; font-size:8px; }
 .history-card>strong { color:#9a6822; font-size:9px; text-align:right; }
 .history-card .favorite-play { min-height:32px; padding:5px; background:#9a7023; color:#fff8c6; border-color:#5c4219; font-size:9px; }
+.favorite-actions { display:grid; gap:5px; }
+.history-card .favorite-delete { min-height:28px; padding:4px; background:#f5d7ca; color:#722c22; border-color:#8f4638; font-size:8px; }
 .empty-archive { padding:28px 10px; text-align:center; color:#66766b; }
 .gallery-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; padding:4px 12px 12px; }
 .gallery-card { padding:8px; border:3px solid #8c7441; background:#fff9df; text-align:center; }
