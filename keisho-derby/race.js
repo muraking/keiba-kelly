@@ -858,6 +858,11 @@ function drawVisionGate(vx,camY,vw,camH){
   });
   const local=preRaceClock-sequenceIndex*step;
   const difficult=focus?.id===gateDifficultHorseId;
+  const refusalKey=`gate-refusal-${focus?.id||0}`;
+  if(difficult&&local>=290&&local<820&&!commentaryStamp.has(refusalKey)){
+    commentaryStamp.add(refusalKey);
+    setCommentary(`${focus.id}番${focus.name}、ゲート入りを嫌がっています。係員がゆっくりと促します。`);
+  }
   let travel=Math.max(0,Math.min(1,local/850));
   if(difficult){
     if(travel>.34&&travel<.74)travel=.34+Math.abs(Math.sin(local/55))*.035;
@@ -1379,9 +1384,7 @@ startButton.addEventListener("click", () => {
       state="gates";preRaceClock=0;phaseEl.textContent="全馬ゲートイン";
       const difficultHorse=horses.find(h=>(h.temperamentValue>=65||h.temperamentValue<=35)&&h.temperamentRoll<.58);
       gateDifficultHorseId=difficultHorse?.id??null;
-      setCommentary(difficultHorse
-        ? `${difficultHorse.id}番${difficultHorse.name}、ゲート入りを嫌がっています。係員に促され、ゆっくりと収まりました。`
-        : "各馬、順調にゲートへ。全馬ゲートイン、場内が静まり返ります。");
+      setCommentary("各馬、順番にゲートへ向かいます。");
       gateStartTimer=setTimeout(()=>{
         if(state!=="gates")return;
         assignStartReactions();
