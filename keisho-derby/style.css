@@ -420,7 +420,9 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .training-popup-stage.hillPair .popup-horse-a { top:48px;animation-delay:.08s; }
 .training-popup-stage.hillPair .popup-horse-b { top:22px;animation-delay:0s; }
 .training-popup-stage.pool .popup-horse { top:44px; animation:popupSwim .8s steps(3) infinite; }
-.training-popup-stage.hillSolo .popup-horse,.training-popup-stage.hillPair .popup-horse { animation:popupHill 1.45s steps(12) 1 forwards; }
+.training-popup-stage.hillSolo .popup-horse { animation:popupHill 1.45s steps(12) 1 forwards; }
+.training-popup-stage.hillPair .popup-horse-a { animation:popupHillPairA 1.45s steps(12) 1 forwards; }
+.training-popup-stage.hillPair .popup-horse-b { animation:popupHillPairB 1.45s steps(12) 1 forwards; }
 .training-popup-stage.rest .popup-ground { background:#78a957; }
 .training-popup-stage.rest .popup-horse { left:38%; top:42px; animation:popupRest 1.2s steps(3) infinite; }
 .popup-gate { display:none; position:absolute; right:18px; bottom:29px; z-index:2; width:67px; height:72px; border:6px solid #dce5df; background:repeating-linear-gradient(90deg,#617978 0 7px,#bfcac5 7px 11px); box-sizing:border-box; color:#fff; font:bold 9px sans-serif; }
@@ -437,6 +439,14 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 @keyframes popupHill {
   0%{left:-18%;top:62px;transform:scale(.72)}
   88%,100%{left:105%;top:10px;transform:scale(.72)}
+}
+@keyframes popupHillPairA {
+  0%{left:-22%;top:62px;transform:scale(.72)}
+  88%,100%{left:105%;top:10px;transform:scale(.72)}
+}
+@keyframes popupHillPairB {
+  0%{left:-31%;top:42px;transform:scale(.68)}
+  88%,100%{left:96%;top:-7px;transform:scale(.68)}
 }
 @keyframes popupGateDash { 0%{left:-18%;transform:scale(.72)} 30%{left:22%;transform:scale(.72)} 88%,100%{left:105%;transform:scale(.72)} }
 @keyframes popupRest { 0%,100%{transform:scale(.72) rotate(0)} 50%{transform:scale(.72) rotate(3deg) translateY(3px)} }
