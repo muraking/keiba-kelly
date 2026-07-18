@@ -270,7 +270,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .pixel-cloud i:nth-child(1){left:0;top:11px;width:62px;height:12px}.pixel-cloud i:nth-child(2){left:14px;top:4px;width:23px;height:14px}.pixel-cloud i:nth-child(3){left:38px;top:7px;width:18px;height:12px}
 .cloud-one{top:24px;left:145px}.cloud-two{top:62px;left:-75px;transform:scale(.7);animation-duration:19s;animation-delay:-7s}
 .stable-weather-label { position:absolute;z-index:6;right:8px;top:75px;padding:3px 7px;border:2px solid #735327;background:#fff2bd;color:#49361f;font-size:9px;font-weight:900;box-shadow:2px 2px #5b4930; }
-.stable-precipitation { display:none;position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.65;background:repeating-linear-gradient(105deg,transparent 0 15px,#d9f2ff 16px 18px,transparent 19px 31px);background-size:42px 54px;animation:stableRain .55s steps(3) infinite; }
+.stable-precipitation { display:none;position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.32;background:repeating-linear-gradient(105deg,transparent 0 30px,#d9f2ff 31px 32px,transparent 33px 61px);background-size:74px 78px;animation:stableRain .9s steps(4) infinite; }
 .stable-scene.weather-cloudy { background:linear-gradient(#91aeb8 0 52%,#6f9a57 52% 72%,#4b803c 72%); }
 .stable-scene.weather-cloudy .sky-sun { opacity:.25;filter:grayscale(.4); }
 .stable-scene.weather-cloudy .pixel-cloud { filter:brightness(.82) grayscale(.35); }
@@ -278,7 +278,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .stable-scene.weather-rain .sky-sun,.stable-scene.weather-snow .sky-sun { display:none; }
 .stable-scene.weather-rain .pixel-cloud { filter:brightness(.62) grayscale(.65);transform:scale(1.2); }
 .stable-scene.weather-rain .stable-precipitation,.stable-scene.weather-snow .stable-precipitation { display:block; }
-.stable-scene.weather-heavy-rain .stable-precipitation { opacity:.9;animation-duration:.34s; }
+.stable-scene.weather-heavy-rain .stable-precipitation { opacity:.86;background:repeating-linear-gradient(105deg,transparent 0 15px,#d9f2ff 16px 18px,transparent 19px 31px);background-size:42px 54px;animation-duration:.34s; }
 .stable-scene.weather-snow { background:linear-gradient(#c7d2d5 0 52%,#aeb9a3 52% 72%,#879b80 72%); }
 .stable-scene.weather-snow .stable-precipitation { opacity:.85;background:radial-gradient(circle,#fff 0 2px,transparent 3px);background-size:25px 31px;animation-duration:1.8s; }
 @keyframes stableRain { to { background-position:-18px 54px; } }
