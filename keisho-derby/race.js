@@ -829,6 +829,24 @@ function drawVisionGoalBoard(x,y){
   }
 }
 
+function drawVisionGate(vx,camY,vw,camH){
+  const gateLeft=vx+67,stallW=34,gateY=camY+14;
+  ctx.fillStyle="#d9e1dc";ctx.fillRect(gateLeft,gateY-6,stallW*8,5);
+  horses.forEach((h,i)=>{
+    const stallX=gateLeft+i*stallW;
+    ctx.strokeStyle="#d9e1dc";ctx.lineWidth=2;ctx.strokeRect(stallX,gateY,stallW-2,camH-17);
+    ctx.fillStyle="#263b47";ctx.font="bold 7px sans-serif";ctx.textAlign="center";ctx.fillText(h.id,stallX+15,gateY+9);
+    const temperamental=(h.temperamentValue>=65||h.temperamentValue<=35)&&h.temperamentRoll<.58;
+    const delay=i*65+(temperamental?560:0);
+    let travel=Math.max(0,Math.min(1,(preRaceClock-delay)/720));
+    if(temperamental&&travel>.18&&travel<.62)travel=.18+Math.abs(Math.sin(preRaceClock/95))*.08;
+    const horseX=vx+12+travel*(stallX+14-(vx+12));
+    const horseY=gateY+22+(temperamental&&travel<.65?Math.sin(preRaceClock/70)*2:0);
+    if(travel>0)drawVisionCandidateHorse(horseX,horseY,h,.27);
+    if(temperamental&&travel<.7){ctx.fillStyle="#f0b05d";ctx.fillRect(horseX-10,horseY+5,3,7);ctx.fillStyle="#315b84";ctx.fillRect(horseX-11,horseY+11,5,5)}
+  });
+}
+
 function drawHorizontalTrack(){
   ctx.fillStyle="#2d7131";ctx.fillRect(0,0,LOGICAL_WIDTH,logicalHeight);
   const isDirt=raceSurface==="ダート";
@@ -955,17 +973,22 @@ function drawTrackV2(){
       const travel=Math.max(0,Math.min(1,(preRaceClock-i*230)/1250));
       if(travel>0)drawVisionCandidateHorse(vx+22+travel*(vw-70),camY+21+(i%3)*10,h,.38);
     });
+  }else if(state==="gates"){
+    drawVisionGate(vx,camY,vw,camH);
   }else{
     const visionDistances=horses.map(h=>raceDistance(h));
     const visionFront=Math.max(...visionDistances);
+    const leaderX=vx+vw*.57;
     [...horses].filter(h=>visionFront-raceDistance(h)<=105).sort((a,b)=>b.lane-a.lane).forEach(h=>{
       const distance=raceDistance(h);
-      const x=Math.round(vx+vw-30-(visionFront-distance)*2.65);
+      const x=Math.round(leaderX-(visionFront-distance)*2.25);
       const lane=Math.max(1,Math.min(8,h.lane));
       const y=Math.round(camY+11+(lane-1)*(camH-20)/7);
       drawVisionCandidateHorse(x,y,h,.38);
     });
-    drawVisionGoalBoard(vx+vw-22,camY+2);
+    const goalDistance=TOTAL-visionFront;
+    const goalX=leaderX+goalDistance*2.1;
+    if(goalX>vx-20&&goalX<vx+vw+20)drawVisionGoalBoard(goalX,camY+2);
   }
   // 馬名タグ：先頭と自分の馬（仕様：ビジョンに愛馬の馬番と馬名を表示）。
   // 全頭順位ボード：枠色チップ＋馬番＋馬名フル表示＋着差。
@@ -1298,7 +1321,10 @@ startButton.addEventListener("click", () => {
     gateStartTimer=setTimeout(()=>{
       if(state!=="parade")return;
       state="gates";preRaceClock=0;phaseEl.textContent="全馬ゲートイン";
-      setCommentary("全馬ゲートイン。場内が静まり返ります。まもなくスタートです。");
+      const difficultHorse=horses.find(h=>(h.temperamentValue>=65||h.temperamentValue<=35)&&h.temperamentRoll<.58);
+      setCommentary(difficultHorse
+        ? `${difficultHorse.id}番${difficultHorse.name}、ゲート入りを嫌がっています。係員に促され、ゆっくりと収まりました。`
+        : "各馬、順調にゲートへ。全馬ゲートイン、場内が静まり返ります。");
       gateStartTimer=setTimeout(()=>{
         if(state!=="gates")return;
         state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
