@@ -513,7 +513,7 @@ const training={
   turfPair:{label:"芝・併せ馬",fatigue:13,stats:{speed:1,guts:1,turf:1}},
   dirtSolo:{label:"ダート・単走",fatigue:8,stats:{stamina:1,dirt:1}},
   dirtPair:{label:"ダート・併せ馬",fatigue:15,stats:{power:1,guts:1,dirt:1}},
-  hillSolo:{label:"坂路単走",fatigue:11,stats:{power:2,stamina:1}},
+  hillSolo:{label:"坂路単走",fatigue:11,stats:{power:2,stamina:1,dash:.5}},
   hillPair:{label:"坂路併せ",fatigue:17,stats:{power:2,guts:1,dash:1}},
   pool:{label:"プール",fatigue:3,stats:{stamina:1}},
   gate:{label:"ゲート訓練",fatigue:5,stats:{dash:1}},
