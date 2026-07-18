@@ -1019,7 +1019,7 @@ function playAutoTrainingSequence(steps,modeName,finishText){
       stage.className="training-popup-stage rest auto-finish";
       playAutoTrainingSequence.timer=setTimeout(()=>{
         popup.classList.remove("show","auto-sequence");popup.setAttribute("aria-hidden","true");
-      },1200);
+      },1600);
       return;
     }
     const step=sequence[index];
@@ -1029,7 +1029,8 @@ function playAutoTrainingSequence(steps,modeName,finishText){
     void stage.offsetWidth;
     stage.className=`training-popup-stage ${step.type}`;
     index++;
-    playAutoTrainingSequence.timer=setTimeout(showNext,720);
+    // 走行・坂路・ゲート・森林の1回分の動きを最後まで見せてから切り替える。
+    playAutoTrainingSequence.timer=setTimeout(showNext,1900);
   };
   showNext();
 }
