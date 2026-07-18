@@ -595,7 +595,9 @@ function updateCommentary(remaining) {
   const currentOrder = order();
   const leader = currentOrder[0];
   const second = currentOrder[1];
+  const playerHorse = currentOrder.find(h=>h.player);
   const playerPosition = currentOrder.findIndex(h => h.player) + 1;
+  const playerCall = `${playerHorse.id}番${playerHorse.name}`;
   const marks = [
     [TOTAL-120, horses.find(h=>h.player)?.temperamentTrouble==="出遅れ"
       ? `${horses.find(h=>h.player).id}番${horses.find(h=>h.player).name}は出遅れ！ 後方からの競馬になります。`
@@ -603,16 +605,16 @@ function updateCommentary(remaining) {
     [TOTAL-300, racePace.escapeCount >= 2
       ? `逃げ争い！ ${racePace.escapeCount}頭が先手を主張、ペースが上がる！`
       : `${leader.name}が単騎で先頭へ。落ち着いた流れです。`],
-    [TOTAL-500, `序盤の隊列が決まりました。先頭${leader.name}、プレイヤー馬は${playerPosition}番手。`],
+    [TOTAL-500, `序盤の隊列が決まりました。先頭${leader.name}、${playerCall}は${playerPosition}番手。`],
     [Math.max(100, TOTAL-800), `コーナーへ。${leader.name}が先頭、${second.name}が差を詰めます。`],
-    [Math.max(100, TOTAL-1100), `中盤です。プレイヤー馬は現在${playerPosition}番手、まだ脚をためています。`],
+    [Math.max(100, TOTAL-1100), `中盤です。${playerCall}は現在${playerPosition}番手、まだ脚をためています。`],
     [Math.max(100, TOTAL-1400), `向正面、後方の馬も進出開始。先頭は${leader.name}。`],
     [900, `残り900m、各馬が仕掛けのタイミングをうかがいます。`],
     [700, `3コーナーから4コーナー！ ${second.name}が先頭へ迫る！`],
     [525, racePace.escapeCount >= 3
       ? `最後の直線！ 前が苦しい、外から差し・追込勢！`
       : `最後の直線！ 逃げ馬がまだ粘る、後続は届くか！`],
-    [400, `残り400！ 先頭${leader.name}、プレイヤー馬は${playerPosition}番手から追います！`],
+    [400, `残り400！ 先頭${leader.name}、${playerCall}は${playerPosition}番手から追います！`],
     [250, `残り250！ 横に広がって追い比べ！`],
     [150, `${leader.name}が先頭！ ${second.name}も並びかける！`],
     [80, `ゴール前！ 抜け出すのは${leader.id}番${leader.name}！`],
