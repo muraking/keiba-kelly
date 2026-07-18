@@ -1055,22 +1055,23 @@ function advanceWeek(rest=false){
   const notice=reserved&&reserved.week===game.week?` 予約していた「${reserved.name}」の開催週です。`:reserved&&reserved.week-game.week===1?` 来週は予約した「${reserved.name}」です。`:"";
   renderHome(`${notice} ${equipmentNotice} ${conditionTrendComment()}`.trim());
 }
-function autoTrainingChoice(mode,raceSoon=false){
+function autoTrainingChoice(mode,raceSoon=false,usage={},lastType=""){
   const weightDiff=game.weight-bestWeight();
   if(game.fatigue>=55)return "rest";
   if(raceSoon){
     if(game.fatigue>=30)return "rest";
-    if(game.condition<38)return "light";
+    if(game.condition<38&&(usage.light||0)<1)return "light";
     if(Math.abs(weightDiff)>8)return weightDiff>0?"hillSolo":"pool";
-    return game.trainingsUsed===0?"turfSolo":"gate";
+    return game.trainingsUsed===0?"turfSolo":(usage.gate||0)<2?"gate":"hillSolo";
   }
   if(mode==="safe"){
-    if(game.condition<35)return "light";
+    if(game.condition<35&&(usage.light||0)<1)return "light";
     if(game.fatigue>=35)return game.trainingsUsed===0?"pool":"rest";
     if(weightDiff>=10)return "dirtSolo";
     if(weightDiff<=-10)return "pool";
   }else if(mode==="balanced"){
-    if(game.condition<38)return game.trainingsUsed===0?"forest":"light";
+    const conditionCare=(usage.forest||0)+(usage.light||0);
+    if(game.condition<38&&conditionCare<2)return game.trainingsUsed===0?"forest":"light";
     if(game.fatigue>=45)return "rest";
     if(weightDiff>=12)return "hillSolo";
     if(weightDiff<=-4)return game.trainingsUsed===0?"pool":"rest";
@@ -1080,17 +1081,28 @@ function autoTrainingChoice(mode,raceSoon=false){
     if(weightDiff<=-8)return "rest";
   }
   const candidates=[
-    {stat:"speed",type:"turfSolo"},{stat:"dash",type:"gate"},{stat:"stamina",type:"dirtSolo"},{stat:"power",type:"hillSolo"},{stat:"guts",type:mode==="safe"?"turfSolo":"turfPair"}
-  ].sort((a,b)=>game[a.stat]-game[b.stat]);
-  if(mode==="balanced"&&weightDiff<=2&&candidates[0].type.includes("Pair"))return "turfSolo";
-  if(mode!=="safe"&&game.fatigue<22&&game.trainingsUsed===0&&candidates[0].stat==="guts")return "turfPair";
+    {stat:"speed",type:"turfSolo"},
+    {stat:"dash",type:(usage.gate||0)<2?"gate":"hillSolo"},
+    {stat:"stamina",type:game.fatigue>=28?"pool":"dirtSolo"},
+    {stat:"power",type:mode==="safe"?"hillSolo":"dirtPair"},
+    {stat:"guts",type:mode==="safe"?"dirtSolo":game.fatigue<24?"hillPair":"turfPair"},
+    {stat:"turf",type:"turfSolo"},
+    {stat:"dirt",type:"dirtSolo"},
+  ];
+  candidates.forEach(candidate=>{
+    const repeated=(usage[candidate.type]||0)*75+(candidate.type===lastType?55:0);
+    const hardPenalty=candidate.type.includes("Pair")&&game.fatigue>=30?80:0;
+    candidate.score=game[candidate.stat]+repeated+hardPenalty;
+  });
+  candidates.sort((a,b)=>a.score-b.score);
   return candidates[0].type;
 }
 function runAutoTraining(mode){
   if(game.injury)return renderHome("故障中はおまかせ調教を利用できません。復帰を待ちましょう。");
   const modeName=mode==="safe"?"安全":mode==="balanced"?"バランス":"レース仕上げ";
   const beforeStats=Object.fromEntries(["speed","dash","stamina","power","guts","turf","dirt"].map(stat=>[stat,game[stat]]));
-  const beforeEquipment=[...game.equipment],counts={},animationSteps=[],startWeek=game.week;
+  const beforeEquipment=[...game.equipment],counts={},typeUsage={},animationSteps=[],startWeek=game.week;
+  let lastAutoType="";
   let completed=0,stoppedForRace=false;
   autoTrainingActive=true;
   for(let i=0;i<4;i++){
@@ -1098,8 +1110,9 @@ function runAutoTraining(mode){
     if(reserved&&reserved.week===game.week){stoppedForRace=true;break}
     const raceSoon=!!reserved&&reserved.week===game.week+1;
     while(game.trainingsUsed<2&&!game.injury){
-      const type=autoTrainingChoice(mode,raceSoon),label=training[type]?.label||"休養";
+      const type=autoTrainingChoice(mode,raceSoon,typeUsage,lastAutoType),label=training[type]?.label||"休養";
       counts[label]=(counts[label]||0)+1;
+      typeUsage[type]=(typeUsage[type]||0)+1;lastAutoType=type;
       animationSteps.push({type,label});
       train(type);
     }
