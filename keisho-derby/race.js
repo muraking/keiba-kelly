@@ -122,6 +122,17 @@ const TRACK_PROFILES={
   "京都":{turn:"右",straight:404,elevation:4.3,straightShare:.32,roundness:1.04,facility:"pond",innerBias:.006,frontBias:.002},
   "阪神":{turn:"右",straight:474,elevation:2.4,straightShare:.35,roundness:1.10,facility:"terrace",innerBias:.004,frontBias:-.002},
   "小倉":{turn:"右",straight:293,elevation:3.0,straightShare:.29,roundness:.90,facility:"garden",innerBias:.014,frontBias:.013},
+  "門別":{turn:"右",straight:330,elevation:1.54,straightShare:.30,roundness:1.04,facility:"north",innerBias:.009,frontBias:.004},
+  "盛岡":{turn:"左",straight:300,elevation:4.4,straightShare:.30,roundness:1.06,facility:"hill",innerBias:.007,frontBias:.001},
+  "浦和":{turn:"左",straight:220,elevation:0,straightShare:.25,roundness:.78,facility:"city",innerBias:.018,frontBias:.019},
+  "船橋":{turn:"左",straight:308,elevation:0,straightShare:.30,roundness:.94,facility:"city",innerBias:.010,frontBias:.006},
+  "大井":{turn:"右",straight:386,elevation:0,straightShare:.32,roundness:1.04,facility:"city",innerBias:.005,frontBias:-.002},
+  "川崎":{turn:"左",straight:300,elevation:0,straightShare:.29,roundness:.80,facility:"city",innerBias:.016,frontBias:.016},
+  "金沢":{turn:"右",straight:236,elevation:0,straightShare:.25,roundness:.79,facility:"garden",innerBias:.017,frontBias:.018},
+  "名古屋":{turn:"右",straight:240,elevation:0,straightShare:.26,roundness:.77,facility:"city",innerBias:.017,frontBias:.017},
+  "園田":{turn:"右",straight:213,elevation:1.23,straightShare:.24,roundness:.72,facility:"city",innerBias:.020,frontBias:.021},
+  "高知":{turn:"右",straight:200,elevation:1.58,straightShare:.24,roundness:.75,facility:"hill",innerBias:-.004,frontBias:.018},
+  "佐賀":{turn:"右",straight:200,elevation:1.0,straightShare:.24,roundness:.75,facility:"garden",innerBias:.018,frontBias:.019},
 };
 function trackProfile(){return TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"]}
 // JRA course lap lengths (metres). Turf uses the rail/course normally used by
@@ -137,6 +148,17 @@ const COURSE_LAPS = {
   "京都": { "芝": 1894.3, "ダート": 1607.6 },
   "阪神": { "芝": 2089.0, "ダート": 1517.6 },
   "小倉": { "芝": 1615.1, "ダート": 1445.4 },
+  "門別": { "ダート": 1600 },
+  "盛岡": { "芝": 1400, "ダート": 1600 },
+  "浦和": { "ダート": 1200 },
+  "船橋": { "ダート": 1400 },
+  "大井": { "ダート": 1600 },
+  "川崎": { "ダート": 1200 },
+  "金沢": { "ダート": 1200 },
+  "名古屋": { "ダート": 1180 },
+  "園田": { "ダート": 1051 },
+  "高知": { "ダート": 1100 },
+  "佐賀": { "ダート": 1100 },
 };
 function configureCourseDistance(){
   const laps=COURSE_LAPS[currentRaceVenue]||COURSE_LAPS["東京"];
@@ -1155,6 +1177,17 @@ function drawTrack() {
   if(profile.facility==="pond"){ctx.fillStyle="#4d9dc1";ctx.fillRect(103,287,58,34)}
   if(profile.facility==="long"){ctx.fillStyle="#bd9b70";ctx.fillRect(84,146,192,10)}
   if(profile.facility==="garden"){ctx.fillStyle="#d97c93";for(let x=102;x<250;x+=18)ctx.fillRect(x,315,8,8)}
+  if(["門別","盛岡","浦和","船橋","大井","川崎","金沢","名古屋","園田","高知","佐賀"].includes(currentRaceVenue)){
+    ctx.fillStyle=currentRaceVenue==="盛岡"?"#416b39":"#d7c8a1";
+    ctx.fillRect(126,292,108,22);
+    ctx.fillStyle="#263d32";ctx.font="bold 11px sans-serif";ctx.textAlign="center";
+    ctx.fillText(currentRaceVenue+"競馬場",180,307);
+    if(["大井","川崎","船橋","浦和"].includes(currentRaceVenue)){
+      ctx.fillStyle="#87989e";ctx.fillRect(112,320,136,13);ctx.fillStyle="#cfd8d8";for(let x=116;x<244;x+=14)ctx.fillRect(x,322,8,7);
+    }
+    if(currentRaceVenue==="門別"){ctx.fillStyle="#efe8d2";ctx.fillRect(105,321,52,14);ctx.fillRect(203,321,52,14)}
+    if(currentRaceVenue==="金沢"){ctx.fillStyle="#e8bb45";ctx.fillRect(151,322,58,12);ctx.fillStyle="#b84942";ctx.fillRect(173,315,14,26)}
+  }
   // 長いホーム直線沿いのスタンド。走路より外へ置き、馬とは重ねない。
   ctx.fillStyle="#c9d3d3";ctx.fillRect(352,112,7,266);
   ctx.fillStyle="#506574";

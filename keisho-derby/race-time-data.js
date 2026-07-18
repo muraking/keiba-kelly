@@ -13,6 +13,11 @@ window.RACE_TIME_MASTER={
     "京都":{turfFactor:1.002,dirtFactor:1.005},
     "阪神":{turfFactor:1.006,dirtFactor:1.007},
     "小倉":{turfFactor:1.004,dirtFactor:1.006},
+    "門別":{turfFactor:1,dirtFactor:1.014},"盛岡":{turfFactor:1.012,dirtFactor:1.010},
+    "浦和":{turfFactor:1,dirtFactor:1.020},"船橋":{turfFactor:1,dirtFactor:1.010},
+    "大井":{turfFactor:1,dirtFactor:1.006},"川崎":{turfFactor:1,dirtFactor:1.015},
+    "金沢":{turfFactor:1,dirtFactor:1.018},"名古屋":{turfFactor:1,dirtFactor:1.017},
+    "園田":{turfFactor:1,dirtFactor:1.022},"高知":{turfFactor:1,dirtFactor:1.025},"佐賀":{turfFactor:1,dirtFactor:1.020},
   },
   // key: 競馬場-馬場-距離-年齢区分。値はミリ秒。
   records:{

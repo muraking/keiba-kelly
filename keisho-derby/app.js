@@ -138,6 +138,44 @@ for(let week=1;week<=240;week++){
       baseTime:Math.round(basePer1000*distance/1000),prize,difficulty,condition});
   }));
 }
+const OFFICIAL_GRADE_LABEL={G1:"GⅠ",G2:"GⅡ",G3:"GⅢ",Jpn1:"JpnⅠ",Jpn2:"JpnⅡ",Jpn3:"JpnⅢ"};
+const OFFICIAL_PRIZE={G1:12000,G2:6700,G3:4100,Jpn1:8000,Jpn2:4000,Jpn3:2500};
+const OFFICIAL_DIFFICULTY={G1:96,G2:91,G3:86,Jpn1:95,Jpn2:90,Jpn3:85};
+function officialWeek(date,year){
+  const [,month,day]=date.split("-").map(Number),days=new Date(2026,month,0).getDate();
+  return (year-1)*48+(month-1)*4+Math.min(4,Math.max(1,Math.ceil(day/days*4)));
+}
+function officialRaceAgeEligible(race,g){
+  const age=horseAge(),text=race.age||"";
+  if(text.includes("2歳")&&age!==2)return false;
+  if(text.includes("3歳")&&!text.includes("以上")&&age!==3)return false;
+  if(text.includes("4歳以上")&&age<4)return false;
+  if(text.includes("3歳以上")&&age<3)return false;
+  if(text.includes("牝")&&g.candidate?.sex!=="牝馬")return false;
+  return true;
+}
+function narAgeText(name){
+  const female=/クイーン賞|兵庫女王|エンプレス|関東オークス|スパーキングレディー|ブリーダーズゴールド|マリーンカップ|レディスプレリュード|エーデルワイス|JBCレディス/.test(name);
+  if(/2歳|エーデルワイス|兵庫ジュニア|全日本2歳/.test(name))return female?"2歳牝":"2歳";
+  if(/ブルーバード|雲取|京浜盃|羽田盃|東京ダービー|兵庫チャンピオン|関東オークス|不来方|マリーンカップ|ジャパンダートクラシック|北海道スプリント/.test(name))return female?"3歳牝":"3歳";
+  return female?"3歳以上牝":"3歳以上";
+}
+function addOfficialRaces(source,prefix){
+  for(let year=1;year<=5;year++)source.forEach((raw,index)=>{
+    const official={...raw,age:raw.age||narAgeText(raw.name)};
+    const normalizedClass=raw.grade.endsWith("1")?"G1":raw.grade.endsWith("2")?"G2":"G3";
+    const classThreshold=normalizedClass==="G1"?1600:normalizedClass==="G2"?1000:400;
+    raceCalendar.push({id:`${prefix}-${year}-${index}`,program:true,official:true,officialDate:raw.date,number:11,
+      week:officialWeek(raw.date,year),name:`${raw.name} ${OFFICIAL_GRADE_LABEL[raw.grade]}`,raceClass:normalizedClass,
+      course:`${raw.venue} ${raw.surface}${raw.distance}m`,surface:raw.surface,distance:raw.distance,
+      baseTime:Math.round((raw.surface==="芝"?60000:63000)*raw.distance/1000),prize:OFFICIAL_PRIZE[raw.grade],difficulty:OFFICIAL_DIFFICULTY[raw.grade],
+      condition:g=>officialRaceAgeEligible(official,g)&&!g.maiden&&g.classMoney>=classThreshold});
+  });
+}
+// 手作業の仮重賞は公式2026日程へ置き換える。
+for(let i=raceCalendar.length-1;i>=0;i--)if(!raceCalendar[i].program&&["G1","G2","G3"].includes(raceCalendar[i].raceClass))raceCalendar.splice(i,1);
+addOfficialRaces(window.OFFICIAL_JRA_GRADED_2026||[],"jra26");
+addOfficialRaces(window.OFFICIAL_NAR_GRADED_2026||[],"nar26");
 const CLASS_TIME_ADJUST={
   "新馬":{芝:2.6,ダート:3.3},
   "未勝利":{芝:2.2,ダート:3.0},
@@ -1025,7 +1063,7 @@ function renderRaces(){
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
     const arrived=r.week===game.week,debutSeasonOpen=game.week>=21,eligible=arrived&&debutSeasonOpen&&r.condition(game),surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
     const raceYear=Math.floor((r.week-1)/48)+1,raceYearWeek=(r.week-1)%48;
-    const date=`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
+    const officialDate=r.officialDate?`${Number(r.officialDate.slice(5,7))}月${Number(r.officialDate.slice(8,10))}日（2026公式）`:`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
     let reason="出走条件外";
     if(eligible)reason="出走する";
     else if(!arrived)reason="未来の予定";
@@ -1038,7 +1076,7 @@ function renderRaces(){
     else reason="獲得賞金不足";
     const reserved=game.reservedRaceId===r.id;
     const wonBefore=game.raceHistory.some(x=>x.raceName===r.name&&x.place===1);
-    return `<article class="race-choice ${eligible?"":"locked"} ${reserved?"reserved":""}"><b class="race-number">${r.number||11}R</b><div><small>${date}　${r.course}${reserved?"　★出走予定":""}</small>
+    return `<article class="race-choice ${eligible?"":"locked"} ${reserved?"reserved":""}"><b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
     <h3>${wonBefore?"🏆 ":""}${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p></div>
     <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${!arrived?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
   }).join("")||`<p class="empty-races">この開催場の番組はありません。</p>`;
@@ -1062,8 +1100,12 @@ function seededRaceRandom(race,salt=0){
 }
 const VENUE_WEATHER_REGION={
   "札幌":"north","函館":"north",
+  "門別":"north","盛岡":"north",
   "福島":"east","新潟":"east",
   "東京":"kanto","中山":"kanto",
+  "浦和":"kanto","船橋":"kanto","大井":"kanto","川崎":"kanto",
+  "金沢":"central","名古屋":"central",
+  "園田":"kansai","高知":"west","佐賀":"west",
   "中京":"central","京都":"kansai","阪神":"kansai","小倉":"west"
 };
 const MONTHLY_RAIN_CHANCE={
@@ -1127,7 +1169,8 @@ function updateStableWeather(){
 }
 function prepareRace(race){
   if(!race)return;
-  document.querySelector("#raceCourseTitle").textContent=`${race.course}・左`;
+  const leftTracks=new Set(["東京","中京","新潟","盛岡","浦和","船橋","川崎"]);
+  document.querySelector("#raceCourseTitle").textContent=`${race.course}・${leftTracks.has(raceVenue(race))?"左":"右"}`;
   document.querySelector("#raceNameTitle").textContent=race.name;
   document.querySelector("#newspaperDate").textContent=weekLabel();
   document.querySelector("#newspaperCourse").textContent=race.course;
