@@ -201,6 +201,7 @@ function finishMarkerVisible(){
   // 長距離戦では途中のゴール板をゴールと誤認しないよう、最終周に入ってから表示する。
   return raceDistance(leader)>=Math.max(0,TOTAL-LAP)-2;
 }
+function startMarkerVisible(){return ["ready","parade","gates","gateBreak"].includes(state)}
 function trackBiasFor(number,style){
   const profile=trackProfile();
   if(currentRaceVenue==="新潟"&&raceSurface==="芝"&&TOTAL===1000){
@@ -992,7 +993,7 @@ function drawHorizontalTrack(){
   visionOrder.slice(0,4).forEach((h,i)=>{const y=164+i*9;ctx.fillStyle=h.color;ctx.fillRect(103,y-7,9,9);ctx.fillStyle="#fff";ctx.font="bold 7px sans-serif";ctx.textAlign="left";ctx.fillText(`${i+1}位`,116,y);ctx.fillStyle="#26342c";ctx.fillRect(145,y-7,108,6);ctx.fillStyle=h.stamina<.3?"#df4b3f":"#53c96b";ctx.fillRect(145,y-7,108*Math.max(.02,h.stamina),6)});
   ctx.fillStyle="#ffe46d";ctx.font="bold 8px sans-serif";ctx.textAlign="left";ctx.fillText("横向きレイアウト TEST",8,14);
   trace(8.7,"#fffdf0",3);
-  drawMarker(START_PROGRESS,"#35dc5c","START");if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
+  if(startMarkerVisible())drawMarker(START_PROGRESS,"#35dc5c","START");if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 }
 
 // レイアウトV2用の着差表示。ゴール後は時計差、道中は実距離差から換算する。
@@ -1060,7 +1061,7 @@ function drawTrackV2(){
   }
   ctx.fillStyle="#9fd6a0";ctx.font="bold 9px sans-serif";ctx.textAlign="center";
   trace(8.7,"#fffdf0",2);
-  drawMarker(START_PROGRESS,"#35dc5c","START");
+  if(startMarkerVisible())drawMarker(START_PROGRESS,"#35dc5c","START");
   if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 
   // コース直下の実況帯（最新4行）。
@@ -1311,7 +1312,7 @@ function drawTrack() {
     ctx.fillStyle="#fffdf0";ctx.fillRect(Math.round(post.x-1),Math.round(post.y-1),3,3);
   }
 
-  drawMarker(START_PROGRESS, "#35dc5c", "START");
+  if(startMarkerVisible())drawMarker(START_PROGRESS, "#35dc5c", "START");
   if(finishMarkerVisible())drawMarker(FINISH_PROGRESS % 1, "#ec3d35", "GOAL");
   ctx.fillStyle = "#ffe068";
   ctx.font = "bold 9px sans-serif";
