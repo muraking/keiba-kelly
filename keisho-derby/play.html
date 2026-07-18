@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.6.5</title>
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.6.6</title>
   <link rel="stylesheet" href="style.css?v=20260718-45">
 </head>
 <body class="tester-build">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.6.5</b>
+        <b class="build-version">Ver. 0.6.6</b>
       </div>
     </section>
 
@@ -284,7 +284,6 @@
           <span id="weatherDisplay">天気 --　馬場 --</span>
         </div>
       </header>
-      <button id="gateSkipButton" class="gate-skip-button" hidden>ゲート演出をスキップして発走へ</button>
       <section class="course-wrap">
         <canvas id="raceCanvas" width="720" height="1000" aria-label="東京競馬場を走る8頭のドット馬"></canvas>
         <div id="winnerPopup" class="winner-popup" aria-hidden="true">
@@ -321,6 +320,7 @@
           <div id="elevationHorses"></div><span>高低差・全馬位置</span>
         </div>
       </section>
+      <button id="gateSkipButton" class="gate-skip-button" hidden>ゲート演出をスキップして発走へ</button>
       <div class="commentary race-commentary-wide" aria-live="polite">
         <div class="announcer" aria-label="実況アナウンサー"><i class="ann-hair"></i><i class="ann-face"></i><i class="ann-body"></i><i class="ann-mic"></i></div><p id="commentary">各馬、ゲートに入りました。</p>
       </div>
