@@ -836,21 +836,21 @@ function drawVisionGate(vx,camY,vw,camH){
   ctx.fillStyle="#f5f5ed";ctx.fillRect(gateX,gateY,gateW,gateH);
   ctx.strokeStyle="#7f918f";ctx.lineWidth=3;ctx.strokeRect(gateX,gateY,gateW,gateH);
   ctx.fillStyle="#d4ddd8";ctx.fillRect(gateX+7,gateY+5,5,gateH-10);
-  const entryOrder=[1,3,5,7,2,4,6,8],step=600;
+  const entryOrder=[1,3,5,7,2,4,6,8],step=1000;
   const sequenceIndex=Math.min(7,Math.floor(preRaceClock/step));
   const focus=horses.find(h=>h.id===entryOrder[sequenceIndex]);
   const local=preRaceClock-sequenceIndex*step;
   const difficult=focus?.id===gateDifficultHorseId;
-  let travel=Math.max(0,Math.min(1,local/520));
+  let travel=Math.max(0,Math.min(1,local/850));
   if(difficult){
     if(travel>.34&&travel<.74)travel=.34+Math.abs(Math.sin(local/55))*.035;
     else if(travel>=.74)travel=.34+(travel-.74)/.26*.66;
   }
   const horseX=vx+34+travel*(gateX-vx-45),horseY=camY+35+(difficult&&travel<.8?Math.sin(local/60)*2:0);
-  if(focus&&local<555)drawVisionCandidateHorse(horseX,horseY,focus,.42);
-  if(difficult&&local<500){ctx.fillStyle="#efb05d";ctx.fillRect(horseX-18,horseY+4,4,8);ctx.fillStyle="#315b84";ctx.fillRect(horseX-19,horseY+11,7,6)}
+  if(focus&&local<900)drawVisionCandidateHorse(horseX,horseY,focus,.42);
+  if(difficult&&local<820){ctx.fillStyle="#efb05d";ctx.fillRect(horseX-18,horseY+4,4,8);ctx.fillStyle="#315b84";ctx.fillRect(horseX-19,horseY+11,7,6)}
   ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";
-  ctx.fillText(difficult&&local<500?`${focus.id}番、ゲート入りを嫌がる`:`${focus?.id||8}番、枠入り`,vx+8,camY+9);
+  ctx.fillText(difficult&&local<820?`${focus.id}番、ゲート入りを嫌がる`:`${focus?.id||8}番、枠入り`,vx+8,camY+9);
 }
 
 function drawVisionGateBreak(vx,camY,vw,camH){
@@ -1355,7 +1355,7 @@ startButton.addEventListener("click", () => {
           : "ゲートオープン！ 逃げ馬がすんなり先頭へ立ちました。");
           lastTime=0;
         },900);
-      },5000);
+      },8100);
     },2400);
   }
 });
