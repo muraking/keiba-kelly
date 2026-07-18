@@ -61,6 +61,7 @@ let multiplier = 1;
 let lastTime = 0;
 let raceClock = 0;
 let preRaceClock = 0;
+let waitingMotionClock = 0;
 let gateDifficultHorseId = null;
 let cheerClock = 0;
 let commentaryStamp = new Set();
@@ -246,6 +247,7 @@ function resetRace() {
   state = "ready";
   raceClock = 0;
   preRaceClock = 0;
+  waitingMotionClock = 0;
   gateDifficultHorseId = null;
   cheerClock = 0;
   split1000Time = null;
@@ -833,6 +835,14 @@ function drawVisionGoalBoard(x,y){
   }
 }
 
+function waitingHorsePosition(h,vx,camY){
+  const slot=h.id-1;
+  return {
+    x:vx+132+(slot%4)*28+Math.sin(waitingMotionClock*.00075+slot*1.7)*11,
+    y:camY+21+Math.floor(slot/4)*18+Math.sin(waitingMotionClock*.00055+slot)*3
+  };
+}
+
 function drawVisionGate(vx,camY,vw,camH){
   const gateX=vx+vw-49,gateY=camY+7,gateW=34,gateH=41;
   ctx.fillStyle="#f5f5ed";ctx.fillRect(gateX,gateY,gateW,gateH);
@@ -842,10 +852,9 @@ function drawVisionGate(vx,camY,vw,camH){
   const sequenceIndex=Math.min(7,Math.floor(preRaceClock/step));
   const focus=horses.find(h=>h.id===entryOrder[sequenceIndex]);
   const enteredIds=new Set(entryOrder.slice(0,sequenceIndex));
-  horses.filter(h=>h.id!==focus?.id&&!enteredIds.has(h.id)).forEach((h,i)=>{
-    const wanderX=vx+132+(i%4)*28+Math.sin(preRaceClock*.00075+i*1.7)*11;
-    const wanderY=camY+21+Math.floor(i/4)*18+Math.sin(preRaceClock*.00055+i)*3;
-    drawVisionCandidateHorse(wanderX,wanderY,h,.32);
+  horses.filter(h=>h.id!==focus?.id&&!enteredIds.has(h.id)).forEach(h=>{
+    const wait=waitingHorsePosition(h,vx,camY);
+    drawVisionCandidateHorse(wait.x,wait.y,h,.32);
   });
   const local=preRaceClock-sequenceIndex*step;
   const difficult=focus?.id===gateDifficultHorseId;
@@ -854,9 +863,9 @@ function drawVisionGate(vx,camY,vw,camH){
     if(travel>.34&&travel<.74)travel=.34+Math.abs(Math.sin(local/55))*.035;
     else if(travel>=.74)travel=.34+(travel-.74)/.26*.66;
   }
-  const entryStartX=vx+207;
-  const horseX=entryStartX+travel*(gateX-11-entryStartX),horseY=camY+35+(difficult&&travel<.8?Math.sin(local/60)*2:0);
-  if(focus&&local<900)drawVisionCandidateHorse(horseX,horseY,focus,.42);
+  const wait=waitingHorsePosition(focus,vx,camY);
+  const horseX=wait.x+travel*(gateX-11-wait.x),horseY=wait.y+travel*(camY+35-wait.y)+(difficult&&travel<.8?Math.sin(local/60)*2:0);
+  if(focus&&local<900)drawVisionCandidateHorse(horseX,horseY,focus,.32);
   if(difficult&&local<820){ctx.fillStyle="#efb05d";ctx.fillRect(horseX-18,horseY+4,4,8);ctx.fillStyle="#315b84";ctx.fillRect(horseX-19,horseY+11,7,6)}
   ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";
   ctx.fillText(difficult&&local<820?`${focus.id}番、ゲート入りを嫌がる`:`${focus?.id||8}番、枠入り`,vx+8,camY+9);
@@ -1013,13 +1022,9 @@ function drawTrackV2(){
     horses.forEach((h,i)=>{
       const travel=Math.max(0,Math.min(1,(preRaceClock-i*300)/1800));
       if(travel<=0)return;
-      if(travel<1)drawVisionCandidateHorse(vx+20+travel*145,camY+21+(i%3)*10,h,.34);
-      else{
-        const waitingClock=preRaceClock-i*300-1800;
-        const wanderX=vx+132+(i%4)*28+Math.sin(waitingClock*.00075+i*1.7)*11;
-        const wanderY=camY+21+Math.floor(i/4)*18+Math.sin(waitingClock*.00055+i)*3;
-        drawVisionCandidateHorse(wanderX,wanderY,h,.32);
-      }
+      const wait=waitingHorsePosition(h,vx,camY),ease=travel*travel*(3-2*travel);
+      const entryY=camY+21+(i%3)*10;
+      drawVisionCandidateHorse(vx+20+(wait.x-vx-20)*ease,entryY+(wait.y-entryY)*ease,h,.32);
     });
   }else if(state==="gates"){
     drawVisionGate(vx,camY,vw,camH);
@@ -1342,6 +1347,7 @@ function loop(time) {
   lastTime = time;
   if(state==="parade"||state==="gates"||state==="gateBreak"){
     preRaceClock+=realDt;
+    if(state==="parade"||state==="gates")waitingMotionClock+=realDt;
     draw();
   } else if (state === "running") {
     cheerClock += realDt;
