@@ -361,6 +361,14 @@ function trainerTemperamentComment(){
   if(game.temperament==="穏やか")return "落ち着いていますが、反応が鈍い時があります";
   return "気性は安定しています";
 }
+function fatigueCoachComment(){
+  if(game.injury)return `${game.injury.name}を発症しています。今は調教せず、長期放牧で回復を待ちましょう。`;
+  if(game.fatigue>=80)return "疲れが限界に近づいています。この状態で調教を続けると故障につながります。今週は休ませてください。";
+  if(game.fatigue>=65)return "かなり疲れがたまっています。このまま強い調教を続けると故障するかもしれません。休養を考えましょう。";
+  if(game.fatigue>=45)return "疲れがたまってきています。脚元への負担が大きい調教は、少し控えた方がよさそうです。";
+  if(game.fatigue>=25)return "少し疲れが見えます。様子を見ながら調教を選びましょう。";
+  return "元気があります。今週もしっかり動けそうです。";
+}
 function renderTack(){
   document.querySelector("#temperamentComment").textContent=trainerTemperamentComment();
   document.querySelector("#tackChoices").innerHTML=game.tackUnlocked.length
@@ -402,7 +410,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#nextRaceButtonText").textContent=reservedRace
     ? `次走：${reservedRace.name}（${weeksToRace===0?"今週":`${weeksToRace}週後`}）`
     : game.races>0?"次走予約なし":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
-  document.querySelector("#homeMessage").textContent=message;
+  document.querySelector("#homeMessage").textContent=`${message} ${fatigueCoachComment()}`;
   applyHorseAppearance(document.querySelector("#trainingScene"));
   const statsEl=document.querySelector("#horseStats");
   statsEl.hidden=!developerMode;
