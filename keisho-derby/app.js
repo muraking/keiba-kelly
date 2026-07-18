@@ -509,14 +509,14 @@ function renderHome(message="今週の予定を決めましょう。"){
   saveGame();
 }
 const training={
-  turfSolo:{label:"芝・単走",fatigue:8,stats:{speed:1,turf:1}},
-  turfPair:{label:"芝・併せ馬",fatigue:17,stats:{speed:1,guts:1,turf:1}},
-  dirtSolo:{label:"ダート・単走",fatigue:10,stats:{stamina:1,dirt:1}},
-  dirtPair:{label:"ダート・併せ馬",fatigue:19,stats:{power:1,guts:1,dirt:1}},
-  hillSolo:{label:"坂路単走",fatigue:14,stats:{power:2,stamina:1}},
-  hillPair:{label:"坂路併せ",fatigue:21,stats:{power:2,guts:1,dash:1}},
+  turfSolo:{label:"芝・単走",fatigue:6,stats:{speed:1,turf:1}},
+  turfPair:{label:"芝・併せ馬",fatigue:13,stats:{speed:1,guts:1,turf:1}},
+  dirtSolo:{label:"ダート・単走",fatigue:8,stats:{stamina:1,dirt:1}},
+  dirtPair:{label:"ダート・併せ馬",fatigue:15,stats:{power:1,guts:1,dirt:1}},
+  hillSolo:{label:"坂路単走",fatigue:11,stats:{power:2,stamina:1}},
+  hillPair:{label:"坂路併せ",fatigue:17,stats:{power:2,guts:1,dash:1}},
   pool:{label:"プール",fatigue:3,stats:{stamina:1}},
-  gate:{label:"ゲート訓練",fatigue:7,stats:{dash:1}},
+  gate:{label:"ゲート訓練",fatigue:5,stats:{dash:1}},
 };
 const injuries=[
   {name:"骨膜炎",minWeeks:6,maxWeeks:10,weight:44,lossChance:.18,maxLoss:1},
@@ -641,7 +641,7 @@ function train(type){
   if(game.trainingsUsed>=2)return renderHome("今週の調教は2回終了しました。レースか翌週を選びましょう。");
   if(type==="rest"){
     game.trainingsUsed++;
-    game.fatigue=Math.max(0,game.fatigue-22);
+    game.fatigue=Math.max(0,game.fatigue-28);
     game.condition=Math.min(100,game.condition+4);
     const restWeightDiff=game.weight-bestWeight();
     const restWeightGain=restWeightDiff<=-9?rnd(2,4):restWeightDiff<4?rnd(1,2):rnd(0,1);
@@ -706,7 +706,7 @@ function playTrainingAnimation(type,label,outcome){
 function advanceWeek(rest=false){
   game.week++; game.trainingsUsed=0;
   const walker=game.equipment.includes("walker")?8:0;
-  game.fatigue=Math.max(0,game.fatigue-(rest?38:14)-walker);
+  game.fatigue=Math.max(0,game.fatigue-(rest?42:18)-walker);
   game.legCondition=Math.min(100,game.legCondition+(rest?rnd(12,20):rnd(4,8)));
   advanceConditionCycle(rest?5:0);
   const weeklyWeightDiff=game.weight-bestWeight();
@@ -941,7 +941,7 @@ function showResult(detail){
     age:horseAge(),date:weekLabel(),favorite:false
   });
   refreshGalleryUnlocks();
-  game.fatigue=Math.min(100,game.fatigue+28);advanceConditionCycle(-8);
+  game.fatigue=Math.min(100,game.fatigue+24);advanceConditionCycle(-8);
   game.legCondition=Math.max(0,game.legCondition-rnd(4,9));
   game.weight=Math.max(330,game.weight-rnd(4,7));
   sufferPostRaceInjury(r,weather.going);
