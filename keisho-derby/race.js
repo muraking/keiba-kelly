@@ -843,9 +843,9 @@ function drawVisionGate(vx,camY,vw,camH){
   const focus=horses.find(h=>h.id===entryOrder[sequenceIndex]);
   const enteredIds=new Set(entryOrder.slice(0,sequenceIndex));
   horses.filter(h=>h.id!==focus?.id&&!enteredIds.has(h.id)).forEach((h,i)=>{
-    const angle=preRaceClock*.0022+i*Math.PI*2/7;
-    const circleX=vx+176+Math.cos(angle)*31,circleY=camY+30+Math.sin(angle)*12;
-    drawVisionCandidateHorse(circleX,circleY,h,.23);
+    const wanderX=vx+132+(i%4)*28+Math.sin(preRaceClock*.00075+i*1.7)*11;
+    const wanderY=camY+21+Math.floor(i/4)*18+Math.sin(preRaceClock*.00055+i)*3;
+    drawVisionCandidateHorse(wanderX,wanderY,h,.32);
   });
   const local=preRaceClock-sequenceIndex*step;
   const difficult=focus?.id===gateDifficultHorseId;
@@ -1015,8 +1015,10 @@ function drawTrackV2(){
       if(travel<=0)return;
       if(travel<1)drawVisionCandidateHorse(vx+20+travel*145,camY+21+(i%3)*10,h,.34);
       else{
-        const angle=(preRaceClock-i*300-1800)*.002+i*Math.PI/4;
-        drawVisionCandidateHorse(vx+176+Math.cos(angle)*31,camY+30+Math.sin(angle)*12,h,.23);
+        const waitingClock=preRaceClock-i*300-1800;
+        const wanderX=vx+132+(i%4)*28+Math.sin(waitingClock*.00075+i*1.7)*11;
+        const wanderY=camY+21+Math.floor(i/4)*18+Math.sin(waitingClock*.00055+i)*3;
+        drawVisionCandidateHorse(wanderX,wanderY,h,.32);
       }
     });
   }else if(state==="gates"){
