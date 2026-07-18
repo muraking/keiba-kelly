@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.3.0</title>
+  <title>ドット競馬 継承ダービー｜Ver. 0.3.1</title>
   <link rel="stylesheet" href="style.css?v=20260718-21">
 </head>
 <body>
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.3.0</b>
+        <b class="build-version">Ver. 0.3.1</b>
       </div>
     </section>
 
@@ -186,7 +186,7 @@
     <section id="raceSelectScreen" class="game-screen select-screen">
       <header class="simple-header"><b>レース選択</b><span id="selectTurn">残り12ターン</span></header>
       <div class="race-week-nav"><button id="previousRaceWeek" aria-label="前週">◀ 前週</button><b id="raceWeekLabel">1年目 1月1週</b><button id="nextRaceWeek" aria-label="翌週">翌週 ▶</button></div>
-      <p class="race-select-guide">開催場を選んでください</p>
+      <p class="race-select-guide">開催場を切り替えると、その会場の1R〜12Rを表示します</p>
       <div id="raceVenueTabs" class="race-venue-tabs"></div>
       <div id="raceChoices"></div>
       <button data-back="homeScreen">育成へもどる</button>
@@ -295,7 +295,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-11"></script>
+  <script src="app.js?v=20260718-12"></script>
   <script src="race.js?v=20260718-20"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>

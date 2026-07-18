@@ -681,11 +681,8 @@ function renderRaces(){
   const periodRaces=raceCalendar.filter(r=>r.week===displayWeek&&r.program);
   const venues=[...new Set(periodRaces.map(raceVenue))];
   if(window.selectedRaceVenue&&!venues.includes(window.selectedRaceVenue))window.selectedRaceVenue="";
+  if(!window.selectedRaceVenue)window.selectedRaceVenue=venues[0]||"";
   document.querySelector("#raceVenueTabs").innerHTML=venues.map(v=>`<button data-venue="${v}" class="${window.selectedRaceVenue===v?"selected":""}">${v}</button>`).join("");
-  if(!window.selectedRaceVenue){
-    document.querySelector("#raceChoices").innerHTML=`<p class="empty-races">${venues.join("・")}で開催されます。<br>上の開催場を選ぶと1R〜12Rを表示します。</p>`;
-    return;
-  }
   const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue).sort((a,b)=>(a.number||11)-(b.number||11));
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
     const arrived=r.week===game.week,debutSeasonOpen=game.week>=21,eligible=arrived&&debutSeasonOpen&&r.condition(game),surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
