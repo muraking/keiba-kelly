@@ -470,11 +470,14 @@ function sendToPasture(){
     if(Math.random()<injury.lossChance){
       const amount=rnd(1,injury.maxLoss)*10;
       game[stat]=Math.max(1,Math.round((game[stat]-amount)*10)/10);
-      lost.push(`${stat==="speed"?"スピード":stat==="dash"?"ダッシュ":stat==="stamina"?"スタミナ":stat==="power"?"パワー":"勝負根性"}-${amount}`);
+      lost.push(stat==="speed"?"スピード":stat==="dash"?"ダッシュ":stat==="stamina"?"スタミナ":stat==="power"?"パワー":"勝負根性");
     }
   });
   game.injury=null;
-  renderHome(`${injury.name}から復帰しました。${weeks}週間の放牧${lost.length?`で能力が低下（${lost.join("、")}）`:"を経て、能力低下はありませんでした"}。`);
+  const recoveryComment=lost.length
+    ? `調教師「長い休養の影響でしょう。${lost.join("や")}の動きに、まだ少し物足りなさがあります。焦らず戻していきましょう」`
+    : "調教師「休養は長くなりましたが、動きに大きな衰えは見られません。ここから慎重に仕上げましょう」";
+  renderHome(`${injury.name}から復帰しました。${weeks}週間の放牧を終えました。 ${recoveryComment}`);
 }
 const equipmentCatalog=[
   {id:"treadmill",name:"高性能トレッドミル",cost:120,grade:"改良型",desc:"坂路調教のパワー上昇量+1"},
