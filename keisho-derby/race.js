@@ -343,7 +343,7 @@ function resetRace() {
   speedButton.hidden = true;
   pauseButton.textContent = "一時停止";
   multiplier = 1;
-  speedButton.textContent = "レース速度：標準";
+  speedButton.textContent = "レース速度：4倍";
   draw();
   renderRanking();
 }
@@ -1521,7 +1521,7 @@ pauseButton.addEventListener("click", () => {
 
 speedButton.addEventListener("click", () => {
   multiplier = multiplier === 1 ? 2 : 1;
-  speedButton.textContent = multiplier === 1 ? "レース速度：標準" : "レース速度：2倍";
+  speedButton.textContent = multiplier === 1 ? "レース速度：4倍" : "レース速度：8倍";
 });
 
 resetButton.addEventListener("click", resetRace);
