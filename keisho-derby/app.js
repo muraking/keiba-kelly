@@ -36,7 +36,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], candidate:null,
-  reservedRaceId:null, affection:0, lineage:[],retirementRecords:[]
+  reservedRaceId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{}
 });
 let game = defaultGame();
 let developerMode=localStorage.getItem("dotKeibaDeveloperMode")==="1";
@@ -161,6 +161,8 @@ function loadGame(){
     if(!Number.isFinite(saved?.temperamentValue))game.temperamentValue=rnd(30,75);
     if(!saved?.temperament)game.temperament=temperamentType(game.temperamentValue);
     if(!Array.isArray(saved?.tackUnlocked))game.tackUnlocked=[];
+    if(!game.equipmentDurability||typeof game.equipmentDurability!=="object")game.equipmentDurability={};
+    game.equipment.forEach(id=>{if(!Number.isFinite(game.equipmentDurability[id]))game.equipmentDurability[id]=equipmentCatalog.find(x=>x.id===id)?.durability||80});
     if(!Array.isArray(saved?.lineage))game.lineage=[];
     if(!Array.isArray(saved?.retirementRecords))game.retirementRecords=[];
     if(game.candidate&&!game.candidate.sex)game.candidate.sex=Math.random()<.5?"牡馬":"牝馬";
@@ -254,7 +256,7 @@ function beginNextGeneration(partner){
   child.temperament=temperamentType(child.temperamentValue);
   child.weight=child.baseBestWeight+rnd(12,20);
   child.potentialCaps=createPotentialCaps(child);
-  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired]};
+  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired]};
   game={...defaultGame(),...legacy,candidate:child};
   document.querySelector("#candidateNumber").textContent=`${game.generation}世代目`;
   document.querySelector("#candidateTitle").textContent=`${child.coat}の2歳${child.sex}`;
@@ -310,7 +312,11 @@ function trainingGain(stat,base,mult,type){
   const remaining=Math.max(0,cap-game[stat]);
   if(remaining<=0||mult<=0)return 0;
   const capFactor=remaining>=120?1:remaining>=70?.72:remaining>=30?.45:.22;
-  const equipmentBonus=stat==="power"&&type.startsWith("hill")&&game.equipment.includes("treadmill")?5:0;
+  const equipmentBonus=
+    stat==="power"&&type.startsWith("hill")&&game.equipment.includes("treadmill")?5:
+    stat==="stamina"&&type==="pool"&&game.equipment.includes("waterWalker")?5:
+    stat==="dash"&&type==="gate"&&game.equipment.includes("startingGate")?5:
+    stat==="stamina"&&type.startsWith("dirt")&&game.equipment.includes("altitude")?3:0;
   return Math.min(remaining,(base*6+equipmentBonus)*mult*(.72+maturityRate()*.33)*capFactor);
 }
 function bestWeight(){
@@ -630,10 +636,39 @@ function sendToPasture(){
   renderHome(`${injury.name}から復帰しました。${weeks}週間の放牧を終えました。 ${recoveryComment}`);
 }
 const equipmentCatalog=[
-  {id:"treadmill",name:"高性能トレッドミル",cost:120,grade:"改良型",desc:"坂路調教のパワー上昇量+1"},
-  {id:"walker",name:"ウォーキングマシン",cost:90,grade:"標準設備",desc:"翌週開始時の疲労回復+8"},
-  {id:"gps",name:"GPS計測装置",cost:70,grade:"標準設備",desc:"調教失敗率を25%軽減"},
+  {id:"treadmill",name:"高性能トレッドミル",cost:120,grade:"坂路設備",desc:"坂路調教のパワー成長を補助",durability:80,icon:"走"},
+  {id:"walker",name:"ウォーキングマシン",cost:90,grade:"回復設備",desc:"週送り時の疲労回復+8",durability:100,icon:"歩"},
+  {id:"gps",name:"GPS計測装置",cost:70,grade:"計測設備",desc:"調教失敗率を25%軽減",durability:70,icon:"測"},
+  {id:"waterWalker",name:"アクアウォーカー",cost:150,grade:"水中設備",desc:"プール調教のスタミナ成長を補助",durability:75,icon:"水"},
+  {id:"startingGate",name:"練習用発馬機",cost:100,grade:"基礎設備",desc:"ゲート訓練のダッシュ成長を補助",durability:110,icon:"門"},
+  {id:"iceBath",name:"脚元冷却装置",cost:85,grade:"ケア設備",desc:"調教後の脚元への負担を軽減",durability:85,icon:"冷"},
+  {id:"solarium",name:"馬用ソラリウム",cost:110,grade:"回復設備",desc:"週送り時に調子をわずかに整える",durability:90,icon:"陽"},
+  {id:"massage",name:"振動マッサージ機",cost:130,grade:"回復設備",desc:"週送り時の疲労回復+3",durability:75,icon:"揉"},
+  {id:"haySteamer",name:"飼料スチーマー",cost:80,grade:"飼養設備",desc:"馬体重をベスト体重へ戻しやすくする",durability:95,icon:"飼"},
+  {id:"altitude",name:"低酸素トレーニング室",cost:220,grade:"先進設備",desc:"ダート調教のスタミナ成長を補助",durability:60,icon:"肺"},
 ];
+function equipmentCondition(item){
+  const value=game.equipmentDurability[item.id]??item.durability,ratio=value/item.durability;
+  return ratio>.72?"新品同様":ratio>.42?"良好":ratio>.18?"劣化しています":"故障寸前";
+}
+function ageEquipment(){
+  const broken=[],warnings=[];
+  game.equipment=[...game.equipment].filter(id=>{
+    const item=equipmentCatalog.find(x=>x.id===id);
+    if(!item)return false;
+    let value=game.equipmentDurability[id]??item.durability;
+    value=Math.max(0,value-rnd(1,2));
+    const ratio=value/item.durability;
+    const breakChance=ratio>.38?0:ratio>.2?.012:ratio>.08?.035:.09;
+    if(value<=0||Math.random()<breakChance){broken.push(item.name);delete game.equipmentDurability[id];return false}
+    game.equipmentDurability[id]=value;
+    if(ratio<=.2&&Math.random()<.35)warnings.push(`${item.name}は故障寸前です`);
+    else if(ratio<=.38&&Math.random()<.18)warnings.push(`${item.name}の劣化が目立ってきました`);
+    return true;
+  });
+  if(broken.length)return `${broken.join("、")}が故障しました。設備ショップから買い直せます。`;
+  return warnings[0]||"";
+}
 const galleryCatalog=[
   {id:"stable",title:"はじめての入厩",trophy:"bronze",condition:()=>true,desc:"厩舎で始まった育成の日々"},
   {id:"debut",title:"ターフへ",trophy:"bronze",condition:g=>g.races>=1,desc:"記念すべき初出走"},
@@ -726,7 +761,8 @@ function train(type){
   if(type==="gate"&&mult>0)game.gateSkill=Math.min(1000,game.gateSkill+rnd(mult===2?24:12,mult===2?40:22));
   const gains=Object.fromEntries(Object.keys(t.stats).map(stat=>[stat,game[stat]-beforeStats[stat]]));
   game.trainingsUsed++; game.fatigue=Math.min(100,game.fatigue+t.fatigue);
-  const legLoad={turfSolo:3,turfPair:8,dirtSolo:4,dirtPair:9,hillSolo:9,hillPair:12,pool:-5,gate:2}[type]||0;
+  const rawLegLoad={turfSolo:3,turfPair:8,dirtSolo:4,dirtPair:9,hillSolo:9,hillPair:12,pool:-5,gate:2}[type]||0;
+  const legLoad=game.equipment.includes("iceBath")?Math.max(-5,rawLegLoad-2):rawLegLoad;
   game.legCondition=Math.max(0,Math.min(100,game.legCondition-legLoad+rnd(-1,1)));
   const weightLoss=type==="pool"?rnd(1,2):type==="gate"?rnd(1,2):type.includes("Pair")?rnd(3,5):type==="hillSolo"?rnd(3,4):rnd(2,4);
   game.weight=Math.max(330,game.weight-weightLoss);
@@ -768,26 +804,32 @@ function playTrainingAnimation(type,label,outcome){
 }
 function advanceWeek(rest=false){
   game.week++; game.trainingsUsed=0;
-  const walker=game.equipment.includes("walker")?8:0;
-  game.fatigue=Math.max(0,game.fatigue-(rest?42:18)-walker);
+  const recoveryEquipment=(game.equipment.includes("walker")?8:0)+(game.equipment.includes("massage")?3:0);
+  game.fatigue=Math.max(0,game.fatigue-(rest?42:18)-recoveryEquipment);
   game.legCondition=Math.min(100,game.legCondition+(rest?rnd(12,20):rnd(4,8)));
-  advanceConditionCycle(rest?5:0);
+  advanceConditionCycle((rest?5:0)+(game.equipment.includes("solarium")?1:0));
   const weeklyWeightDiff=game.weight-bestWeight();
   const weeklyWeightChange=rest
     ? (weeklyWeightDiff<=-9?rnd(3,5):weeklyWeightDiff<4?rnd(1,3):rnd(0,1))
     : weeklyWeightDiff>=9?rnd(-1,0):weeklyWeightDiff>=4?rnd(0,1):weeklyWeightDiff<=-9?rnd(3,5):weeklyWeightDiff<=-4?rnd(2,3):rnd(1,2);
   game.weight=Math.max(330,Math.min(600,game.weight+weeklyWeightChange));
+  if(game.equipment.includes("haySteamer")){
+    const target=bestWeight();
+    if(game.weight>target+3)game.weight--;
+    else if(game.weight<target-3)game.weight++;
+  }
+  const equipmentNotice=ageEquipment();
   const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
   const notice=reserved&&reserved.week===game.week?` 予約していた「${reserved.name}」の開催週です。`:reserved&&reserved.week-game.week===1?` 来週は予約した「${reserved.name}」です。`:"";
-  renderHome(`${notice} ${conditionTrendComment()}`.trim());
+  renderHome(`${notice} ${equipmentNotice} ${conditionTrendComment()}`.trim());
 }
 function renderShop(){
   document.querySelector("#shopPoints").textContent=`${game.farmPoints} FP`;
   document.querySelector("#equipmentCards").innerHTML=equipmentCatalog.map(item=>{
     const owned=game.equipment.includes(item.id),canBuy=game.farmPoints>=item.cost;
     return `<article class="equipment-card ${owned?"owned":""}">
-      <div class="equipment-icon">${item.id==="treadmill"?"走":item.id==="walker"?"歩":"測"}</div>
-      <div><small>${item.grade}</small><h3>${item.name}</h3><p>${item.desc}</p></div>
+      <div class="equipment-icon">${item.icon}</div>
+      <div><small>${item.grade}</small><h3>${item.name}</h3><p>${item.desc}</p>${owned?`<b class="equipment-condition">状態：${equipmentCondition(item)}</b>`:""}</div>
       <button data-equipment="${item.id}" ${owned||!canBuy?"disabled":""}>${owned?"所有中":`${item.cost} FP`}</button>
     </article>`;
   }).join("");
@@ -795,7 +837,7 @@ function renderShop(){
 function buyEquipment(id){
   const item=equipmentCatalog.find(x=>x.id===id);
   if(!item||game.equipment.includes(id)||game.farmPoints<item.cost)return;
-  game.farmPoints-=item.cost; game.equipment.push(id); saveGame(); renderShop();
+  game.farmPoints-=item.cost; game.equipment.push(id);game.equipmentDurability[id]=item.durability;saveGame();renderShop();
 }
 function renderRaces(){
   if(!Number.isFinite(window.selectedRaceWeek))window.selectedRaceWeek=game.week;
@@ -1052,7 +1094,7 @@ document.querySelector("#confirmNameButton").onclick=()=>{
     document.querySelector("#nameScreen .hint").textContent="馬名はカタカナ2〜10文字で、使用できない表現を含まない名前にしてください。";
     input.focus();return;
   }
-  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords]};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
+  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords]};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
   renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。まずは馬体を整えましょう。`);showScreen("homeScreen");
 };
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.dataset.back));
