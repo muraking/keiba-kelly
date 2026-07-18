@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.5.1</title>
-  <link rel="stylesheet" href="style.css?v=20260718-35">
+  <title>ドット競馬 継承ダービー｜Ver. 0.5.2</title>
+  <link rel="stylesheet" href="style.css?v=20260718-36">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.5.1</b>
+        <b class="build-version">Ver. 0.5.2</b>
       </div>
     </section>
 
@@ -83,7 +83,7 @@
         <div class="stable-precipitation" aria-hidden="true"></div>
         <span id="weekDisplay" class="stable-date-label">1年目 1月1週</span>
         <div class="stable-board horse-board"><div><b id="homeHorseName">ドットスター</b><span class="horse-age-class"><em id="homeHorseAge">2歳</em><em id="homeHorseClass">新馬</em></span></div><span>獲得賞金 <strong id="homePrize">0万円</strong></span><span>育成ポイント <strong id="farmPoints">0 FP</strong></span></div>
-        <div class="barn">
+        <div id="stableBuilding" class="barn" role="button" tabindex="0" aria-label="所有設備を見る">
           <div class="stable-roof"></div><div class="stable-label">A</div>
           <div class="stable-window w1"></div><div class="stable-window w2"></div>
           <div class="stable-door d1"></div><div class="stable-door d2"></div>
@@ -193,6 +193,13 @@
       <header class="simple-header"><b>設備ショップ</b><span id="shopPoints">0 FP</span></header>
       <p class="shop-intro">設備カードは購入後も牧場に残り、毎週の調教を支援します。</p>
       <div id="equipmentCards"></div>
+      <button data-back="homeScreen">育成へもどる</button>
+    </section>
+
+    <section id="stableEquipmentScreen" class="game-screen shop-screen stable-equipment-screen">
+      <header class="simple-header"><b>厩舎の設備</b><span id="stableEquipmentCount">0台 所有</span></header>
+      <p class="shop-intro">設備は使い続けると劣化します。状態が悪い設備ほど、週送り時に故障する可能性が高くなります。</p>
+      <div id="stableEquipmentList"></div>
       <button data-back="homeScreen">育成へもどる</button>
     </section>
 
@@ -308,7 +315,7 @@
     </section>
   </main>
   <script src="race-time-data.js?v=20260717-16"></script>
-  <script src="app.js?v=20260718-24"></script>
+  <script src="app.js?v=20260718-25"></script>
   <script src="race.js?v=20260718-32"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>

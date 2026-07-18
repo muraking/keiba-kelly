@@ -36,7 +36,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], candidate:null,
-  reservedRaceId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{}
+  reservedRaceId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{}
 });
 let game = defaultGame();
 let developerMode=localStorage.getItem("dotKeibaDeveloperMode")==="1";
@@ -162,7 +162,9 @@ function loadGame(){
     if(!saved?.temperament)game.temperament=temperamentType(game.temperamentValue);
     if(!Array.isArray(saved?.tackUnlocked))game.tackUnlocked=[];
     if(!game.equipmentDurability||typeof game.equipmentDurability!=="object")game.equipmentDurability={};
+    if(!game.equipmentAge||typeof game.equipmentAge!=="object")game.equipmentAge={};
     game.equipment.forEach(id=>{if(!Number.isFinite(game.equipmentDurability[id]))game.equipmentDurability[id]=equipmentCatalog.find(x=>x.id===id)?.durability||80});
+    game.equipment.forEach(id=>{if(!Number.isFinite(game.equipmentAge[id]))game.equipmentAge[id]=0});
     if(!Array.isArray(saved?.lineage))game.lineage=[];
     if(!Array.isArray(saved?.retirementRecords))game.retirementRecords=[];
     if(game.candidate&&!game.candidate.sex)game.candidate.sex=Math.random()<.5?"牡馬":"牝馬";
@@ -256,7 +258,7 @@ function beginNextGeneration(partner){
   child.temperament=temperamentType(child.temperamentValue);
   child.weight=child.baseBestWeight+rnd(12,20);
   child.potentialCaps=createPotentialCaps(child);
-  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired]};
+  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired]};
   game={...defaultGame(),...legacy,candidate:child};
   document.querySelector("#candidateNumber").textContent=`${game.generation}世代目`;
   document.querySelector("#candidateTitle").textContent=`${child.coat}の2歳${child.sex}`;
@@ -616,6 +618,7 @@ function sendToPasture(){
   const injury=game.injury;
   const weeks=injury.weeks;
   game.week+=weeks;
+  game.equipment.forEach(id=>game.equipmentAge[id]=(game.equipmentAge[id]||0)+weeks);
   game.trainingsUsed=0;
   game.fatigue=0;
   game.legCondition=Math.min(100,game.legCondition+rnd(28,45));
@@ -656,11 +659,12 @@ function ageEquipment(){
   game.equipment=[...game.equipment].filter(id=>{
     const item=equipmentCatalog.find(x=>x.id===id);
     if(!item)return false;
+    game.equipmentAge[id]=(game.equipmentAge[id]||0)+1;
     let value=game.equipmentDurability[id]??item.durability;
     value=Math.max(0,value-rnd(1,2));
     const ratio=value/item.durability;
     const breakChance=ratio>.38?0:ratio>.2?.012:ratio>.08?.035:.09;
-    if(value<=0||Math.random()<breakChance){broken.push(item.name);delete game.equipmentDurability[id];return false}
+    if(value<=0||Math.random()<breakChance){broken.push(item.name);delete game.equipmentDurability[id];delete game.equipmentAge[id];return false}
     game.equipmentDurability[id]=value;
     if(ratio<=.2&&Math.random()<.35)warnings.push(`${item.name}は故障寸前です`);
     else if(ratio<=.38&&Math.random()<.18)warnings.push(`${item.name}の劣化が目立ってきました`);
@@ -834,10 +838,19 @@ function renderShop(){
     </article>`;
   }).join("");
 }
+function renderEquipmentStatus(){
+  document.querySelector("#stableEquipmentCount").textContent=`${game.equipment.length}台 所有`;
+  document.querySelector("#stableEquipmentList").innerHTML=game.equipment.length?game.equipment.map(id=>{
+    const item=equipmentCatalog.find(x=>x.id===id);
+    if(!item)return "";
+    const weeks=game.equipmentAge[id]||0;
+    return `<article class="stable-equipment-card"><div class="equipment-icon">${item.icon}</div><div><small>${item.grade}</small><h3>${item.name}</h3><p>購入から ${weeks}週経過</p><b>状態：${equipmentCondition(item)}</b></div></article>`;
+  }).join(""):'<p class="empty-equipment">まだ設備を持っていません。設備ショップで購入できます。</p>';
+}
 function buyEquipment(id){
   const item=equipmentCatalog.find(x=>x.id===id);
   if(!item||game.equipment.includes(id)||game.farmPoints<item.cost)return;
-  game.farmPoints-=item.cost; game.equipment.push(id);game.equipmentDurability[id]=item.durability;saveGame();renderShop();
+  game.farmPoints-=item.cost;game.equipment.push(id);game.equipmentDurability[id]=item.durability;game.equipmentAge[id]=0;saveGame();renderShop();
 }
 function renderRaces(){
   if(!Number.isFinite(window.selectedRaceWeek))window.selectedRaceWeek=game.week;
@@ -1094,7 +1107,7 @@ document.querySelector("#confirmNameButton").onclick=()=>{
     document.querySelector("#nameScreen .hint").textContent="馬名はカタカナ2〜10文字で、使用できない表現を含まない名前にしてください。";
     input.focus();return;
   }
-  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords]};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
+  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords]};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
   renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。まずは馬体を整えましょう。`);showScreen("homeScreen");
 };
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.dataset.back));
@@ -1102,6 +1115,9 @@ document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>train(b.data
 document.querySelector("#pastureButton").onclick=sendToPasture;
 document.querySelector("#nextWeekButton").onclick=()=>advanceWeek(false);
 document.querySelector("#shopButton").onclick=()=>{renderShop();showScreen("shopScreen")};
+const openStableEquipment=()=>{renderEquipmentStatus();showScreen("stableEquipmentScreen")};
+document.querySelector("#stableBuilding").onclick=openStableEquipment;
+document.querySelector("#stableBuilding").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openStableEquipment()}};
 document.querySelector("#historyButton").onclick=()=>{renderHistory();showScreen("historyScreen")};
 document.querySelector("#historyList").onclick=e=>{
   const button=e.target.closest("[data-favorite-replay]");
