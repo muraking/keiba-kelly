@@ -403,6 +403,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#weekDisplay").textContent=weekLabel();
   document.querySelector("#turnsLeft").textContent=`${game.trainingsUsed}/2`;
   document.querySelector("#farmPoints").textContent=`${game.farmPoints} FP`;
+  updateStableWeather();
   document.querySelector("#conditionText").textContent=`調子：${conditionLabel()}／脚元：${legLabel()}／${classLabel()}`;
   const debutWeek=Math.min(...raceCalendar.filter(r=>r.raceClass==="新馬").map(r=>r.week));
   const reservedRace=raceCalendar.find(r=>r.id===game.reservedRaceId);
@@ -752,6 +753,18 @@ function raceDayWeather(race){
     going=goingRoll<.12?"稍重":goingRoll<.57?"重":"不良";
   }
   return {weather,going,month,region};
+}
+function updateStableWeather(){
+  const scene=document.querySelector(".stable-scene");
+  if(!scene)return;
+  const stableForecast=raceDayWeather({id:`stable-${game.week}`,week:game.week,course:"東京 芝1600m"});
+  scene.classList.remove("weather-cloudy","weather-rain","weather-heavy-rain","weather-snow");
+  if(stableForecast.weather==="曇")scene.classList.add("weather-cloudy");
+  if(stableForecast.weather==="雨")scene.classList.add("weather-rain");
+  if(stableForecast.weather==="大雨")scene.classList.add("weather-rain","weather-heavy-rain");
+  if(stableForecast.weather==="雪")scene.classList.add("weather-snow");
+  const label=document.querySelector("#stableWeatherLabel");
+  if(label)label.textContent=stableForecast.weather==="曇"?"くもり":stableForecast.weather;
 }
 function prepareRace(race){
   if(!race)return;
