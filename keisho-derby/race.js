@@ -60,6 +60,7 @@ let state = "ready";
 let multiplier = 1;
 let lastTime = 0;
 let raceClock = 0;
+let preRaceClock = 0;
 let cheerClock = 0;
 let commentaryStamp = new Set();
 let commentaryHistory = [];
@@ -242,6 +243,7 @@ function resetRace() {
   }}));
   state = "ready";
   raceClock = 0;
+  preRaceClock = 0;
   cheerClock = 0;
   split1000Time = null;
   measuredPace = "未確定";
@@ -816,6 +818,17 @@ function drawVisionCandidateHorse(x,y,h,scale=.62){
   ctx.restore();
 }
 
+function drawVisionGoalBoard(x,y){
+  ctx.fillStyle="#f7f3df";ctx.fillRect(x,y,4,48);
+  ctx.fillStyle="#d73932";ctx.fillRect(x-3,y,10,5);
+  ctx.fillStyle="#fff";ctx.fillRect(x-14,y+5,32,14);
+  ctx.strokeStyle="#27231e";ctx.lineWidth=2;ctx.strokeRect(x-14,y+5,32,14);
+  ctx.fillStyle="#d73932";ctx.font="bold 7px sans-serif";ctx.textAlign="center";ctx.fillText("GOAL",x+2,y+15);
+  for(let row=0;row<3;row++)for(let col=0;col<2;col++){
+    ctx.fillStyle=(row+col)%2?"#111":"#fff";ctx.fillRect(x-2+col*4,y+21+row*4,4,4);
+  }
+}
+
 function drawHorizontalTrack(){
   ctx.fillStyle="#2d7131";ctx.fillRect(0,0,LOGICAL_WIDTH,logicalHeight);
   const isDirt=raceSurface==="ダート";
@@ -934,15 +947,26 @@ function drawTrackV2(){
   ctx.fillStyle=isDirt?"#8a5f3a":"#3f8a3b";
   for(let i=0;i<12;i++)ctx.fillRect(vx+8+i*29,camY+6+(i*17)%40,18,2);
   const leaderDist=raceDistance(leader);
-  const visionDistances=horses.map(h=>raceDistance(h));
-  const visionFront=Math.max(...visionDistances);
-  [...horses].filter(h=>visionFront-raceDistance(h)<=105).sort((a,b)=>b.lane-a.lane).forEach(h=>{
-    const distance=raceDistance(h);
-    const x=Math.round(vx+vw-30-(visionFront-distance)*2.65);
-    const lane=Math.max(1,Math.min(8,h.lane));
-    const y=Math.round(camY+11+(lane-1)*(camH-20)/7);
-    drawVisionCandidateHorse(x,y,h,.38);
-  });
+  if(state==="parade"){
+    ctx.fillStyle="#d8d0b9";ctx.fillRect(vx+5,camY+4,30,camH-8);
+    ctx.fillStyle="#342d28";ctx.fillRect(vx+10,camY+13,20,camH-17);
+    ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";ctx.fillText("本馬場入場",vx+39,camY+10);
+    horses.slice(0,6).forEach((h,i)=>{
+      const travel=Math.max(0,Math.min(1,(preRaceClock-i*230)/1250));
+      if(travel>0)drawVisionCandidateHorse(vx+22+travel*(vw-70),camY+21+(i%3)*10,h,.38);
+    });
+  }else{
+    const visionDistances=horses.map(h=>raceDistance(h));
+    const visionFront=Math.max(...visionDistances);
+    [...horses].filter(h=>visionFront-raceDistance(h)<=105).sort((a,b)=>b.lane-a.lane).forEach(h=>{
+      const distance=raceDistance(h);
+      const x=Math.round(vx+vw-30-(visionFront-distance)*2.65);
+      const lane=Math.max(1,Math.min(8,h.lane));
+      const y=Math.round(camY+11+(lane-1)*(camH-20)/7);
+      drawVisionCandidateHorse(x,y,h,.38);
+    });
+    drawVisionGoalBoard(vx+vw-22,camY+2);
+  }
   // 馬名タグ：先頭と自分の馬（仕様：ビジョンに愛馬の馬番と馬名を表示）。
   // 全頭順位ボード：枠色チップ＋馬番＋馬名フル表示＋着差。
   const boardY=camY+camH+4;
@@ -1243,7 +1267,10 @@ function loop(time) {
   const simulationDt = realDt * BASE_PLAYBACK_RATE * multiplier;
   const clockDt = simulationDt;
   lastTime = time;
-  if (state === "running") {
+  if(state==="parade"||state==="gates"){
+    preRaceClock+=realDt;
+    draw();
+  } else if (state === "running") {
     cheerClock += realDt;
     simulationAccumulator += simulationDt;
     while (simulationAccumulator >= 16 && state === "running") {
@@ -1261,20 +1288,26 @@ function loop(time) {
 
 startButton.addEventListener("click", () => {
   if (state === "ready") {
-    state = "gates";
+    state = "parade";
+    preRaceClock=0;
     startButton.disabled = true;
     pauseButton.disabled = true;
-    phaseEl.textContent = "全馬ゲートイン";
-    setCommentary("全馬ゲートイン。場内が静まり返ります。まもなくスタートです。");
-    draw();
+    phaseEl.textContent = "本馬場入場";
+    setCommentary("各馬がパドックを後にして、本馬場へ入ってきました。");
+    lastTime=0;raf=requestAnimationFrame(loop);
     gateStartTimer=setTimeout(()=>{
-      if(state!=="gates")return;
-      state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
-      setCommentary(racePace.escapeCount >= 2
-        ? `ゲートオープン！ 逃げ${racePace.escapeCount}頭が先手を争います！`
-        : "ゲートオープン！ 逃げ馬がすんなり先頭へ立ちました。");
-      lastTime=0;raf=requestAnimationFrame(loop);
-    },1800);
+      if(state!=="parade")return;
+      state="gates";preRaceClock=0;phaseEl.textContent="全馬ゲートイン";
+      setCommentary("全馬ゲートイン。場内が静まり返ります。まもなくスタートです。");
+      gateStartTimer=setTimeout(()=>{
+        if(state!=="gates")return;
+        state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
+        setCommentary(racePace.escapeCount >= 2
+          ? `ゲートオープン！ 逃げ${racePace.escapeCount}頭が先手を争います！`
+          : "ゲートオープン！ 逃げ馬がすんなり先頭へ立ちました。");
+        lastTime=0;
+      },1800);
+    },2400);
   }
 });
 
