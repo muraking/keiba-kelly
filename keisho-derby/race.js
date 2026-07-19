@@ -125,15 +125,21 @@ let pendingResultDetail = null;
 let archiveReplay = false;
 let horizontalLayout = false;
 let layoutV2 = false;
-let customTokyoCourse = false;
 let courseAuditMode = false;
+let drawingCourseTrace = false;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
 const COURSE_PATH_CACHE=new WeakMap();
-const customTokyoImages={turf:new Image(),dirt:new Image()};
-customTokyoImages.turf.src="./racecourses/tokyo/turf_pixel.png";
-customTokyoImages.dirt.src="./racecourses/tokyo/dirt_pixel.png";
+// 公式平面図を基準にしたテスト専用の発走ポケット。
+// start/controlはスタンド下へ正規化したCanvas座標、entryMetersは本線合流までの距離。
+const TEST_START_CHUTES={
+  "東京|芝|1600":{start:[338,64],control:[330,62],entryMeters:230,label:"2コーナー奥ポケット"},
+  "東京|芝|1800":{start:[330,93],control:[320,69],entryMeters:205,label:"2コーナー奥ポケット"},
+  "東京|芝|2000":{start:[342,145],control:[334,91],entryMeters:185,label:"1コーナー奥ポケット"},
+  "東京|ダート|1600":{start:[337,70],control:[326,68],entryMeters:215,label:"芝ポケット発走"}
+};
+function currentTestChute(){return courseAuditMode?TEST_START_CHUTES[`${currentRaceVenue}|${raceSurface}|${TOTAL}`]||null:null}
 // 「通常」を従来シミュレーションの4倍速として扱う。
 // 画面表示の2倍・4倍は通常速度を基準に、それぞれ内部8倍・16倍になる。
 const BASE_PLAYBACK_RATE = 4;
@@ -898,7 +904,24 @@ function numberTextColor(id) {
   return id === 1 || id === 5 ? "#111" : "#fff";
 }
 
-function coursePoint(progress, lane = 3) {
+function coursePoint(progress,lane=3){
+  const chute=!drawingCourseTrace&&currentTestChute();
+  if(chute&&Number.isFinite(START_PROGRESS)){
+    const travelled=(progress-START_PROGRESS)*LAP;
+    if(travelled>=-.5&&travelled<chute.entryMeters){
+      const t=Math.max(0,Math.min(1,travelled/chute.entryMeters));
+      const end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,lane);
+      const laneShift=(lane-4.2)*2.2;
+      const sx=chute.start[0],sy=chute.start[1]+laneShift,cx=chute.control[0],cy=chute.control[1]+laneShift;
+      const u=1-t,x=u*u*sx+2*u*t*cx+t*t*end.x,y=u*u*sy+2*u*t*cy+t*t*end.y;
+      const dx=2*u*(cx-sx)+2*t*(end.x-cx),dy=2*u*(cy-sy)+2*t*(end.y-cy);
+      return{x,y,angle:Math.atan2(dy,dx),curve:true};
+    }
+  }
+  return baseCoursePoint(progress,lane);
+}
+
+function baseCoursePoint(progress, lane = 3) {
   if(currentCourseSpec.route==="直線"){
     const ratio=Math.max(0,Math.min(1,(progress-START_PROGRESS)/(TOTAL/LAP)));
     return horizontalLayout
@@ -1205,24 +1228,16 @@ function drawTrackV2(){
   }
   const straightCourse=currentCourseSpec.route==="直線";
   const trace=(lane,color,width)=>{
+    drawingCourseTrace=true;
     ctx.beginPath();
     if(straightCourse){
       const a=coursePoint(START_PROGRESS,lane),b=coursePoint(FINISH_PROGRESS,lane);ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
     }else for(let i=0;i<=180;i++){const q=coursePoint(i/180,lane);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
-    if(!straightCourse)ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke();
+    if(!straightCourse)ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke();drawingCourseTrace=false;
   };
-  const customTokyoImage=customTokyoCourse?(isDirt?customTokyoImages.dirt:customTokyoImages.turf):null;
-  if(customTokyoImage?.complete&&customTokyoImage.naturalWidth){
-    ctx.save();ctx.imageSmoothingEnabled=false;
-    const scale=Math.min(340/customTokyoImage.naturalWidth,(courseAuditMode?154:202)/customTokyoImage.naturalHeight);
-    const width=Math.round(customTokyoImage.naturalWidth*scale),height=Math.round(customTokyoImage.naturalHeight*scale);
-    ctx.drawImage(customTokyoImage,Math.round((360-width)/2),courseAuditMode?32+Math.round((158-height)/2):44+Math.round((202-height)/2),width,height);
-    ctx.restore();
-  }else{
-    trace(4.5,"#f1ead2",40);
-    trace(4.5,isDirt?"#a87549":"#43943e",33);
-    for(let lane=1;lane<=8;lane++)trace(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
-  }
+  trace(4.5,"#f1ead2",40);
+  trace(4.5,isDirt?"#a87549":"#43943e",33);
+  for(let lane=1;lane<=8;lane++)trace(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
   if(isBanei){
     [{x:131,h:10,label:"第1障害"},{x:238,h:18,label:"第2障害"}].forEach(o=>{
       ctx.fillStyle="#8a603d";ctx.beginPath();ctx.moveTo(o.x-13,155);ctx.lineTo(o.x,155-o.h);ctx.lineTo(o.x+13,155);ctx.fill();
@@ -1230,10 +1245,18 @@ function drawTrackV2(){
     });
   }
   // 内馬場。
-  if(!straightCourse&&!customTokyoCourse){
+  if(!straightCourse){
     ctx.beginPath();
     for(let i=0;i<=120;i++){const q=coursePoint(i/120,9.4);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
     ctx.closePath();ctx.fillStyle="#1e5d28";ctx.fill();
+  }
+  // ポケットは内馬場より手前に描き、独立した発走路と本線への合流を見せる。
+  const chute=currentTestChute();
+  if(chute){
+    const end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,4.5);
+    const drawChute=(color,width)=>{ctx.beginPath();ctx.moveTo(chute.start[0],chute.start[1]);ctx.quadraticCurveTo(chute.control[0],chute.control[1],end.x,end.y);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap="butt";ctx.stroke()};
+    drawChute("#f1ead2",38);drawChute(isDirt?"#a87549":"#43943e",31);
+    ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="right";ctx.fillText(chute.label,chute.start[0]-3,chute.start[1]-5);
   }
   const profile=trackProfile();
   if(["museum","pond","sea"].includes(profile.facility)){
@@ -1753,7 +1776,6 @@ window.addEventListener("dotkeiba:prepare", event => {
   resultDispatchedForRace = false;
   raceSurface = event.detail.surface || "芝";
   currentRaceVenue = event.detail.venue || "東京";
-  customTokyoCourse=!!event.detail.customCourseAsset&&currentRaceVenue==="東京";
   courseAuditMode=!!event.detail.courseAuditMode;
   raceDirectionOverride=event.detail.direction||null;
   TOTAL = event.detail.distance || 2400;

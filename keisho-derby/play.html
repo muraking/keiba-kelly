@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.7</title>
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.8</title>
   <link rel="stylesheet" href="style.css?v=20260719-58">
 </head>
 <body class="tester-build">
@@ -47,9 +47,9 @@
         <h1>ドット競馬<br><span>継承ダービー</span></h1>
         <button class="primary big" id="newGameButton">はじめから</button>
         <button id="continueButton">つづきから</button>
-        <button id="raceTestButton">レース画面テスト</button>
+        <button id="raceTestButton">コース検証テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.7</b>
+        <b class="build-version">Ver. 0.10.8</b>
       </div>
     </section>
 
@@ -62,7 +62,7 @@
     </section>
 
     <section id="raceTestSetupScreen" class="game-screen race-test-setup-screen">
-      <header class="simple-header"><b>レース画面テスト</b><span>条件を選択</span></header>
+      <header class="simple-header"><b>コース検証テスト</b><span>本編未反映</span></header>
       <div class="race-test-config">
         <label>競馬場<select id="raceTestVenue"></select></label>
         <label>馬場<select id="raceTestSurface"></select></label>
@@ -405,9 +405,9 @@
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260718-2"></script>
-  <script src="app.js?v=20260719-14"></script>
+  <script src="app.js?v=20260719-15"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
-  <script src="race.js?v=20260719-7"></script>
+  <script src="race.js?v=20260719-8"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>
