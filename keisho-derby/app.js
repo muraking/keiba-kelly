@@ -1,4 +1,7 @@
 const SAVE_KEY = "dotKeibaTrialV3";
+// 2歳から9歳末までの8年間。旧実装の240週（5年）固定により、
+// 5年目12月以降に番組が消える不具合を防ぐ。
+const CAREER_MAX_WEEKS = 384;
 const screens = [...document.querySelectorAll(".game-screen")];
 const coats = [["栗毛","#b96e32"],["鹿毛","#74401f"],["黒鹿毛","#3c2a25"],["芦毛","#b9b7ad"]];
 const sires = [
@@ -170,7 +173,7 @@ function programAgeLabel(week){
   if(age===3)return "3歳以上";
   return yearWeek<21?"4歳以上":"3歳以上";
 }
-for(let week=1;week<=240;week++){
+for(let week=1;week<=CAREER_MAX_WEEKS;week++){
   const calendarAge=horseAgeAtWeek(week),yearWeek=(week-1)%48,ageLimitedSeason=calendarAge===2||(calendarAge===3&&yearWeek<21),venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
   venues.forEach(venue=>PROGRAM_RACES.forEach(([number,baseName,baseClass,baseSurface,requestedDistance,prize,difficulty])=>{
     // 後半4競走は週ごとに芝・ダートを2競走ずつ配置し、固定的な芝偏重を防ぐ。
@@ -224,7 +227,7 @@ function narAgeText(name){
   return female?"3歳以上牝":"3歳以上";
 }
 function addOfficialRaces(source,prefix){
-  for(let year=1;year<=5;year++)source.forEach((raw,index)=>{
+  for(let year=1;year<=CAREER_MAX_WEEKS/48;year++)source.forEach((raw,index)=>{
     const official={...raw,age:raw.age||narAgeText(raw.name)};
     const raceWeek=officialWeek(raw.date,year);
     const normalizedClass=raw.grade.endsWith("1")?"G1":raw.grade.endsWith("2")?"G2":"G3";
@@ -1243,7 +1246,7 @@ function buyEquipment(id){
 }
 function renderRaces(){
   if(!Number.isFinite(window.selectedRaceWeek))window.selectedRaceWeek=game.week;
-  const displayWeek=Math.max(1,Math.min(240,window.selectedRaceWeek));
+  const displayWeek=Math.max(1,Math.min(CAREER_MAX_WEEKS,window.selectedRaceWeek));
   window.selectedRaceWeek=displayWeek;
   const year=Math.floor((displayWeek-1)/48)+1,yearWeek=(displayWeek-1)%48;
   const displayLabel=`${year}年目 ${Math.floor(yearWeek/4)+1}月${yearWeek%4+1}週`;
@@ -1595,7 +1598,7 @@ document.querySelector("#raceChoices").onclick=e=>{
 };
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
 document.querySelector("#previousRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.max(1,(window.selectedRaceWeek||game.week)-1);window.selectedRaceVenue="";renderRaces()};
-document.querySelector("#nextRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.min(240,(window.selectedRaceWeek||game.week)+1);window.selectedRaceVenue="";renderRaces()};
+document.querySelector("#nextRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.min(CAREER_MAX_WEEKS,(window.selectedRaceWeek||game.week)+1);window.selectedRaceVenue="";renderRaces()};
 document.querySelector("#newspaperRaceButton").onclick=()=>{showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"))};
 addEventListener("dotkeiba:preview-ready",e=>{
   if(!game.selectedRace)return;
