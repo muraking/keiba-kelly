@@ -1257,8 +1257,8 @@ function drawVisionGateBreak(vx,camY,vw,camH){
     const horseX=startX+launchElapsed*.17+reactionLead-(i%2)*2;
     drawVisionCandidateHorse(horseX,camY+camH*.72+(i%4)*Math.max(2,camH*.025),h,VISION_HORSE_SCALE);
   });
-  const launchScroll=Math.max(0,preRaceClock-launchStart)*.17;
-  drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move-launchScroll);
+  // 左端への移動完了後は発馬機を固定し、馬だけを右へ走らせる。
+  drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move);
 }
 
 function assignStartReactions(){
@@ -1452,7 +1452,6 @@ function drawTrackV2(){
       const cameraEase=cameraBlend*cameraBlend*(3-2*cameraBlend);
       const entryX=screenX-28,targetLeaderX=screenX+screenW-18;
       const leaderX=entryX+(targetLeaderX-entryX)*cameraEase+cameraOffset;
-      const horseScale=VISION_HORSE_SCALE;
       // ゴール板は遠景として先に描き、馬をその手前へ重ねる。
       const goalX=leaderX+goalDistance*pixelsPerMeter;
       if(goalX>screenX-20&&goalX<screenX+screenW+20)drawVisionGoalBoard(goalX,screenY+Math.max(2,screenH*.08));
@@ -1463,7 +1462,7 @@ function drawTrackV2(){
         // 地面・柵と同じ勾配上へ馬を置き、各馬の位置に応じて坂を上り下りさせる。
         const horseElevation=-(courseElevation(h.progress)-courseElevation(centerOrder[0].progress))*.55;
         const y=Math.round(visionTerrain.groundY(x)+screenH*.17+(lane-1)*Math.max(1.2,screenH*.08/7)+horseElevation);
-        drawVisionCandidateHorse(x,y,h,horseScale);
+        drawVisionCandidateHorse(x,y,h,VISION_HORSE_SCALE);
       });
     }
     ctx.restore();
