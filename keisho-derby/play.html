@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.38</title>
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.39</title>
   <link rel="stylesheet" href="style.css?v=20260719-62">
 </head>
 <body class="tester-build">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">コース検証テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.38</b>
+        <b class="build-version">Ver. 0.10.39</b>
       </div>
     </section>
 
@@ -146,7 +146,7 @@
       <div class="stats" id="horseStats"></div>
       <section class="coach-message">
         <span class="pixel-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i><b class="trainer-caption">調教師</b></span>
-        <div class="coach-copy"><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b></div><div id="tackChoices" class="tack-choices"></div></div>
+        <div class="coach-copy"><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b><span>脚元</span><b id="legConditionComment">脚元を確認しています</b></div><div id="tackChoices" class="tack-choices"></div></div>
       </section>
       <div class="training-menu-head"><b>調教メニュー</b><span>今週 <strong id="turnsLeft">0/2</strong></span></div>
       <div class="auto-training-panel"><button id="autoTrainingButton">おまかせ調教 4週間</button></div>
@@ -186,6 +186,7 @@
         <button class="training-condition" data-action="light">軽め調整<br><small>下降を抑える</small></button>
         <button class="training-condition" data-action="forest">森林馬道<br><small>上向き期待</small></button>
         <button id="voluntaryPastureButton" class="training-condition">放牧<br><small>4週間・心身回復</small></button>
+        <button id="hotSpringButton" class="training-condition hot-spring-button" data-action="hotSpring" hidden>温泉療養<br><small>週2回分・脚元回復 大</small></button>
         <button id="pastureButton" class="pasture-button" hidden>復帰までスキップ<br><small id="pastureWeeks">長期放牧</small></button>
       </nav>
       <button class="primary big race-select-main" id="goRaceSelectButton"><span>レースに出走</span><small id="nextRaceButtonText">次走予定を確認</small></button>
@@ -414,7 +415,7 @@
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260718-2"></script>
-  <script src="app.js?v=20260720-2"></script>
+  <script src="app.js?v=20260720-3"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260720-1"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>

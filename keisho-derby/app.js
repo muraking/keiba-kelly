@@ -722,6 +722,13 @@ function classAbilityTarget(){
   return label==="新馬"?500:label==="未勝利"?530:label==="1勝クラス"?610:label==="2勝クラス"?680:label==="3勝クラス"?750:820;
 }
 function legLabel(){return game.legCondition>=85?"良好":game.legCondition>=65?"少し張り":game.legCondition>=45?"注意":"危険"}
+function legCoachComment(){
+  if(game.injury)return `${game.injury.name}を発症しています。長期放牧が必要です`;
+  if(game.legCondition>=85)return "すっきりしています。通常の調教を行えます";
+  if(game.legCondition>=65)return "少し張りがあります。プールか軽め調整を挟むと安心です";
+  if(game.legCondition>=45)return game.equipment.includes("hotSpring")?"張りが強く出ています。温泉療養を勧めます":"強い調教は避け、森林馬道・プール・休養で戻しましょう";
+  return game.equipment.includes("hotSpring")?"故障寸前です。今週は温泉療養か放牧を選んでください":"故障寸前です。調教を中止し、放牧を強く勧めます";
+}
 function raceConditionModifier(){
   if(game.condition>=85)return 30;
   if(game.condition>=68)return 15;
@@ -889,6 +896,7 @@ function postRaceFatigueGain(race,weather,place){
 }
 function renderTack(){
   document.querySelector("#temperamentComment").textContent=trainerTemperamentComment();
+  document.querySelector("#legConditionComment").textContent=legCoachComment();
   document.querySelector("#tackChoices").innerHTML=game.tackUnlocked.length
     ? `<button data-tack="" class="${!game.equippedTack?"selected":""}">馬具なし</button>`+
       game.tackUnlocked.map(id=>`<button data-tack="${id}" class="${game.equippedTack===id?"selected":""}">${tackCatalog[id].name}<small>${tackCatalog[id].desc}</small></button>`).join("")
@@ -975,6 +983,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#autoTrainingButton").disabled=injured||trainingLocked;
   document.querySelector("#voluntaryPastureButton").disabled=injured||trainingLocked;
   document.querySelector("#pastureButton").hidden=!injured;
+  document.querySelector("#hotSpringButton").hidden=!game.equipment.includes("hotSpring");
   if(injured)document.querySelector("#pastureWeeks").textContent=`${game.injury.name}・${game.injury.weeks}週間を一括進行`;
   saveGame();
   const arrivedReservation=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
@@ -1002,6 +1011,7 @@ const training={
   gate:{label:"ゲート訓練",fatigue:5,stats:{dash:1}},
   light:{label:"軽め調整",fatigue:0,stats:{}},
   forest:{label:"森林馬道",fatigue:0,stats:{}},
+  hotSpring:{label:"温泉療養",fatigue:0,stats:{}},
 };
 const injuries=[
   {name:"骨膜炎",minWeeks:6,maxWeeks:10,weight:44,lossChance:.18,maxLoss:1},
@@ -1015,7 +1025,7 @@ function weightedInjury(){
   return injuries.find(x=>(roll-=x.weight)<=0)||injuries[0];
 }
 function injuryRisk(type){
-  const intensity={turfSolo:.55,turfPair:1,dirtSolo:.65,dirtPair:1.08,hillSolo:1.05,hillPair:1.22,pool:.08,gate:.35}[type]||0;
+  const intensity={turfSolo:.55,turfPair:1,dirtSolo:.65,dirtPair:1.08,hillSolo:1.05,hillPair:1.22,pool:.08,gate:.35,hotSpring:0}[type]||0;
   if(game.fatigue<45||intensity===0)return 0;
   const fatigueRisk=Math.pow((game.fatigue-50)/50,2);
   const legRisk=game.legCondition>=65?1:game.legCondition>=45?1.45:2.1;
@@ -1082,6 +1092,8 @@ const equipmentCatalog=[
   {id:"massage",name:"振動マッサージ機",cost:130,grade:"回復設備",desc:"週送り時の疲労回復+3",durability:75,icon:"揉"},
   {id:"haySteamer",name:"飼料スチーマー",cost:80,grade:"飼養設備",desc:"馬体重をベスト体重へ戻しやすくする",durability:95,icon:"飼"},
   {id:"altitude",name:"低酸素トレーニング室",cost:220,grade:"先進設備",desc:"ダート調教のスタミナ成長を補助",durability:60,icon:"肺"},
+  {id:"hotSpring",name:"馬用温泉施設",cost:260,grade:"療養設備",desc:"温泉療養を解放。週2回分で脚元と疲労を大きく回復",durability:90,icon:"湯"},
+  {id:"supportShoes",name:"治療用蹄鉄セット",cost:105,grade:"装蹄設備",desc:"強い調教による脚元への負担をさらに軽減",durability:80,icon:"蹄"},
 ];
 function equipmentCondition(item){
   const value=game.equipmentDurability[item.id]??item.durability,ratio=value/item.durability;
@@ -1223,6 +1235,19 @@ function train(type){
   if(trainingAnimationActive&&!autoTrainingActive)return;
   if(game.injury)return renderHome(`${game.injury.name}のため調教できません。長期放牧が必要です。`);
   if(game.trainingsUsed>=2)return renderHome("今週の調教は2回終了しました。レースか翌週を選びましょう。");
+  if(type==="hotSpring"){
+    if(!game.equipment.includes("hotSpring"))return renderHome("温泉療養には、設備ショップの馬用温泉施設が必要です。");
+    if(game.trainingsUsed>0)return renderHome("温泉療養は今週の調教2回分を使います。週の最初に選んでください。");
+    const beforeLeg=game.legCondition;
+    game.trainingsUsed=2;
+    game.fatigue=Math.max(0,game.fatigue-rnd(28,36));
+    game.raceLoad=Math.max(0,game.raceLoad-rnd(12,20));
+    game.legCondition=Math.min(100,game.legCondition+rnd(18,28));
+    game.condition=Math.min(100,game.condition+rnd(3,6));
+    if(game.weight<bestWeight()-5)game.weight++;
+    playTrainingAnimation("hotSpring","温泉療養","脚元回復");
+    return renderHome(`温泉でじっくりほぐしました。脚元は「${legLabel()}」まで回復し、疲れも抜けています。${beforeLeg<45?"故障の危険は下がりましたが、次週も慎重に進めましょう。":"表情も穏やかです。"}`);
+  }
   if(type==="light"||type==="forest"){
     const forest=type==="forest",before=game.condition;
     game.trainingsUsed++;
@@ -1262,8 +1287,9 @@ function train(type){
   if(type==="gate"&&mult>0)game.gateSkill=Math.min(1000,game.gateSkill+rnd(mult===2?24:12,mult===2?40:22));
   const gains=Object.fromEntries(Object.keys(t.stats).map(stat=>[stat,game[stat]-beforeStats[stat]]));
   game.trainingsUsed++; game.fatigue=Math.min(100,game.fatigue+t.fatigue);
-  const rawLegLoad={turfSolo:3,turfPair:8,dirtSolo:4,dirtPair:9,hillSolo:9,hillPair:12,pool:-5,gate:2}[type]||0;
-  const legLoad=game.equipment.includes("iceBath")?Math.max(-5,rawLegLoad-2):rawLegLoad;
+  const rawLegLoad={turfSolo:3,turfPair:8,dirtSolo:4,dirtPair:9,hillSolo:9,hillPair:12,pool:-7,gate:2}[type]||0;
+  const careReduction=(game.equipment.includes("iceBath")?2:0)+(game.equipment.includes("supportShoes")?2:0);
+  const legLoad=Math.max(-7,rawLegLoad-careReduction);
   game.legCondition=Math.max(0,Math.min(100,game.legCondition-legLoad+rnd(-1,1)));
   const weightDiffBefore=game.weight-bestWeight();
   let weightLoss;
@@ -1385,6 +1411,8 @@ function advanceWeek(rest=false){
 }
 function autoTrainingChoice(mode,raceSoon=false,usage={},lastType=""){
   const weightDiff=game.weight-bestWeight();
+  if(game.legCondition<48&&game.equipment.includes("hotSpring")&&game.trainingsUsed===0)return "hotSpring";
+  if(game.legCondition<62)return game.trainingsUsed===0?"pool":"rest";
   if(game.fatigue>=55)return "rest";
   if(raceSoon){
     if(game.fatigue>=30)return "rest";
