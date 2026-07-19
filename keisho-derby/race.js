@@ -1263,19 +1263,24 @@ function drawTrackV2(){
     const minX=Math.min(...innerRail.map(p=>p.x)),maxX=Math.max(...innerRail.map(p=>p.x));
     const minY=Math.min(...innerRail.map(p=>p.y)),maxY=Math.max(...innerRail.map(p=>p.y));
     const innerW=maxX-minX,innerH=maxY-minY;
-    const mw=Math.floor(innerW*.68),mh=Math.floor(innerH*.58);
+    // 内柵のすぐ内側まで使う。角のカーブへ触れない最小限の余白だけ残す。
+    const mw=Math.floor(innerW*.84),mh=Math.floor(innerH*.74);
     const mx=Math.round((minX+maxX-mw)/2),my=Math.round((minY+maxY-mh)/2);
     const centerOrder=order(),front=Math.max(...centerOrder.map(h=>raceDistance(h)));
     const screenX=mx+3,screenY=my+20,screenW=mw-6,screenH=mh-23;
     ctx.fillStyle="#111a20";ctx.fillRect(mx,my,mw,mh);ctx.strokeStyle=plateBorder;ctx.lineWidth=2;ctx.strokeRect(mx,my,mw,mh);
     ctx.fillStyle="#263a2e";ctx.fillRect(mx+2,my+2,mw-4,16);
     ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText("TURF VISION　中継映像",mx+mw/2,my+12);
+    // 馬・ゲート・ゴール板・確定情報は中継画面の外へ一切描画しない。
+    ctx.save();ctx.beginPath();ctx.rect(screenX,screenY,screenW,screenH);ctx.clip();
     if(state==="runout"||state==="finished"){
       const winner=centerOrder[0];
       ctx.fillStyle="#10151a";ctx.fillRect(screenX,screenY,screenW,screenH);
       ctx.fillStyle="#d83232";ctx.fillRect(mx+mw-55,my+24,43,21);ctx.fillStyle="#fff";ctx.font="bold 14px sans-serif";ctx.fillText("確定",mx+mw-34,my+40);
-      drawVisionCandidateHorse(mx+34,my+Math.min(61,mh-33),winner,.58);
-      centerOrder.slice(0,3).forEach((h,index)=>{const y=my+58+index*13;ctx.fillStyle="#e8edf0";ctx.font="bold 8px sans-serif";ctx.textAlign="left";ctx.fillText(`${index+1}着 ${h.id}番`,mx+mw*.53,y);ctx.fillStyle=index?"#cfb96f":"#ffe36d";ctx.textAlign="right";ctx.fillText(index?marginLabel(centerOrder[index-1],h):formatTime(h.finishTime),mx+mw-8,y)});
+      drawVisionCandidateHorse(mx+34,my+Math.min(61,mh-31),winner,.54);
+      const resultGap=Math.max(9,Math.min(12,(screenH-34)/3));
+      const resultTop=Math.max(my+49,my+mh-resultGap*3-4);
+      centerOrder.slice(0,3).forEach((h,index)=>{const y=resultTop+index*resultGap;ctx.fillStyle="#e8edf0";ctx.font="bold 8px sans-serif";ctx.textAlign="left";ctx.fillText(`${index+1}着 ${h.id}番`,mx+mw*.53,y);ctx.fillStyle=index?"#cfb96f":"#ffe36d";ctx.textAlign="right";ctx.fillText(index?marginLabel(centerOrder[index-1],h):formatTime(h.finishTime),mx+mw-8,y)});
     }else if(state==="parade"){
       ctx.fillStyle=isDirt?"#9a6c43":"#4a9445";ctx.fillRect(screenX,screenY,screenW,screenH);
       horses.forEach((h,i)=>{
@@ -1306,6 +1311,7 @@ function drawTrackV2(){
       const goalX=leaderX+goalDistance*Math.max(1.05,screenW/105);
       if(goalX>screenX-20&&goalX<screenX+screenW+20)drawVisionGoalBoard(goalX,screenY+2);
     }
+    ctx.restore();
   }
 
   // コース直下の実況帯（最新4行）。
