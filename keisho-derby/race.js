@@ -1162,7 +1162,7 @@ function drawVisionGate(vx,camY,vw,camH){
   const enteredIds=new Set(entryOrder.slice(0,sequenceIndex));
   horses.filter(h=>h.id!==focus?.id&&!enteredIds.has(h.id)).forEach(h=>{
     const wait=waitingHorsePosition(h,vx,camY,vw,camH);
-    drawVisionCandidateHorse(wait.x,wait.y,h,.40);
+    drawVisionCandidateHorse(wait.x,wait.y,h,.39);
   });
   const local=preRaceClock-sequenceIndex*step;
   const difficult=focus?.id===gateDifficultHorseId;
@@ -1178,21 +1178,19 @@ function drawVisionGate(vx,camY,vw,camH){
   }
   const wait=waitingHorsePosition(focus,vx,camY,vw,camH);
   const horseX=wait.x+travel*(gateX-11-wait.x),horseY=wait.y+travel*(gateY+gateH-7-wait.y)+(difficult&&travel<.8?Math.sin(local/60)*2:0);
-  if(focus&&local<900)drawVisionCandidateHorse(horseX,horseY,focus,.40);
+  if(focus&&local<900)drawVisionCandidateHorse(horseX,horseY,focus,.39);
   if(difficult&&local<820){ctx.fillStyle="#efb05d";ctx.fillRect(horseX-18,horseY+4,4,8);ctx.fillStyle="#315b84";ctx.fillRect(horseX-19,horseY+11,7,6)}
   ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";
   ctx.fillText(difficult&&local<820?`${focus.id}番、ゲート入りを嫌がる`:`${focus?.id||8}番、枠入り`,vx+8,camY+9);
 }
 
 function drawVisionGateBreak(vx,camY,vw,camH){
-  const burst=Math.max(0,Math.min(1,(preRaceClock-360)/500));
-  drawVisionGateStructure(vx,camY,vw,camH,-burst*(vw*.72));
-  if(burst>0)horses.forEach((h,i)=>drawVisionCandidateHorse(vx+vw-18+burst*34+(i%3)*5,camY+camH*.72+(i%4)*Math.max(2,camH*.025),h,.40));
-  if(burst>0){
-    const notable=horses.filter(h=>h.startReaction!=="普通").map(h=>`${h.id}番 ${h.startReaction}`).join("　");
-    ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(notable||"各馬そろったスタート",vx+vw/2,camY+10);
-  }
-  if(burst===0){ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText("8番が入り、全馬収容",vx+vw/2,camY+10)}
+  const move=Math.max(0,Math.min(1,(preRaceClock-250)/650));
+  const gateW=Math.max(23,Math.min(27,vw*.12));
+  const targetOffset=-(vw-gateW-16);
+  drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move);
+  ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";
+  ctx.fillText(move<1?"全馬収容　発馬機を移動中":"発馬機停止　スタートを待ちます",vx+vw/2,camY+10);
 }
 
 function assignStartReactions(){
@@ -1348,25 +1346,28 @@ function drawTrackV2(){
         const ease=1-Math.pow(1-travel,3);
         const x=screenX-18+(target.x-screenX+18)*ease;
         const y=screenY+screenH*.72+(target.y-screenY-screenH*.72)*ease;
-        drawVisionCandidateHorse(x,y,h,.40);
+        drawVisionCandidateHorse(x,y,h,.39);
       });
     }else if(state==="gates"){
       drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,0);
       drawVisionGate(screenX,screenY,screenW,screenH);
     }else if(state==="gateBreak"){
-      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.08);
+      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,0);
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
-      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.14);
+      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.012);
       const rear=Math.min(...centerOrder.map(h=>raceDistance(h))),fieldSpan=Math.max(0,front-rear);
       const cameraSpan=Math.max(105,Math.min(280,fieldSpan+24));
       const pixelsPerMeter=(screenW-38)/cameraSpan;
-      const leaderX=screenX+screenW-18;
-      const horseScale=fieldSpan>180?.32:fieldSpan>115?.36:.42;
-      // ゴール板は遠景として先に描き、馬をその手前へ重ねる。
       const goalDistance=TOTAL-front;
+      const sweepPhase=raceClock%16000;
+      const sweep=goalDistance>500&&sweepPhase>10500&&sweepPhase<14500?Math.sin((sweepPhase-10500)/4000*Math.PI):0;
+      const cameraOffset=sweep*Math.min(screenW*.50,fieldSpan*pixelsPerMeter*.70);
+      const leaderX=screenX+screenW-18+cameraOffset;
+      const horseScale=.39;
+      // ゴール板は遠景として先に描き、馬をその手前へ重ねる。
       const goalX=leaderX+goalDistance*pixelsPerMeter;
-      if(goalX>screenX-20&&goalX<screenX+screenW+20)drawVisionGoalBoard(goalX,screenY+screenH-50);
+      if(goalX>screenX-20&&goalX<screenX+screenW+20)drawVisionGoalBoard(goalX,screenY+Math.max(2,screenH*.08));
       centerOrder.filter((h,index)=>front-raceDistance(h)<=cameraSpan||index<4).sort((a,b)=>b.lane-a.lane).forEach(h=>{
         const gap=front-raceDistance(h);
         const x=Math.round(leaderX-gap*pixelsPerMeter);
@@ -1788,7 +1789,7 @@ startButton.addEventListener("click", () => {
         state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
         gateSkipButton.hidden=true;
         setCommentary("全馬、枠内に収まりました。スタートを待ちます。");
-        gateStartTimer=setTimeout(beginRaceAfterGate,900);
+        gateStartTimer=setTimeout(beginRaceAfterGate,1450);
       },8100);
     },6500);
   }
@@ -1801,7 +1802,7 @@ gateSkipButton.addEventListener("click",()=>{
   state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
   gateSkipButton.hidden=true;
   setCommentary("ゲート入りをスキップしました。全馬収容、スタートを待ちます。");
-  gateStartTimer=setTimeout(beginRaceAfterGate,700);
+  gateStartTimer=setTimeout(beginRaceAfterGate,1450);
 });
 
 raceTestBackButton.addEventListener("click",()=>{
