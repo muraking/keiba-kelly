@@ -79,7 +79,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], gradedTrophies:[], candidate:null,
-  reservedRaceId:null,reservationNotifiedId:null, affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:""
+  reservedRaceId:null,reservationNotifiedId:null,pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:""
 });
 let game = defaultGame();
 let autoTrainingActive=false;
@@ -406,6 +406,7 @@ function loadGame(slot=activeSaveSlot){
     if(!Array.isArray(saved?.favoriteRaces))game.favoriteRaces=[];
     if(!Array.isArray(saved?.galleryUnlocks))game.galleryUnlocks=["stable"];
     if(!Array.isArray(saved?.gradedTrophies))game.gradedTrophies=(game.raceHistory||[]).filter(x=>x.place===1&&["G1","G2","G3"].includes(x.raceClass)).map(x=>({raceName:x.raceName,grade:x.raceClass,horseName:game.horseName,generation:game.generation,date:x.date}));
+    if(!Array.isArray(saved?.declinedOverseasInvites))game.declinedOverseasInvites=[];
     if(!Number.isFinite(saved?.temperamentValue))game.temperamentValue=rnd(30,75);
     if(!saved?.temperament)game.temperament=temperamentType(game.temperamentValue);
     if(!Array.isArray(saved?.tackUnlocked))game.tackUnlocked=[];
@@ -988,6 +989,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   saveGame();
   const arrivedReservation=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
   if(arrivedReservation&&game.reservationNotifiedId!==arrivedReservation.id)queueMicrotask(()=>showReservationArrival(arrivedReservation));
+  else if(game.pendingOverseasOfferId)queueMicrotask(showOverseasInvitation);
 }
 function closeReservationArrival(){
   const modal=document.querySelector("#reservationArrivalModal");modal.classList.remove("show");modal.setAttribute("aria-hidden","true");
@@ -995,11 +997,51 @@ function closeReservationArrival(){
 function showReservationArrival(race){
   game.reservationNotifiedId=race.id;saveGame();
   document.querySelector("#reservationArrivalRace").textContent=`${race.course}　${race.name}`;
+  document.querySelector("#reservationArrivalTitle").textContent=race.overseas?"海外GⅠの遠征週です！":"予約レースの開催週です！";
+  document.querySelector("#reservationArrivalAction").textContent=race.overseas?"海外GⅠへ出走":"レース選択へ";
+  document.querySelector("#reservationArrivalGuide").textContent=race.overseas?"秘密の招待レースへ直接向かいます":"予約した会場と番組を開きます";
   const modal=document.querySelector("#reservationArrivalModal");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
 }
 function openReservedRaceWeek(race){
+  if(race.overseas){closeReservationArrival();prepareRace(race);return}
   window.selectedRaceWeek=race.week;window.selectedRaceVenue=raceVenue(race);renderRaces();showScreen("raceSelectScreen");closeReservationArrival();
 }
+function overseasInviteReason(key){
+  return key==="arc"?"宝塚記念を制した走りが欧州関係者の目に留まりました。2400mの世界最高峰、凱旋門賞へ挑戦しませんか？":
+    key==="king-george"?"芝中長距離GⅠでの実績が評価されました。欧州の夏の大一番へ招待されています。":
+    key==="dubai-world-cup"?"国内ダートGⅠでの勝利が評価され、ドバイワールドカップから招待が届きました。":
+    key==="bc-classic"?"ダートの世界戦で通用する走りと判断され、ブリーダーズカップクラシックへ招待されました。":
+    "距離適性と国内GⅠでの実績が評価され、香港国際競走から招待が届きました。";
+}
+function qualifyingOverseasKey(race){
+  const name=race.name;
+  if(/宝塚記念/.test(name))return "arc";
+  if(/大阪杯|天皇賞（春）|日本ダービー/.test(name))return "king-george";
+  if(/チャンピオンズカップ|東京大賞典|帝王賞|JBCクラシック/.test(name))return "dubai-world-cup";
+  if(race.surface==="ダート"&&race.raceClass==="G1")return "bc-classic";
+  if(race.surface==="芝"&&race.raceClass==="G1"){
+    if(race.distance<=1400)return "hong-kong-sprint";
+    if(race.distance<=1800)return "hong-kong-mile";
+    if(race.distance<=2200)return "hong-kong-cup";
+    return "hong-kong-vase";
+  }
+  return null;
+}
+function checkOverseasInvitation(race,place){
+  if(place!==1||race.overseas)return;
+  const key=qualifyingOverseasKey(race);if(!key)return;
+  const candidates=raceCalendar.filter(item=>item.overseas&&item.id.endsWith(`-${key}`)&&item.week>game.week&&!game.declinedOverseasInvites.includes(item.id));
+  const target=candidates.sort((a,b)=>a.week-b.week)[0];if(!target)return;
+  game.pendingOverseasOfferId=target.id;
+}
+function showOverseasInvitation(){
+  const race=raceCalendar.find(item=>item.id===game.pendingOverseasOfferId);if(!race)return;
+  const key=race.id.replace(/^overseas-\d+-/,"");
+  document.querySelector("#overseasInviteTitle").textContent=`${race.name}からの招待`;
+  document.querySelector("#overseasInviteText").textContent=`${overseasInviteReason(key)} 開催は${Math.max(1,race.week-game.week)}週後です。`;
+  const modal=document.querySelector("#overseasInviteModal");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+}
+function closeOverseasInvitation(){const modal=document.querySelector("#overseasInviteModal");modal.classList.remove("show");modal.setAttribute("aria-hidden","true")}
 const training={
   turfSolo:{label:"芝・単走",fatigue:6,stats:{speed:1,turf:1}},
   turfPair:{label:"芝・併せ馬",fatigue:13,stats:{speed:1,guts:1,turf:1}},
@@ -1524,7 +1566,7 @@ function renderRaces(){
   document.querySelector("#selectTurn").textContent=displayWeek===game.week?"今週":displayWeek>game.week?`今から${displayWeek-game.week}週後`:"開催終了";
   document.querySelector("#raceWeekLabel").textContent=displayLabel;
   document.querySelector("#previousRaceWeek").disabled=displayWeek<=1;
-  const periodRaces=raceCalendar.filter(r=>r.week===displayWeek&&r.program);
+  const periodRaces=raceCalendar.filter(r=>r.week===displayWeek&&r.program&&!r.overseas);
   const venues=[...new Set(periodRaces.map(raceVenue))];
   if(window.selectedRaceVenue&&!venues.includes(window.selectedRaceVenue))window.selectedRaceVenue="";
   if(!window.selectedRaceVenue)window.selectedRaceVenue=venues[0]||"";
@@ -1757,6 +1799,7 @@ function showResult(detail){
     age:horseAge(),date:weekLabel(),week:game.week,favorite:false
   });
   if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",generation:game.generation,date:weekLabel()});
+  checkOverseasInvitation(r,place);
   refreshGalleryUnlocks();
   const spacingBeforeRace=raceIntervalState(game.week);
   const fatigueGain=postRaceFatigueGain(r,weather,place);
@@ -1962,6 +2005,15 @@ document.querySelector("#breedingPartners").onclick=e=>{
 };
 document.querySelector("#inheritConfirmProceed").onclick=()=>{const partner=pendingBreedingPartner;closeInheritanceConfirm();if(partner)beginNextGeneration(partner)};
 document.querySelector("#inheritConfirmCancel").onclick=closeInheritanceConfirm;
+document.querySelector("#overseasInviteAccept").onclick=()=>{
+  const race=raceCalendar.find(item=>item.id===game.pendingOverseasOfferId);if(!race)return closeOverseasInvitation();
+  game.reservedRaceId=race.id;game.reservationNotifiedId=null;game.pendingOverseasOfferId=null;saveGame();closeOverseasInvitation();
+  renderHome(`${race.name}からの招待を受けました。${Math.max(1,race.week-game.week)}週後の海外遠征へ向けて仕上げましょう。`);
+};
+document.querySelector("#overseasInviteDecline").onclick=()=>{
+  if(game.pendingOverseasOfferId&&!game.declinedOverseasInvites.includes(game.pendingOverseasOfferId))game.declinedOverseasInvites.push(game.pendingOverseasOfferId);
+  game.pendingOverseasOfferId=null;saveGame();closeOverseasInvitation();renderHome("海外からの招待は今回は見送りました。国内路線へ戻ります。");
+};
 document.querySelector("#devModeButton").onclick=()=>{
   developerMode=!developerMode;
   localStorage.setItem("dotKeibaDeveloperMode",developerMode?"1":"0");

@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.10.40</title>
+  <title>ドット競馬 継承ダービー｜Ver. 0.10.41</title>
   <link rel="stylesheet" href="style.css?v=20260719-62">
 </head>
 <body>
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">コース検証テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.40</b>
+        <b class="build-version">Ver. 0.10.41</b>
       </div>
     </section>
 
@@ -162,10 +162,10 @@
       </div>
       <div id="reservationArrivalModal" class="auto-training-modal" aria-hidden="true">
         <div class="auto-training-dialog reservation-arrival-dialog" role="dialog" aria-modal="true">
-          <b>予約レースの開催週です！</b>
+          <b id="reservationArrivalTitle">予約レースの開催週です！</b>
           <div class="reservation-flag">出走予定</div>
           <p id="reservationArrivalRace">東京 芝1600m　予約レース</p>
-          <button id="reservationArrivalOpen"><strong>レース選択へ</strong><small>予約した会場と番組を開きます</small></button>
+          <button id="reservationArrivalOpen"><strong id="reservationArrivalAction">レース選択へ</strong><small id="reservationArrivalGuide">予約した会場と番組を開きます</small></button>
           <button id="reservationArrivalClose" class="auto-training-cancel">あとで確認する</button>
         </div>
       </div>
@@ -412,10 +412,18 @@
         <button id="inheritConfirmCancel" class="auto-training-cancel">候補一覧へ戻る</button>
       </div>
     </div>
+    <div id="overseasInviteModal" class="auto-training-modal overseas-invite-modal" aria-hidden="true">
+      <div class="auto-training-dialog overseas-invite-dialog" role="dialog" aria-modal="true" aria-labelledby="overseasInviteTitle">
+        <small>SECRET OVERSEAS CHALLENGE</small><b id="overseasInviteTitle">海外GⅠからの招待</b>
+        <div class="overseas-letter"><span>✈</span><p id="overseasInviteText"></p></div>
+        <button id="overseasInviteAccept" class="race-warning-proceed">招待を受ける</button>
+        <button id="overseasInviteDecline" class="auto-training-cancel">今回は見送る</button>
+      </div>
+    </div>
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260718-2"></script>
-  <script src="app.js?v=20260720-4"></script>
+  <script src="app.js?v=20260720-5"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260720-1"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
