@@ -1225,26 +1225,24 @@ function drawVisionGate(vx,camY,vw,camH){
   const horseX=wait.x+travel*(gateX-11-wait.x),horseY=wait.y+travel*(gateY+gateH-7-wait.y)+(difficult&&travel<.8?Math.sin(local/60)*2:0);
   if(focus&&local<900)drawVisionCandidateHorse(horseX,horseY,focus,.44);
   if(difficult&&local<820){ctx.fillStyle="#efb05d";ctx.fillRect(horseX-18,horseY+4,4,8);ctx.fillStyle="#315b84";ctx.fillRect(horseX-19,horseY+11,7,6)}
-  ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="left";
-  ctx.fillText(difficult&&local<820?`${focus.id}番、ゲート入りを嫌がる`:`${focus?.id||8}番、枠入り`,vx+8,camY+9);
 }
 
 function drawVisionGateBreak(vx,camY,vw,camH){
   const move=Math.max(0,Math.min(1,(preRaceClock-300)/1500));
   const gateW=Math.max(23,Math.min(27,vw*.12));
   const targetOffset=-(vw-gateW-16);
-  const launchStart=2150,launchDuration=800;
+  const launchStart=2150,launchDuration=900;
   // 左端で停止してから扉を開き、全馬が発馬機から右へ飛び出す。
   horses.forEach((h,i)=>{
-    const launch=Math.max(0,Math.min(1,(preRaceClock-launchStart-i*32)/launchDuration));
+    const reactionDelay=h.startReaction==="出遅れ"?260:h.startReaction==="好スタート"?-90:0;
+    const launch=Math.max(0,Math.min(1,(preRaceClock-launchStart-reactionDelay)/launchDuration));
     if(launch<=0)return;
     const ease=1-Math.pow(1-launch,3);
-    const startX=vx+10+gateW*.62,targetX=vx+vw-18-(i%3)*3;
+    const reactionLead=h.startReaction==="好スタート"?8:h.startReaction==="出遅れ"?-13:0;
+    const startX=vx+10+gateW*.62,targetX=vx+vw-24+reactionLead-(i%2)*2;
     drawVisionCandidateHorse(startX+(targetX-startX)*ease,camY+camH*.72+(i%4)*Math.max(2,camH*.025),h,.44);
   });
   drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move);
-  ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";
-  ctx.fillText(move<1?"全馬収容　発馬機ごと左へ移動":preRaceClock<launchStart?"左端で停止　スタートを待ちます":"ゲートオープン！",vx+vw/2,camY+10);
 }
 
 function assignStartReactions(){
@@ -1827,6 +1825,11 @@ function loop(time) {
 
 function beginRaceAfterGate(){
   if(state!=="gateBreak")return;
+  // ゲートから出た時の着差を本レース座標へ引き継ぐ。画面切替で横一線へ戻さない。
+  horses.forEach(h=>{
+    const reactionMeters=h.startReaction==="好スタート"?3.2:h.startReaction==="出遅れ"?-6:(h.id%3-1)*.45;
+    h.progress=START_PROGRESS+reactionMeters/LAP;
+  });
   state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
   gateSkipButton.hidden=true;
   speedButton.hidden=false;
@@ -1847,7 +1850,7 @@ function startReplayFromGateExit(resetFirst=true){
   phaseEl.textContent="全馬収容";
   setCommentary("保存リプレイを、発馬機が左へ移動する場面から再生します。",true);
   lastTime=0;raf=requestAnimationFrame(loop);
-  gateStartTimer=setTimeout(beginRaceAfterGate,3100);
+  gateStartTimer=setTimeout(beginRaceAfterGate,3500);
 }
 
 startButton.addEventListener("click", () => {
@@ -1872,7 +1875,7 @@ startButton.addEventListener("click", () => {
         state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
         gateSkipButton.hidden=true;
         setCommentary("全馬、枠内に収まりました。スタートを待ちます。");
-        gateStartTimer=setTimeout(beginRaceAfterGate,3100);
+        gateStartTimer=setTimeout(beginRaceAfterGate,3500);
       },8100);
     },6500);
   }
@@ -1885,7 +1888,7 @@ gateSkipButton.addEventListener("click",()=>{
   state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
   gateSkipButton.hidden=true;
   setCommentary("ゲート入りをスキップしました。全馬収容、スタートを待ちます。");
-  gateStartTimer=setTimeout(beginRaceAfterGate,3100);
+  gateStartTimer=setTimeout(beginRaceAfterGate,3500);
 });
 
 raceTestBackButton.addEventListener("click",()=>{
