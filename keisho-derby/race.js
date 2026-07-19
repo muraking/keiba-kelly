@@ -125,10 +125,14 @@ let pendingResultDetail = null;
 let archiveReplay = false;
 let horizontalLayout = false;
 let layoutV2 = false;
+let customTokyoCourse = false;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
 const COURSE_PATH_CACHE=new WeakMap();
+const customTokyoImages={turf:new Image(),dirt:new Image()};
+customTokyoImages.turf.src="./racecourses/tokyo/turf_pixel.png";
+customTokyoImages.dirt.src="./racecourses/tokyo/dirt_pixel.png";
 // 「通常」を従来シミュレーションの4倍速として扱う。
 // 画面表示の2倍・4倍は通常速度を基準に、それぞれ内部8倍・16倍になる。
 const BASE_PLAYBACK_RATE = 4;
@@ -1204,9 +1208,18 @@ function drawTrackV2(){
     }else for(let i=0;i<=180;i++){const q=coursePoint(i/180,lane);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
     if(!straightCourse)ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke();
   };
-  trace(4.5,"#f1ead2",40);
-  trace(4.5,isDirt?"#a87549":"#43943e",33);
-  for(let lane=1;lane<=8;lane++)trace(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
+  const customTokyoImage=customTokyoCourse?(isDirt?customTokyoImages.dirt:customTokyoImages.turf):null;
+  if(customTokyoImage?.complete&&customTokyoImage.naturalWidth){
+    ctx.save();ctx.imageSmoothingEnabled=false;
+    const scale=Math.min(340/customTokyoImage.naturalWidth,202/customTokyoImage.naturalHeight);
+    const width=Math.round(customTokyoImage.naturalWidth*scale),height=Math.round(customTokyoImage.naturalHeight*scale);
+    ctx.drawImage(customTokyoImage,Math.round((360-width)/2),44+Math.round((202-height)/2),width,height);
+    ctx.restore();
+  }else{
+    trace(4.5,"#f1ead2",40);
+    trace(4.5,isDirt?"#a87549":"#43943e",33);
+    for(let lane=1;lane<=8;lane++)trace(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
+  }
   if(isBanei){
     [{x:131,h:10,label:"第1障害"},{x:238,h:18,label:"第2障害"}].forEach(o=>{
       ctx.fillStyle="#8a603d";ctx.beginPath();ctx.moveTo(o.x-13,155);ctx.lineTo(o.x,155-o.h);ctx.lineTo(o.x+13,155);ctx.fill();
@@ -1214,7 +1227,7 @@ function drawTrackV2(){
     });
   }
   // 内馬場。
-  if(!straightCourse){
+  if(!straightCourse&&!customTokyoCourse){
     ctx.beginPath();
     for(let i=0;i<=120;i++){const q=coursePoint(i/120,9.4);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
     ctx.closePath();ctx.fillStyle="#1e5d28";ctx.fill();
@@ -1737,6 +1750,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   resultDispatchedForRace = false;
   raceSurface = event.detail.surface || "芝";
   currentRaceVenue = event.detail.venue || "東京";
+  customTokyoCourse=!!event.detail.customCourseAsset&&currentRaceVenue==="東京";
   raceDirectionOverride=event.detail.direction||null;
   TOTAL = event.detail.distance || 2400;
   configureCourseDistance();

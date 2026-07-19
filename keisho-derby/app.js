@@ -1534,18 +1534,18 @@ function prepareRace(race){
     game.selectedRace={
       id:race.id,name:race.name,raceClass:race.raceClass,course:race.course,
       surface:race.surface,distance:race.distance,prize:race.prize,
-      trialRight:race.trialRight||null
+      trialRight:race.trialRight||null,customCourseAsset:!!race.customCourseAsset
     };
     game.currentRaceWeather=raceWeather;
     saveGame();
-    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
+    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,customCourseAsset:!!race.customCourseAsset,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
   }catch(error){
     console.error("race preparation failed",error);
     document.querySelector("#commentary").textContent="レースの読み込みを再試行しています。";
     dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{
       horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,
       condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,
-      raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,direction:race.direction||null,
+      raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,direction:race.direction||null,customCourseAsset:!!race.customCourseAsset,
       surface:race.surface,heavyTrack:game.heavyTrack,weather:"晴",going:"良",
       raceMonth:raceCalendarMonth(race),baseTime:race.baseTime,
       benchmarkTime:race.baseTime,recordTime:race.baseTime*.965,recordVerified:false
@@ -1661,42 +1661,46 @@ document.querySelector("#devModeButton").textContent=developerMode?"開発表示
 document.querySelector("#newGameButton").onclick=()=>{renderSaveSlots("new");showScreen("saveSlotScreen")};
 const raceTestVenue=document.querySelector("#raceTestVenue"),raceTestSurface=document.querySelector("#raceTestSurface"),raceTestDistance=document.querySelector("#raceTestDistance");
 const TEST_SURFACE_LABEL={turf:"芝",dirt:"ダート",banei:"ばんえい"};
+const CUSTOM_TOKYO_TEST_VENUE="東京（制作コース）";
+function raceTestBaseVenue(venue){return venue===CUSTOM_TOKYO_TEST_VENUE?"東京":venue}
 function raceTestSurfaceDistances(venue,surface){
-  if(JRA_COURSE_DISTANCES[venue]?.[surface])return JRA_COURSE_DISTANCES[venue][surface];
-  const course=window.COURSE_LAYOUTS?.[venue],english=surface==="芝"?"turf":surface==="ダート"?"dirt":"banei";
+  const baseVenue=raceTestBaseVenue(venue);
+  if(JRA_COURSE_DISTANCES[baseVenue]?.[surface])return JRA_COURSE_DISTANCES[baseVenue][surface];
+  const course=window.COURSE_LAYOUTS?.[baseVenue],english=surface==="芝"?"turf":surface==="ダート"?"dirt":"banei";
   const direct=course?.distances?.[english];if(Array.isArray(direct)&&direct.length)return [...new Set(direct)].sort((a,b)=>a-b);
   const fromStarts=Object.keys(course?.startPositions||{}).filter(key=>key.startsWith(english)).map(key=>Number(key.match(/_(\d+)$/)?.[1])).filter(Number.isFinite);
   return [...new Set(fromStarts)].sort((a,b)=>a-b);
 }
 function updateRaceTestSummary(){
-  const venue=raceTestVenue.value,surface=raceTestSurface.value,distance=Number(raceTestDistance.value),course=window.COURSE_LAYOUTS?.[venue];
+  const venue=raceTestVenue.value,baseVenue=raceTestBaseVenue(venue),surface=raceTestSurface.value,distance=Number(raceTestDistance.value),course=window.COURSE_LAYOUTS?.[baseVenue];
   if(!course)return;
   const english=surface==="芝"?"turf":surface==="ダート"?"dirt":"banei",layoutKey=Object.keys(course.layouts).find(k=>k===english)||Object.keys(course.layouts).find(k=>k.startsWith(english));
   const lap=course.lap[layoutKey]||course.lap[english]||Object.values(course.lap)[0],straight=course.straight[layoutKey]||course.straight[english]||Object.values(course.straight)[0];
   const direction=course.direction==="left"?"左回り":course.direction==="right"?"右回り":course.direction==="both"?"左右両回り":"直線";
-  document.querySelector("#raceTestCourseSummary").innerHTML=`<b>${venue}競馬場　${surface}${distance}m</b><br>${direction}／1周 ${lap}m／直線 ${straight}m<br>高低差 ${course.elevation}m　${course.corner}`;
+  document.querySelector("#raceTestCourseSummary").innerHTML=`<b>${venue}　${surface}${distance}m</b><br>${direction}／1周 ${lap}m／直線 ${straight}m<br>高低差 ${course.elevation}m　${venue===CUSTOM_TOKYO_TEST_VENUE?"作成素材を使用する試験表示":course.corner}`;
 }
 function updateRaceTestDistances(){
   const distances=raceTestSurfaceDistances(raceTestVenue.value,raceTestSurface.value);
   raceTestDistance.innerHTML=distances.map(distance=>`<option value="${distance}">${distance}m</option>`).join("");updateRaceTestSummary();
 }
 function updateRaceTestSurfaces(){
-  const course=window.COURSE_LAYOUTS?.[raceTestVenue.value],surfaces=course?.surfaces||["turf","dirt"];
+  const course=window.COURSE_LAYOUTS?.[raceTestBaseVenue(raceTestVenue.value)],surfaces=course?.surfaces||["turf","dirt"];
   raceTestSurface.innerHTML=surfaces.map(surface=>`<option value="${TEST_SURFACE_LABEL[surface]}">${TEST_SURFACE_LABEL[surface]}</option>`).join("");updateRaceTestDistances();
 }
 function openRaceTestSetup(){
-  const venues=Object.keys(window.COURSE_LAYOUTS||{});raceTestVenue.innerHTML=venues.map(venue=>`<option value="${venue}" ${venue==="東京"?"selected":""}>${venue}</option>`).join("");
+  const venues=[CUSTOM_TOKYO_TEST_VENUE,...Object.keys(window.COURSE_LAYOUTS||{})];raceTestVenue.innerHTML=venues.map(venue=>`<option value="${venue}" ${venue===CUSTOM_TOKYO_TEST_VENUE?"selected":""}>${venue}</option>`).join("");
   updateRaceTestSurfaces();showScreen("raceTestSetupScreen");
 }
 document.querySelector("#raceTestButton").onclick=openRaceTestSetup;
 raceTestVenue.onchange=updateRaceTestSurfaces;raceTestSurface.onchange=updateRaceTestDistances;raceTestDistance.onchange=updateRaceTestSummary;
 document.querySelector("#raceTestStartButton").onclick=()=>{
   const venue=raceTestVenue.value,surface=raceTestSurface.value,distance=Number(raceTestDistance.value);
+  const baseVenue=raceTestBaseVenue(venue),customCourseAsset=venue===CUSTOM_TOKYO_TEST_VENUE;
   game=defaultGame();generateCandidate();
   const c=game.candidate,testAbility={speed:650,dash:620,stamina:640,power:610,guts:600,turf:660,dirt:620};
   const testCaps=createPotentialCaps({...c,...testAbility});
   game={...game,horseName:"ドットスター",week:21,...testAbility,gateSkill:600,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:testCaps};
-  const testRace={id:`test-${venue}-${surface}-${distance}`,week:game.week,name:"レース画面テスト",raceClass:"オープン",course:`${venue} ${surface}${distance}m`,surface,distance,baseTime:surface==="ばんえい"?150000:Math.round((surface==="芝"?60000:63000)*distance/1000),prize:0,difficulty:82,condition:()=>true};
+  const testRace={id:`test-${baseVenue}-${surface}-${distance}`,week:game.week,name:customCourseAsset?"東京制作コース・テスト":"レース画面テスト",raceClass:"オープン",course:`${baseVenue} ${surface}${distance}m`,surface,distance,customCourseAsset,baseTime:surface==="ばんえい"?150000:Math.round((surface==="芝"?60000:63000)*distance/1000),prize:0,difficulty:82,condition:()=>true};
   prepareRace(testRace);showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"));
 };
 document.querySelector("#rerollHorseButton").onclick=generateCandidate;
