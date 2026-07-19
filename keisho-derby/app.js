@@ -83,6 +83,7 @@ const defaultGame = () => ({
 });
 let game = defaultGame();
 let autoTrainingActive=false;
+let pendingRaceAfterSpacingWarning=null;
 let developerMode=localStorage.getItem("dotKeibaDeveloperMode")==="1";
 const ABILITY_STATS=["speed","dash","stamina","power","guts","turf","dirt","heavyTrack"];
 
@@ -1805,10 +1806,27 @@ document.querySelector("#raceChoices").onclick=e=>{
   const button=e.target.closest("[data-race]");
   if(button){
     const race=raceCalendar.find(r=>r.id===button.dataset.race),warning=raceSpacingCoachWarning(race?.week);
-    if(warning&&!confirm(`調教師「${warning}」\n\nそれでも出走しますか？`))return;
+    if(warning){
+      pendingRaceAfterSpacingWarning=race;
+      document.querySelector("#raceSpacingWarningText").textContent=warning+"。どうしますか？";
+      const modal=document.querySelector("#raceSpacingWarningModal");
+      modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+      return;
+    }
     prepareRace(race);
   }
 };
+function closeRaceSpacingWarning(){
+  pendingRaceAfterSpacingWarning=null;
+  const modal=document.querySelector("#raceSpacingWarningModal");
+  modal.classList.remove("show");modal.setAttribute("aria-hidden","true");
+}
+document.querySelector("#raceSpacingProceed").onclick=()=>{
+  const race=pendingRaceAfterSpacingWarning;
+  closeRaceSpacingWarning();
+  if(race)prepareRace(race);
+};
+document.querySelector("#raceSpacingCancel").onclick=closeRaceSpacingWarning;
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
 document.querySelector("#previousRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.max(1,(window.selectedRaceWeek||game.week)-1);window.selectedRaceVenue="";renderRaces()};
 document.querySelector("#nextRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.min(CAREER_MAX_WEEKS,(window.selectedRaceWeek||game.week)+1);window.selectedRaceVenue="";renderRaces()};

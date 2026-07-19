@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.10.4</title>
-  <link rel="stylesheet" href="style.css?v=20260719-57">
+  <title>ドット競馬 継承ダービー｜Ver. 0.10.5</title>
+  <link rel="stylesheet" href="style.css?v=20260719-58">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.4</b>
+        <b class="build-version">Ver. 0.10.5</b>
       </div>
     </section>
 
@@ -276,6 +276,17 @@
       <div id="raceVenueTabs" class="race-venue-tabs"></div>
       <div id="raceChoices"></div>
       <button data-back="homeScreen">育成へもどる</button>
+      <div id="raceSpacingWarningModal" class="auto-training-modal" aria-hidden="true">
+        <div class="auto-training-dialog race-warning-dialog" role="dialog" aria-modal="true" aria-labelledby="raceSpacingWarningTitle">
+          <b id="raceSpacingWarningTitle">調教師からの進言</b>
+          <div class="race-warning-message">
+            <span class="pixel-trainer race-warning-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i><b class="trainer-caption">調教師</b></span>
+            <p id="raceSpacingWarningText">前走から間隔が詰まっています。</p>
+          </div>
+          <button id="raceSpacingProceed" class="race-warning-proceed"><strong>それでも出走する</strong><small>状態への影響と故障リスクを承知して出走します</small></button>
+          <button id="raceSpacingCancel" class="auto-training-cancel">今回は見送る</button>
+        </div>
+      </div>
     </section>
 
     <section id="newspaperScreen" class="game-screen newspaper-screen">
@@ -394,7 +405,7 @@
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260718-2"></script>
-  <script src="app.js?v=20260719-11"></script>
+  <script src="app.js?v=20260719-12"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260719-5"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>

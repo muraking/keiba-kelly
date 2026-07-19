@@ -571,6 +571,13 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .auto-training-dialog>button small { margin-top:2px;font-size:9px;color:#62563d; }
 .auto-training-dialog>.auto-training-cancel { display:block;margin-top:10px;background:#d9dfd2;text-align:center; }
 .reservation-arrival-dialog { border-color:#d09b2d;background:#fff5c9; }
+.race-warning-dialog { border-color:#8f542f;background:#fff2c8;text-align:left; }
+.race-warning-dialog>b { padding:5px 8px;background:#34523b;color:#fff0a8;text-align:center; }
+.race-warning-message { display:grid;grid-template-columns:62px 1fr;gap:9px;align-items:center;margin:10px 0;padding:8px;border:2px solid #a88543;background:#fffdf0; }
+.race-warning-trainer { display:block;width:58px;min-height:73px; }
+.race-warning-message p { margin:0;color:#3f311d;font-size:11px;font-weight:700;line-height:1.75; }
+.race-warning-dialog>.race-warning-proceed { border-color:#9b4935;background:#ffe0bb; }
+.race-warning-dialog>.race-warning-proceed strong { color:#812f22; }
 .reservation-arrival-dialog>p { padding:9px;border:2px solid #8a672d;background:#fff;color:#382912;font-size:11px;font-weight:900; }
 .reservation-flag { display:inline-block;margin:3px 0 7px;padding:3px 8px;border:2px solid #245f38;background:#46a65b;color:#fff;font-size:10px;font-weight:900; }
 .race-select-main { display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px; }
