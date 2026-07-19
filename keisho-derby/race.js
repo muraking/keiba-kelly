@@ -1253,10 +1253,11 @@ function drawVisionGateBreak(vx,camY,vw,camH){
     if(launchElapsed<=0)return;
     const reactionLead=h.startReaction==="好スタート"?8:h.startReaction==="出遅れ"?-13:0;
     const startX=vx+10+gateW*.62;
-    const horseX=startX+launchElapsed*.058+reactionLead-(i%2)*2;
+    // ゲート映像では全馬がそのまま右端の外まで駆け抜ける。
+    const horseX=startX+launchElapsed*.17+reactionLead-(i%2)*2;
     drawVisionCandidateHorse(horseX,camY+camH*.72+(i%4)*Math.max(2,camH*.025),h,VISION_HORSE_SCALE);
   });
-  const launchScroll=Math.max(0,preRaceClock-launchStart)*.058;
+  const launchScroll=Math.max(0,preRaceClock-launchStart)*.17;
   drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move-launchScroll);
 }
 
@@ -1427,7 +1428,7 @@ function drawTrackV2(){
     }else if(state==="gateBreak"){
       const gateW=Math.max(23,Math.min(27,screenW*.12));
       const gateMove=Math.max(0,Math.min(1,(preRaceClock-300)/1500));
-      const synchronizedScroll=(screenW-gateW-16)*gateMove+Math.max(0,preRaceClock-2150)*.058;
+      const synchronizedScroll=(screenW-gateW-16)*gateMove+Math.max(0,preRaceClock-2150)*.17;
       drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,0,synchronizedScroll);
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
@@ -1445,12 +1446,12 @@ function drawTrackV2(){
       const sweepElapsed=cameraSweepStart<0?Infinity:weatherClock-cameraSweepStart;
       const sweep=sweepElapsed>=0&&sweepElapsed<6000?Math.sin(sweepElapsed/6000*Math.PI):0;
       const cameraOffset=sweep*Math.min(screenW*.50,fieldSpan*pixelsPerMeter*.70);
-      // 発走直後はゲート映像の中央位置から始め、徐々に通常の先頭追従位置へ移す。
+      // ゲート映像で右へ消えた後、中継映像では左から馬群が入ってくる。
       const visualElapsed=Math.max(0,weatherClock-raceVisualStartClock);
-      const cameraBlend=Math.max(0,Math.min(1,visualElapsed/3200));
-      // 開始直後に急加速しないよう、速度0から滑らかにつながる補間にする。
+      const cameraBlend=Math.max(0,Math.min(1,visualElapsed/1600));
       const cameraEase=cameraBlend*cameraBlend*(3-2*cameraBlend);
-      const leaderX=screenX+screenW*.53+(screenW*.47-18)*cameraEase+cameraOffset;
+      const entryX=screenX-28,targetLeaderX=screenX+screenW-18;
+      const leaderX=entryX+(targetLeaderX-entryX)*cameraEase+cameraOffset;
       const horseScale=VISION_HORSE_SCALE;
       // ゴール板は遠景として先に描き、馬をその手前へ重ねる。
       const goalX=leaderX+goalDistance*pixelsPerMeter;
@@ -1878,7 +1879,7 @@ function startReplayFromGateExit(resetFirst=true){
   phaseEl.textContent="全馬収容";
   setCommentary("保存リプレイを、発馬機が左へ移動する場面から再生します。",true);
   lastTime=0;raf=requestAnimationFrame(loop);
-  gateStartTimer=setTimeout(beginRaceAfterGate,3500);
+  gateStartTimer=setTimeout(beginRaceAfterGate,3700);
 }
 
 startButton.addEventListener("click", () => {
@@ -1903,7 +1904,7 @@ startButton.addEventListener("click", () => {
         state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
         gateSkipButton.hidden=true;
         setCommentary("全馬、枠内に収まりました。スタートを待ちます。");
-        gateStartTimer=setTimeout(beginRaceAfterGate,3500);
+        gateStartTimer=setTimeout(beginRaceAfterGate,3700);
       },8100);
     },6500);
   }
@@ -1916,7 +1917,7 @@ gateSkipButton.addEventListener("click",()=>{
   state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
   gateSkipButton.hidden=true;
   setCommentary("ゲート入りをスキップしました。全馬収容、スタートを待ちます。");
-  gateStartTimer=setTimeout(beginRaceAfterGate,3500);
+  gateStartTimer=setTimeout(beginRaceAfterGate,3700);
 });
 
 raceTestBackButton.addEventListener("click",()=>{
