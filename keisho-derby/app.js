@@ -73,7 +73,8 @@ const defaultGame = () => ({
   conditionDirection:1, conditionPhaseWeeks:4, conditionStability:"普通", conditionPeakWeeks:0,
   weight:0, baseBestWeight:0, growthType:"普通", growthPotential:12,
   generation:1, potentialCaps:null, ageDecline:0, distanceMin:1400, distanceMax:2000,
-  injury:null, legCondition:100,
+  injury:null, legCondition:100, recoveryPower:550, turnaroundTolerance:500,
+  lastRaceWeek:null, raceLoad:0,
   temperament:"普通",temperamentValue:50,temperamentKnown:false,
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
@@ -337,6 +338,10 @@ function loadGame(slot=activeSaveSlot){
     if(!Number.isFinite(saved?.distanceMin))game.distanceMin=1400;
     if(!Number.isFinite(saved?.distanceMax))game.distanceMax=2000;
     if(!Number.isFinite(saved?.heavyTrack))game.heavyTrack=rnd(420,680);
+    if(!Number.isFinite(saved?.recoveryPower))game.recoveryPower=rnd(430,670);
+    if(!Number.isFinite(saved?.turnaroundTolerance))game.turnaroundTolerance=rnd(400,650);
+    if(!Number.isFinite(saved?.lastRaceWeek))game.lastRaceWeek=null;
+    if(!Number.isFinite(saved?.raceLoad))game.raceLoad=0;
     if(!Array.isArray(saved?.raceHistory))game.raceHistory=[];
     if(!Array.isArray(saved?.favoriteRaces))game.favoriteRaces=[];
     if(!Array.isArray(saved?.galleryUnlocks))game.galleryUnlocks=["stable"];
@@ -403,6 +408,9 @@ function createPotentialCaps(source){
   });
   return caps;
 }
+function inheritRecoveryTrait(parentValue,variation=80){
+  return Math.max(300,Math.min(850,Math.round(parentValue*.55+rnd(400,700)*.45+rnd(-variation,variation))));
+}
 function generateCandidate(){
   const coat=Math.random()<.004?["白毛","#eee9dd"]:coats[rnd(0,coats.length-1)], sire=sires[rnd(0,sires.length-1)], dam=dams[rnd(0,dams.length-1)];
   const turf=rnd(400,610), dirt=rnd(400,610);
@@ -411,7 +419,7 @@ function generateCandidate(){
   const temperamentValue=inheritTemperament(sire,dam);
   const [distanceMin,distanceMax]=createDistanceRange(sire,dam);
   const parentHeavyBase=(sire[2].includes("ダート")?5:0)+(dam[2].includes("ダート")?5:0);
-  const candidate={coat:coat[0],color:coat[1],sex:Math.random()<.5?"牡馬":"牝馬",faceMark:Math.random()<.38,socks:rnd(0,4),eyeType:["優しい","鋭い","好奇心旺盛"][rnd(0,2)],sire,dam,speed:rnd(390,560),dash:rnd(370,540),gateSkill:rnd(380,540),stamina:rnd(390,560),power:rnd(380,550),guts:rnd(370,540),turf,dirt,heavyTrack:Math.max(350,Math.min(800,rnd(430,670)+parentHeavyBase*10)),temperamentValue,temperament:temperamentType(temperamentValue),baseBestWeight,weight:baseBestWeight+rnd(12,20),growthType,growthPotential:rnd(7,15),distanceMin,distanceMax,...createConditionCycle()};
+  const candidate={coat:coat[0],color:coat[1],sex:Math.random()<.5?"牡馬":"牝馬",faceMark:Math.random()<.38,socks:rnd(0,4),eyeType:["優しい","鋭い","好奇心旺盛"][rnd(0,2)],sire,dam,speed:rnd(390,560),dash:rnd(370,540),gateSkill:rnd(380,540),stamina:rnd(390,560),power:rnd(380,550),guts:rnd(370,540),turf,dirt,heavyTrack:Math.max(350,Math.min(800,rnd(430,670)+parentHeavyBase*10)),temperamentValue,temperament:temperamentType(temperamentValue),baseBestWeight,weight:baseBestWeight+rnd(12,20),growthType,growthPotential:rnd(7,15),distanceMin,distanceMax,recoveryPower:rnd(380,760),turnaroundTolerance:rnd(340,740),...createConditionCycle()};
   candidate.potentialCaps=createPotentialCaps(candidate);
   game.candidate=candidate;
   document.querySelector("#candidateTitle").textContent=`${coat[0]}の2歳${candidate.sex}`;
@@ -469,7 +477,8 @@ function beginNextGeneration(partner){
     speed:inheritedStat(game.speed,level),dash:inheritedStat(game.dash,level),gateSkill:inheritedStat(game.gateSkill,level,45),stamina:inheritedStat(game.stamina,level),power:inheritedStat(game.power,level),guts:inheritedStat(game.guts,level),
     turf:inheritedStat(game.turf,level,70),dirt:inheritedStat(game.dirt,level,70),heavyTrack:inheritedStat(game.heavyTrack,level,75),
     temperamentValue:Math.max(18,Math.min(88,Math.round(game.temperamentValue*.55+rnd(25,75)*.45))),baseBestWeight:Math.max(400,Math.min(540,Math.round(game.baseBestWeight*.55+rnd(430,500)*.45+rnd(-12,12)))),
-    growthType:inheritGrowthType(game.growthType,partner.growth),growthPotential:Math.max(7,Math.min(20,Math.round(game.growthPotential*.45+(level-380)/35+rnd(-2,2)))),distanceMin,distanceMax,...createConditionCycle()
+    growthType:inheritGrowthType(game.growthType,partner.growth),growthPotential:Math.max(7,Math.min(20,Math.round(game.growthPotential*.45+(level-380)/35+rnd(-2,2)))),distanceMin,distanceMax,
+    recoveryPower:inheritRecoveryTrait(game.recoveryPower),turnaroundTolerance:inheritRecoveryTrait(game.turnaroundTolerance),...createConditionCycle()
   };
   child.temperament=temperamentType(child.temperamentValue);
   child.weight=child.baseBestWeight+rnd(12,20);
@@ -760,6 +769,52 @@ function fatigueCoachComment(){
   if(game.fatigue>=25)return "少し疲れが見えます。様子を見ながら調教を選びましょう。";
   return "元気があります。今週もしっかり動けそうです。";
 }
+function raceIntervalState(targetWeek=game.week){
+  if(!Number.isFinite(game.lastRaceWeek))return {gap:null,label:"初出走",level:"none"};
+  const gap=Math.max(0,targetWeek-game.lastRaceWeek);
+  if(gap===1)return {gap,label:"連闘",level:"danger"};
+  if(gap===2)return {gap,label:"中1週",level:"warning"};
+  if(gap===3)return {gap,label:"中2週",level:"caution"};
+  return {gap,label:`中${Math.max(0,gap-1)}週`,level:"safe"};
+}
+function recoveryTraitComment(){
+  if(game.recoveryPower>=700)return "疲れの抜けがかなり早いタイプです";
+  if(game.recoveryPower>=580)return "疲れは比較的抜けやすいタイプです";
+  if(game.recoveryPower<420)return "疲れが残りやすいので、間隔を取った方がよさそうです";
+  return "疲れの抜け方は標準的です";
+}
+function raceSpacingCoachWarning(targetWeek=game.week){
+  const spacing=raceIntervalState(targetWeek);
+  if(spacing.gap===null)return "";
+  const tolerant=game.turnaroundTolerance>=650;
+  if(spacing.gap===1){
+    if(game.fatigue>=70||game.legCondition<55)return "連闘になります。疲れと脚元の張りが強く、故障の危険があります。今回は見送ることを強く勧めます";
+    if(tolerant&&game.fatigue<48)return "連闘になります。この馬は詰めた間隔に対応できそうですが、普段より故障には注意が必要です";
+    return "連闘になります。前走の疲れが残る可能性があり、能力低下と故障リスクを覚悟する必要があります";
+  }
+  if(spacing.gap===2){
+    if(game.fatigue>=65)return "中1週ですが、まだ前走の疲れが抜けていません。休ませる選択も考えましょう";
+    return tolerant?"中1週です。この馬なら対応できそうですが、馬体と脚元を確認して使いましょう":"中1週です。少し間隔が詰まるため、疲れが残らないか注意しましょう";
+  }
+  if(spacing.gap===3&&game.fatigue>=60)return "中2週ですが、まだ疲れが残っています。状態優先で判断しましょう";
+  return "";
+}
+function shortRestAbilityPenalty(targetWeek=game.week){
+  const spacing=raceIntervalState(targetWeek),tolerance=(game.turnaroundTolerance-500)/200;
+  if(spacing.gap===1)return Math.max(6,Math.round(25-tolerance*8+game.raceLoad*.10));
+  if(spacing.gap===2)return Math.max(2,Math.round(9-tolerance*3+game.raceLoad*.035));
+  if(spacing.gap===3)return Math.max(0,Math.round(3-tolerance));
+  return 0;
+}
+function postRaceFatigueGain(race,weather,place){
+  const recovery=(game.recoveryPower-550)/100;
+  const distance=Math.max(0,(race.distance-1200)/300);
+  const going=["重","不良"].includes(weather.going)?4:weather.going==="稍重"?2:0;
+  const effort=place<=3?2:0;
+  const spacing=raceIntervalState(game.week);
+  const shortRest=spacing.gap===1?8:spacing.gap===2?3:0;
+  return Math.max(14,Math.min(40,Math.round(19+distance+going+effort+shortRest-recovery)));
+}
 function renderTack(){
   document.querySelector("#temperamentComment").textContent=trainerTemperamentComment();
   document.querySelector("#tackChoices").innerHTML=game.tackUnlocked.length
@@ -814,7 +869,8 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#nextRaceButtonText").textContent=reservedRace
     ? `次走：${reservedRace.name}（${weeksToRace===0?"今週":`${weeksToRace}週後`}）`
     : game.races>0?"次走予約なし":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
-  document.querySelector("#homeMessage").textContent=`${message} ${fatigueCoachComment()}`;
+  const spacingWarning=raceSpacingCoachWarning();
+  document.querySelector("#homeMessage").textContent=`${message} ${fatigueCoachComment()}${spacingWarning?` ${spacingWarning}`:""}`;
   applyHorseAppearance(document.querySelector("#trainingScene"));
   const statsEl=document.querySelector("#horseStats");
   statsEl.hidden=!developerMode;
@@ -824,6 +880,8 @@ function renderHome(message="今週の予定を決めましょう。"){
       statRow("芝適性",game.turf,"#72c45e")+statRow("ダート適性",game.dirt,"#c9915b")+
       statRow("道悪適性",game.heavyTrack,"#5aa5c8")+
       statRow("ゲート習熟",game.gateSkill,"#c7a9ef")+
+      statRow("回復力",game.recoveryPower,"#73cfc4")+statRow("連闘適性",game.turnaroundTolerance,"#d9a84c")+
+      `<div class="trainer-stat"><span>競走負荷</span><b>${game.raceLoad}/100</b></div>`+
       `<div class="trainer-stat"><span>調子の波</span><b>${game.condition}／${game.conditionDirection>0?"上向き":game.conditionDirection<0?"下降中":"維持"}・${game.conditionStability}型（残り${game.conditionPeakWeeks||game.conditionPhaseWeeks}週）</b></div>`
     : "";
   document.querySelector("#horseWeight").textContent=`${game.weight}kg`;
@@ -1156,7 +1214,9 @@ function advanceWeek(rest=false){
   game.week++; game.trainingsUsed=0;
   applyWeeklyPeakDecline();
   const recoveryEquipment=(game.equipment.includes("walker")?8:0)+(game.equipment.includes("massage")?3:0);
-  game.fatigue=Math.max(0,game.fatigue-(rest?42:18)-recoveryEquipment);
+  const naturalRecovery=Math.round(18+(game.recoveryPower-550)/45);
+  game.fatigue=Math.max(0,game.fatigue-(rest?naturalRecovery+24:naturalRecovery)-recoveryEquipment);
+  game.raceLoad=Math.max(0,game.raceLoad-Math.round(9+game.recoveryPower/90+(rest?8:0)));
   game.legCondition=Math.min(100,game.legCondition+(rest?rnd(12,20):rnd(4,8)));
   advanceConditionCycle((rest?5:0)+(game.equipment.includes("solarium")?1:0));
   const weeklyWeightDiff=game.weight-bestWeight();
@@ -1297,10 +1357,11 @@ function renderRaces(){
     const conditionEligible=r.condition(game);
     const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&conditionEligible,surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
     const reservable=!arrived&&r.week>game.week&&ageEligible&&sexEligible&&conditionEligible;
+    const spacing=raceIntervalState(r.week),spacingWarning=raceSpacingCoachWarning(r.week);
     const raceYear=Math.floor((r.week-1)/48)+1,raceYearWeek=(r.week-1)%48;
     const officialDate=r.officialDate?`${Number(r.officialDate.slice(5,7))}月${Number(r.officialDate.slice(8,10))}日（2026公式）`:`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
     let reason="出走条件外";
-    if(eligible)reason="出走する";
+    if(eligible)reason=spacing.gap===1?"連闘で出走":spacing.gap===2?"中1週で出走":"出走する";
     else if(!arrived)reason="未来の予定";
     else if(!debutSeasonOpen)reason="2歳新馬戦の開始前";
     else if(!ageEligible)reason=`${r.age}限定`;
@@ -1314,8 +1375,8 @@ function renderRaces(){
     const reserved=game.reservedRaceId===r.id;
     const wonBefore=game.raceHistory.some(x=>x.raceName===r.name&&x.place===1);
     const gradedWon=["G1","G2","G3"].includes(r.raceClass)&&(wonBefore||(game.gradedTrophies||[]).some(t=>t.raceName===r.name));
-    return `<article class="race-choice ${eligible?"":"locked"} ${reservable?"reservable":""} ${reserved?"reserved":""} ${gradedWon?"won-graded":""}">${gradedWon?'<span class="race-won-trophy" title="勝利済み重賞" aria-label="勝利済み重賞">🏆</span>':""}<b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
-    <h3>${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p></div>
+    return `<article class="race-choice ${eligible?"":"locked"} ${reservable?"reservable":""} ${reserved?"reserved":""} ${gradedWon?"won-graded":""} ${spacingWarning?`short-rest ${spacing.level}`:""}">${gradedWon?'<span class="race-won-trophy" title="勝利済み重賞" aria-label="勝利済み重賞">🏆</span>':""}<b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
+    <h3>${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p>${spacingWarning?`<p class="race-spacing-warning"><b>${spacing.label}</b>　調教師「${spacingWarning}」</p>`:""}</div>
     <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${reservable||reserved?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
   }).join("")||`<p class="empty-races">この開催場の番組はありません。</p>`;
 }
@@ -1326,8 +1387,9 @@ function playerAbility(race){
   const weightPenalty=Math.min(80,Math.abs(game.weight-bestWeight())*2.2);
   const fatiguePenalty=game.fatigue<=25?0:game.fatigue<=45?(game.fatigue-25)*.6:game.fatigue<=70?12+(game.fatigue-45)*1.2:42+(game.fatigue-70)*1.3;
   const distancePenalty=distanceAbilityPenalty(race.distance);
+  const spacingPenalty=shortRestAbilityPenalty(game.week);
   const raw=distanceWeight*.28+speed*.18+dash*.08+stamina*.14+power*.11+guts*.07+surface*.14+
-    growthAbilityBonus()+raceConditionModifier()-weightPenalty-fatiguePenalty-distancePenalty;
+    growthAbilityBonus()+raceConditionModifier()-weightPenalty-fatiguePenalty-distancePenalty-spacingPenalty;
   return Math.round(Math.min(game.generation===1?840:1000,raw));
 }
 function seededRaceRandom(race,salt=0){
@@ -1469,6 +1531,9 @@ function postRaceTrainerComment(){
   else if(game.legCondition<70)comments.push("脚元に少し張りがあるので、軽めの調整がよさそうです");
   else comments.push("脚元に大きな問題はありません");
 
+  comments.push(recoveryTraitComment());
+  if(game.raceLoad>=75)comments.push("最近の競走負荷がかなり重なっています。間隔を空けて疲れを抜きたいところです");
+  else if(game.raceLoad>=45)comments.push("ここ数走の負荷が少し蓄積しています。次走までの間隔には注意しましょう");
   comments.push(conditionTrendComment());
   if(game.lastRaceAdvice)comments.push(game.lastRaceAdvice);
   return `調教師「${comments.join("。")}。」`;
@@ -1480,7 +1545,12 @@ function sufferPostRaceInjury(race,going){
   if(game.legCondition<45)risk+=.0025;
   if(["重","不良"].includes(going))risk+=.0008;
   if(race.surface==="ダート")risk+=.0003;
-  if(Math.random()>=Math.min(.007,risk))return null;
+  const spacing=raceIntervalState(game.week);
+  const toleranceFactor=Math.max(.55,Math.min(1.5,(850-game.turnaroundTolerance)/350));
+  if(spacing.gap===1)risk+=.006*toleranceFactor;
+  else if(spacing.gap===2)risk+=.0018*toleranceFactor;
+  if(game.raceLoad>=75)risk+=(game.raceLoad-70)*.00012;
+  if(Math.random()>=Math.min(.025,risk))return null;
   const injury=weightedInjury();
   game.injury={...injury,weeks:rnd(injury.minWeeks,injury.maxWeeks)};
   return game.injury;
@@ -1505,14 +1575,19 @@ function showResult(detail){
   game.raceHistory.push({
     raceName:r.name,raceClass:r.raceClass,course:r.course,place,time:player.finishTime,
     earned,weather:weather.weather,going:weather.going,isRecord:!!player.isRecord,
-    age:horseAge(),date:weekLabel(),favorite:false
+    age:horseAge(),date:weekLabel(),week:game.week,favorite:false
   });
   if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,generation:game.generation,date:weekLabel()});
   refreshGalleryUnlocks();
-  game.fatigue=Math.min(100,game.fatigue+24);advanceConditionCycle(-8);
+  const spacingBeforeRace=raceIntervalState(game.week);
+  const fatigueGain=postRaceFatigueGain(r,weather,place);
+  game.fatigue=Math.min(100,game.fatigue+fatigueGain);advanceConditionCycle(-8);
+  const raceLoadGain=Math.round(25+r.distance/250+(spacingBeforeRace.gap===1?18:spacingBeforeRace.gap===2?7:0));
+  game.raceLoad=Math.min(100,game.raceLoad+raceLoadGain);
   game.legCondition=Math.max(0,game.legCondition-rnd(4,9));
   game.weight=Math.max(330,game.weight-rnd(4,7));
   sufferPostRaceInjury(r,weather.going);
+  game.lastRaceWeek=game.week;
   game.lastRaceAdvice=raceSuitabilityAdvice(r,place);
   game.week++;game.trainingsUsed=0;saveGame();
   document.querySelector("#resultPlace").textContent=`${place}着`;document.querySelector("#resultHorseName").textContent=game.horseName;
@@ -1587,7 +1662,7 @@ document.querySelector("#confirmNameButton").onclick=()=>{
     document.querySelector("#nameScreen .hint").textContent="馬名はカタカナ2〜10文字で、使用できない表現を含まない名前にしてください。";
     input.focus();return;
   }
-  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
+  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
   renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。${game.generation>1?game.inheritanceComment:"まずは馬体を整えましょう。"}`);showScreen("homeScreen");
 };
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.dataset.back));
@@ -1670,7 +1745,12 @@ document.querySelector("#reservationArrivalClose").onclick=closeReservationArriv
 document.querySelector("#raceChoices").onclick=e=>{
   const reserve=e.target.closest("[data-reserve]");
   if(reserve){game.reservedRaceId=game.reservedRaceId===reserve.dataset.reserve?null:reserve.dataset.reserve;game.reservationNotifiedId=null;saveGame();renderRaces();return}
-  const button=e.target.closest("[data-race]");if(button)prepareRace(raceCalendar.find(r=>r.id===button.dataset.race));
+  const button=e.target.closest("[data-race]");
+  if(button){
+    const race=raceCalendar.find(r=>r.id===button.dataset.race),warning=raceSpacingCoachWarning(race?.week);
+    if(warning&&!confirm(`調教師「${warning}」\n\nそれでも出走しますか？`))return;
+    prepareRace(race);
+  }
 };
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
 document.querySelector("#previousRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.max(1,(window.selectedRaceWeek||game.week)-1);window.selectedRaceVenue="";renderRaces()};

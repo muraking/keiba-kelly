@@ -722,6 +722,11 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .race-choice.reserved,.race-choice.reservable.reserved { opacity:1;border-color:#ffe36c;background:#25240d;box-shadow:inset 4px 0 #ffe36c; }
 .race-won-trophy { position:absolute;z-index:2;right:5px;top:3px;display:grid;place-items:center;width:22px;height:22px;border:2px solid #7a581b;background:#fff0a5;font-size:14px;line-height:1;box-shadow:2px 2px #30240d; }
 .race-choice.won-graded { padding-top:26px; }
+.race-choice.short-rest { border-color:#d9a84c; box-shadow:inset 4px 0 #d9a84c; }
+.race-choice.short-rest.danger { border-color:#e65b52; box-shadow:inset 4px 0 #e65b52; }
+.race-choice .race-spacing-warning { margin-top:5px; padding:5px 7px; color:#ffe8b0; background:#38270f; border-left:3px solid #d9a84c; font-size:10px; line-height:1.45; }
+.race-choice.danger .race-spacing-warning { color:#ffe1dd; background:#3b1715; border-left-color:#e65b52; }
+.race-choice .race-spacing-warning b { color:#fff1a8; }
 .select-screen > button { width:calc(100% - 24px); margin:0 12px 16px; }
 
 .shop-screen { background:#eef4e8; }
