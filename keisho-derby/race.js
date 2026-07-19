@@ -126,6 +126,7 @@ let archiveReplay = false;
 let horizontalLayout = false;
 let layoutV2 = false;
 let customTokyoCourse = false;
+let courseAuditMode = false;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
@@ -922,6 +923,7 @@ function coursePoint(progress, lane = 3) {
   if(layoutV2&&officialPath?.length>2){
     const pt=officialCoursePoint(officialPath,p,lane);
     if(rightTurn)pt.angle+=Math.PI;
+    if(courseAuditMode){pt.x=360-pt.x;pt.y=270-pt.y;pt.angle+=Math.PI;}
     return pt;
   }
   const pt=verticalCoursePoint(p,lane);
@@ -1190,15 +1192,16 @@ function drawTrackV2(){
   ctx.fillStyle="#101a21";ctx.fillRect(0,0,360,20);
   ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
   ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m ${currentCourseSpec.route}　${playerSetup.going}`,180,14);
-  // ホーム直線沿いの大型スタンド（上辺）。
-  ctx.fillStyle="#6e8492";ctx.fillRect(4,20,352,5);
-  ctx.fillStyle="#506574";ctx.fillRect(4,25,352,7);
-  ctx.fillStyle="#37475c";ctx.fillRect(4,32,352,10);
+  // 通常画面は上辺、独立したコース検証テストでは下辺にスタンドを置く。
+  const standY=courseAuditMode?202:20;
+  ctx.fillStyle="#6e8492";ctx.fillRect(4,standY,352,5);
+  ctx.fillStyle="#506574";ctx.fillRect(4,standY+5,352,7);
+  ctx.fillStyle="#37475c";ctx.fillRect(4,standY+12,352,10);
   const crowdCount=playerSetup.raceClass==="G1"?230:playerSetup.raceClass==="G2"?180:playerSetup.raceClass==="G3"?135:playerSetup.raceClass==="オープン"?90:45;
   const crowdColors=["#e65b4f","#f0d56a","#5ca6d8","#f2eee0","#7356a8"];
   for(let i=0;i<crowdCount;i++){
     ctx.fillStyle=crowdColors[i%5];
-    ctx.fillRect(6+(i*6.1)%348,23+((i*13)%4)*4,3,3);
+    ctx.fillRect(6+(i*6.1)%348,standY+3+((i*13)%4)*4,3,3);
   }
   const straightCourse=currentCourseSpec.route==="直線";
   const trace=(lane,color,width)=>{
@@ -1211,9 +1214,9 @@ function drawTrackV2(){
   const customTokyoImage=customTokyoCourse?(isDirt?customTokyoImages.dirt:customTokyoImages.turf):null;
   if(customTokyoImage?.complete&&customTokyoImage.naturalWidth){
     ctx.save();ctx.imageSmoothingEnabled=false;
-    const scale=Math.min(340/customTokyoImage.naturalWidth,202/customTokyoImage.naturalHeight);
+    const scale=Math.min(340/customTokyoImage.naturalWidth,(courseAuditMode?154:202)/customTokyoImage.naturalHeight);
     const width=Math.round(customTokyoImage.naturalWidth*scale),height=Math.round(customTokyoImage.naturalHeight*scale);
-    ctx.drawImage(customTokyoImage,Math.round((360-width)/2),44+Math.round((202-height)/2),width,height);
+    ctx.drawImage(customTokyoImage,Math.round((360-width)/2),courseAuditMode?32+Math.round((158-height)/2):44+Math.round((202-height)/2),width,height);
     ctx.restore();
   }else{
     trace(4.5,"#f1ead2",40);
@@ -1751,6 +1754,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   raceSurface = event.detail.surface || "芝";
   currentRaceVenue = event.detail.venue || "東京";
   customTokyoCourse=!!event.detail.customCourseAsset&&currentRaceVenue==="東京";
+  courseAuditMode=!!event.detail.courseAuditMode;
   raceDirectionOverride=event.detail.direction||null;
   TOTAL = event.detail.distance || 2400;
   configureCourseDistance();
