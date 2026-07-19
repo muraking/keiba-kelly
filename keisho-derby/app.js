@@ -161,6 +161,44 @@ const PROGRAM_RACES=[
   [11,"3勝クラス特別","3勝","mixed","long",1840,82],
   [12,"オープン特別","オープン","mixed",1800,2200,85],
 ];
+// 一般戦は同じ週の全会場が同じ馬場に偏らないよう、クラス別の比率と距離帯から決定する。
+// 長距離は選択肢として残しつつ、短距離・マイル・中距離より低い頻度にしている。
+const CLASS_PROGRAM_PROFILES={
+  "1勝":{
+    surfaces:["芝","ダート","芝","ダート","芝","ダート"],
+    芝:[1200,1400,1600,1800,2000,2400],
+    ダート:[1200,1400,1700,1800,2100]
+  },
+  "2勝":{
+    surfaces:["芝","ダート","芝","ダート","芝","ダート"],
+    芝:[1200,1400,1600,1800,2000,2200,2400],
+    ダート:[1200,1400,1700,1800,1900,2100]
+  },
+  "3勝":{
+    surfaces:["芝","ダート","芝","芝","ダート"],
+    芝:[1200,1400,1600,1800,2000,2200,2400,3000],
+    ダート:[1200,1400,1700,1800,1900,2100]
+  },
+  "オープン":{
+    surfaces:["芝","ダート","芝","芝","ダート","芝"],
+    芝:[1200,1400,1600,1800,2000,2200,2400,3000],
+    ダート:[1200,1400,1600,1700,1800,1900,2100]
+  }
+};
+function programRotationIndex(week,venue,number,salt=0){
+  const text=`${week}|${venue}|${number}|${salt}`;
+  let hash=2166136261;
+  for(let i=0;i<text.length;i++){hash^=text.charCodeAt(i);hash=Math.imul(hash,16777619)}
+  return hash>>>0;
+}
+function classProgramSpec(raceClass,venue,week,number){
+  const profile=CLASS_PROGRAM_PROFILES[raceClass];
+  if(!profile)return null;
+  const surface=profile.surfaces[programRotationIndex(week,venue,number)%profile.surfaces.length];
+  const distances=profile[surface];
+  const requestedDistance=distances[programRotationIndex(week,venue,number,7)%distances.length];
+  return {surface,requestedDistance};
+}
 function classMoneyEligible(raceClass,g){
   if(raceClass==="1勝")return !g.maiden&&g.classMoney<=500;
   if(raceClass==="2勝")return !g.maiden&&g.classMoney>=501&&g.classMoney<=1000;
@@ -185,8 +223,8 @@ function programAgeLabel(week){
 for(let week=1;week<=CAREER_MAX_WEEKS;week++){
   const calendarAge=horseAgeAtWeek(week),yearWeek=(week-1)%48,ageLimitedSeason=calendarAge===2||(calendarAge===3&&yearWeek<21),venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
   venues.forEach(venue=>PROGRAM_RACES.forEach(([number,baseName,baseClass,baseSurface,requestedDistance,prize,difficulty])=>{
-    // 後半4競走は週ごとに芝・ダートを2競走ずつ配置し、固定的な芝偏重を防ぐ。
-    const surface=baseSurface==="mixed"?((week+number)%2===0?"芝":"ダート"):baseSurface;
+    // 条件戦はクラス・開催場・週ごとのプロファイルで馬場と距離を分散する。
+    let surface=baseSurface==="mixed"?((week+number)%2===0?"芝":"ダート"):baseSurface;
     let raceClass=baseClass,name=baseName,raceDistanceRequest=requestedDistance;
     const newRaceClosed=calendarAge>3||(calendarAge===3&&yearWeek>12);
     const maidenClosed=calendarAge>3||(calendarAge===3&&yearWeek>36);
@@ -196,6 +234,9 @@ for(let week=1;week<=CAREER_MAX_WEEKS;week++){
     }else if(raceClass==="新馬"||raceClass==="未勝利")name=`${calendarAge}歳${raceClass}`;
     else if(raceClass==="1勝"&&number!==9)name=`${programAgeLabel(week)}1勝クラス`;
     if(number===9&&calendarAge===2){name="2歳1勝クラス";raceDistanceRequest=1800}
+    const classSpec=classProgramSpec(raceClass,venue,week,number);
+    if(classSpec){surface=classSpec.surface;raceDistanceRequest=classSpec.requestedDistance}
+    if(number===9&&calendarAge===2)raceDistanceRequest=1800;
     if(raceDistanceRequest==="long"&&surface==="ダート")raceDistanceRequest=1800;
     if(number>=10&&ageLimitedSeason){raceClass="オープン";name=`${calendarAge}歳オープン`}
     const niigataStraight=venue==="新潟"&&surface==="芝"&&number===7;
