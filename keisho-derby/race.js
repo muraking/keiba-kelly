@@ -128,6 +128,7 @@ let lastTime = 0;
 let raceClock = 0;
 let preRaceClock = 0;
 let weatherClock = 0;
+let raceVisualStartClock = 0;
 let waitingMotionClock = 0;
 let gateDifficultHorseId = null;
 let cheerClock = 0;
@@ -1131,7 +1132,8 @@ function drawVisionMovingBackdrop(x,y,w,h,speed=.25,scrollOverride=null,progress
   // 芝面・走路・柵を同じ勾配で描き、馬だけが浮いて上下する見え方を防ぐ。
   ctx.fillStyle="#397b3b";ctx.beginPath();ctx.moveTo(x,y+horizon);ctx.lineTo(x+w,y+horizon+slopePixels*.28);ctx.lineTo(x+w,rightTrack);ctx.lineTo(x,leftTrack);ctx.closePath();ctx.fill();
   ctx.fillStyle=raceSurface==="ダート"?"#a87549":"#4a9445";ctx.beginPath();ctx.moveTo(x,leftTrack);ctx.lineTo(x+w,rightTrack);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
-  const scroll=(scrollOverride??((raceClock+preRaceClock)*speed))%26;
+  // 映像の流れは内部レース倍速ではなく実時間で動かす。
+  const scroll=(scrollOverride??(weatherClock*speed))%26;
   ctx.strokeStyle="#eef3e5";ctx.lineWidth=2;
   [-5,3].forEach(offset=>{ctx.beginPath();ctx.moveTo(x,leftTrack+offset);ctx.lineTo(x+w,rightTrack+offset);ctx.stroke()});
   ctx.fillStyle="#eef3e5";
@@ -1144,7 +1146,7 @@ function drawVisionMovingBackdrop(x,y,w,h,speed=.25,scrollOverride=null,progress
     ctx.fillStyle="#ffe36d";ctx.fillRect(sunX-7,sunY-2,15,5);ctx.fillRect(sunX-4,sunY-6,9,13);
   }else{
     ctx.fillStyle=weather==="雪"?"#eef4f5":"#d9e2e5";
-    for(let cloudX=x-35-((raceClock+preRaceClock)*.003)%150;cloudX<x+w+45;cloudX+=150){
+    for(let cloudX=x-35-(weatherClock*.003)%150;cloudX<x+w+45;cloudX+=150){
       ctx.fillRect(Math.round(cloudX),y+5,22,5);ctx.fillRect(Math.round(cloudX+6),y+2,12,4);
     }
   }
@@ -1429,7 +1431,7 @@ function drawTrackV2(){
       drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,0,synchronizedScroll);
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
-      const visionTerrain=drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.025,null,centerOrder[0]?.progress??null);
+      const visionTerrain=drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.058,null,centerOrder[0]?.progress??null);
       const rear=Math.min(...centerOrder.map(h=>raceDistance(h))),fieldSpan=Math.max(0,front-rear);
       const cameraSpan=Math.max(105,Math.min(280,fieldSpan+24));
       const pixelsPerMeter=(screenW-38)/cameraSpan;
@@ -1444,8 +1446,10 @@ function drawTrackV2(){
       const sweep=sweepElapsed>=0&&sweepElapsed<6000?Math.sin(sweepElapsed/6000*Math.PI):0;
       const cameraOffset=sweep*Math.min(screenW*.50,fieldSpan*pixelsPerMeter*.70);
       // 発走直後はゲート映像の中央位置から始め、徐々に通常の先頭追従位置へ移す。
-      const cameraBlend=Math.max(0,Math.min(1,raceClock/2200));
-      const cameraEase=1-Math.pow(1-cameraBlend,3);
+      const visualElapsed=Math.max(0,weatherClock-raceVisualStartClock);
+      const cameraBlend=Math.max(0,Math.min(1,visualElapsed/3200));
+      // 開始直後に急加速しないよう、速度0から滑らかにつながる補間にする。
+      const cameraEase=cameraBlend*cameraBlend*(3-2*cameraBlend);
       const leaderX=screenX+screenW*.53+(screenW*.47-18)*cameraEase+cameraOffset;
       const horseScale=VISION_HORSE_SCALE;
       // ゴール板は遠景として先に描き、馬をその手前へ重ねる。
@@ -1853,6 +1857,7 @@ function beginRaceAfterGate(){
     const reactionMeters=h.startReaction==="好スタート"?3.2:h.startReaction==="出遅れ"?-6:(h.id%3-1)*.45;
     h.progress=START_PROGRESS+reactionMeters/LAP;
   });
+  raceVisualStartClock=weatherClock;
   state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
   gateSkipButton.hidden=true;
   speedButton.hidden=false;
