@@ -139,7 +139,7 @@ const TEST_START_CHUTES={
   "東京|芝|1600":{start:[338,64],control:[330,62],entryMeters:230,label:"2コーナー奥ポケット"},
   "東京|芝|1800":{start:[330,93],control:[320,69],entryMeters:205,label:"2コーナー奥ポケット"},
   "東京|芝|2000":{start:[342,145],control:[334,91],entryMeters:185,label:"1コーナー奥ポケット"},
-  "東京|ダート|1600":{start:[337,70],control:[326,68],entryMeters:215,label:"芝ポケット発走"}
+  "東京|ダート|1600":{start:[337,70],control:[326,68],entryMeters:215,label:"芝ポケット発走",shape:"line"}
 };
 function currentTestChute(){return courseAuditMode?TEST_START_CHUTES[`${currentRaceVenue}|${raceSurface}|${TOTAL}`]||null:null}
 // 「通常」を従来シミュレーションの4倍速として扱う。
@@ -323,7 +323,9 @@ function makeHorse(i, styles) {
     style: effectiveStyle,
     styleLabel:isPlayer?styles[i]:listedStyle,
     rivalTrait:rival?.trait||null,
-    progress: START_PROGRESS - i * .0009,
+    // ポケット発走は8頭すべてを同じ発走断面へ並べる。
+    // 通常コースでだけ描画上の微小な前後差を残す。
+    progress: START_PROGRESS - (currentTestChute()?0:i * .0009),
     // 基本は内ラチ沿い。逃げ・先行ほど内、差し・追込も道中は馬群内で脚をためる。
     lane: effectiveStyle === "逃げ" ? 7.25 : effectiveStyle === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
     targetLane: effectiveStyle === "逃げ" ? 7.25 : effectiveStyle === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
@@ -918,8 +920,11 @@ function coursePoint(progress,lane=3){
       const end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,lane);
       const laneShift=(lane-4.2)*2.2;
       const sx=chute.start[0],sy=chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift,cx=chute.control[0],cy=chute.control[1]+COURSE_AUDIT_Y_SHIFT+laneShift;
-      const u=1-t,x=u*u*sx+2*u*t*cx+t*t*end.x,y=u*u*sy+2*u*t*cy+t*t*end.y;
-      const dx=2*u*(cx-sx)+2*t*(end.x-cx),dy=2*u*(cy-sy)+2*t*(end.y-cy);
+      const u=1-t;
+      const x=chute.shape==="line"?sx+(end.x-sx)*t:u*u*sx+2*u*t*cx+t*t*end.x;
+      const y=chute.shape==="line"?sy+(end.y-sy)*t:u*u*sy+2*u*t*cy+t*t*end.y;
+      const dx=chute.shape==="line"?end.x-sx:2*u*(cx-sx)+2*t*(end.x-cx);
+      const dy=chute.shape==="line"?end.y-sy:2*u*(cy-sy)+2*t*(end.y-cy);
       return{x,y,angle:Math.atan2(dy,dx),curve:true};
     }
   }
@@ -1262,9 +1267,15 @@ function drawTrackV2(){
   // ポケットは内馬場より手前に描き、独立した発走路と本線への合流を見せる。
   const chute=currentTestChute();
   if(chute){
-    const end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,4.5);
-    const drawChute=(color,width)=>{ctx.beginPath();ctx.moveTo(chute.start[0],chute.start[1]+COURSE_AUDIT_Y_SHIFT);ctx.quadraticCurveTo(chute.control[0],chute.control[1]+COURSE_AUDIT_Y_SHIFT,end.x,end.y);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap="butt";ctx.stroke()};
-    drawChute("#f1ead2",38);drawChute(isDirt?"#a87549":"#43943e",31);
+    const drawChute=(lane,color,width)=>{
+      const laneShift=(lane-4.2)*2.2,end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,lane);
+      ctx.beginPath();ctx.moveTo(chute.start[0],chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift);
+      if(chute.shape==="line")ctx.lineTo(end.x,end.y);
+      else ctx.quadraticCurveTo(chute.control[0],chute.control[1]+COURSE_AUDIT_Y_SHIFT+laneShift,end.x,end.y);
+      ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();
+    };
+    drawChute(4.5,"#f1ead2",38);drawChute(4.5,isDirt?"#a87549":"#43943e",31);
+    for(let lane=1;lane<=8;lane++)drawChute(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
     ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="right";ctx.fillText(chute.label,chute.start[0]-3,chute.start[1]+COURSE_AUDIT_Y_SHIFT-5);
   }
   const profile=trackProfile();
