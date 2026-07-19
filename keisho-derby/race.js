@@ -1687,7 +1687,14 @@ function drawCrowdCheer(){
   // 周回ごとのホーム直線に入った時だけ、スタンドから歓声を出す。
   if(distanceToFinishLine>profile.straight*1.04)return;
   const ratio=raceDistance(leader)/TOTAL;
-  const calls=ratio>.82?["差せー！","粘れー！","そのまま！","伸びろー！","届いてくれ！","逃げ切れ！","並んだ！","もう少し！","いけー！","突き抜けろ！"]:ratio>.62?["外から来た！","内を突け！","前が開いた！","進路を取れ！","動き出した！","差を詰めろ！","いい脚だ！","馬群を割れ！"]:["いいぞー！","前を追え！","落ち着いて！","いい手応え！","まだ我慢！","行けるぞ！","頑張れー！"];
+  const localCalls={
+    "メイダン":["هيا!","يلا!","أسرع!","إلى الأمام!","لا تستسلم!","أحسنت!"],
+    "アスコット":["Come on!","Go on!","Keep going!","What a run!","Hold on!","Push on!"],
+    "パリロンシャン":["Allez !","Courage !","Plus vite !","Tiens bon !","Magnifique !","Jusqu'au bout !"],
+    "ブリーダーズカップ":["Let's go!","Come on!","Move up!","Keep driving!","Go get 'em!","What a finish!"],
+    "シャティン":["加油！","衝呀！","頂住！","追上去！","好嘢！","唔好放棄！"]
+  };
+  const calls=localCalls[currentRaceVenue]||(ratio>.82?["差せー！","粘れー！","そのまま！","伸びろー！","届いてくれ！","逃げ切れ！","並んだ！","もう少し！","いけー！","突き抜けろ！"]:ratio>.62?["外から来た！","内を突け！","前が開いた！","進路を取れ！","動き出した！","差を詰めろ！","いい脚だ！","馬群を割れ！"]:["いいぞー！","前を追え！","落ち着いて！","いい手応え！","まだ我慢！","行けるぞ！","頑張れー！"]);
   const gradeLevel=playerSetup.raceClass==="G1"?4:playerSetup.raceClass==="G2"?3:playerSetup.raceClass==="G3"?2:playerSetup.raceClass==="オープン"?1:0;
   const straightVisit=Math.floor(Math.max(0,travelled)/LAP)+1;
   const excitement=Math.min(5,gradeLevel+Math.min(2,straightVisit-1)+(ratio>.82?1:0));
