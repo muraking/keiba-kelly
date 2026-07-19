@@ -347,6 +347,7 @@ function makeHorse(i, styles) {
     player: isPlayer,
     finished: false,
     finishTime: null,
+    last600StartTime: null,
     wobble: raceRandom() * 10,
   };
 }
@@ -757,6 +758,7 @@ function update(dt, clockDt) {
 
     h.lane += (h.targetLane - h.lane) * Math.min(1, dt * .0017);
     h.progress += velocity * dt;
+    if(h.last600StartTime===null&&raceDistance(h)>=Math.max(0,TOTAL-600))h.last600StartTime=raceClock;
 
     if (h.progress >= FINISH_PROGRESS) {
       // 展開の上振れだけで標準馬がレコードを更新しないようにする。
@@ -865,9 +867,11 @@ function finishRace() {
     pendingResultDetail={
       winnerTime:formatTime(winner.finishTime),isRecord,
       raceSeed,setup:{...playerSetup},measuredPace,
+      split1000:split1000Time?formatTime(split1000Time):"--:--.-",
       order:order().map(h=>({
         id:h.id,name:h.name,color:h.color,odds:h.odds,style:h.style,
         finishTime:formatTime(h.finishTime),finishMs:h.finishTime,player:h.player,
+        final3F:h.last600StartTime===null?"--.-秒":`${Math.max(0,(h.finishTime-h.last600StartTime)/1000).toFixed(1)}秒`,
         isRecord:Number.isFinite(playerSetup.recordTime)&&h.finishTime<playerSetup.recordTime,
         temperamentTrouble:h.temperamentTrouble,
       }))
@@ -1249,7 +1253,7 @@ function marginLabel(prev,h){
   if(gap<1.6)return"1/2";
   if(gap<2.2)return"3/4";
   if(gap<3.1)return"1";
-  if(gap>=24)return"大差";
+  if(gap>=36)return"大差";
   const lengths=Math.round(gap/2.4*2)/2;
   return lengths%1?`${Math.floor(lengths)} 1/2`:`${lengths}`;
 }

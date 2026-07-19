@@ -541,6 +541,12 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .pixel-trainer .trainer-nose { left:28px;top:20px;width:2px;height:3px;background:#a96644;z-index:2; }
 .pixel-trainer .trainer-mouth { left:25px;top:25px;width:8px;height:2px;background:#6f2d28;z-index:2; }
 .pixel-trainer .trainer-body { left:12px;top:33px;width:34px;height:24px;background:#24466e;box-shadow:inset 0 4px #f2ead8; }
+.pixel-trainer.trainer-suit .trainer-body{background:#252b35;box-shadow:inset 0 4px #f5f2e8,inset 15px 0 #303947}
+.pixel-trainer.trainer-sunglasses .trainer-eye{width:7px;height:3px;background:#111;box-shadow:5px 0 #111}.pixel-trainer.trainer-sunglasses .eye-right{display:none}
+.pixel-trainer.trainer-cowboy .trainer-hair{left:10px;top:1px;width:38px;height:5px;background:#9a6332;box-shadow:8px -4px #9a6332}.pixel-trainer.trainer-cowboy .trainer-body{background:#7a4b2c}
+.pixel-trainer.trainer-female .trainer-hair{left:14px;width:29px;height:25px;background:#53301f;box-shadow:none}.pixel-trainer.trainer-female .trainer-face{z-index:1}.pixel-trainer.trainer-female .trainer-body{background:#7b3f72}
+.pixel-trainer.trainer-veteran .trainer-hair{background:#d6d1c7;box-shadow:-3px 4px #d6d1c7,3px 3px #d6d1c7}.pixel-trainer.trainer-veteran .trainer-mouth{background:#eee;box-shadow:0 3px #eee}
+.pixel-trainer.trainer-young .trainer-hair{background:#63351e;box-shadow:-3px 4px #63351e,3px 3px #63351e}.pixel-trainer.trainer-young .trainer-body{background:#28755b}
 .coach-copy { min-width:0;padding:5px 7px 6px; }
 .coach-copy>b { color:#75511f;font-size:10px; }
 .coach-message p {
@@ -816,6 +822,9 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .gallery-card h3 { margin:7px 0 3px; color:#463718; font-size:11px; }
 .gallery-card p { min-height:22px; margin:0; color:#6d6043; font-size:8px; }
 .trophy-winner { display:block; margin-top:5px; padding:5px; background:#4f3f20; color:#fff1a6; font-size:7px; line-height:1.5; }
+.trophy-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 14px}.trophy-tabs button{min-height:42px;background:#e8e3cd;border:3px solid #776844;color:#423719;font-weight:900}.trophy-tabs button.selected{background:#273d31;color:#ffe46e;border-color:#d0ae43}
+.trophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 12px 14px}.trophy-card{display:grid;grid-template-rows:42px auto auto;align-items:center;min-height:116px;padding:8px;border:4px solid #8b6a28;background:#fff4bf;color:#352918;text-align:center;box-shadow:inset 0 0 0 3px #e0bd54}.trophy-card.grade-g1{border-color:#a87912;background:#fff0a3;box-shadow:inset 0 0 0 3px #f4ce45}.trophy-card.grade-g2{border-color:#77858a;background:#edf2ef;box-shadow:inset 0 0 0 3px #c4d0d2}.trophy-card.grade-g3{border-color:#945c35;background:#f0d2b6;box-shadow:inset 0 0 0 3px #c78955}.trophy-card b{font-size:9px;line-height:1.45}.trophy-card small{font-size:7px;color:#6d5a35}.trophy-cup-icon{font-size:32px;line-height:1;color:#bf861c;text-shadow:2px 2px #5b4017}.grade-g2 .trophy-cup-icon{color:#aab9bd}.grade-g3 .trophy-cup-icon{color:#b66f3f}
+.trophy-horse-detail{display:grid;grid-template-columns:128px 1fr;gap:10px;align-items:center;margin:2px 12px 15px;padding:10px;border:4px solid #d0ae43;background:#15281f;color:#fff4be}.trophy-horse-detail h3{margin:3px 0;color:#ffe060;font-size:12px}.trophy-horse-detail p{margin:5px 0 0;font-size:8px}.trophy-detail-stage{position:relative;height:92px;overflow:hidden;border:3px solid #d0ae43;background:linear-gradient(#6fc3dd 0 58%,#5d9c45 58%)}.trophy-detail-horse{position:absolute;left:51px;bottom:15px;transform:scale(.8);transform-origin:center bottom}.trophy-detail-horse .winner-wreath{display:block}
 .coach-message { position:relative; }
 .coach-message::before { display:none; }
 .coach-message::before { content:"調"; position:absolute; left:10px; top:12px; display:grid; place-items:center; width:32px; height:38px; border:3px solid #322617; background:linear-gradient(#e8c49c 0 42%,#314a6d 42%); color:#21170f; font-weight:900; box-shadow:4px 4px #7b692f; }
