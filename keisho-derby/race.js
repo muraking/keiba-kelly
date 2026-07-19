@@ -103,6 +103,7 @@ let split1000Time = null;
 let measuredPace = "未確定";
 let raceSurface = "芝";
 let currentRaceVenue = "東京";
+let raceDirectionOverride = null;
 let currentCourseSpec = {route:"",lap:2083.1,straight:525.9,elevation:2.7};
 let opponentAbilities = [];
 let opponentNames = [];
@@ -159,20 +160,27 @@ const TRACK_PROFILES={
   "小倉":{turn:"右",straight:293,elevation:3.0,straightShare:.29,roundness:.90,facility:"garden",innerBias:.014,frontBias:.013},
   "門別":{turn:"右",straight:330,elevation:1.54,straightShare:.30,roundness:1.04,facility:"north",innerBias:.009,frontBias:.004},
   "盛岡":{turn:"左",straight:300,elevation:4.4,straightShare:.30,roundness:1.06,facility:"hill",innerBias:.007,frontBias:.001},
+  "水沢":{turn:"右",straight:245,elevation:0,straightShare:.25,roundness:.78,facility:"garden",innerBias:.017,frontBias:.018},
   "浦和":{turn:"左",straight:220,elevation:0,straightShare:.25,roundness:.78,facility:"city",innerBias:.018,frontBias:.019},
   "船橋":{turn:"左",straight:308,elevation:0,straightShare:.30,roundness:.94,facility:"city",innerBias:.010,frontBias:.006},
   "大井":{turn:"右",straight:386,elevation:0,straightShare:.32,roundness:1.04,facility:"city",innerBias:.005,frontBias:-.002},
   "川崎":{turn:"左",straight:300,elevation:0,straightShare:.29,roundness:.80,facility:"city",innerBias:.016,frontBias:.016},
   "金沢":{turn:"右",straight:236,elevation:0,straightShare:.25,roundness:.79,facility:"garden",innerBias:.017,frontBias:.018},
+  "笠松":{turn:"右",straight:201,elevation:1.92,straightShare:.23,roundness:.70,facility:"river",innerBias:.020,frontBias:.021},
   "名古屋":{turn:"右",straight:240,elevation:0,straightShare:.26,roundness:.77,facility:"city",innerBias:.017,frontBias:.017},
   "園田":{turn:"右",straight:213,elevation:1.23,straightShare:.24,roundness:.72,facility:"city",innerBias:.020,frontBias:.021},
+  "姫路":{turn:"右",straight:230,elevation:0,straightShare:.25,roundness:.78,facility:"castle",innerBias:.018,frontBias:.019},
   "高知":{turn:"右",straight:200,elevation:1.58,straightShare:.24,roundness:.75,facility:"hill",innerBias:-.004,frontBias:.018},
   "佐賀":{turn:"右",straight:200,elevation:1.0,straightShare:.24,roundness:.75,facility:"garden",innerBias:.018,frontBias:.019},
+  "帯広":{turn:"直線",straight:200,elevation:1.6,straightShare:1,roundness:0,facility:"banei",innerBias:0,frontBias:0},
 };
 function trackProfile(){
   const base=TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"];
+  const official=window.COURSE_LAYOUTS?.[currentRaceVenue];
   const route=currentCourseSpec.route;
-  return {...base,straight:currentCourseSpec.straight??base.straight,elevation:currentCourseSpec.elevation??base.elevation,
+  const direction=raceDirectionOverride||official?.direction;
+  const officialTurn=direction==="right"?"右":direction==="left"?"左":base.turn;
+  return {...base,turn:officialTurn,straight:currentCourseSpec.straight??base.straight,elevation:currentCourseSpec.elevation??base.elevation,
     straightShare:route==="外回り"?Math.max(base.straightShare,.36):route==="内回り"?Math.min(base.straightShare,.30):base.straightShare,
     roundness:route==="外回り"?base.roundness*1.08:route==="内回り"?base.roundness*.94:base.roundness};
 }
@@ -216,11 +224,24 @@ const TURF_ROUTE_SPECS={
   "阪神":{内回り:{lap:1689,straight:356.5,elevation:1.9},外回り:{lap:2089,straight:473.6,elevation:2.4},"外→内":{lap:1689,straight:356.5,elevation:2.4}}
 };
 function courseSpec(){
+  const official=window.COURSE_LAYOUTS?.[currentRaceVenue];
+  if(currentRaceVenue==="帯広")return{route:"直線",layoutKey:"banei",lap:200,straight:200,elevation:1.6};
   const route=raceSurface==="芝"?TURF_ROUTE_BY_DISTANCE[currentRaceVenue]?.[TOTAL]:"ダート";
   const routed=route&&TURF_ROUTE_SPECS[currentRaceVenue]?.[route];
   const profile=TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"];
   const lap=(COURSE_LAPS[currentRaceVenue]||COURSE_LAPS["東京"])[raceSurface]||2083.1;
-  return routed?{route,...routed}:{route:route||raceSurface,lap,straight:profile.straight,elevation:profile.elevation};
+  if(routed){
+    const layoutKey=route.includes("外")?"turf_outer":route.includes("内")?"turf_inner":"turf";
+    return{route,layoutKey,...routed};
+  }
+  if(official){
+    const surface=raceSurface==="芝"?"turf":"dirt";
+    const keys=Object.keys(official.layouts).filter(k=>k.startsWith(surface));
+    const layoutKey=keys.includes(surface)?surface:keys.includes(`${surface}_outer`)?`${surface}_outer`:keys[0];
+    return{route:route||raceSurface,layoutKey,lap:official.lap[layoutKey]||official.lap[surface]||lap,
+      straight:official.straight[layoutKey]||official.straight[surface]||profile.straight,elevation:official.elevation};
+  }
+  return{route:route||raceSurface,layoutKey:raceSurface==="芝"?"turf":"dirt",lap,straight:profile.straight,elevation:profile.elevation};
 }
 function configureCourseDistance(){
   currentCourseSpec=courseSpec();
@@ -228,7 +249,7 @@ function configureCourseDistance(){
   // 決勝線は各場のホーム直線内（スタンド前）に置く。
   // 固定値だと直線割合の短い競馬場でコーナーへ入るため、コース形状ごとに算出する。
   const profile=trackProfile();
-  const renderedFinish=Math.max(.14,Math.min(profile.straightShare-.025,profile.straightShare*.72));
+  const renderedFinish=window.COURSE_LAYOUTS?.[currentRaceVenue]?.finishProgress??Math.max(.14,Math.min(profile.straightShare-.025,profile.straightShare*.72));
   FINISH_PROGRESS=profile.turn==="右"?1-renderedFinish:renderedFinish;
   START_PROGRESS=FINISH_PROGRESS-TOTAL/LAP;
 }
@@ -882,6 +903,12 @@ function coursePoint(progress, lane = 3) {
     const t=(p-straight*2-curve)/curve,a=Math.PI/2+t*Math.PI;
     return{x:left+Math.cos(a)*rx,y:cy+Math.sin(a)*(bottom-top)/2,angle:a+Math.PI/2,curve:true};
   }
+  const officialPath=window.COURSE_LAYOUTS?.[currentRaceVenue]?.layouts?.[currentCourseSpec.layoutKey];
+  if(layoutV2&&officialPath?.length>2){
+    const pt=officialCoursePoint(officialPath,p,lane);
+    if(rightTurn)pt.angle+=Math.PI;
+    return pt;
+  }
   const pt=verticalCoursePoint(p,lane);
   // 座標だけでなく馬体の向きも実際の右回り進行方向へ反転する。
   if(rightTurn)pt.angle+=Math.PI;
@@ -894,6 +921,21 @@ function coursePoint(progress, lane = 3) {
     angle:Math.atan2(-.632*Math.cos(pt.angle),.723*Math.sin(pt.angle)),
     curve:pt.curve,
   };
+}
+
+function officialCoursePoint(path,p,lane){
+  const closed=path.length>2;
+  const segmentCount=closed?path.length:path.length-1;
+  const lengths=[];let total=0;
+  for(let i=0;i<segmentCount;i++){
+    const a=path[i],b=path[(i+1)%path.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);lengths.push(length);total+=length;
+  }
+  let target=Math.max(0,Math.min(.999999,p))*total,index=0;
+  while(index<lengths.length-1&&target>lengths[index]){target-=lengths[index];index++}
+  const a=path[index],b=path[(index+1)%path.length],t=target/(lengths[index]||1);
+  const angle=Math.atan2(b[1]-a[1],b[0]-a[0]);
+  const offset=(lane-4.2)*2.35;
+  return{x:a[0]+(b[0]-a[0])*t-Math.sin(angle)*offset,y:a[1]+(b[1]-a[1])*t+Math.cos(angle)*offset,angle,curve:index!==0&&index!==Math.floor(path.length/2)};
 }
 
 function verticalCoursePoint(p,lane){
@@ -1104,7 +1146,8 @@ function marginLabel(prev,h){
 // レイアウトV2：縦画面のまま上から「コース（横長）→ターフビジョン→高低差」を積む。
 // ビジョンはコースの外に独立させ、走路とは重ねない。スタミナバーは表示しない。
 function drawTrackV2(){
-  const isDirt=raceSurface==="ダート";
+  const isBanei=currentRaceVenue==="帯広";
+  const isDirt=raceSurface==="ダート"||isBanei;
   ctx.fillStyle="#0d1a26";ctx.fillRect(0,0,LOGICAL_WIDTH,logicalHeight);
   // コース帯の芝生下地。
   ctx.fillStyle="#2d7131";ctx.fillRect(0,42,360,208);
@@ -1137,6 +1180,12 @@ function drawTrackV2(){
   trace(4.5,"#f1ead2",40);
   trace(4.5,isDirt?"#a87549":"#43943e",33);
   for(let lane=1;lane<=8;lane++)trace(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
+  if(isBanei){
+    [{x:131,h:10,label:"第1障害"},{x:238,h:18,label:"第2障害"}].forEach(o=>{
+      ctx.fillStyle="#8a603d";ctx.beginPath();ctx.moveTo(o.x-13,155);ctx.lineTo(o.x,155-o.h);ctx.lineTo(o.x+13,155);ctx.fill();
+      ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="center";ctx.fillText(o.label,o.x,174);
+    });
+  }
   // 内馬場。
   if(!straightCourse){
     ctx.beginPath();
@@ -1661,6 +1710,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   resultDispatchedForRace = false;
   raceSurface = event.detail.surface || "芝";
   currentRaceVenue = event.detail.venue || "東京";
+  raceDirectionOverride=event.detail.direction||null;
   TOTAL = event.detail.distance || 2400;
   configureCourseDistance();
   BASE_PROGRESS_PER_MS = (TOTAL / LAP) / (event.detail.baseTime || TOTAL * 62);

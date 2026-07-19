@@ -13,3 +13,10 @@
 
 ゲーム内は1か月4週制なので、公式開催日を同月内の第1〜4週へ変換する。
 元の日付は `officialDate` として保持し、レース選択画面に表示する。
+# コースレイアウト
+
+- JRA公式「競馬場・コース紹介」 https://www.jra.go.jp/facilities/index.html
+- 地方競馬全国協会「コース一覧」 https://www.keiba.go.jp/guide/course/
+- 地方競馬全国協会「地方競馬総合ガイドブック 2026」 https://www.keiba.go.jp/about/guidebook.html
+
+`course-layout-data.js` の中心線座標は、上記公式上面図をゲーム用Canvas座標へ独自に再構成したもの。公式画像は収録しない。
