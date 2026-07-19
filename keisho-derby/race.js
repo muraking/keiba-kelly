@@ -1432,7 +1432,7 @@ function drawTrackV2(){
       drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,0,synchronizedScroll);
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
-      const visionTerrain=drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.058,null,centerOrder[0]?.progress??null);
+      const visionTerrain=drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.072,null,centerOrder[0]?.progress??null);
       const rear=Math.min(...centerOrder.map(h=>raceDistance(h))),fieldSpan=Math.max(0,front-rear);
       const cameraSpan=Math.max(105,Math.min(280,fieldSpan+24));
       const pixelsPerMeter=(screenW-38)/cameraSpan;
