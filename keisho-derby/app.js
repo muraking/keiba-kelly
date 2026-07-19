@@ -1659,7 +1659,7 @@ function showResult(detail){
 document.querySelector("#continueButton").disabled=!hasAnySave();
 document.querySelector("#devModeButton").textContent=developerMode?"開発表示 ON":"開発表示";
 document.querySelector("#newGameButton").onclick=()=>{renderSaveSlots("new");showScreen("saveSlotScreen")};
-const raceTestVenue=document.querySelector("#raceTestVenue"),raceTestSurface=document.querySelector("#raceTestSurface"),raceTestDistance=document.querySelector("#raceTestDistance");
+const raceTestVenue=document.querySelector("#raceTestVenue"),raceTestDirection=document.querySelector("#raceTestDirection"),raceTestDirectionRow=document.querySelector("#raceTestDirectionRow"),raceTestSurface=document.querySelector("#raceTestSurface"),raceTestDistance=document.querySelector("#raceTestDistance");
 const TEST_SURFACE_LABEL={turf:"芝",dirt:"ダート",banei:"ばんえい"};
 // NAR公式コースレコードに掲載されている施行実績距離。検証画面だけで使用する。
 const TEST_LOCAL_DISTANCES={
@@ -1694,7 +1694,8 @@ function updateRaceTestSummary(){
   if(!course)return;
   const english=surface==="芝"?"turf":surface==="ダート"?"dirt":"banei",layoutKey=Object.keys(course.layouts).find(k=>k===english)||Object.keys(course.layouts).find(k=>k.startsWith(english));
   const lap=course.lap[layoutKey]||course.lap[english]||Object.values(course.lap)[0],straight=course.straight[layoutKey]||course.straight[english]||Object.values(course.straight)[0];
-  const direction=course.direction==="left"?"左回り":course.direction==="right"?"右回り":course.direction==="both"?"左右両回り":"直線";
+  const selectedDirection=raceTestDirection.value||course.direction;
+  const direction=selectedDirection==="left"?"左回り":selectedDirection==="right"?"右回り":selectedDirection==="both"?"左右両回り":"直線";
   const pocket=baseVenue==="東京"&&((surface==="芝"&&[1600,1800,2000].includes(distance))||(surface==="ダート"&&distance===1600));
   document.querySelector("#raceTestCourseSummary").innerHTML=`<b>${venue}競馬場　${surface}${distance}m</b><br>${direction}／1周 ${lap}m／直線 ${straight}m<br>高低差 ${course.elevation}m　${course.corner}${pocket?"<br><strong>距離別ポケット走路を表示</strong>":""}<br><small>コース検証用・本編には未反映</small>`;
 }
@@ -1704,6 +1705,9 @@ function updateRaceTestDistances(){
 }
 function updateRaceTestSurfaces(){
   const course=window.COURSE_LAYOUTS?.[raceTestBaseVenue(raceTestVenue.value)],surfaces=course?.surfaces||["turf","dirt"];
+  const directions=course?.direction==="both"?[{value:"right",label:"右回り（外回り）"},{value:"left",label:"左回り（外回り）"}]:[{value:course?.direction||"left",label:course?.direction==="right"?"右回り":course?.direction==="straight"?"直線":"左回り"}];
+  raceTestDirection.innerHTML=directions.map(item=>`<option value="${item.value}">${item.label}</option>`).join("");
+  raceTestDirectionRow.hidden=directions.length===1;
   raceTestSurface.innerHTML=surfaces.map(surface=>`<option value="${TEST_SURFACE_LABEL[surface]}">${TEST_SURFACE_LABEL[surface]}</option>`).join("");updateRaceTestDistances();
 }
 function openRaceTestSetup(){
@@ -1712,14 +1716,15 @@ function openRaceTestSetup(){
 }
 document.querySelector("#raceTestButton").onclick=openRaceTestSetup;
 raceTestVenue.onchange=updateRaceTestSurfaces;raceTestSurface.onchange=updateRaceTestDistances;raceTestDistance.onchange=updateRaceTestSummary;
+raceTestDirection.onchange=updateRaceTestSummary;
 document.querySelector("#raceTestStartButton").onclick=()=>{
-  const venue=raceTestVenue.value,surface=raceTestSurface.value,distance=Number(raceTestDistance.value);
+  const venue=raceTestVenue.value,surface=raceTestSurface.value,distance=Number(raceTestDistance.value),direction=raceTestDirection.value||null;
   const baseVenue=raceTestBaseVenue(venue);
   game=defaultGame();generateCandidate();
   const c=game.candidate,testAbility={speed:650,dash:620,stamina:640,power:610,guts:600,turf:660,dirt:620};
   const testCaps=createPotentialCaps({...c,...testAbility});
   game={...game,horseName:"ドットスター",week:21,...testAbility,gateSkill:600,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:testCaps};
-  const testRace={id:`test-${baseVenue}-${surface}-${distance}`,week:game.week,name:"コース検証テスト",raceClass:"オープン",course:`${baseVenue} ${surface}${distance}m`,surface,distance,courseAuditMode:true,baseTime:surface==="ばんえい"?150000:Math.round((surface==="芝"?60000:63000)*distance/1000),prize:0,difficulty:82,condition:()=>true};
+  const testRace={id:`test-${baseVenue}-${surface}-${distance}`,week:game.week,name:"コース検証テスト",raceClass:"オープン",course:`${baseVenue} ${surface}${distance}m`,surface,distance,direction,courseAuditMode:true,baseTime:surface==="ばんえい"?150000:Math.round((surface==="芝"?60000:63000)*distance/1000),prize:0,difficulty:82,condition:()=>true};
   prepareRace(testRace);showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"));
 };
 document.querySelector("#rerollHorseButton").onclick=generateCandidate;

@@ -270,7 +270,9 @@ function configureCourseDistance(){
   // 固定値だと直線割合の短い競馬場でコーナーへ入るため、コース形状ごとに算出する。
   const profile=trackProfile();
   const renderedFinish=window.COURSE_LAYOUTS?.[currentRaceVenue]?.finishProgress??Math.max(.14,Math.min(profile.straightShare-.025,profile.straightShare*.72));
-  FINISH_PROGRESS=profile.turn==="右"?1-renderedFinish:renderedFinish;
+  // 検証画面は中心線の基準点をそのまま決勝線に使い、進行方向だけ描画時に反転する。
+  // これで左右どちらの回りでもゴールがスタンド前から動かない。
+  FINISH_PROGRESS=courseAuditMode?renderedFinish:(profile.turn==="右"?1-renderedFinish:renderedFinish);
   START_PROGRESS=FINISH_PROGRESS-TOTAL/LAP;
 }
 function finishMarkerVisible(){
@@ -932,7 +934,10 @@ function baseCoursePoint(progress, lane = 3) {
   }
   let p = ((progress % 1) + 1) % 1;
   const rightTurn=trackProfile().turn==="右";
-  if(rightTurn)p=(1-p)%1;
+  // 元の中心線は時計回り。検証画面の左回りは決勝線を軸に座標順だけを反転する。
+  // 単純な 1-p ではゴール位置まで移動するため、2*FINISH_PROGRESS-p で位置を固定する。
+  const reverseTraversal=courseAuditMode?!rightTurn:rightTurn;
+  if(reverseTraversal)p=((2*FINISH_PROGRESS-p)%1+1)%1;
   if(horizontalLayout){
     const inset=lane*4,left=43+inset,right=317-inset,top=50+lane*3,bottom=230-lane*3;
     const cy=(top+bottom)/2,rx=Math.max(28,48-inset*.12),straight=.39,curve=.11;
@@ -945,13 +950,13 @@ function baseCoursePoint(progress, lane = 3) {
   const officialPath=window.COURSE_LAYOUTS?.[currentRaceVenue]?.layouts?.[currentCourseSpec.layoutKey];
   if(layoutV2&&officialPath?.length>2){
     const pt=officialCoursePoint(officialPath,p,lane);
-    if(rightTurn)pt.angle+=Math.PI;
+    if(reverseTraversal)pt.angle+=Math.PI;
     if(courseAuditMode){pt.x=360-pt.x;pt.y=270-pt.y;pt.angle+=Math.PI;}
     return pt;
   }
   const pt=verticalCoursePoint(p,lane);
   // 座標だけでなく馬体の向きも実際の右回り進行方向へ反転する。
-  if(rightTurn)pt.angle+=Math.PI;
+  if(reverseTraversal)pt.angle+=Math.PI;
   if(!layoutV2)return pt;
   // レイアウトV2：縦画面のまま、実測ベースの縦型コース形状を90度回転して
   // 画面上部の横長コースへ写像する。ホーム直線（縦型では右端）が上辺＝スタンド側。
