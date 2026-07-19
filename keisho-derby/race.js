@@ -871,7 +871,7 @@ function finishRace() {
       raceSeed,setup:{...playerSetup},measuredPace,
       order:order().map(h=>({
         id:h.id,name:h.name,color:h.color,odds:h.odds,style:h.style,
-        finishTime:formatTime(h.finishTime),player:h.player,
+        finishTime:formatTime(h.finishTime),finishMs:h.finishTime,player:h.player,
         isRecord:Number.isFinite(playerSetup.recordTime)&&h.finishTime<playerSetup.recordTime,
         temperamentTrouble:h.temperamentTrouble,
       }))
@@ -1197,10 +1197,17 @@ function drawTrackV2(){
     const x=(i*83)%356,y=46+(i*47)%200;
     ctx.fillStyle=i%3?"#245f27":"#347b32";ctx.fillRect(x,y,3,3);
   }
-  // コース上部のレース情報。
-  ctx.fillStyle="#101a21";ctx.fillRect(0,0,360,20);
-  ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
-  ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m ${currentCourseSpec.route}　${playerSetup.going}`,180,14);
+  // 上部のレース銘板。重賞ほど金属装飾を豪華にする。
+  const gradeLevel=playerSetup.raceClass==="G1"?3:playerSetup.raceClass==="G2"?2:playerSetup.raceClass==="G3"?1:0;
+  const plateBorder=gradeLevel===3?"#ffe36d":gradeLevel===2?"#d7dce2":gradeLevel===1?"#c98d45":"#8aa391";
+  ctx.fillStyle="#101a21";ctx.fillRect(0,0,360,39);
+  ctx.fillStyle=gradeLevel>=2?"#18273a":"#1a2c25";ctx.fillRect(5,3,350,33);
+  ctx.strokeStyle=plateBorder;ctx.lineWidth=gradeLevel===3?3:2;ctx.strokeRect(5,3,350,33);
+  if(gradeLevel===3){ctx.strokeStyle="#8e6f20";ctx.lineWidth=1;ctx.strokeRect(9,7,342,25);for(let x=14;x<350;x+=28){ctx.fillStyle="#fff2a3";ctx.fillRect(x,5,3,3)}}
+  ctx.fillStyle=plateBorder;ctx.font=`bold ${gradeLevel?11:10}px sans-serif`;ctx.textAlign="center";
+  ctx.fillText(playerSetup.raceName||"テストレース",180,16);
+  ctx.fillStyle="#f5f1df";ctx.font="bold 9px sans-serif";
+  ctx.fillText(`${currentRaceVenue}　${raceSurface}${TOTAL}m　${currentCourseSpec.route}　${playerSetup.going}`,180,29);
   const standY=232;
   ctx.fillStyle="#6e8492";ctx.fillRect(4,standY,352,5);
   ctx.fillStyle="#506574";ctx.fillRect(4,standY+5,352,7);
@@ -1208,8 +1215,11 @@ function drawTrackV2(){
   const crowdCount=playerSetup.raceClass==="G1"?230:playerSetup.raceClass==="G2"?180:playerSetup.raceClass==="G3"?135:playerSetup.raceClass==="オープン"?90:45;
   const crowdColors=["#e65b4f","#f0d56a","#5ca6d8","#f2eee0","#7356a8"];
   for(let i=0;i<crowdCount;i++){
-    ctx.fillStyle=crowdColors[i%5];
-    ctx.fillRect(6+(i*6.1)%348,standY+3+((i*13)%4)*4,3,3);
+    // raceSeedと番号から固定乱数を作り、毎フレームちらつかず不規則に配置する。
+    const hash=(Math.imul(i+17,1103515245)+Math.imul(raceSeed+31,12345))>>>0;
+    const x=7+(hash%346),row=(hash>>>9)%4,y=standY+3+row*4,size=(hash>>>15)%5===0?3:2;
+    ctx.fillStyle=crowdColors[(hash>>>18)%crowdColors.length];
+    ctx.fillRect(x,y,size,size+1);
   }
   const straightCourse=currentCourseSpec.route==="直線";
   const trace=(lane,color,width)=>{
@@ -1243,6 +1253,20 @@ function drawTrackV2(){
   trace(8.7,"#fffdf0",2);
   if(startMarkerVisible())drawMarker(START_PROGRESS,"#35dc5c","START");
   if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
+
+  // 内馬場の小型ターフビジョン。先頭集団を実際の位置差に合わせて投影する。
+  if(!straightCourse){
+    const mx=105,my=91,mw=150,mh=61,centerOrder=order(),front=Math.max(...centerOrder.map(h=>raceDistance(h)));
+    ctx.fillStyle="#111a20";ctx.fillRect(mx,my,mw,mh);ctx.strokeStyle=plateBorder;ctx.lineWidth=2;ctx.strokeRect(mx,my,mw,mh);
+    ctx.fillStyle="#263a2e";ctx.fillRect(mx+2,my+2,mw-4,13);
+    ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="center";ctx.fillText("TURF VISION",mx+mw/2,my+11);
+    ctx.fillStyle=isDirt?"#9a6c43":"#4a9445";ctx.fillRect(mx+3,my+17,mw-6,mh-20);
+    const visible=centerOrder.filter(h=>front-raceDistance(h)<=95).slice(0,6);
+    visible.forEach((h,index)=>{
+      const gap=front-raceDistance(h),x=mx+mw-25-gap*1.05,y=my+25+(index%3)*10+Math.sin(raceClock/170+h.id)*1.2;
+      drawVisionCandidateHorse(x,y,h,.20);
+    });
+  }
 
   // コース直下の実況帯（最新4行）。
   const commentaryY=254;

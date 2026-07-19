@@ -83,6 +83,7 @@ const defaultGame = () => ({
 });
 let game = defaultGame();
 let autoTrainingActive=false;
+let trainingAnimationActive=false;
 let pendingRaceAfterSpacingWarning=null;
 let developerMode=localStorage.getItem("dotKeibaDeveloperMode")==="1";
 const ABILITY_STATS=["speed","dash","stamina","power","guts","turf","dirt","heavyTrack"];
@@ -942,10 +943,11 @@ function renderHome(message="今週の予定を決めましょう。"){
   trainingScene.classList.add(game.fatigue>=75?"horse-exhausted":game.fatigue>=45?"horse-tired":game.fatigue<20&&game.condition>=55?"horse-vigorous":"horse-normal");
   renderTack();
   const injured=!!game.injury;
-  document.querySelectorAll("[data-action]").forEach(b=>b.disabled=injured||game.trainingsUsed>=2);
+  const trainingLocked=autoTrainingActive||trainingAnimationActive;
+  document.querySelectorAll("[data-action]").forEach(b=>b.disabled=injured||game.trainingsUsed>=2||trainingLocked);
   document.querySelector("#goRaceSelectButton").disabled=injured;
   document.querySelector("#nextWeekButton").disabled=injured;
-  document.querySelector("#autoTrainingButton").disabled=injured;
+  document.querySelector("#autoTrainingButton").disabled=injured||trainingLocked;
   document.querySelector("#pastureButton").hidden=!injured;
   if(injured)document.querySelector("#pastureWeeks").textContent=`${game.injury.name}・${game.injury.weeks}週間を一括進行`;
   saveGame();
@@ -1139,6 +1141,7 @@ function renderGallery(){
   saveGame();
 }
 function train(type){
+  if(trainingAnimationActive&&!autoTrainingActive)return;
   if(game.injury)return renderHome(`${game.injury.name}のため調教できません。長期放牧が必要です。`);
   if(game.trainingsUsed>=2)return renderHome("今週の調教は2回終了しました。レースか翌週を選びましょう。");
   if(type==="light"||type==="forest"){
@@ -1221,6 +1224,9 @@ function playTrainingAnimation(type,label,outcome){
   document.querySelector("#trainingPopupTitle").textContent=label;
   document.querySelector("#trainingPopupResult").textContent=outcome==="失敗"?"うまく走れなかった…":outcome==="大成功"?"大成功！":`${outcome}！`;
   popup.style.setProperty("--popup-horse-color",game.candidate?.color||"#b96e32");
+  trainingAnimationActive=true;
+  document.querySelectorAll("[data-action]").forEach(button=>button.disabled=true);
+  document.querySelector("#autoTrainingButton").disabled=true;
   popup.classList.add("show");
   popup.setAttribute("aria-hidden","false");
   stage.className=`training-popup-stage ${type}`;
@@ -1228,6 +1234,8 @@ function playTrainingAnimation(type,label,outcome){
   playTrainingAnimation.timer=setTimeout(()=>{
     popup.classList.remove("show");
     popup.setAttribute("aria-hidden","true");
+    trainingAnimationActive=false;
+    renderHome(document.querySelector("#homeMessage")?.textContent?.replace(/\s+疲れ[^。]*。?$/,"" )||"今週の予定を決めましょう。");
   },2200);
 }
 function playAutoTrainingSequence(steps,modeName,finishText){
@@ -1236,6 +1244,9 @@ function playAutoTrainingSequence(steps,modeName,finishText){
   const compact=steps.filter((step,index)=>index===0||step.type!==steps[index-1].type).slice(0,5);
   const sequence=compact.length?compact:[{type:"rest",label:"休養"}];
   popup.style.setProperty("--popup-horse-color",game.candidate?.color||"#b96e32");
+  trainingAnimationActive=true;
+  document.querySelectorAll("[data-action]").forEach(button=>button.disabled=true);
+  document.querySelector("#autoTrainingButton").disabled=true;
   popup.classList.add("show","auto-sequence");popup.setAttribute("aria-hidden","false");
   clearTimeout(playAutoTrainingSequence.timer);
   let index=0;
@@ -1246,6 +1257,8 @@ function playAutoTrainingSequence(steps,modeName,finishText){
       stage.className="training-popup-stage rest auto-finish";
       playAutoTrainingSequence.timer=setTimeout(()=>{
         popup.classList.remove("show","auto-sequence");popup.setAttribute("aria-hidden","true");
+        trainingAnimationActive=false;
+        renderHome(`おまかせ調教を終え、${weekLabel()}から通常調教を選べます。`);
       },1600);
       return;
     }
@@ -1646,10 +1659,21 @@ function showResult(detail){
   resultHorseScene.classList.remove("is-winner","is-placed","is-defeated");
   resultHorseScene.classList.add(place===1?"is-winner":place<=3?"is-placed":"is-defeated");
   resultHorseScene.setAttribute("aria-label",place===1?"優勝レイを掛けて喜ぶ愛馬":place<=3?"健闘して少し悔しそうな愛馬":"レースに敗れて悲しむ愛馬");
-  document.querySelector("#resultHorseMood").textContent=place===1?"やったね！":place<=3?"次こそ勝とう！":"よく頑張ったね";
+  const winnerResult=detail.order[0],gapMs=Math.max(0,(player.finishMs||0)-(winnerResult.finishMs||0));
+  const resultPhraseGroups=place===1
+    ?{mood:["やったね！","最高の走り！","よくやった！","見事な勝利！"],comment:["最後まで力強く走り切りました。立派な勝利です！","今日はこの馬の良さを存分に出せました。","堂々と先頭でゴールしました！","素晴らしい内容です。この勢いで次も狙いましょう！"]}
+    :place===2&&gapMs<=500
+      ?{mood:["あと少しだった！","惜しかった！","次は届くよ！","悔しいね！"],comment:["勝ち馬とはわずかな差でした。もうひと伸びできれば逆転できます。","最後まで競り合いました。次こそ先頭でゴールしましょう。","本当に惜しい内容です。力は十分通用しています。","あと一歩でした。この悔しさを次のレースへつなげましょう。"]}
+      :place<=3
+        ?{mood:["次こそ勝とう！","よく食らいついた！","まだ伸びるよ！","立派な好走！"],comment:["上位争いに加わる良い走りでした。","最後まで諦めず、しっかり伸びています。","勝ち切るにはもう少しですが、内容は悪くありません。","このクラスでも戦える手応えがありました。"]}
+        :place<=5
+          ?{mood:["もうひと頑張り！","次は上を狙おう！","悪くないよ！","ここから巻き返そう！"],comment:["掲示板には入りました。展開が向けばさらに上を狙えます。","大きくは崩れていません。次走での前進に期待しましょう。","見せ場は作れました。足りない部分を調教で補いましょう。","相手なりに走れています。もう一段階成長させたいところです。"]}
+          :{mood:["もっと頑張ろう！","次は巻き返そう！","今日は残念！","また挑戦しよう！","ここからだよ！"],comment:["今日は力を出し切れませんでした。状態を整えてやり直しましょう。","悔しい結果ですが、原因を見直せば巻き返せます。","この経験も次につながります。焦らず立て直しましょう。","まだ成長の余地があります。得意条件を探していきましょう。","今日は展開も向きませんでした。次走でもう一度挑戦しましょう。"]};
+  const phraseIndex=(game.races+game.week+place+player.id)%resultPhraseGroups.mood.length;
+  document.querySelector("#resultHorseMood").textContent=resultPhraseGroups.mood[phraseIndex];
   applyHorseAppearance(resultHorseScene);
   document.querySelector("#resultTime").textContent=player.finishTime;document.querySelector("#resultPrize").textContent=`獲得賞金 ${earned.toLocaleString()}万円／育成ポイント +${fpEarned} FP`;
-  document.querySelector("#resultComment").textContent=(place===1?"見事な勝利です！":place<=3?"好走しました。次は勝利を狙いましょう。":"調教を重ねて巻き返しましょう。")+
+  document.querySelector("#resultComment").textContent=resultPhraseGroups.comment[phraseIndex%resultPhraseGroups.comment.length]+
     (playerTrouble?` 調教師「今日は${playerTrouble}がありました。馬具を検討しましょう」`:"");
   document.querySelector("#postRaceCondition").textContent=resultRaceReview(r,player,place,detail.measuredPace);
   document.querySelector("#resultOrder").innerHTML=detail.order.slice(0,5).map((h,i)=>`<div><span>${i+1}</span><b>${h.name}</b><small>${h.odds.toFixed(1)}倍</small></div>`).join("");
