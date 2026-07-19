@@ -880,6 +880,8 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .result-order span { color:#ffe16a; font-weight:800; }
 .result-order small { color:#b3c1ca; text-align:right; }
 
+.dev-stat-legend { margin:0 0 8px;padding:5px 8px;border-bottom:1px dashed #a8b29e;color:#6a5a34;font-size:9px;text-align:right; }
+
 .race-header {
   padding: 19px 15px 10px;
   border-bottom: 3px solid var(--gold);

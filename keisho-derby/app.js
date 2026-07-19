@@ -376,6 +376,7 @@ function loadGame(slot=activeSaveSlot){
     if(!["早熟","普通","晩成"].includes(saved?.growthType))game.growthType="普通";
     if(!Number.isFinite(saved?.growthPotential))game.growthPotential=rnd(9,16);
     if(!saved?.potentialCaps)game.potentialCaps=createPotentialCaps(game);
+    normalizePotentialCaps(game);
     if(!Number.isFinite(saved?.distanceMin))game.distanceMin=1400;
     if(!Number.isFinite(saved?.distanceMax))game.distanceMax=2000;
     if(!Number.isFinite(saved?.heavyTrack))game.heavyTrack=rnd(420,680);
@@ -448,6 +449,15 @@ function createPotentialCaps(source){
     caps[stat]=Math.min(hardCap,source[stat]+rnd(surface?80:90,surface?190:220));
   });
   return caps;
+}
+function normalizePotentialCaps(source){
+  if(!source.potentialCaps)source.potentialCaps=createPotentialCaps(source);
+  ["speed","dash","stamina","power","guts","turf","dirt"].forEach(stat=>{
+    const current=Number(source[stat])||0;
+    const savedCap=Number(source.potentialCaps[stat]);
+    source.potentialCaps[stat]=Math.max(current,Number.isFinite(savedCap)?savedCap:current);
+  });
+  return source.potentialCaps;
 }
 function inheritRecoveryTrait(parentValue,variation=80){
   return Math.max(300,Math.min(850,Math.round(parentValue*.55+rnd(400,700)*.45+rnd(-variation,variation))));
@@ -915,7 +925,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   const statsEl=document.querySelector("#horseStats");
   statsEl.hidden=!developerMode;
   statsEl.innerHTML=developerMode
-    ? statRow("スピード",game.speed,"#57c8ff")+statRow("ダッシュ",game.dash,"#ff9d43")+statRow("スタミナ",game.stamina,"#55d56b")+
+    ? `<div class="dev-stat-legend">数値表示：現在値 / 素質上限</div>`+statRow("スピード",game.speed,"#57c8ff")+statRow("ダッシュ",game.dash,"#ff9d43")+statRow("スタミナ",game.stamina,"#55d56b")+
       statRow("パワー",game.power,"#ef8661")+statRow("勝負根性",game.guts,"#e6c354")+
       statRow("芝適性",game.turf,"#72c45e")+statRow("ダート適性",game.dirt,"#c9915b")+
       statRow("道悪適性",game.heavyTrack,"#5aa5c8")+
@@ -1682,7 +1692,9 @@ raceTestVenue.onchange=updateRaceTestSurfaces;raceTestSurface.onchange=updateRac
 document.querySelector("#raceTestStartButton").onclick=()=>{
   const venue=raceTestVenue.value,surface=raceTestSurface.value,distance=Number(raceTestDistance.value);
   game=defaultGame();generateCandidate();
-  const c=game.candidate;game={...game,horseName:"ドットスター",week:21,speed:650,dash:620,gateSkill:600,stamina:640,power:610,guts:600,turf:660,dirt:620,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:c.potentialCaps};
+  const c=game.candidate,testAbility={speed:650,dash:620,stamina:640,power:610,guts:600,turf:660,dirt:620};
+  const testCaps=createPotentialCaps({...c,...testAbility});
+  game={...game,horseName:"ドットスター",week:21,...testAbility,gateSkill:600,heavyTrack:560,baseBestWeight:c.baseBestWeight,weight:c.baseBestWeight,condition:72,candidate:c,potentialCaps:testCaps};
   const testRace={id:`test-${venue}-${surface}-${distance}`,week:game.week,name:"レース画面テスト",raceClass:"オープン",course:`${venue} ${surface}${distance}m`,surface,distance,baseTime:surface==="ばんえい"?150000:Math.round((surface==="芝"?60000:63000)*distance/1000),prize:0,difficulty:82,condition:()=>true};
   prepareRace(testRace);showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"));
 };
