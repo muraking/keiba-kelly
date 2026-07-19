@@ -128,6 +128,7 @@ let horizontalLayout = false;
 let layoutV2 = false;
 let courseAuditMode = false;
 let drawingCourseTrace = false;
+const COURSE_AUDIT_Y_SHIFT = -18;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
@@ -916,7 +917,7 @@ function coursePoint(progress,lane=3){
       const t=Math.max(0,Math.min(1,travelled/chute.entryMeters));
       const end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,lane);
       const laneShift=(lane-4.2)*2.2;
-      const sx=chute.start[0],sy=chute.start[1]+laneShift,cx=chute.control[0],cy=chute.control[1]+laneShift;
+      const sx=chute.start[0],sy=chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift,cx=chute.control[0],cy=chute.control[1]+COURSE_AUDIT_Y_SHIFT+laneShift;
       const u=1-t,x=u*u*sx+2*u*t*cx+t*t*end.x,y=u*u*sy+2*u*t*cy+t*t*end.y;
       const dx=2*u*(cx-sx)+2*t*(end.x-cx),dy=2*u*(cy-sy)+2*t*(end.y-cy);
       return{x,y,angle:Math.atan2(dy,dx),curve:true};
@@ -953,7 +954,7 @@ function baseCoursePoint(progress, lane = 3) {
   if(layoutV2&&officialPath?.length>2){
     const pt=officialCoursePoint(officialPath,p,lane);
     if(reverseTraversal)pt.angle+=Math.PI;
-    if(courseAuditMode){pt.x=360-pt.x;pt.y=270-pt.y;pt.angle+=Math.PI;}
+    if(courseAuditMode){pt.x=360-pt.x;pt.y=270-pt.y+COURSE_AUDIT_Y_SHIFT;pt.angle+=Math.PI;}
     return pt;
   }
   const pt=verticalCoursePoint(p,lane);
@@ -1262,9 +1263,9 @@ function drawTrackV2(){
   const chute=currentTestChute();
   if(chute){
     const end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,4.5);
-    const drawChute=(color,width)=>{ctx.beginPath();ctx.moveTo(chute.start[0],chute.start[1]);ctx.quadraticCurveTo(chute.control[0],chute.control[1],end.x,end.y);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap="butt";ctx.stroke()};
+    const drawChute=(color,width)=>{ctx.beginPath();ctx.moveTo(chute.start[0],chute.start[1]+COURSE_AUDIT_Y_SHIFT);ctx.quadraticCurveTo(chute.control[0],chute.control[1]+COURSE_AUDIT_Y_SHIFT,end.x,end.y);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap="butt";ctx.stroke()};
     drawChute("#f1ead2",38);drawChute(isDirt?"#a87549":"#43943e",31);
-    ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="right";ctx.fillText(chute.label,chute.start[0]-3,chute.start[1]-5);
+    ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="right";ctx.fillText(chute.label,chute.start[0]-3,chute.start[1]+COURSE_AUDIT_Y_SHIFT-5);
   }
   const profile=trackProfile();
   if(["museum","pond","sea"].includes(profile.facility)){
