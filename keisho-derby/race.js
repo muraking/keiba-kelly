@@ -794,6 +794,7 @@ function update(dt, clockDt) {
     }
 
     h.lane += (h.targetLane - h.lane) * Math.min(1, dt * .0017);
+    const progressBeforeMove=h.progress;
     h.progress += velocity * dt;
     if(h.last600StartTime===null&&raceDistance(h)>=Math.max(0,TOTAL-600))h.last600StartTime=raceClock;
 
@@ -807,10 +808,13 @@ function update(dt, clockDt) {
         h.progress=FINISH_PROGRESS-.00008;
         return;
       }
-      // 着順判定はゴール到達時に確定するが、描画位置は止めない。
+      // 16ms刻みの末尾時刻を全馬へ付けると僅差が同値になるため、
+      // ゴール線を横切った位置からフレーム内の到達時刻を補間する。
+      const moved=Math.max(1e-9,h.progress-progressBeforeMove);
+      const crossingRatio=Math.max(0,Math.min(1,(FINISH_PROGRESS-progressBeforeMove)/moved));
       h.progress = FINISH_PROGRESS + BASE_PROGRESS_PER_MS*dt*.35;
       h.finished = true;
-      h.finishTime = raceClock;
+      h.finishTime = raceClock-clockDt+clockDt*crossingRatio;
     }
   });
 
@@ -1276,21 +1280,26 @@ function drawHorizontalTrack(){
   if(startMarkerVisible())drawMarker(START_PROGRESS,"#35dc5c","START");if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 }
 
-// レイアウトV2用の着差表示。ゴール後は時計差、道中は実距離差から換算する。
+// レイアウトV2用の着差表示。JRA表記に合わせ、10馬身超だけを「大差」とする。
 function marginLabel(prev,h){
   if(state==="ready"||raceClock<600)return"--";
-  let gap;
-  if(prev.finished&&h.finished)gap=Math.max(0,h.finishTime-prev.finishTime)*.0166;
-  else gap=Math.max(0,raceDistance(prev)-raceDistance(h));
-  if(gap<.15)return"ハナ";
-  if(gap<.4)return"アタマ";
-  if(gap<.8)return"クビ";
-  if(gap<1.6)return"1/2";
-  if(gap<2.2)return"3/4";
-  if(gap<3.1)return"1";
-  if(gap>=36)return"大差";
-  const lengths=Math.round(gap/2.4*2)/2;
-  return lengths%1?`${Math.floor(lengths)} 1/2`:`${lengths}`;
+  const gapMeters=prev.finished&&h.finished
+    ? Math.max(0,h.finishTime-prev.finishTime)*.0166
+    : Math.max(0,raceDistance(prev)-raceDistance(h));
+  const lengths=gapMeters/2.4;
+  if(lengths<.07)return"ハナ";
+  if(lengths<.16)return"アタマ";
+  if(lengths<.34)return"クビ";
+  if(lengths<.63)return"1/2";
+  if(lengths<.88)return"3/4";
+  if(lengths<1.13)return"1";
+  if(lengths>10)return"大差";
+  const rounded=lengths<2?Math.round(lengths*4)/4:Math.round(lengths*2)/2;
+  const whole=Math.floor(rounded),fraction=Math.round((rounded-whole)*4);
+  if(fraction===1)return`${whole} 1/4`;
+  if(fraction===2)return`${whole} 1/2`;
+  if(fraction===3)return`${whole} 3/4`;
+  return`${whole}`;
 }
 
 // レイアウトV2：縦画面のまま上から「コース（横長）→ターフビジョン→高低差」を積む。
