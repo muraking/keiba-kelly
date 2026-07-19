@@ -1428,7 +1428,8 @@ function drawTrackV2(){
     }else if(state==="gateBreak"){
       const gateW=Math.max(23,Math.min(27,screenW*.12));
       const gateMove=Math.max(0,Math.min(1,(preRaceClock-300)/1500));
-      const synchronizedScroll=(screenW-gateW-16)*gateMove+Math.max(0,preRaceClock-2150)*.17;
+      // 発馬機の移動完了後は柵を止める。流れるのは中継映像へ切り替わってから。
+      const synchronizedScroll=(screenW-gateW-16)*gateMove;
       drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,0,synchronizedScroll);
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
