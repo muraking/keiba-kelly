@@ -1,12 +1,10 @@
 const LEGACY_SAVE_KEY = "dotKeibaTrialV3";
 const SAVE_KEY_PREFIX = "dotKeibaTrialV3Slot";
 const ACTIVE_SLOT_KEY = "dotKeibaActiveSaveSlot";
+const SAVE_SCHEMA_VERSION=window.DotKeibaSaveCompat.SCHEMA_VERSION;
 let activeSaveSlot=Math.max(1,Math.min(3,Number(localStorage.getItem(ACTIVE_SLOT_KEY))||1));
 const saveSlotKey=slot=>`${SAVE_KEY_PREFIX}${slot}`;
-if(localStorage.getItem(LEGACY_SAVE_KEY)&&![1,2,3].some(slot=>localStorage.getItem(saveSlotKey(slot)))){
-  localStorage.setItem(saveSlotKey(1),localStorage.getItem(LEGACY_SAVE_KEY));
-  localStorage.removeItem(LEGACY_SAVE_KEY);
-}
+window.DotKeibaSaveCompat.copyLegacySave(localStorage,LEGACY_SAVE_KEY,SAVE_KEY_PREFIX,3);
 // 2歳から9歳末までの8年間。旧実装の240週（5年）固定により、
 // 5年目12月以降に番組が消える不具合を防ぐ。
 const CAREER_MAX_WEEKS = 384;
@@ -68,6 +66,7 @@ const breedingPartners={
 };
 let currentBreedingChoices=[];
 const defaultGame = () => ({
+  saveVersion:SAVE_SCHEMA_VERSION,
   horseName:"", week:1, trainingsUsed:0, prize:0, farmPoints:0, equipment:[], classMoney:0, priorityRights:[],
   speed:0, dash:0, gateSkill:450, stamina:0, power:0, guts:0, turf:0, dirt:0, heavyTrack:500, condition:60, fatigue:10,
   conditionDirection:1, conditionPhaseWeeks:4, conditionStability:"普通", conditionPeakWeeks:0,
@@ -79,7 +78,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], gradedTrophies:[], candidate:null,
-  reservedRaceId:null,reservationNotifiedId:null,pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:""
+  reservedRaceId:null,reservationNotifiedId:null,pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:"",lastRaceAdvice:""
 });
 let game = defaultGame();
 let autoTrainingActive=false;
@@ -381,12 +380,20 @@ function classBenchmarkTime(race){
 }
 
 function showScreen(id){ screens.forEach(s=>s.classList.toggle("active",s.id===id)); scrollTo(0,0); }
-function saveGame(){ localStorage.setItem(saveSlotKey(activeSaveSlot),JSON.stringify(game)); }
+function saveGame(){ game.saveVersion=SAVE_SCHEMA_VERSION;localStorage.setItem(saveSlotKey(activeSaveSlot),JSON.stringify(game)); }
 function loadGame(slot=activeSaveSlot){
   try{
     activeSaveSlot=slot;localStorage.setItem(ACTIVE_SLOT_KEY,String(slot));
-    const saved=JSON.parse(localStorage.getItem(saveSlotKey(slot)));
-    game={...defaultGame(),...saved};
+    const key=saveSlotKey(slot),raw=localStorage.getItem(key);
+    if(!raw)return false;
+    const saved=JSON.parse(raw);
+    const migration=window.DotKeibaSaveCompat.migrateSaveData(saved,defaultGame());
+    // 初回移行時は元JSONを別キーへ残す。バックアップは上書きしない。
+    if(migration.changed){
+      const backupKey=`${key}BackupV${migration.fromVersion}`;
+      if(!localStorage.getItem(backupKey))localStorage.setItem(backupKey,raw);
+    }
+    game=migration.data;
     if(!Number.isFinite(saved?.dash)||saved.dash<=0)game.dash=Math.max(400,Math.min(650,Math.round((game.speed+game.power)/2)-30));
     if(game.candidate&&!Number.isFinite(game.candidate.dash))game.candidate.dash=game.dash;
     if(!Number.isFinite(saved?.baseBestWeight)||saved.baseBestWeight<=0)game.baseBestWeight=rnd(438,492);
@@ -416,8 +423,10 @@ function loadGame(slot=activeSaveSlot){
     game.equipment.forEach(id=>{if(!Number.isFinite(game.equipmentAge[id]))game.equipmentAge[id]=0});
     if(!Array.isArray(saved?.lineage))game.lineage=[];
     if(!Array.isArray(saved?.retirementRecords))game.retirementRecords=[];
-    if(game.candidate&&!game.candidate.sex)game.candidate.sex=Math.random()<.5?"牡馬":"牝馬";
-    return !!game.horseName;
+    if(game.candidate&&!game.candidate.sex)game.candidate.sex="牡馬";
+    if(!game.horseName)return false;
+    if(migration.changed)saveGame();
+    return true;
   }catch{return false}
 }
 function hasAnySave(){return [1,2,3].some(slot=>localStorage.getItem(saveSlotKey(slot)))}
