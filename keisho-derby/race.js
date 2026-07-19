@@ -77,6 +77,34 @@ const FICTIONAL_RIVALS=Array.from({length:160},(_,i)=>{
   return{name:`${FICTIONAL_PREFIXES[i%FICTIONAL_PREFIXES.length]}${FICTIONAL_SUFFIXES[(i*7+Math.floor(i/20))%FICTIONAL_SUFFIXES.length]}`,
     surface,min:ranges[0],max:ranges[1],style:["逃げ","先行","差し","追込"][i%4],trait:i%11===0?"steady":i%13===0?"power":null,fictional:true};
 });
+// 海外GⅠだけに登場する開催地別の強豪。国内番組には混ぜない。
+const OVERSEAS_RIVALS={
+  "メイダン":[
+    {name:"デザートエンペラー",style:"先行",trait:"power"},{name:"ゴールデンファルコン",style:"逃げ",trait:"speed"},
+    {name:"アラビアンナイト",style:"差し",trait:"kick"},{name:"サンドストーム",style:"先行",trait:"steady"},
+    {name:"ドバイレジェンド",style:"差し",trait:"guts"},{name:"ミッドナイトスーク",style:"追込",trait:"late"},{name:"エミレーツキング",style:"逃げ",trait:"pace"}
+  ],
+  "アスコット":[
+    {name:"ロイヤルクラウン",style:"先行",trait:"steady"},{name:"ハイランドロード",style:"差し",trait:"stamina"},
+    {name:"キングスガード",style:"逃げ",trait:"guts"},{name:"ウィンザーローズ",style:"差し",trait:"kick"},
+    {name:"ブリタニア",style:"先行",trait:"power"},{name:"グリーンナイト",style:"追込",trait:"late"},{name:"アスコットヒーロー",style:"先行",trait:"stamina"}
+  ],
+  "パリロンシャン":[
+    {name:"エトワールドパリ",style:"差し",trait:"kick"},{name:"モンマルトル",style:"先行",trait:"steady"},
+    {name:"ルグランシエル",style:"追込",trait:"late"},{name:"ヴェルサイユ",style:"先行",trait:"stamina"},
+    {name:"トリオンフ",style:"差し",trait:"guts"},{name:"シャンゼリゼ",style:"逃げ",trait:"pace"},{name:"ノーブルフランス",style:"まくり",trait:"power"}
+  ],
+  "ブリーダーズカップ":[
+    {name:"アメリカンドリーム",style:"先行",trait:"power"},{name:"ケンタッキーキング",style:"逃げ",trait:"speed"},
+    {name:"スターズアンドストライプ",style:"差し",trait:"guts"},{name:"ワイルドフロンティア",style:"先行",trait:"steady"},
+    {name:"パシフィックリッジ",style:"追込",trait:"kick"},{name:"ダートコマンダー",style:"逃げ",trait:"pace"},{name:"チャーチルダウンズ",style:"差し",trait:"late"}
+  ],
+  "シャティン":[
+    {name:"ゴールデンドラゴン",style:"先行",trait:"steady"},{name:"ヴィクトリアピーク",style:"差し",trait:"kick"},
+    {name:"ラッキーハーバー",style:"逃げ",trait:"speed"},{name:"オリエントスター",style:"先行",trait:"power"},
+    {name:"セントラルキング",style:"追込",trait:"late"},{name:"ハッピーバレー",style:"差し",trait:"guts"},{name:"レッドランタン",style:"逃げ",trait:"pace"}
+  ]
+};
 const STYLE_PATTERNS = [
   ["逃げ", "先行", "差し", "先行", "差し", "追込", "差し", "追込"],
   ["逃げ", "逃げ", "先行", "先行", "差し", "差し", "追込", "追込"],
@@ -355,7 +383,11 @@ function makeHorse(i, styles) {
 function buildOpponentAbilities() {
   // プレイヤー能力には追従せず、レース格ごとの固定帯から編成する。
   const standards={新馬:630,未勝利:640,"1勝":700,"2勝":750,"3勝":800,オープン:830,G3:860,G2:900,G1:940};
-  const raceStandard=standards[playerSetup.raceClass]??playerSetup.difficulty;
+  const raceStandard=playerSetup.overseas?970:(standards[playerSetup.raceClass]??playerSetup.difficulty);
+  if(playerSetup.overseas){
+    // 国内GⅠより平均約30高い世界戦。最上位は1000級だが、展開不利なら逆転可能。
+    return [-20,-10,0,8,16,24,30].map(offset=>raceStandard+offset).sort(()=>raceRandom()-.5);
+  }
   const offsets = playerSetup.raceClass==="G1"
     ? [-45,-30,-15,0,10,20,30]
     : [-50, -30, -10, 0, 10, 30, 50];
@@ -374,6 +406,10 @@ function buildOpponentNames(){
 
 function buildOpponentRivals(){
   const shuffle=pool=>{for(let i=pool.length-1;i>0;i--){const j=Math.floor(raceRandom()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}return pool};
+  if(playerSetup.overseas){
+    const overseasPool=OVERSEAS_RIVALS[currentRaceVenue]||OVERSEAS_RIVALS["アスコット"];
+    return shuffle(overseasPool.map(r=>({...r,surface:raceSurface,min:TOTAL,max:TOTAL,overseas:true}))).slice(0,7);
+  }
   const graded=["G1","G2","G3"].includes(playerSetup.raceClass);
   const legendCount=!graded?0:playerSetup.raceClass==="G1"?2:playerSetup.raceClass==="G2"?(raceRandom()<.5?1:2):1;
   const legendPool=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-150&&TOTAL<=r.max+150).map(r=>({...r,legend:true}));
@@ -469,7 +505,8 @@ function assignFlowFit(entries, pace) {
       fit = h.style === "先行" ? 1.025 : h.style === "差し" ? .975 : h.style === "追込" ? .95 : 1;
     }
     // 馬群や仕掛けのタイミングによる小さな揺らぎ。
-    h.flowFit = fit + (raceRandom() - .5) * .018;
+    const flowScale=playerSetup.overseas?1.24:1;
+    h.flowFit = 1+(fit-1)*flowScale + (raceRandom() - .5) * (playerSetup.overseas ? .022 : .018);
   });
 }
 

@@ -1708,18 +1708,18 @@ function prepareRace(race){
     game.selectedRace={
       id:race.id,name:race.name,raceClass:race.raceClass,course:race.course,
       surface:race.surface,distance:race.distance,prize:race.prize,
-      trialRight:race.trialRight||null
+      trialRight:race.trialRight||null,overseas:!!race.overseas
     };
     game.currentRaceWeather=raceWeather;
     saveGame();
-    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
+    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
   }catch(error){
     console.error("race preparation failed",error);
     document.querySelector("#commentary").textContent="レースの読み込みを再試行しています。";
     dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{
       horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,
       condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,
-      raceClass:race.raceClass,venue:raceVenue(race),distance:race.distance,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,
+      raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,
       surface:race.surface,heavyTrack:game.heavyTrack,weather:"晴",going:"良",
       raceMonth:raceCalendarMonth(race),baseTime:race.baseTime,
       benchmarkTime:race.baseTime,recordTime:race.baseTime*.965,recordVerified:false
