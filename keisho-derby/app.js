@@ -869,8 +869,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#nextRaceButtonText").textContent=reservedRace
     ? `次走：${reservedRace.name}（${weeksToRace===0?"今週":`${weeksToRace}週後`}）`
     : game.races>0?"次走予約なし":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
-  const spacingWarning=raceSpacingCoachWarning();
-  document.querySelector("#homeMessage").textContent=`${message} ${fatigueCoachComment()}${spacingWarning?` ${spacingWarning}`:""}`;
+  document.querySelector("#homeMessage").textContent=`${message} ${fatigueCoachComment()}`;
   applyHorseAppearance(document.querySelector("#trainingScene"));
   const statsEl=document.querySelector("#horseStats");
   statsEl.hidden=!developerMode;
@@ -1357,11 +1356,10 @@ function renderRaces(){
     const conditionEligible=r.condition(game);
     const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&conditionEligible,surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
     const reservable=!arrived&&r.week>game.week&&ageEligible&&sexEligible&&conditionEligible;
-    const spacing=raceIntervalState(r.week),spacingWarning=raceSpacingCoachWarning(r.week);
     const raceYear=Math.floor((r.week-1)/48)+1,raceYearWeek=(r.week-1)%48;
     const officialDate=r.officialDate?`${Number(r.officialDate.slice(5,7))}月${Number(r.officialDate.slice(8,10))}日（2026公式）`:`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
     let reason="出走条件外";
-    if(eligible)reason=spacing.gap===1?"連闘で出走":spacing.gap===2?"中1週で出走":"出走する";
+    if(eligible)reason="出走する";
     else if(!arrived)reason="未来の予定";
     else if(!debutSeasonOpen)reason="2歳新馬戦の開始前";
     else if(!ageEligible)reason=`${r.age}限定`;
@@ -1375,8 +1373,8 @@ function renderRaces(){
     const reserved=game.reservedRaceId===r.id;
     const wonBefore=game.raceHistory.some(x=>x.raceName===r.name&&x.place===1);
     const gradedWon=["G1","G2","G3"].includes(r.raceClass)&&(wonBefore||(game.gradedTrophies||[]).some(t=>t.raceName===r.name));
-    return `<article class="race-choice ${eligible?"":"locked"} ${reservable?"reservable":""} ${reserved?"reserved":""} ${gradedWon?"won-graded":""} ${spacingWarning?`short-rest ${spacing.level}`:""}">${gradedWon?'<span class="race-won-trophy" title="勝利済み重賞" aria-label="勝利済み重賞">🏆</span>':""}<b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
-    <h3>${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p>${spacingWarning?`<p class="race-spacing-warning"><b>${spacing.label}</b>　調教師「${spacingWarning}」</p>`:""}</div>
+    return `<article class="race-choice ${eligible?"":"locked"} ${reservable?"reservable":""} ${reserved?"reserved":""} ${gradedWon?"won-graded":""}">${gradedWon?'<span class="race-won-trophy" title="勝利済み重賞" aria-label="勝利済み重賞">🏆</span>':""}<b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
+    <h3>${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p></div>
     <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${reservable||reserved?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
   }).join("")||`<p class="empty-races">この開催場の番組はありません。</p>`;
 }
