@@ -1062,14 +1062,32 @@ function drawPixelHorse(h, pos) {
 function drawVisionCandidateHorse(x,y,h,scale=.62){
   ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
   const coat=h.player?"#d08a42":"#a9612f";
+  const motionClock=state==="running"||state==="runout"?raceClock:preRaceClock+waitingMotionClock;
+  const stride=(Math.floor(motionClock/105)+h.id)%2;
   ctx.fillStyle=coat;ctx.strokeStyle="#3c2418";ctx.lineWidth=2;
   ctx.fillRect(-22,-6,34,16);ctx.strokeRect(-22,-6,34,16);
   ctx.fillRect(8,-17,10,24);ctx.strokeRect(8,-17,10,24);
   ctx.fillRect(15,-23,18,13);ctx.strokeRect(15,-23,18,13);
-  ctx.fillRect(-28,-5,8,5);ctx.fillRect(-16,9,5,15);ctx.fillRect(5,9,5,15);
+  ctx.fillRect(-28,-5+(stride?1:-1),8,5);
+  ctx.fillRect(-17+(stride?3:0),9,5,15);ctx.fillRect(4-(stride?3:0),9,5,15);
+  ctx.fillRect(-7-(stride?3:0),9,4,13);ctx.fillRect(10+(stride?3:0),9,4,13);
   ctx.fillStyle=h.color;ctx.fillRect(-12,-4,14,9);
   ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(h.id,-5,4);
   ctx.restore();
+}
+
+function drawVisionMovingBackdrop(x,y,w,h,speed=.25){
+  const horizon=Math.max(12,Math.floor(h*.42));
+  ctx.fillStyle="#79c7df";ctx.fillRect(x,y,w,horizon);
+  ctx.fillStyle=raceSurface==="ダート"?"#a87549":"#4a9445";ctx.fillRect(x,y+horizon,w,h-horizon);
+  const scroll=((raceClock+preRaceClock)*speed)%22;
+  ctx.fillStyle="#eef3e5";ctx.fillRect(x,y+horizon-2,w,3);
+  ctx.fillRect(x,y+horizon+8,w,2);
+  for(let postX=x-scroll;postX<x+w+8;postX+=22)ctx.fillRect(Math.round(postX),y+horizon-4,3,18);
+  ctx.fillStyle="#dff3f7";
+  for(let cloudX=x-40-((raceClock+preRaceClock)*speed*.18)%90;cloudX<x+w+50;cloudX+=90){
+    ctx.fillRect(Math.round(cloudX),y+5,22,5);ctx.fillRect(Math.round(cloudX+6),y+2,12,4);
+  }
 }
 
 function drawVisionGoalBoard(x,y){
@@ -1085,8 +1103,9 @@ function drawVisionGoalBoard(x,y){
 
 function waitingHorsePosition(h,vx,camY,vw=224,camH=55){
   const slot=h.id-1;
+  const left=vx+22,right=vx+vw-Math.max(55,vw*.25);
   return {
-    x:vx+Math.max(42,vw*.48)+(slot%4)*Math.max(15,vw*.105)+Math.sin(waitingMotionClock*.00075+slot*1.7)*5,
+    x:left+(slot%4)*Math.max(12,(right-left)/3)+Math.sin(waitingMotionClock*.00075+slot*1.7)*3,
     y:camY+Math.max(15,camH*.33)+Math.floor(slot/4)*Math.max(12,camH*.28)+Math.sin(waitingMotionClock*.00055+slot)*2
   };
 }
@@ -1270,7 +1289,8 @@ function drawTrackV2(){
     const screenX=mx+3,screenY=my+20,screenW=mw-6,screenH=mh-23;
     ctx.fillStyle="#111a20";ctx.fillRect(mx,my,mw,mh);ctx.strokeStyle=plateBorder;ctx.lineWidth=2;ctx.strokeRect(mx,my,mw,mh);
     ctx.fillStyle="#263a2e";ctx.fillRect(mx+2,my+2,mw-4,16);
-    ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText("TURF VISION　中継映像",mx+mw/2,my+12);
+    const visionCaption=state==="parade"?"本馬場入場":state==="gates"?"ゲート前":state==="gateBreak"?"発馬":"中継映像";
+    ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(`TURF VISION　${visionCaption}`,mx+mw/2,my+12);
     // 馬・ゲート・ゴール板・確定情報は中継画面の外へ一切描画しない。
     ctx.save();ctx.beginPath();ctx.rect(screenX,screenY,screenW,screenH);ctx.clip();
     if(state==="runout"||state==="finished"){
@@ -1282,33 +1302,37 @@ function drawTrackV2(){
       const resultTop=Math.max(my+49,my+mh-resultGap*3-4);
       centerOrder.slice(0,3).forEach((h,index)=>{const y=resultTop+index*resultGap;ctx.fillStyle="#e8edf0";ctx.font="bold 8px sans-serif";ctx.textAlign="left";ctx.fillText(`${index+1}着 ${h.id}番`,mx+mw*.53,y);ctx.fillStyle=index?"#cfb96f":"#ffe36d";ctx.textAlign="right";ctx.fillText(index?marginLabel(centerOrder[index-1],h):formatTime(h.finishTime),mx+mw-8,y)});
     }else if(state==="parade"){
-      ctx.fillStyle=isDirt?"#9a6c43":"#4a9445";ctx.fillRect(screenX,screenY,screenW,screenH);
+      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.08);
       horses.forEach((h,i)=>{
-        const travel=Math.max(0,Math.min(1,(preRaceClock-i*300)/1800));
+        const travel=Math.max(0,Math.min(1,(preRaceClock-i*260)/2200));
         if(travel<=0)return;
-        const target=waitingHorsePosition(h,screenX,screenY,screenW,screenH);
-        const entryY=screenY+15+(i%3)*Math.max(8,screenH*.15);
-        drawVisionCandidateHorse(screenX+12+(target.x-screenX-12)*travel,entryY+(target.y-entryY)*travel,h,.36);
+        const x=screenX-16+travel*(screenW+3);
+        const y=screenY+screenH*.57+(i%4)*Math.max(6,screenH*.09);
+        drawVisionCandidateHorse(x,y,h,.36);
       });
     }else if(state==="gates"){
-      ctx.fillStyle=isDirt?"#9a6c43":"#4a9445";ctx.fillRect(screenX,screenY,screenW,screenH);
+      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.03);
       drawVisionGate(screenX,screenY,screenW,screenH);
     }else if(state==="gateBreak"){
-      ctx.fillStyle=isDirt?"#9a6c43":"#4a9445";ctx.fillRect(screenX,screenY,screenW,screenH);
+      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.18);
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
-      ctx.fillStyle=isDirt?"#9a6c43":"#4a9445";ctx.fillRect(screenX,screenY,screenW,screenH);
-      const leaderX=screenX+screenW*.57;
-      centerOrder.filter(h=>front-raceDistance(h)<=105).sort((a,b)=>b.lane-a.lane).forEach(h=>{
+      drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.32);
+      const rear=Math.min(...centerOrder.map(h=>raceDistance(h))),fieldSpan=Math.max(0,front-rear);
+      const cameraSpan=Math.max(105,Math.min(280,fieldSpan+24));
+      const pixelsPerMeter=(screenW-38)/cameraSpan;
+      const leaderX=screenX+screenW-18;
+      const horseScale=fieldSpan>180?.29:fieldSpan>115?.33:.38;
+      centerOrder.filter((h,index)=>front-raceDistance(h)<=cameraSpan||index<4).sort((a,b)=>b.lane-a.lane).forEach(h=>{
         const gap=front-raceDistance(h);
-        const x=Math.round(leaderX-gap*Math.max(1.15,screenW/95));
+        const x=Math.round(leaderX-gap*pixelsPerMeter);
         const lane=Math.max(1,Math.min(8,h.lane));
         const y=Math.round(screenY+10+(lane-1)*Math.max(4,(screenH-18)/7));
-        drawVisionCandidateHorse(x,y,h,.38);
+        drawVisionCandidateHorse(x,y,h,horseScale);
       });
       // 旧中継映像と同じく、ゴール直前だけゴール板が右から接近して通過する。
       const goalDistance=TOTAL-front;
-      const goalX=leaderX+goalDistance*Math.max(1.05,screenW/105);
+      const goalX=leaderX+goalDistance*pixelsPerMeter;
       if(goalX>screenX-20&&goalX<screenX+screenW+20)drawVisionGoalBoard(goalX,screenY+2);
     }
     ctx.restore();
