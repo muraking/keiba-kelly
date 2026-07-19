@@ -1090,6 +1090,26 @@ function drawVisionMovingBackdrop(x,y,w,h,speed=.25){
   }
 }
 
+function drawVisionWinnerScene(x,y,w,h,winner){
+  ctx.fillStyle="#72c7e3";ctx.fillRect(x,y,w,h);
+  const groundY=y+Math.floor(h*.62);
+  ctx.fillStyle="#55a046";ctx.fillRect(x,groundY,w,h-(groundY-y));
+  ctx.fillStyle="#f5f2df";ctx.fillRect(x,groundY+5,w,3);
+  for(let px=x+8;px<x+w;px+=24)ctx.fillRect(px,groundY,3,Math.max(9,h*.2));
+  const horseX=x+w*.28,horseY=y+h*.67;
+  drawVisionCandidateHorse(horseX,horseY,winner,.56);
+  const jx=horseX+7,jy=horseY-29,cheer=Math.floor(raceClock/220)%2;
+  ctx.fillStyle="#efbd85";ctx.fillRect(jx-4,jy-12-cheer*2,9,8);
+  ctx.fillStyle="#24202a";ctx.fillRect(jx-5,jy-14-cheer*2,11,3);
+  ctx.fillStyle="#e23d39";ctx.fillRect(jx-6,jy-4,13,13);
+  ctx.fillStyle="#fff";ctx.fillRect(jx-2,jy-4,4,13);
+  ctx.fillStyle="#e23d39";ctx.fillRect(jx+5,jy-18-cheer*2,4,17);
+  ctx.fillStyle="#efbd85";ctx.fillRect(jx+4,jy-22-cheer*2,7,6);
+  ctx.fillStyle="#10283a";ctx.fillRect(x+3,y+h-17,w*.52-5,14);
+  ctx.fillStyle="#ffe36d";ctx.font="bold 9px sans-serif";ctx.textAlign="center";
+  ctx.fillText(`${winner.id}番　${winner.name}`,x+w*.26,y+h-7);
+}
+
 function drawVisionGoalBoard(x,y){
   ctx.fillStyle="#f7f3df";ctx.fillRect(x,y,4,48);
   ctx.fillStyle="#d73932";ctx.fillRect(x-3,y,10,5);
@@ -1289,15 +1309,15 @@ function drawTrackV2(){
     const screenX=mx+3,screenY=my+20,screenW=mw-6,screenH=mh-23;
     ctx.fillStyle="#111a20";ctx.fillRect(mx,my,mw,mh);ctx.strokeStyle=plateBorder;ctx.lineWidth=2;ctx.strokeRect(mx,my,mw,mh);
     ctx.fillStyle="#263a2e";ctx.fillRect(mx+2,my+2,mw-4,16);
-    const visionCaption=state==="parade"?"本馬場入場":state==="gates"?"ゲート前":state==="gateBreak"?"発馬":"中継映像";
+    const visionCaption=state==="runout"||state==="finished"?"WINNER":state==="parade"?"本馬場入場":state==="gates"?"ゲート前":state==="gateBreak"?"発馬":"中継映像";
     ctx.fillStyle="#fff3a6";ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(`TURF VISION　${visionCaption}`,mx+mw/2,my+12);
     // 馬・ゲート・ゴール板・確定情報は中継画面の外へ一切描画しない。
     ctx.save();ctx.beginPath();ctx.rect(screenX,screenY,screenW,screenH);ctx.clip();
     if(state==="runout"||state==="finished"){
       const winner=centerOrder[0];
-      ctx.fillStyle="#10151a";ctx.fillRect(screenX,screenY,screenW,screenH);
+      drawVisionWinnerScene(screenX,screenY,screenW,screenH,winner);
+      ctx.fillStyle="#10151add";ctx.fillRect(mx+mw*.52,screenY,mw*.48-3,screenH);
       ctx.fillStyle="#d83232";ctx.fillRect(mx+mw-55,my+24,43,21);ctx.fillStyle="#fff";ctx.font="bold 14px sans-serif";ctx.fillText("確定",mx+mw-34,my+40);
-      drawVisionCandidateHorse(mx+34,my+Math.min(61,mh-31),winner,.54);
       const resultGap=Math.max(9,Math.min(12,(screenH-34)/3));
       const resultTop=Math.max(my+49,my+mh-resultGap*3-4);
       centerOrder.slice(0,3).forEach((h,index)=>{const y=resultTop+index*resultGap;ctx.fillStyle="#e8edf0";ctx.font="bold 8px sans-serif";ctx.textAlign="left";ctx.fillText(`${index+1}着 ${h.id}番`,mx+mw*.53,y);ctx.fillStyle=index?"#cfb96f":"#ffe36d";ctx.textAlign="right";ctx.fillText(index?marginLabel(centerOrder[index-1],h):formatTime(h.finishTime),mx+mw-8,y)});

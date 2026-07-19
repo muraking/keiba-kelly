@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.23</title>
-  <link rel="stylesheet" href="style.css?v=20260719-59">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.24</title>
+  <link rel="stylesheet" href="style.css?v=20260719-60">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">コース検証テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.23</b>
+        <b class="build-version">Ver. 0.10.24</b>
       </div>
     </section>
 
@@ -329,19 +329,8 @@
         <canvas id="raceCanvas" width="720" height="1000" aria-label="東京競馬場を走る8頭のドット馬"></canvas>
         <div id="winnerPopup" class="winner-popup" aria-hidden="true">
           <div class="winner-card">
-            <p>WINNER</p>
-            <div class="winner-visual">
-              <div class="winner-horse">
-                <i class="wh-body"></i><i class="wh-neck"></i><i class="wh-head"></i>
-                <i class="wh-leg l1"></i><i class="wh-leg l2"></i><i class="wh-tail"></i>
-                <b id="winnerSaddle">1</b>
-              </div>
-              <div class="pixel-jockey">
-                <i class="j-head"></i><i class="j-body"></i><i class="j-arm"></i><i class="j-fist"></i>
-              </div>
-            </div>
-            <strong><span id="winnerNumber">1番</span> <b id="winnerName">ドットスター</b></strong>
-            <small id="winnerTime">2:24.0</small>
+            <span id="winnerSaddle" hidden>1</span><span id="winnerNumber" hidden>1番</span>
+            <b id="winnerName" hidden>ドットスター</b><small id="winnerTime" hidden>2:24.0</small>
             <div class="winner-actions">
               <button id="winnerReplayButton">リプレイを見る</button>
               <button id="favoriteRaceButton">☆ お気に入り保存</button>
@@ -409,7 +398,7 @@
   <script src="race-program-2026.js?v=20260718-2"></script>
   <script src="app.js?v=20260719-21"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
-  <script src="race.js?v=20260719-22"></script>
+  <script src="race.js?v=20260719-23"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>
