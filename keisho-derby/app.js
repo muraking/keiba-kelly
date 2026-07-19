@@ -1236,7 +1236,7 @@ function playTrainingAnimation(type,label,outcome){
     popup.setAttribute("aria-hidden","true");
     trainingAnimationActive=false;
     renderHome(document.querySelector("#homeMessage")?.textContent?.replace(/\s+疲れ[^。]*。?$/,"" )||"今週の予定を決めましょう。");
-  },2200);
+  },1600);
 }
 function playAutoTrainingSequence(steps,modeName,finishText){
   const popup=document.querySelector("#trainingPopup"),stage=document.querySelector("#trainingPopupStage");
