@@ -934,37 +934,35 @@ function coursePoint(progress, lane = 3) {
   };
 }
 
-function smoothedOfficialPath(path){
+function cleanOfficialGeometry(path){
   if(COURSE_PATH_CACHE.has(path))return COURSE_PATH_CACHE.get(path);
-  let points=path.map(([x,y],i)=>[180+(x-180)*.92,145+(y-145)*.72]);
-  // ホーム直線はスタンドと平行な一本の直線として固定する。
-  if(points.length>=5){const homeY=points.slice(0,3).reduce((sum,q)=>sum+q[1],0)/3;for(let i=0;i<3;i++)points[i][1]=homeY}
-  // Chaikin補間でコーナーの折れを丸める。場ごとの非対称形状は維持する。
-  for(let pass=0;pass<2;pass++){
-    const next=[];
-    for(let i=0;i<points.length;i++){
-      const a=points[i],b=points[(i+1)%points.length];
-      next.push([a[0]*.75+b[0]*.25,a[1]*.75+b[1]*.25],[a[0]*.25+b[0]*.75,a[1]*.25+b[1]*.75]);
-    }
-    points=next;
-  }
-  COURSE_PATH_CACHE.set(path,points);return points;
+  const points=path.map(([x,y])=>[180+(x-180)*.92,145+(y-145)*.72]);
+  const xs=points.map(q=>q[0]),ys=points.map(q=>q[1]);
+  const left=Math.max(14,Math.min(...xs)),right=Math.min(346,Math.max(...xs));
+  const top=Math.max(76,Math.min(...ys)),bottom=Math.min(224,Math.max(...ys));
+  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+  const leftRadius=clamp((points[0]?.[0]??left+42)-left,36,58);
+  const rightRadius=clamp(right-(points[2]?.[0]??right-42),36,58);
+  const geometry={left,right,top,bottom,leftRadius,rightRadius};
+  COURSE_PATH_CACHE.set(path,geometry);return geometry;
 }
 
 function officialCoursePoint(rawPath,p,lane){
-  const path=smoothedOfficialPath(rawPath);
-  const closed=path.length>2;
-  const segmentCount=closed?path.length:path.length-1;
-  const lengths=[];let total=0;
-  for(let i=0;i<segmentCount;i++){
-    const a=path[i],b=path[(i+1)%path.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);lengths.push(length);total+=length;
+  const g=cleanOfficialGeometry(rawPath),straightShare=trackProfile().straightShare,curveShare=(1-straightShare*2)/2;
+  const bezier=(a,b,c,d,t)=>{const u=1-t;return u*u*u*a+3*u*u*t*b+3*u*t*t*c+t*t*t*d};
+  const derivative=(a,b,c,d,t)=>3*(1-t)*(1-t)*(b-a)+6*(1-t)*t*(c-b)+3*t*t*(d-c);
+  let x,y,dx,dy,curve=false;
+  const topLeft=g.left+g.leftRadius,topRight=g.right-g.rightRadius,bottomRight=g.right-g.rightRadius*.92,bottomLeft=g.left+g.leftRadius*.92;
+  if(p<straightShare){const t=p/straightShare;x=topLeft+(topRight-topLeft)*t;y=g.top;dx=1;dy=0}
+  else if(p<straightShare+curveShare){
+    const t=(p-straightShare)/curveShare;x=bezier(topRight,g.right,g.right,bottomRight,t);y=bezier(g.top,g.top,g.bottom,g.bottom,t);dx=derivative(topRight,g.right,g.right,bottomRight,t);dy=derivative(g.top,g.top,g.bottom,g.bottom,t);curve=true;
+  }else if(p<straightShare*2+curveShare){const t=(p-straightShare-curveShare)/straightShare;x=bottomRight+(bottomLeft-bottomRight)*t;y=g.bottom;dx=-1;dy=0}
+  else{
+    const t=(p-straightShare*2-curveShare)/curveShare;x=bezier(bottomLeft,g.left,g.left,topLeft,t);y=bezier(g.bottom,g.bottom,g.top,g.top,t);dx=derivative(bottomLeft,g.left,g.left,topLeft,t);dy=derivative(g.bottom,g.bottom,g.top,g.top,t);curve=true;
   }
-  let target=Math.max(0,Math.min(.999999,p))*total,index=0;
-  while(index<lengths.length-1&&target>lengths[index]){target-=lengths[index];index++}
-  const a=path[index],b=path[(index+1)%path.length],t=target/(lengths[index]||1);
-  const angle=Math.atan2(b[1]-a[1],b[0]-a[0]);
+  const angle=Math.atan2(dy,dx);
   const offset=(lane-4.2)*2.35;
-  return{x:a[0]+(b[0]-a[0])*t-Math.sin(angle)*offset,y:a[1]+(b[1]-a[1])*t+Math.cos(angle)*offset,angle,curve:index!==0&&index!==Math.floor(path.length/2)};
+  return{x:x-Math.sin(angle)*offset,y:y+Math.cos(angle)*offset,angle,curve};
 }
 
 function verticalCoursePoint(p,lane){
