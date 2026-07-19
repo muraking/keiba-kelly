@@ -1276,7 +1276,7 @@ function drawTrackV2(){
   ctx.fillStyle=plateBorder;ctx.font=`bold ${gradeLevel?10:9}px sans-serif`;ctx.textAlign="center";
   ctx.fillText(playerSetup.raceName||"テストレース",180,13);
   ctx.fillStyle="#f5f1df";ctx.font="bold 8px sans-serif";
-  ctx.fillText(`${currentRaceVenue}　${raceSurface}${TOTAL}m　${currentCourseSpec.route}　${playerSetup.going}`,180,24);
+  ctx.fillText(`${currentRaceVenue}　${raceSurface}${TOTAL}m　${currentCourseSpec.route}　天気 ${playerSetup.weather}　馬場 ${playerSetup.going}`,180,24);
   const standY=232;
   ctx.fillStyle="#6e8492";ctx.fillRect(4,standY,352,5);
   ctx.fillStyle="#506574";ctx.fillRect(4,standY+5,352,7);
