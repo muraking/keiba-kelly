@@ -136,7 +136,7 @@ const COURSE_PATH_CACHE=new WeakMap();
 // 公式平面図を基準にしたテスト専用の発走ポケット。
 // start/controlはスタンド下へ正規化したCanvas座標、entryMetersは本線合流までの距離。
 const TEST_START_CHUTES={
-  "東京|芝|1600":{start:[338,64],control:[330,62],entryMeters:230,label:"2コーナー奥ポケット"},
+  "東京|芝|1600":{start:[344,64],control:[318,64],entryMeters:230,label:"2コーナー奥ポケット",shape:"horizontal"},
   "東京|芝|1800":{start:[330,93],control:[320,69],entryMeters:205,label:"2コーナー奥ポケット"},
   "東京|芝|2000":{start:[342,145],control:[334,91],entryMeters:185,label:"1コーナー奥ポケット"},
   "東京|ダート|1600":{start:[337,70],control:[326,68],entryMeters:215,label:"芝ポケット発走",shape:"line"}
@@ -921,10 +921,12 @@ function coursePoint(progress,lane=3){
       const laneShift=(lane-4.2)*2.2;
       const sx=chute.start[0],sy=chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift,cx=chute.control[0],cy=chute.control[1]+COURSE_AUDIT_Y_SHIFT+laneShift;
       const u=1-t;
-      const x=chute.shape==="line"?sx+(end.x-sx)*t:u*u*sx+2*u*t*cx+t*t*end.x;
-      const y=chute.shape==="line"?sy+(end.y-sy)*t:u*u*sy+2*u*t*cy+t*t*end.y;
-      const dx=chute.shape==="line"?end.x-sx:2*u*(cx-sx)+2*t*(end.x-cx);
-      const dy=chute.shape==="line"?end.y-sy:2*u*(cy-sy)+2*t*(end.y-cy);
+      const horizontal=chute.shape==="horizontal",line=chute.shape==="line",ex2=end.x+18;
+      // 1600m芝は向正面の延長。描画と馬の軌道に同じ水平Bezierを使う。
+      const x=horizontal?u*u*u*sx+3*u*u*t*cx+3*u*t*t*ex2+t*t*t*end.x:line?sx+(end.x-sx)*t:u*u*sx+2*u*t*cx+t*t*end.x;
+      const y=horizontal?u*u*u*sy+3*u*u*t*sy+3*u*t*t*end.y+t*t*t*end.y:line?sy+(end.y-sy)*t:u*u*sy+2*u*t*cy+t*t*end.y;
+      const dx=horizontal?3*u*u*(cx-sx)+6*u*t*(ex2-cx)+3*t*t*(end.x-ex2):line?end.x-sx:2*u*(cx-sx)+2*t*(end.x-cx);
+      const dy=horizontal?6*u*t*(end.y-sy):line?end.y-sy:2*u*(cy-sy)+2*t*(end.y-cy);
       return{x,y,angle:Math.atan2(dy,dx),curve:true};
     }
   }
@@ -1271,6 +1273,7 @@ function drawTrackV2(){
       const laneShift=(lane-4.2)*2.2,end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,lane);
       ctx.beginPath();ctx.moveTo(chute.start[0],chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift);
       if(chute.shape==="line")ctx.lineTo(end.x,end.y);
+      else if(chute.shape==="horizontal")ctx.bezierCurveTo(chute.control[0],chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift,end.x+18,end.y,end.x,end.y);
       else ctx.quadraticCurveTo(chute.control[0],chute.control[1]+COURSE_AUDIT_Y_SHIFT+laneShift,end.x,end.y);
       ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();
     };
