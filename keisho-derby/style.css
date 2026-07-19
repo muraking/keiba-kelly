@@ -817,6 +817,37 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .result-screen h2 { margin:5px 0 18px; color:#ffe16a; font-size:52px; text-shadow:4px 4px #5b2a18; }
 .result-horse { display:flex; justify-content:center; align-items:center; gap:10px; color:white; font-size:19px; }
 .result-horse span { display:grid; place-items:center; width:30px; height:30px; background:#eee; color:#111; border:2px solid #d7bd67; }
+.result-horse-scene {
+  position:relative;
+  height:128px;
+  margin:12px 0 8px;
+  overflow:hidden;
+  border:3px solid #d7bd67;
+  background:linear-gradient(#73c7df 0 58%,#76ad52 58% 75%,#4d873c 75%);
+  box-shadow:inset 0 0 0 3px #173522;
+}
+.result-horse-scene::after { content:"";position:absolute;left:0;right:0;bottom:18px;height:4px;background:#f8f2d2;box-shadow:0 8px #f8f2d2; }
+.result-pixel-horse { position:absolute;z-index:3;left:50%;top:27px;margin-left:-46px;transform-origin:center bottom; }
+.result-horse-mood { position:absolute;z-index:5;right:9px;bottom:5px;padding:3px 7px;border:2px solid #694b24;background:#fff3bc;color:#51351c;font-size:10px;box-shadow:2px 2px #315629; }
+.winner-wreath { display:none;position:absolute;z-index:5;left:57px;top:29px;width:17px;height:25px;border:5px dotted #ffe35a;border-radius:45%;transform:rotate(-13deg);filter:drop-shadow(2px 2px #9c3b25); }
+.winner-wreath::after { content:"";position:absolute;left:1px;bottom:-9px;width:5px;height:12px;background:#e83e38;box-shadow:8px 2px #f2c83e; }
+.sad-tear { display:none;position:absolute;z-index:5;left:84px;top:28px;width:4px;height:7px;background:#65d9ff;box-shadow:2px 4px #3289bd; }
+.result-celebration i { display:none;position:absolute;z-index:2;width:5px;height:5px;background:#ffe65b; }
+.result-celebration i:nth-child(1){left:15%;top:19px}.result-celebration i:nth-child(2){left:27%;top:48px;background:#f06b66}.result-celebration i:nth-child(3){left:39%;top:12px;background:#fff}
+.result-celebration i:nth-child(4){right:38%;top:22px;background:#62e5d1}.result-celebration i:nth-child(5){right:25%;top:47px;background:#f58aca}.result-celebration i:nth-child(6){right:13%;top:14px}
+.result-horse-scene.is-winner .winner-wreath,.result-horse-scene.is-winner .result-celebration i { display:block; }
+.result-horse-scene.is-winner .result-pixel-horse { animation:resultHorseJoy 1.15s steps(4) infinite; }
+.result-horse-scene.is-winner .result-celebration i { animation:resultConfetti 1.3s steps(4) infinite; }
+.result-horse-scene.is-placed .result-pixel-horse { animation:resultHorsePlaced 2s steps(3) infinite; }
+.result-horse-scene.is-placed .candidate-head,.result-horse-scene.is-defeated .candidate-head { animation:resultHeadDown 2.1s steps(3) infinite; }
+.result-horse-scene.is-defeated .result-pixel-horse { animation:resultHorseSad 2.4s steps(3) infinite; }
+.result-horse-scene.is-defeated .sad-tear { display:block;animation:resultTear 1.7s steps(3) infinite; }
+@keyframes resultHorseJoy { 0%,100%{transform:translateY(0) rotate(0)}45%{transform:translateY(-13px) rotate(-2deg)}65%{transform:translateY(-13px) rotate(2deg)} }
+@keyframes resultConfetti { 0%{transform:translateY(-8px) rotate(0);opacity:0}25%,70%{opacity:1}100%{transform:translateY(62px) rotate(90deg);opacity:0} }
+@keyframes resultHorsePlaced { 0%,100%{transform:translateY(0)}50%{transform:translateY(3px)} }
+@keyframes resultHorseSad { 0%,100%{transform:translateY(4px)}50%{transform:translateY(7px)} }
+@keyframes resultHeadDown { 0%,100%{transform:rotate(12deg) translateY(2px)}50%{transform:rotate(24deg) translateY(5px)} }
+@keyframes resultTear { 0%{transform:translateY(-2px);opacity:0}25%{opacity:1}100%{transform:translateY(12px);opacity:0} }
 .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin:24px 0 14px; }
 .result-grid div { padding:13px 5px; border:1px solid #927534; background:#050a10; }
 .result-grid small { display:block; color:#9eb0bb; }

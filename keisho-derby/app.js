@@ -1631,6 +1631,12 @@ function showResult(detail){
   game.week++;game.trainingsUsed=0;saveGame();
   document.querySelector("#resultPlace").textContent=`${place}着`;document.querySelector("#resultHorseName").textContent=game.horseName;
   document.querySelector("#resultFrame").textContent=player.id;document.querySelector("#resultFrame").style.background=player.color;
+  const resultHorseScene=document.querySelector("#resultHorseScene");
+  resultHorseScene.classList.remove("is-winner","is-placed","is-defeated");
+  resultHorseScene.classList.add(place===1?"is-winner":place<=3?"is-placed":"is-defeated");
+  resultHorseScene.setAttribute("aria-label",place===1?"優勝レイを掛けて喜ぶ愛馬":place<=3?"健闘して少し悔しそうな愛馬":"レースに敗れて悲しむ愛馬");
+  document.querySelector("#resultHorseMood").textContent=place===1?"やったね！":place<=3?"次こそ勝とう！":"よく頑張ったね";
+  applyHorseAppearance(resultHorseScene);
   document.querySelector("#resultTime").textContent=player.finishTime;document.querySelector("#resultPrize").textContent=`獲得賞金 ${earned.toLocaleString()}万円／育成ポイント +${fpEarned} FP`;
   document.querySelector("#resultComment").textContent=(place===1?"見事な勝利です！":place<=3?"好走しました。次は勝利を狙いましょう。":"調教を重ねて巻き返しましょう。")+
     (playerTrouble?` 調教師「今日は${playerTrouble}がありました。馬具を検討しましょう」`:"");

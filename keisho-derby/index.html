@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.10.2</title>
-  <link rel="stylesheet" href="style.css?v=20260719-55">
+  <title>ドット競馬 継承ダービー｜Ver. 0.10.3</title>
+  <link rel="stylesheet" href="style.css?v=20260719-56">
 </head>
 <body>
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.2</b>
+        <b class="build-version">Ver. 0.10.3</b>
       </div>
     </section>
 
@@ -368,6 +368,17 @@
       <p class="kicker">RACE RESULT</p>
       <h2 id="resultPlace">1着</h2>
       <div class="result-horse"><span id="resultFrame">1</span><b id="resultHorseName">ドットスター</b></div>
+      <div id="resultHorseScene" class="result-horse-scene is-winner" aria-label="レース後の愛馬">
+        <div class="result-celebration" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="candidate-pixel-horse result-pixel-horse">
+          <div class="candidate-body"></div><div class="candidate-neck"></div>
+          <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+          <div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
+          <div class="winner-wreath" aria-hidden="true"></div>
+          <div class="sad-tear" aria-hidden="true"></div>
+        </div>
+        <b id="resultHorseMood" class="result-horse-mood">やったね！</b>
+      </div>
       <div class="result-grid">
         <div><small>走破タイム</small><b id="resultTime">2:24.0</b></div>
         <div><small>獲得賞金</small><b id="resultPrize">30000万円</b></div>
@@ -383,7 +394,7 @@
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260718-2"></script>
-  <script src="app.js?v=20260719-9"></script>
+  <script src="app.js?v=20260719-10"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260719-5"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
