@@ -1293,11 +1293,18 @@ function drawTrackV2(){
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
       ctx.fillStyle=isDirt?"#9a6c43":"#4a9445";ctx.fillRect(screenX,screenY,screenW,screenH);
-      const visible=centerOrder.filter(h=>front-raceDistance(h)<=125).slice(0,8);
-      visible.forEach((h,index)=>{
-        const gap=front-raceDistance(h),x=screenX+screenW-18-gap*Math.max(.75,screenW/150),y=screenY+15+(index%4)*Math.max(10,screenH*.2);
-        drawVisionCandidateHorse(x,y,h,.36);
+      const leaderX=screenX+screenW*.57;
+      centerOrder.filter(h=>front-raceDistance(h)<=105).sort((a,b)=>b.lane-a.lane).forEach(h=>{
+        const gap=front-raceDistance(h);
+        const x=Math.round(leaderX-gap*Math.max(1.15,screenW/95));
+        const lane=Math.max(1,Math.min(8,h.lane));
+        const y=Math.round(screenY+10+(lane-1)*Math.max(4,(screenH-18)/7));
+        drawVisionCandidateHorse(x,y,h,.38);
       });
+      // 旧中継映像と同じく、ゴール直前だけゴール板が右から接近して通過する。
+      const goalDistance=TOTAL-front;
+      const goalX=leaderX+goalDistance*Math.max(1.05,screenW/105);
+      if(goalX>screenX-20&&goalX<screenX+screenW+20)drawVisionGoalBoard(goalX,screenY+2);
     }
   }
 
