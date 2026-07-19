@@ -857,13 +857,6 @@ function finishRace() {
   renderRanking();
   setTimeout(()=>{
     state="finished";
-    document.querySelector("#winnerSaddle").textContent=winner.id;
-    document.querySelector("#winnerSaddle").style.background=winner.color;
-    document.querySelector("#winnerSaddle").style.color=numberTextColor(winner.id);
-    document.querySelector("#winnerNumber").textContent=`${winner.id}番`;
-    document.querySelector("#winnerNumber").style.color=winner.color;
-    document.querySelector("#winnerName").textContent=winner.name;
-    document.querySelector("#winnerTime").textContent=`${formatTime(winner.finishTime)}${isRecord?" NEW RECORD":""}`;
     winnerPopup.classList.add("show");
     winnerPopup.setAttribute("aria-hidden","false");
     pendingResultDetail={
@@ -1114,7 +1107,8 @@ function drawVisionWinnerScene(x,y,w,h,winner){
   drawVisionMovingBackdrop(x,y,w,h,.02);
   const horseX=x+w*.28,horseY=y+h*.67;
   drawVisionCandidateHorse(horseX,horseY,winner,.56);
-  const jx=horseX+7,jy=horseY-29,cheer=Math.floor(raceClock/220)%2;
+  // 騎手の胴体下端を馬の背中へ接続し、浮いて見えないようにする。
+  const jx=horseX-2,jy=horseY-15,cheer=Math.floor(raceClock/220)%2;
   ctx.fillStyle="#efbd85";ctx.fillRect(jx-4,jy-12-cheer*2,9,8);
   ctx.fillStyle="#24202a";ctx.fillRect(jx-5,jy-14-cheer*2,11,3);
   ctx.fillStyle="#e23d39";ctx.fillRect(jx-6,jy-4,13,13);
@@ -1122,8 +1116,8 @@ function drawVisionWinnerScene(x,y,w,h,winner){
   ctx.fillStyle="#e23d39";ctx.fillRect(jx+5,jy-18-cheer*2,4,17);
   ctx.fillStyle="#efbd85";ctx.fillRect(jx+4,jy-22-cheer*2,7,6);
   ctx.fillStyle="#10283a";ctx.fillRect(x+3,y+h-17,w*.52-5,14);
-  ctx.fillStyle="#ffe36d";ctx.font="bold 9px sans-serif";ctx.textAlign="center";
-  ctx.fillText(`${winner.id}番　${winner.name}`,x+w*.26,y+h-7);
+  ctx.fillStyle="#ffe36d";ctx.font=`bold ${winner.name.length>9?7:8}px sans-serif`;ctx.textAlign="center";
+  ctx.fillText(winner.name,x+w*.26,y+h-7);
 }
 
 function drawVisionGoalBoard(x,y){
