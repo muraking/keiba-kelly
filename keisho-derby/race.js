@@ -1338,12 +1338,12 @@ function drawTrackV2(){
 
   // 下側は順位・スタミナ情報専用。中継映像は内馬場へ移動済み。
   const visionOrder=order(),leader=visionOrder[0];
-  const vx=4,vy=330,vw=352,vh=228;
+  const vx=4,vy=330,vw=352,vh=170;
   ctx.fillStyle="#101a21";ctx.fillRect(vx,vy,vw,vh);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(vx,vy,vw,vh);
   ctx.fillStyle="#263a2e";ctx.fillRect(vx+3,vy+3,vw-6,18);
   ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
-  ctx.fillText("順位・スタミナ",180,vy+16);
+  ctx.fillText("順位",180,vy+16);
   const camY=vy+22,camH=0;
   const leaderDist=raceDistance(leader);
   // 馬名タグ：先頭と自分の馬（仕様：ビジョンに愛馬の馬番と馬名を表示）。
@@ -1378,7 +1378,7 @@ function drawTrackV2(){
   ctx.fillText(`実測 ${measuredPace}　基準 ${formatTime(playerSetup.benchmarkTime||playerSetup.baseTime)}　レコード ${formatTime(playerSetup.recordTime||playerSetup.baseTime*.965)}　${playerSetup.weather}/${playerSetup.going}`,180,footY+23);
 
   // 高低差・全馬位置（維持）。
-  const ex=4,ey=564,ew=352,eh=56;
+  const ex=4,ey=506,ew=352,eh=56;
   ctx.fillStyle="#e8edcf";ctx.fillRect(ex,ey,ew,eh);
   ctx.strokeStyle="#d7c35d";ctx.lineWidth=3;ctx.strokeRect(ex,ey,ew,eh);
   ctx.fillStyle="#3c5220";ctx.font="bold 10px sans-serif";ctx.textAlign="left";
