@@ -957,7 +957,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
   padding: 8px 8px 5px;
   background: #1d5d25;
 }
-.winner-popup { display:none; position:absolute; left:10px; right:10px; top:50%; transform:translateY(-50%); z-index:10; place-items:center; pointer-events:none; }
+.winner-popup { display:none; position:absolute; left:10px; right:10px; top:34%; z-index:10; place-items:center; pointer-events:none; }
 .winner-popup.show { display:grid; animation:winnerPopupIn .28s steps(4); }
 .winner-card { width:94%; padding:7px; border:4px solid #f3d15f; background:#10283af2; box-shadow:5px 5px #061019; color:#fff; text-align:center; pointer-events:auto; }
 .winner-card>p { margin:0 0 5px; color:#ffe16a; font:bold 17px sans-serif; letter-spacing:2px; }
