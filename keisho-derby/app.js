@@ -955,7 +955,10 @@ function renderHome(message="今週の予定を決めましょう。"){
   document.querySelector("#nextRaceButtonText").textContent=reservedRace
     ? `次走：${reservedRace.name}（${weeksToRace===0?"今週":`${weeksToRace}週後`}）`
     : game.races>0?"次走予約なし":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
-  document.querySelector("#homeMessage").textContent=`${message} ${fatigueCoachComment()}`;
+  const fatigueMessage=fatigueCoachComment();
+  document.querySelector("#homeMessage").textContent=message.includes(fatigueMessage)
+    ? message.trim()
+    : `${message} ${fatigueMessage}`.trim();
   applyHorseAppearance(document.querySelector("#trainingScene"));
   const statsEl=document.querySelector("#horseStats");
   statsEl.hidden=!developerMode;
