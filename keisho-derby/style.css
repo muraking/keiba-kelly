@@ -1037,6 +1037,8 @@ canvas {
 .gate-skip-button[hidden] { display:none; }
 .race-speed-button { display:block;width:calc(100% - 16px);min-height:36px;margin:6px 8px;padding:7px;border:3px solid #284e61;background:#bfe8f2;color:#193845;box-shadow:3px 3px #071218;font-size:11px;font-weight:900; }
 .race-speed-button[hidden] { display:none; }
+.race-test-back-button { display:block;width:calc(100% - 16px);min-height:38px;margin:7px 8px;padding:7px;border:3px solid #735521;background:#fff3bd;color:#33260e;box-shadow:3px 3px #071218;font-size:12px;font-weight:900; }
+.race-test-back-button[hidden] { display:none; }
 
 .controls {
   display: grid;

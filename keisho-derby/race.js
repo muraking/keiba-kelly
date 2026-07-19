@@ -28,6 +28,7 @@ const pauseButton = document.querySelector("#pauseButton");
 const speedButton = document.querySelector("#speedButton");
 const resetButton = document.querySelector("#resetButton");
 const gateSkipButton = document.querySelector("#gateSkipButton");
+const raceTestBackButton = document.querySelector("#raceTestBackButton");
 const winnerPopup = document.querySelector("#winnerPopup");
 const benchmarkTimesEl = document.querySelector("#benchmarkTimes");
 const weatherDisplayEl = document.querySelector("#weatherDisplay");
@@ -450,6 +451,7 @@ function resetRace() {
   startButton.disabled = false;
   pauseButton.disabled = true;
   gateSkipButton.hidden = true;
+  raceTestBackButton.hidden = !courseAuditMode;
   speedButton.hidden = true;
   pauseButton.textContent = "一時停止";
   multiplier = 1;
@@ -1221,7 +1223,8 @@ function drawTrackV2(){
   ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
   ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m ${currentCourseSpec.route}　${playerSetup.going}`,180,14);
   // 通常画面は上辺、独立したコース検証テストでは下辺にスタンドを置く。
-  const standY=courseAuditMode?202:20;
+  // 検証画面はコース外周と馬に重ならないよう、観客席を下端の専用帯へ離す。
+  const standY=courseAuditMode?228:20;
   ctx.fillStyle="#6e8492";ctx.fillRect(4,standY,352,5);
   ctx.fillStyle="#506574";ctx.fillRect(4,standY+5,352,7);
   ctx.fillStyle="#37475c";ctx.fillRect(4,standY+12,352,10);
@@ -1721,6 +1724,14 @@ gateSkipButton.addEventListener("click",()=>{
   gateSkipButton.hidden=true;
   setCommentary("ゲート入りをスキップしました。全馬収容、スタートを待ちます。");
   gateStartTimer=setTimeout(beginRaceAfterGate,700);
+});
+
+raceTestBackButton.addEventListener("click",()=>{
+  clearTimeout(gateStartTimer);
+  state="ready";
+  gateSkipButton.hidden=true;
+  speedButton.hidden=true;
+  window.dispatchEvent(new CustomEvent("dotkeiba:test-back"));
 });
 
 pauseButton.addEventListener("click", () => {

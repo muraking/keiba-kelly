@@ -1888,3 +1888,7 @@ addEventListener("dotkeiba:archive-close",()=>{
   renderHistory();
   showScreen("historyScreen");
 });
+addEventListener("dotkeiba:test-back",()=>{
+  updateRaceTestSummary();
+  showScreen("raceTestSetupScreen");
+});
