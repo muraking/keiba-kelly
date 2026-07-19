@@ -61,7 +61,7 @@ const defaultGame = () => ({
   speed:0, dash:0, gateSkill:450, stamina:0, power:0, guts:0, turf:0, dirt:0, heavyTrack:500, condition:60, fatigue:10,
   conditionDirection:1, conditionPhaseWeeks:4, conditionStability:"普通", conditionPeakWeeks:0,
   weight:0, baseBestWeight:0, growthType:"普通", growthPotential:12,
-  generation:1, potentialCaps:null, distanceMin:1400, distanceMax:2000,
+  generation:1, potentialCaps:null, ageDecline:0, distanceMin:1400, distanceMax:2000,
   injury:null, legCondition:100,
   temperament:"普通",temperamentValue:50,temperamentKnown:false,
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
@@ -480,6 +480,28 @@ function maturityRate(){
   }
   return Math.max(.82,points.at(-1)[1]-(age-points.at(-1)[0])*.04);
 }
+function growthPeakAge(){
+  return game.growthType==="早熟"?4:game.growthType==="晩成"?6:5;
+}
+function growthTrainingMultiplier(){
+  const age=horseAge()+((game.week-1)%48)/48;
+  if(game.growthType==="早熟")return age<3?1.18:age<4?1.08:age<5?.88:.55;
+  if(game.growthType==="晩成")return age<3?.55:age<4?.72:age<5?.92:age<7?1.10:.82;
+  return age<3?.78:age<4?.95:age<6?1.05:.72;
+}
+function effectivePotentialCap(stat){
+  const base=game.potentialCaps?.[stat]??1000;
+  return Math.max(300,base-(game.ageDecline||0));
+}
+function applyWeeklyPeakDecline(){
+  const age=horseAge()+((game.week-1)%48)/48,yearsPast=age-growthPeakAge();
+  if(yearsPast<=0)return;
+  const weekly=(game.growthType==="早熟"?.22:game.growthType==="晩成"?.12:.17)*(1+Math.min(2,yearsPast)*.35);
+  game.ageDecline=Math.min(180,(game.ageDecline||0)+weekly);
+  ["speed","dash","stamina","power","guts"].forEach(stat=>{
+    game[stat]=Math.max(300,Math.min(game[stat]-weekly,effectivePotentialCap(stat)));
+  });
+}
 function growthAbilityBonus(){return game.growthPotential*10*(maturityRate()-.58)/.42;}
 function effectiveDistanceRange(){
   // 血統由来の基礎距離を、現在のスタミナで長距離側へ拡張する。
@@ -501,7 +523,7 @@ function distanceAbilityPenalty(distance){
   return Math.min(220,170+(gap-800)/100*12.5);
 }
 function trainingGain(stat,base,mult,type){
-  const cap=game.potentialCaps?.[stat]??1000;
+  const cap=effectivePotentialCap(stat);
   const remaining=Math.max(0,cap-game[stat]);
   if(remaining<=0||mult<=0)return 0;
   const capFactor=remaining>=120?1:remaining>=70?.72:remaining>=30?.45:.22;
@@ -510,7 +532,7 @@ function trainingGain(stat,base,mult,type){
     stat==="stamina"&&type==="pool"&&game.equipment.includes("waterWalker")?5:
     stat==="dash"&&type==="gate"&&game.equipment.includes("startingGate")?5:
     stat==="stamina"&&type.startsWith("dirt")&&game.equipment.includes("altitude")?3:0;
-  return Math.min(remaining,(base*6+equipmentBonus)*mult*(.72+maturityRate()*.33)*capFactor);
+  return Math.min(remaining,(base*6+equipmentBonus)*mult*growthTrainingMultiplier()*capFactor);
 }
 function bestWeight(){
   const age=horseAge();
@@ -729,7 +751,7 @@ function applyHorseAppearance(el){
 function renderHorseDetail(){
   const stage=document.querySelector("#detailHorseStage");
   applyHorseAppearance(stage);
-  document.querySelector("#detailAge").textContent=`${horseAge()}歳・${gameYear()}年目`;
+  document.querySelector("#detailAge").textContent=`${horseAge()}歳 ${game.candidate?.sex||""}・${gameYear()}年目`;
   document.querySelector("#horseDetailInfo").innerHTML=`<h2>${game.horseName}</h2><dl>
     <dt>性別・毛色</dt><dd>${game.candidate?.sex||"牡馬"}・${game.candidate?.coat||"栗毛"}${game.candidate?.faceMark?"・額に白い模様":""}</dd>
     <dt>目つき</dt><dd>${game.candidate?.eyeType||"穏やか"}</dd><dt>性格</dt><dd>${trainerTemperamentComment()}</dd>
@@ -749,6 +771,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   const horseNameLength=Array.from(game.horseName).length;
   homeHorseName.style.fontSize=horseNameLength>=11?"10px":horseNameLength>=9?"12px":horseNameLength>=7?"14px":"16px";
   document.querySelector("#homeHorseAge").textContent=`${horseAge()}歳`;
+  const sexEl=document.querySelector("#homeHorseSex");if(sexEl)sexEl.textContent=game.candidate?.sex||"";
   document.querySelector("#homeHorseClass").textContent=displayClassLabel();
   document.querySelector("#homePrize").textContent=`${game.prize.toLocaleString()}万円`;
   document.querySelector("#weekDisplay").textContent=weekLabel();
@@ -1096,6 +1119,7 @@ function playAutoTrainingSequence(steps,modeName,finishText){
 }
 function advanceWeek(rest=false){
   game.week++; game.trainingsUsed=0;
+  applyWeeklyPeakDecline();
   const recoveryEquipment=(game.equipment.includes("walker")?8:0)+(game.equipment.includes("massage")?3:0);
   game.fatigue=Math.max(0,game.fatigue-(rest?42:18)-recoveryEquipment);
   game.legCondition=Math.min(100,game.legCondition+(rest?rnd(12,20):rnd(4,8)));
@@ -1235,7 +1259,9 @@ function renderRaces(){
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
     const arrived=r.week===game.week,debutSeasonOpen=game.week>=21;
     const targetAge=horseAgeAtWeek(r.week),ageEligible=raceAgeTextEligible(r.age||"",targetAge),sexEligible=!String(r.age||"").includes("牝")||game.candidate?.sex==="牝馬";
-    const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&r.condition(game),surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
+    const conditionEligible=r.condition(game);
+    const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&conditionEligible,surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
+    const reservable=!arrived&&r.week>game.week&&ageEligible&&sexEligible&&conditionEligible;
     const raceYear=Math.floor((r.week-1)/48)+1,raceYearWeek=(r.week-1)%48;
     const officialDate=r.officialDate?`${Number(r.officialDate.slice(5,7))}月${Number(r.officialDate.slice(8,10))}日（2026公式）`:`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
     let reason="出走条件外";
@@ -1254,7 +1280,7 @@ function renderRaces(){
     const wonBefore=game.raceHistory.some(x=>x.raceName===r.name&&x.place===1);
     return `<article class="race-choice ${eligible?"":"locked"} ${reserved?"reserved":""}"><b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
     <h3>${wonBefore?"🏆 ":""}${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p></div>
-    <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${!arrived&&ageEligible&&sexEligible?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
+    <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${reservable||reserved?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
   }).join("")||`<p class="empty-races">この開催場の番組はありません。</p>`;
 }
 function playerAbility(race){

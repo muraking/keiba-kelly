@@ -37,7 +37,24 @@ const showResultButton = document.querySelector("#showResultButton");
 
 // JRAの枠色：1白、2黒、3赤、4青、5黄、6緑、7橙、8桃
 const COLORS = ["#f5f3e8", "#151515", "#d93732", "#2879d8", "#efc52d", "#36a852", "#e87822", "#ec73ad"];
-const NAMES = ["サンライズ", "ホープフル", "ブルーギア", "ゴールドラン", "グリーンベル", "チェリーミスト", "オレンジロード", "パープルエース"];
+const RIVAL_CATALOG = [
+  {name:"サクラバクシード",surface:"芝",min:1000,max:1400},{name:"ロードカナロック",surface:"芝",min:1000,max:1600},
+  {name:"タイキシャトルズ",surface:"芝",min:1200,max:1800},{name:"グランアレグロ",surface:"芝",min:1200,max:2000},
+  {name:"デュランダッシュ",surface:"芝",min:1200,max:1600},{name:"モーリスライン",surface:"芝",min:1400,max:2000},
+  {name:"ディープインパルス",surface:"芝",min:1800,max:3200},{name:"オルフェーブルー",surface:"芝",min:1800,max:3200},
+  {name:"シンボリルドル",surface:"芝",min:1800,max:3200},{name:"トウカイテイオット",surface:"芝",min:1800,max:2600},
+  {name:"スペシャルウィークス",surface:"芝",min:1800,max:3200},{name:"テイエムオペラド",surface:"芝",min:1800,max:3200},
+  {name:"アーモンドアイス",surface:"芝",min:1600,max:2400},{name:"イクイノスター",surface:"芝",min:1800,max:2600},
+  {name:"キタサンブラックス",surface:"芝",min:1800,max:3200},{name:"ジェンティルドンナー",surface:"芝",min:1600,max:2600},
+  {name:"ウオッカソーダ",surface:"芝",min:1600,max:2400},{name:"ダイワスカーレッツ",surface:"芝",min:1600,max:2500},
+  {name:"メジロマックキング",surface:"芝",min:2200,max:3600},{name:"ライスシャワーズ",surface:"芝",min:2200,max:3600},
+  {name:"ゴールドシップス",surface:"芝",min:2000,max:3600},{name:"ナリタロングロード",surface:"芝",min:2200,max:3600},
+  {name:"クロフネシップ",surface:"ダート",min:1400,max:2100},{name:"ホクトベガス",surface:"ダート",min:1600,max:2400},
+  {name:"コパノリッキーズ",surface:"ダート",min:1400,max:2100},{name:"ヴァーミリオンズ",surface:"ダート",min:1600,max:2400},
+  {name:"エスポワールシティ",surface:"ダート",min:1400,max:2100},{name:"スマートファルコ",surface:"ダート",min:1600,max:2100},
+  {name:"カネヒキリズ",surface:"ダート",min:1600,max:2400},{name:"ルヴァンスブレイブ",surface:"ダート",min:1600,max:2400},
+  {name:"ウシュバテソード",surface:"ダート",min:1800,max:2600},{name:"サクセスブロッケン",surface:"ダート",min:1600,max:2400}
+];
 const STYLE_PATTERNS = [
   ["逃げ", "先行", "差し", "先行", "差し", "追込", "差し", "追込"],
   ["逃げ", "逃げ", "先行", "先行", "差し", "差し", "追込", "追込"],
@@ -47,10 +64,8 @@ const STYLE_PATTERNS = [
 let TOTAL = 2400;
 // The finish line is fixed. Each start is calculated backwards from the
 // official lap length, so different distances no longer share one start.
-// On this path, .349 is the end of the home straight (just before turn 1).
-const FINISH_LINE_PROGRESS = .349;
 let LAP = 2083.1;
-let FINISH_PROGRESS = FINISH_LINE_PROGRESS;
+let FINISH_PROGRESS = .24;
 let START_PROGRESS = FINISH_PROGRESS - TOTAL / LAP;
 // 東京芝2400mを約2分24秒で走破する基礎速度。
 // 2:20.3のコースレコードから通常のダービー水準2:23〜2:26を想定。
@@ -77,6 +92,7 @@ let raceSurface = "芝";
 let currentRaceVenue = "東京";
 let currentCourseSpec = {route:"",lap:2083.1,straight:525.9,elevation:2.7};
 let opponentAbilities = [];
+let opponentNames = [];
 let fieldAverageAbility = 920;
 let raceSeed = 1;
 let randomState = 1;
@@ -195,9 +211,11 @@ function courseSpec(){
 function configureCourseDistance(){
   currentCourseSpec=courseSpec();
   LAP=currentCourseSpec.lap;
-  // 描画時に右回りは進行座標を反転するため、決勝線の内部座標も反転する。
-  // これで全競馬場のゴールがホームスタンド前の同じ決勝線位置になる。
-  FINISH_PROGRESS=trackProfile().turn==="右"?1-FINISH_LINE_PROGRESS:FINISH_LINE_PROGRESS;
+  // 決勝線は各場のホーム直線内（スタンド前）に置く。
+  // 固定値だと直線割合の短い競馬場でコーナーへ入るため、コース形状ごとに算出する。
+  const profile=trackProfile();
+  const renderedFinish=Math.max(.14,Math.min(profile.straightShare-.025,profile.straightShare*.72));
+  FINISH_PROGRESS=profile.turn==="右"?1-renderedFinish:renderedFinish;
   START_PROGRESS=FINISH_PROGRESS-TOTAL/LAP;
 }
 function finishMarkerVisible(){
@@ -234,7 +252,7 @@ function makeHorse(i, styles) {
   const opponentAbility = opponentAbilities[opponentIndex] ?? playerSetup.ability;
   return {
     id: i + 1,
-    name: isPlayer ? playerSetup.horseName : NAMES[i],
+    name: isPlayer ? playerSetup.horseName : opponentNames[opponentIndex],
     color: COLORS[i],
     style: styles[i],
     progress: START_PROGRESS - i * .0009,
@@ -284,6 +302,14 @@ function buildOpponentAbilities() {
     .sort(() => raceRandom() - .5);
 }
 
+function buildOpponentNames(){
+  const matching=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-200&&TOTAL<=r.max+200);
+  const fallback=RIVAL_CATALOG.filter(r=>r.surface===raceSurface);
+  const pool=[...(matching.length>=7?matching:fallback)];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(raceRandom()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  return pool.slice(0,7).map(r=>r.name);
+}
+
 function resetRace() {
   clearTimeout(gateStartTimer);
   cancelAnimationFrame(raf);
@@ -291,6 +317,7 @@ function resetRace() {
   simulationAccumulator = 0;
   const styles = STYLE_PATTERNS[raceSeed % STYLE_PATTERNS.length];
   opponentAbilities = buildOpponentAbilities();
+  opponentNames = buildOpponentNames();
   playerNumber=1+Math.floor(raceRandom()*8);
   horses = Array.from({ length: 8 }, (_, i) => makeHorse(i, styles));
   visionRanks=new Map(horses.map((h,i)=>[h.id,i+1]));visionRankStamp=0;
