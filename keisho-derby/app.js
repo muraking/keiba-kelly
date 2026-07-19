@@ -1696,8 +1696,7 @@ function updateRaceTestSummary(){
   const lap=course.lap[layoutKey]||course.lap[english]||Object.values(course.lap)[0],straight=course.straight[layoutKey]||course.straight[english]||Object.values(course.straight)[0];
   const selectedDirection=raceTestDirection.value||course.direction;
   const direction=selectedDirection==="left"?"左回り":selectedDirection==="right"?"右回り":selectedDirection==="both"?"左右両回り":"直線";
-  const pocket=baseVenue==="東京"&&((surface==="芝"&&[1600,1800,2000].includes(distance))||(surface==="ダート"&&distance===1600));
-  document.querySelector("#raceTestCourseSummary").innerHTML=`<b>${venue}競馬場　${surface}${distance}m</b><br>${direction}／1周 ${lap}m／直線 ${straight}m<br>高低差 ${course.elevation}m　${course.corner}${pocket?"<br><strong>距離別ポケット走路を表示</strong>":""}<br><small>コース検証用・本編には未反映</small>`;
+  document.querySelector("#raceTestCourseSummary").innerHTML=`<b>${venue}競馬場　${surface}${distance}m</b><br>${direction}／1周 ${lap}m／直線 ${straight}m<br>高低差 ${course.elevation}m　${course.corner}<br><small>本編と同じコース表示</small>`;
 }
 function updateRaceTestDistances(){
   const distances=raceTestSurfaceDistances(raceTestVenue.value,raceTestSurface.value);

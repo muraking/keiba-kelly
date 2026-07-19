@@ -128,20 +128,12 @@ let horizontalLayout = false;
 let layoutV2 = false;
 let courseAuditMode = false;
 let drawingCourseTrace = false;
-const COURSE_AUDIT_Y_SHIFT = -18;
+// スタンド下配置を本編でも共通使用。走路はスタンドに近づけつつ接触させない。
+const COURSE_Y_SHIFT = -8;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
 const COURSE_PATH_CACHE=new WeakMap();
-// 公式平面図を基準にしたテスト専用の発走ポケット。
-// start/controlはスタンド下へ正規化したCanvas座標、entryMetersは本線合流までの距離。
-const TEST_START_CHUTES={
-  "東京|芝|1600":{start:[344,64],control:[318,64],entryMeters:230,label:"2コーナー奥ポケット",shape:"horizontal"},
-  "東京|芝|1800":{start:[330,93],control:[320,69],entryMeters:205,label:"2コーナー奥ポケット"},
-  "東京|芝|2000":{start:[342,145],control:[334,91],entryMeters:185,label:"1コーナー奥ポケット"},
-  "東京|ダート|1600":{start:[337,70],control:[326,68],entryMeters:215,label:"芝ポケット発走",shape:"line"}
-};
-function currentTestChute(){return courseAuditMode?TEST_START_CHUTES[`${currentRaceVenue}|${raceSurface}|${TOTAL}`]||null:null}
 // 「通常」を従来シミュレーションの4倍速として扱う。
 // 画面表示の2倍・4倍は通常速度を基準に、それぞれ内部8倍・16倍になる。
 const BASE_PLAYBACK_RATE = 4;
@@ -272,9 +264,8 @@ function configureCourseDistance(){
   // 固定値だと直線割合の短い競馬場でコーナーへ入るため、コース形状ごとに算出する。
   const profile=trackProfile();
   const renderedFinish=window.COURSE_LAYOUTS?.[currentRaceVenue]?.finishProgress??Math.max(.14,Math.min(profile.straightShare-.025,profile.straightShare*.72));
-  // 検証画面は中心線の基準点をそのまま決勝線に使い、進行方向だけ描画時に反転する。
-  // これで左右どちらの回りでもゴールがスタンド前から動かない。
-  FINISH_PROGRESS=courseAuditMode?renderedFinish:(profile.turn==="右"?1-renderedFinish:renderedFinish);
+  // スタンド下レイアウトでは中心線の基準点を決勝線に固定する。
+  FINISH_PROGRESS=renderedFinish;
   START_PROGRESS=FINISH_PROGRESS-TOTAL/LAP;
 }
 function finishMarkerVisible(){
@@ -323,9 +314,7 @@ function makeHorse(i, styles) {
     style: effectiveStyle,
     styleLabel:isPlayer?styles[i]:listedStyle,
     rivalTrait:rival?.trait||null,
-    // ポケット発走は8頭すべてを同じ発走断面へ並べる。
-    // 通常コースでだけ描画上の微小な前後差を残す。
-    progress: START_PROGRESS - (currentTestChute()?0:i * .0009),
+    progress: START_PROGRESS - i * .0009,
     // 基本は内ラチ沿い。逃げ・先行ほど内、差し・追込も道中は馬群内で脚をためる。
     lane: effectiveStyle === "逃げ" ? 7.25 : effectiveStyle === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
     targetLane: effectiveStyle === "逃げ" ? 7.25 : effectiveStyle === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
@@ -912,24 +901,6 @@ function numberTextColor(id) {
 }
 
 function coursePoint(progress,lane=3){
-  const chute=!drawingCourseTrace&&currentTestChute();
-  if(chute&&Number.isFinite(START_PROGRESS)){
-    const travelled=(progress-START_PROGRESS)*LAP;
-    if(travelled>=-.5&&travelled<chute.entryMeters){
-      const t=Math.max(0,Math.min(1,travelled/chute.entryMeters));
-      const end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,lane);
-      const laneShift=(lane-4.2)*2.2;
-      const sx=chute.start[0],sy=chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift,cx=chute.control[0],cy=chute.control[1]+COURSE_AUDIT_Y_SHIFT+laneShift;
-      const u=1-t;
-      const horizontal=chute.shape==="horizontal",line=chute.shape==="line",ex2=end.x+18;
-      // 1600m芝は向正面の延長。描画と馬の軌道に同じ水平Bezierを使う。
-      const x=horizontal?u*u*u*sx+3*u*u*t*cx+3*u*t*t*ex2+t*t*t*end.x:line?sx+(end.x-sx)*t:u*u*sx+2*u*t*cx+t*t*end.x;
-      const y=horizontal?u*u*u*sy+3*u*u*t*sy+3*u*t*t*end.y+t*t*t*end.y:line?sy+(end.y-sy)*t:u*u*sy+2*u*t*cy+t*t*end.y;
-      const dx=horizontal?3*u*u*(cx-sx)+6*u*t*(ex2-cx)+3*t*t*(end.x-ex2):line?end.x-sx:2*u*(cx-sx)+2*t*(end.x-cx);
-      const dy=horizontal?6*u*t*(end.y-sy):line?end.y-sy:2*u*(cy-sy)+2*t*(end.y-cy);
-      return{x,y,angle:Math.atan2(dy,dx),curve:true};
-    }
-  }
   return baseCoursePoint(progress,lane);
 }
 
@@ -946,7 +917,7 @@ function baseCoursePoint(progress, lane = 3) {
   const rightTurn=trackProfile().turn==="右";
   // 元の中心線は時計回り。検証画面の左回りは決勝線を軸に座標順だけを反転する。
   // 単純な 1-p ではゴール位置まで移動するため、2*FINISH_PROGRESS-p で位置を固定する。
-  const reverseTraversal=courseAuditMode?!rightTurn:rightTurn;
+  const reverseTraversal=!rightTurn;
   if(reverseTraversal)p=((2*FINISH_PROGRESS-p)%1+1)%1;
   if(horizontalLayout){
     const inset=lane*4,left=43+inset,right=317-inset,top=50+lane*3,bottom=230-lane*3;
@@ -961,7 +932,7 @@ function baseCoursePoint(progress, lane = 3) {
   if(layoutV2&&officialPath?.length>2){
     const pt=officialCoursePoint(officialPath,p,lane);
     if(reverseTraversal)pt.angle+=Math.PI;
-    if(courseAuditMode){pt.x=360-pt.x;pt.y=270-pt.y+COURSE_AUDIT_Y_SHIFT;pt.angle+=Math.PI;}
+    pt.x=360-pt.x;pt.y=270-pt.y+COURSE_Y_SHIFT;pt.angle+=Math.PI;
     return pt;
   }
   const pt=verticalCoursePoint(p,lane);
@@ -1230,9 +1201,7 @@ function drawTrackV2(){
   ctx.fillStyle="#101a21";ctx.fillRect(0,0,360,20);
   ctx.fillStyle="#fff3a6";ctx.font="bold 12px sans-serif";ctx.textAlign="center";
   ctx.fillText(`${playerSetup.raceName||"テストレース"}　${currentRaceVenue}${raceSurface}${TOTAL}m ${currentCourseSpec.route}　${playerSetup.going}`,180,14);
-  // 通常画面は上辺、独立したコース検証テストでは下辺にスタンドを置く。
-  // 検証画面はコース外周と馬に重ならないよう、観客席を下端の専用帯へ離す。
-  const standY=courseAuditMode?228:20;
+  const standY=232;
   ctx.fillStyle="#6e8492";ctx.fillRect(4,standY,352,5);
   ctx.fillStyle="#506574";ctx.fillRect(4,standY+5,352,7);
   ctx.fillStyle="#37475c";ctx.fillRect(4,standY+12,352,10);
@@ -1251,8 +1220,8 @@ function drawTrackV2(){
     }else for(let i=0;i<=180;i++){const q=coursePoint(i/180,lane);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
     if(!straightCourse)ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.stroke();drawingCourseTrace=false;
   };
-  trace(4.5,"#f1ead2",40);
-  trace(4.5,isDirt?"#a87549":"#43943e",33);
+  trace(4.5,"#f1ead2",46);
+  trace(4.5,isDirt?"#a87549":"#43943e",39);
   for(let lane=1;lane<=8;lane++)trace(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
   if(isBanei){
     [{x:131,h:10,label:"第1障害"},{x:238,h:18,label:"第2障害"}].forEach(o=>{
@@ -1265,21 +1234,6 @@ function drawTrackV2(){
     ctx.beginPath();
     for(let i=0;i<=120;i++){const q=coursePoint(i/120,9.4);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}
     ctx.closePath();ctx.fillStyle="#1e5d28";ctx.fill();
-  }
-  // ポケットは内馬場より手前に描き、独立した発走路と本線への合流を見せる。
-  const chute=currentTestChute();
-  if(chute){
-    const drawChute=(lane,color,width)=>{
-      const laneShift=(lane-4.2)*2.2,end=baseCoursePoint(START_PROGRESS+chute.entryMeters/LAP,lane);
-      ctx.beginPath();ctx.moveTo(chute.start[0],chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift);
-      if(chute.shape==="line")ctx.lineTo(end.x,end.y);
-      else if(chute.shape==="horizontal")ctx.bezierCurveTo(chute.control[0],chute.start[1]+COURSE_AUDIT_Y_SHIFT+laneShift,end.x+18,end.y,end.x,end.y);
-      else ctx.quadraticCurveTo(chute.control[0],chute.control[1]+COURSE_AUDIT_Y_SHIFT+laneShift,end.x,end.y);
-      ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();
-    };
-    drawChute(4.5,"#f1ead2",38);drawChute(4.5,isDirt?"#a87549":"#43943e",31);
-    for(let lane=1;lane<=8;lane++)drawChute(lane,isDirt?(lane%2?"#c18a58":"#94613d"):(lane%2?"#65ad55":"#378537"),1);
-    ctx.fillStyle="#fff3a6";ctx.font="bold 7px sans-serif";ctx.textAlign="right";ctx.fillText(chute.label,chute.start[0]-3,chute.start[1]+COURSE_AUDIT_Y_SHIFT-5);
   }
   const profile=trackProfile();
   if(["museum","pond","sea"].includes(profile.facility)){
@@ -1600,25 +1554,35 @@ function draw() {
 
 function drawCrowdCheer(){
   const visionOrder=order(),leader=visionOrder[0];
-  if(!leader||state!=="running"||raceDistance(leader)/TOTAL<=.50)return;
+  if(!leader||state!=="running")return;
+  const travelled=raceDistance(leader),profile=trackProfile();
+  const distanceToFinishLine=((FINISH_PROGRESS-leader.progress)%1+1)%1*LAP;
+  // 周回ごとのホーム直線に入った時だけ、スタンドから歓声を出す。
+  if(distanceToFinishLine>profile.straight*1.04)return;
   const ratio=raceDistance(leader)/TOTAL;
   const calls=ratio>.82?["差せー！","粘れー！","そのまま！","伸びろー！","届いてくれ！","逃げ切れ！","並んだ！","もう少し！","いけー！","突き抜けろ！"]:ratio>.62?["外から来た！","内を突け！","前が開いた！","進路を取れ！","動き出した！","差を詰めろ！","いい脚だ！","馬群を割れ！"]:["いいぞー！","前を追え！","落ち着いて！","いい手応え！","まだ我慢！","行けるぞ！","頑張れー！"];
-  const cycle=5200,visibleFor=2400,slot=Math.floor(cheerClock/cycle);
+  const gradeLevel=playerSetup.raceClass==="G1"?4:playerSetup.raceClass==="G2"?3:playerSetup.raceClass==="G3"?2:playerSetup.raceClass==="オープン"?1:0;
+  const straightVisit=Math.floor(Math.max(0,travelled)/LAP)+1;
+  const excitement=Math.min(5,gradeLevel+Math.min(2,straightVisit-1)+(ratio>.82?1:0));
+  const cycles=[4300,3400,2700,2100,1650,1300],cycle=cycles[excitement],visibleFor=Math.min(2600,cycle*.72),slot=Math.floor(cheerClock/cycle);
   if(cheerClock%cycle>=visibleFor)return;
-  // レイアウトV2はコースが上部の横長帯なので、吹き出しもコース帯の中に収める。
+  // 吹き出しの尻尾を下側スタンドへ向ける。格が高いほど同時表示を増やす。
   const spots=layoutV2
-    ?[{x:8,y:22,w:104},{x:128,y:22,w:104},{x:248,y:22,w:104}]
+    ?[{x:7,y:207,w:104},{x:128,y:207,w:104},{x:249,y:207,w:104}]
     :[{x:226,y:54,w:108},{x:232,y:96,w:102},{x:218,y:220,w:116},{x:225,y:285,w:109},{x:216,y:350,w:118}];
-  const spot=spots[(slot*3+raceSeed)%spots.length],call=calls[(slot*7+raceSeed)%calls.length];
+  const bubbleCount=layoutV2?Math.min(3,1+Math.floor(excitement/2)):1;
   ctx.save();
-  ctx.shadowColor="#000b";ctx.shadowBlur=0;ctx.shadowOffsetX=3;ctx.shadowOffsetY=3;
-  ctx.fillStyle="#ffffff";ctx.strokeStyle="#262015";ctx.lineWidth=3;
-  ctx.fillRect(spot.x,spot.y,spot.w,24);ctx.strokeRect(spot.x,spot.y,spot.w,24);
-  ctx.beginPath();
-  if(layoutV2){const tx=spot.x+spot.w/2;ctx.moveTo(tx-7,spot.y+24);ctx.lineTo(tx,49);ctx.lineTo(tx+7,spot.y+24)}
-  else{ctx.moveTo(spot.x+spot.w,spot.y+9);ctx.lineTo(349,spot.y+15);ctx.lineTo(spot.x+spot.w,spot.y+19)}
-  ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.shadowColor="transparent";ctx.fillStyle="#111";ctx.font="bold 11px sans-serif";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+17);
+  for(let n=0;n<bubbleCount;n++){
+    const spot=spots[(slot+n+raceSeed)%spots.length],call=calls[(slot*7+n*3+raceSeed)%calls.length];
+    ctx.shadowColor="#000b";ctx.shadowBlur=0;ctx.shadowOffsetX=2;ctx.shadowOffsetY=2;
+    ctx.fillStyle="#ffffff";ctx.strokeStyle="#262015";ctx.lineWidth=2;
+    ctx.fillRect(spot.x,spot.y,spot.w,19);ctx.strokeRect(spot.x,spot.y,spot.w,19);
+    ctx.beginPath();
+    if(layoutV2){const tx=spot.x+spot.w/2;ctx.moveTo(tx-5,spot.y+19);ctx.lineTo(tx,232);ctx.lineTo(tx+5,spot.y+19)}
+    else{ctx.moveTo(spot.x+spot.w,spot.y+7);ctx.lineTo(349,spot.y+12);ctx.lineTo(spot.x+spot.w,spot.y+17)}
+    ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.shadowColor="transparent";ctx.fillStyle="#111";ctx.font="bold 10px sans-serif";ctx.textAlign="center";ctx.fillText(call,spot.x+spot.w/2,spot.y+14);
+  }
   ctx.restore();
 }
 
