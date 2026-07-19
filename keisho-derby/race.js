@@ -1767,6 +1767,18 @@ function beginRaceAfterGate(){
   lastTime=0;
 }
 
+function startReplayFromGateExit(resetFirst=true){
+  if(resetFirst)resetRace();
+  assignStartReactions();
+  state="gateBreak";preRaceClock=0;
+  startButton.disabled=true;pauseButton.disabled=true;
+  gateSkipButton.hidden=true;speedButton.hidden=true;
+  phaseEl.textContent="全馬収容";
+  setCommentary("保存リプレイを、発馬機が左へ移動する場面から再生します。",true);
+  lastTime=0;raf=requestAnimationFrame(loop);
+  gateStartTimer=setTimeout(beginRaceAfterGate,1450);
+}
+
 startButton.addEventListener("click", () => {
   if (state === "ready") {
     state = "parade";
@@ -1828,15 +1840,7 @@ speedButton.addEventListener("click", () => {
 resetButton.addEventListener("click", resetRace);
 window.addEventListener("dotkeiba:auto-start",()=>{if(state==="ready")startButton.click()});
 winnerReplayButton.addEventListener("click",()=>{
-  resetRace();
-  state="running";
-  startButton.disabled=true;
-  pauseButton.disabled=false;
-  speedButton.hidden=false;
-  phaseEl.textContent="リプレイ";
-  setCommentary("保存された展開でレースを再現します。",true);
-  lastTime=0;
-  raf=requestAnimationFrame(loop);
+  startReplayFromGateExit(true);
 });
 favoriteRaceButton.addEventListener("click",()=>{
   if(!pendingResultDetail)return;
@@ -1877,6 +1881,7 @@ window.addEventListener("dotkeiba:prepare", event => {
   configureCourseDistance();
   BASE_PROGRESS_PER_MS = (TOTAL / LAP) / (event.detail.baseTime || TOTAL * 62);
   resetRace();
+  if(archiveReplay)startReplayFromGateExit(false);
 });
 
 resetRace();
