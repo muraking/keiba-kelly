@@ -1261,6 +1261,16 @@ function drawVisionGateBreak(vx,camY,vw,camH){
   drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move);
 }
 
+function updateGateBreakCourseMotion(dt){
+  const launchStart=2150;
+  horses.forEach(h=>{
+    const reactionDelay=h.startReaction==="出遅れ"?260:h.startReaction==="好スタート"?-90:0;
+    if(preRaceClock<launchStart+reactionDelay)return;
+    const startSpeed=h.startReaction==="好スタート"?.0145:h.startReaction==="出遅れ"?.0115:.013;
+    h.progress+=startSpeed*dt/LAP;
+  });
+}
+
 function assignStartReactions(){
   horses.forEach(h=>{
     const lowDash=Math.max(0,(560-h.dash)/560),lowGate=Math.max(0,(620-h.gateSkill)/620),timidness=Math.max(0,(45-h.temperamentValue)/45);
@@ -1268,6 +1278,8 @@ function assignStartReactions(){
     const lateRisk=Math.min(.14,(.012+lowDash*.045+lowGate*.065+timidness*.035)*hoodReduction);
     const roll=raceRandom(),sharpChance=Math.max(.035,Math.min(.18,.055+(h.dash+h.gateSkill-1100)*.00012));
     h.startReaction=roll<lateRisk?"出遅れ":roll>1-sharpChance?"好スタート":"普通";
+    // 発馬時は全馬を同じスタートラインへ置き、反応差で位置取りを作る。
+    h.progress=START_PROGRESS;
     h.gateChecked=true;
     if(h.startReaction==="出遅れ")h.temperamentTrouble="出遅れ";
   });
@@ -1834,6 +1846,7 @@ function loop(time) {
   if(state==="parade"||state==="gates"||state==="gateBreak"){
     preRaceClock+=realDt;
     if(state==="parade"||state==="gates")waitingMotionClock+=realDt;
+    if(state==="gateBreak")updateGateBreakCourseMotion(realDt);
     draw();
   } else if (state === "running") {
     cheerClock += realDt;
@@ -1853,11 +1866,8 @@ function loop(time) {
 
 function beginRaceAfterGate(){
   if(state!=="gateBreak")return;
-  // ゲートから出た時の着差を本レース座標へ引き継ぐ。画面切替で横一線へ戻さない。
-  horses.forEach(h=>{
-    const reactionMeters=h.startReaction==="好スタート"?3.2:h.startReaction==="出遅れ"?-6:(h.id%3-1)*.45;
-    h.progress=START_PROGRESS+reactionMeters/LAP;
-  });
+  // ゲートが開いてから進んだコース座標と反応差を、そのまま本レースへ渡す。
+  raceClock=Math.max(raceClock,preRaceClock-2150);
   raceVisualStartClock=weatherClock;
   state="running";pauseButton.disabled=false;phaseEl.textContent="スタート";
   gateSkipButton.hidden=true;
