@@ -1235,18 +1235,19 @@ function drawVisionGateBreak(vx,camY,vw,camH){
   const move=Math.max(0,Math.min(1,(preRaceClock-300)/1500));
   const gateW=Math.max(23,Math.min(27,vw*.12));
   const targetOffset=-(vw-gateW-16);
-  const launchStart=2150,launchDuration=900;
-  // 左端で停止してから扉を開き、全馬が発馬機から右へ飛び出す。
+  const launchStart=2150;
+  // 発走後は画面右端をゴールにせず、カメラが追走する速度で走り続ける。
   horses.forEach((h,i)=>{
     const reactionDelay=h.startReaction==="出遅れ"?260:h.startReaction==="好スタート"?-90:0;
-    const launch=Math.max(0,Math.min(1,(preRaceClock-launchStart-reactionDelay)/launchDuration));
-    if(launch<=0)return;
-    const ease=1-Math.pow(1-launch,3);
+    const launchElapsed=Math.max(0,preRaceClock-launchStart-reactionDelay);
+    if(launchElapsed<=0)return;
     const reactionLead=h.startReaction==="好スタート"?8:h.startReaction==="出遅れ"?-13:0;
-    const startX=vx+10+gateW*.62,targetX=vx+vw-24+reactionLead-(i%2)*2;
-    drawVisionCandidateHorse(startX+(targetX-startX)*ease,camY+camH*.72+(i%4)*Math.max(2,camH*.025),h,.44);
+    const startX=vx+10+gateW*.62;
+    const horseX=startX+launchElapsed*.058+reactionLead-(i%2)*2;
+    drawVisionCandidateHorse(horseX,camY+camH*.72+(i%4)*Math.max(2,camH*.025),h,.44);
   });
-  drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move);
+  const launchScroll=Math.max(0,preRaceClock-launchStart)*.058;
+  drawVisionGateStructure(vx,camY,vw,camH,targetOffset*move-launchScroll);
 }
 
 function assignStartReactions(){
@@ -1416,7 +1417,7 @@ function drawTrackV2(){
     }else if(state==="gateBreak"){
       const gateW=Math.max(23,Math.min(27,screenW*.12));
       const gateMove=Math.max(0,Math.min(1,(preRaceClock-300)/1500));
-      const synchronizedScroll=(screenW-gateW-16)*gateMove;
+      const synchronizedScroll=(screenW-gateW-16)*gateMove+Math.max(0,preRaceClock-2150)*.058;
       drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,0,synchronizedScroll);
       drawVisionGateBreak(screenX,screenY,screenW,screenH);
     }else{
@@ -1434,7 +1435,10 @@ function drawTrackV2(){
       const sweepElapsed=cameraSweepStart<0?Infinity:weatherClock-cameraSweepStart;
       const sweep=sweepElapsed>=0&&sweepElapsed<6000?Math.sin(sweepElapsed/6000*Math.PI):0;
       const cameraOffset=sweep*Math.min(screenW*.50,fieldSpan*pixelsPerMeter*.70);
-      const leaderX=screenX+screenW-18+cameraOffset;
+      // 発走直後はゲート映像の中央位置から始め、徐々に通常の先頭追従位置へ移す。
+      const cameraBlend=Math.max(0,Math.min(1,raceClock/2200));
+      const cameraEase=1-Math.pow(1-cameraBlend,3);
+      const leaderX=screenX+screenW*.53+(screenW*.47-18)*cameraEase+cameraOffset;
       const horseScale=.44;
       // ゴール板は遠景として先に描き、馬をその手前へ重ねる。
       const goalX=leaderX+goalDistance*pixelsPerMeter;
@@ -1443,7 +1447,9 @@ function drawTrackV2(){
         const gap=front-raceDistance(h);
         const x=Math.round(leaderX-gap*pixelsPerMeter);
         const lane=Math.max(1,Math.min(8,h.lane));
-        const y=Math.round(screenY+screenH*.72+(lane-1)*Math.max(1.2,screenH*.08/7));
+        // 下段の高低差グラフと同じcourseElevationを使い、坂に合わせて中継映像も上下させる。
+        const elevationShift=-(courseElevation(h.progress)-16)*.45;
+        const y=Math.round(screenY+screenH*.72+(lane-1)*Math.max(1.2,screenH*.08/7)+elevationShift);
         drawVisionCandidateHorse(x,y,h,horseScale);
       });
     }
