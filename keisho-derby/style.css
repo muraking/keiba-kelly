@@ -710,12 +710,18 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 }
 
 #raceChoices { padding: 12px; }
-.race-choice { display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:8px;margin-bottom:6px;padding:9px;border:2px solid #88713c;background:#071019; }
+.race-choice { position:relative;display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:8px;margin-bottom:6px;padding:9px;border:2px solid #88713c;background:#071019; }
 .race-number { display:grid;place-items:center;width:30px;height:30px;border:2px solid #d8bd68;background:#1a2b37;color:#fff3b0;font-size:12px; }
 .race-choice h3 { margin:3px 0; color:#ffe16a; font-size:15px; }
 .race-choice small, .race-choice p { margin:0; color:#aab9c4; font-size:9px; }
 .race-choice button { width:95px; }
 .race-choice.locked { opacity:.52; }
+.race-choice.reservable { opacity:1;border-color:#61cf91;background:#0b251c;box-shadow:inset 4px 0 #61cf91; }
+.race-choice.reservable h3 { color:#9cf2bd; }
+.race-choice.reservable .race-choice-buttons button[data-reserve] { border-color:#61cf91;background:#1e7045;color:#fff; }
+.race-choice.reserved,.race-choice.reservable.reserved { opacity:1;border-color:#ffe36c;background:#25240d;box-shadow:inset 4px 0 #ffe36c; }
+.race-won-trophy { position:absolute;z-index:2;right:5px;top:3px;display:grid;place-items:center;width:22px;height:22px;border:2px solid #7a581b;background:#fff0a5;font-size:14px;line-height:1;box-shadow:2px 2px #30240d; }
+.race-choice.won-graded { padding-top:26px; }
 .select-screen > button { width:calc(100% - 24px); margin:0 12px 16px; }
 
 .shop-screen { background:#eef4e8; }
@@ -755,6 +761,22 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .history-card .favorite-delete { min-height:28px; padding:4px; background:#f5d7ca; color:#722c22; border-color:#8f4638; font-size:8px; }
 .empty-archive { padding:28px 10px; text-align:center; color:#66766b; }
 .gallery-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; padding:4px 12px 12px; }
+.save-slot-screen { background:#e9f0df; }
+.save-slot-guide,.save-slot-note { margin:14px 16px; color:#4c5b4e; line-height:1.7; }
+.save-slot-note { padding:10px; border:2px dashed #8d9b82; background:#f8f4dc; font-size:10px; }
+.save-slot-list { display:grid; gap:12px; padding:8px 16px; }
+.save-slot-card { display:grid; grid-template-columns:82px 1fr; gap:3px 10px; min-height:84px; padding:12px; border:4px solid #715629; background:#fff4cf; color:#27352d; text-align:left; box-shadow:inset 0 0 0 3px #d4b96d; }
+.save-slot-card b { grid-row:1 / 4; display:flex; align-items:center; justify-content:center; border-right:3px solid #9c7c3b; color:#79551d; font-size:14px; }
+.save-slot-card strong { font-size:16px; color:#19291e; overflow-wrap:anywhere; }
+.save-slot-card span,.save-slot-card small { font-size:10px; }
+.save-slot-card.empty { border-style:dashed; background:#e7eadf; box-shadow:none; opacity:.8; }
+.save-slot-card.empty strong { color:#718070; }
+.graded-trophy-card h3 { overflow-wrap:anywhere; }
+.race-test-setup-screen { background:#e9f0df; }
+.race-test-config { display:grid;gap:14px;padding:22px 18px 10px; }
+.race-test-config label { display:grid;grid-template-columns:76px 1fr;align-items:center;gap:8px;padding:9px;border:3px solid #806633;background:#fff2c9;color:#3b321f;font-weight:bold; }
+.race-test-config select { width:100%;min-height:40px;padding:6px;border:2px solid #4e654f;background:#fffef2;color:#17271c;font:inherit; }
+.race-test-course-summary { min-height:76px;margin:12px 18px;padding:12px;border:3px solid #405a45;background:#15281d;color:#e8f3d9;line-height:1.8; }
 .gallery-card { padding:8px; border:3px solid #8c7441; background:#fff9df; text-align:center; }
 .gallery-card.locked { filter:grayscale(1); opacity:.55; background:#cbd0c8; }
 .gallery-art { position:relative; height:92px; overflow:hidden; background:linear-gradient(#70c4e2 0 64%,#69a84c 64%); border:3px solid #293a31; image-rendering:pixelated; }

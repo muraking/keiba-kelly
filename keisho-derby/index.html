@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.9.5</title>
-  <link rel="stylesheet" href="style.css?v=20260718-50">
+  <title>ドット競馬 継承ダービー｜Ver. 0.9.8</title>
+  <link rel="stylesheet" href="style.css?v=20260719-53">
 </head>
 <body>
   <main class="phone">
@@ -49,8 +49,28 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">レース画面テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.9.5</b>
+        <b class="build-version">Ver. 0.9.8</b>
       </div>
+    </section>
+
+    <section id="saveSlotScreen" class="game-screen save-slot-screen">
+      <header class="simple-header"><b id="saveSlotTitle">セーブデータ</b><span>3つまで保存</span></header>
+      <p class="save-slot-guide">育てる馬ごとに保存枠を分けられます。</p>
+      <div id="saveSlotList" class="save-slot-list"></div>
+      <p class="save-slot-note">この端末のブラウザ内に保存されます。ブラウザデータを消すとセーブも削除されます。</p>
+      <button data-back="titleScreen">タイトルへもどる</button>
+    </section>
+
+    <section id="raceTestSetupScreen" class="game-screen race-test-setup-screen">
+      <header class="simple-header"><b>レース画面テスト</b><span>条件を選択</span></header>
+      <div class="race-test-config">
+        <label>競馬場<select id="raceTestVenue"></select></label>
+        <label>馬場<select id="raceTestSurface"></select></label>
+        <label>距離<select id="raceTestDistance"></select></label>
+      </div>
+      <div id="raceTestCourseSummary" class="race-test-course-summary"></div>
+      <button class="primary big" id="raceTestStartButton">この条件でレース開始</button>
+      <button data-back="titleScreen">タイトルへもどる</button>
     </section>
 
     <section id="nameScreen" class="game-screen setup-screen">
@@ -363,7 +383,7 @@
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260718-2"></script>
-  <script src="app.js?v=20260719-3"></script>
+  <script src="app.js?v=20260719-6"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260719-4"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
