@@ -38,22 +38,35 @@ const showResultButton = document.querySelector("#showResultButton");
 // JRAの枠色：1白、2黒、3赤、4青、5黄、6緑、7橙、8桃
 const COLORS = ["#f5f3e8", "#151515", "#d93732", "#2879d8", "#efc52d", "#36a852", "#e87822", "#ec73ad"];
 const RIVAL_CATALOG = [
-  {name:"サクラバクシード",surface:"芝",min:1000,max:1400},{name:"ロードカナロック",surface:"芝",min:1000,max:1600},
-  {name:"タイキシャトルズ",surface:"芝",min:1200,max:1800},{name:"グランアレグロ",surface:"芝",min:1200,max:2000},
-  {name:"デュランダッシュ",surface:"芝",min:1200,max:1600},{name:"モーリスライン",surface:"芝",min:1400,max:2000},
-  {name:"ディープインパルス",surface:"芝",min:1800,max:3200},{name:"オルフェーブルー",surface:"芝",min:1800,max:3200},
-  {name:"シンボリルドル",surface:"芝",min:1800,max:3200},{name:"トウカイテイオット",surface:"芝",min:1800,max:2600},
-  {name:"スペシャルウィークス",surface:"芝",min:1800,max:3200},{name:"テイエムオペラド",surface:"芝",min:1800,max:3200},
-  {name:"アーモンドアイス",surface:"芝",min:1600,max:2400},{name:"イクイノスター",surface:"芝",min:1800,max:2600},
-  {name:"キタサンブラックス",surface:"芝",min:1800,max:3200},{name:"ジェンティルドンナー",surface:"芝",min:1600,max:2600},
-  {name:"ウオッカソーダ",surface:"芝",min:1600,max:2400},{name:"ダイワスカーレッツ",surface:"芝",min:1600,max:2500},
-  {name:"メジロマックキング",surface:"芝",min:2200,max:3600},{name:"ライスシャワーズ",surface:"芝",min:2200,max:3600},
-  {name:"ゴールドシップス",surface:"芝",min:2000,max:3600},{name:"ナリタロングロード",surface:"芝",min:2200,max:3600},
-  {name:"クロフネシップ",surface:"ダート",min:1400,max:2100},{name:"ホクトベガス",surface:"ダート",min:1600,max:2400},
-  {name:"コパノリッキーズ",surface:"ダート",min:1400,max:2100},{name:"ヴァーミリオンズ",surface:"ダート",min:1600,max:2400},
-  {name:"エスポワールシティ",surface:"ダート",min:1400,max:2100},{name:"スマートファルコ",surface:"ダート",min:1600,max:2100},
-  {name:"カネヒキリズ",surface:"ダート",min:1600,max:2400},{name:"ルヴァンスブレイブ",surface:"ダート",min:1600,max:2400},
-  {name:"ウシュバテソード",surface:"ダート",min:1800,max:2600},{name:"サクセスブロッケン",surface:"ダート",min:1600,max:2400}
+  {name:"サクラバクシンオー",surface:"芝",min:1000,max:1400,style:"先行",trait:"speed"},{name:"ロードカナロア",surface:"芝",min:1200,max:1600,style:"先行",trait:"steady"},
+  {name:"カルストンライトオ",surface:"芝",min:1000,max:1200,style:"逃げ",trait:"straight"},{name:"デュランダル",surface:"芝",min:1200,max:1600,style:"追込",trait:"kick"},
+  {name:"ビリーヴ",surface:"芝",min:1000,max:1400,style:"先行",trait:"steady"},{name:"ニシノフラワー",surface:"芝",min:1200,max:1600,style:"先行",trait:"early"},
+  {name:"タイキシャトル",surface:"芝",min:1200,max:1600,style:"先行",trait:"steady"},{name:"ニホンピロウイナー",surface:"芝",min:1400,max:1600,style:"先行",trait:"mile"},
+  {name:"ノースフライト",surface:"芝",min:1400,max:1800,style:"差し",trait:"kick"},{name:"ダイワメジャー",surface:"芝",min:1600,max:2000,style:"先行",trait:"power"},
+  {name:"モーリス",surface:"芝",min:1600,max:2000,style:"先行",trait:"late"},{name:"グランアレグリア",surface:"芝",min:1200,max:2000,style:"差し",trait:"kick"},
+  {name:"ウオッカ",surface:"芝",min:1600,max:2400,style:"差し",trait:"tokyo"},{name:"シンボリルドルフ",surface:"芝",min:2000,max:3000,style:"先行",trait:"steady"},
+  {name:"トウカイテイオー",surface:"芝",min:2000,max:2500,style:"先行",trait:"fragile"},{name:"テイエムオペラオー",surface:"芝",min:2000,max:3200,style:"先行",trait:"guts"},
+  {name:"サイレンススズカ",surface:"芝",min:1800,max:2200,style:"大逃げ",trait:"speed"},{name:"エアグルーヴ",surface:"芝",min:1800,max:2400,style:"先行",trait:"steady"},
+  {name:"ジェンティルドンナ",surface:"芝",min:2000,max:2400,style:"先行",trait:"power"},{name:"ブエナビスタ",surface:"芝",min:1600,max:2400,style:"差し",trait:"steady"},
+  {name:"ディープインパクト",surface:"芝",min:2000,max:3200,style:"追込",trait:"kick"},{name:"ナリタブライアン",surface:"芝",min:2000,max:3000,style:"先行",trait:"power"},
+  {name:"オルフェーヴル",surface:"芝",min:2000,max:3200,style:"差し",trait:"wild"},{name:"スペシャルウィーク",surface:"芝",min:2000,max:3200,style:"差し",trait:"steady"},
+  {name:"メジロマックイーン",surface:"芝",min:2400,max:3200,style:"先行",trait:"stamina"},{name:"ライスシャワー",surface:"芝",min:2400,max:3200,style:"差し",trait:"stamina"},
+  {name:"ゴールドシップ",surface:"芝",min:2000,max:3200,style:"まくり",trait:"wild"},{name:"キタサンブラック",surface:"芝",min:2000,max:3200,style:"逃げ",trait:"stamina"},
+  {name:"オグリキャップ",surface:"芝",min:1600,max:2500,style:"先行",trait:"guts"},{name:"ハイセイコー",surface:"芝",min:1600,max:2400,style:"先行",trait:"power"},
+  {name:"コスモバルク",surface:"芝",min:1800,max:2400,style:"先行",trait:"wild"},
+  {name:"サウスヴィグラス",surface:"ダート",min:1000,max:1400,style:"先行",trait:"speed"},{name:"ブロードアピール",surface:"ダート",min:1200,max:1400,style:"追込",trait:"kick"},
+  {name:"メイショウボーラー",surface:"ダート",min:1200,max:1600,style:"逃げ",trait:"speed"},{name:"ブルーコンコルド",surface:"ダート",min:1400,max:1600,style:"差し",trait:"local"},
+  {name:"ラブミーチャン",surface:"ダート",min:800,max:1400,style:"逃げ",trait:"speed"},{name:"クロフネ",surface:"ダート",min:1600,max:2100,style:"先行",trait:"power"},
+  {name:"アドマイヤドン",surface:"ダート",min:1600,max:2000,style:"先行",trait:"steady"},{name:"カネヒキリ",surface:"ダート",min:1600,max:2100,style:"差し",trait:"guts"},
+  {name:"ゴールドアリュール",surface:"ダート",min:1600,max:2000,style:"先行",trait:"steady"},{name:"エスポワールシチー",surface:"ダート",min:1600,max:1800,style:"逃げ",trait:"local"},
+  {name:"トランセンド",surface:"ダート",min:1600,max:1800,style:"逃げ",trait:"pace"},{name:"メイセイオペラ",surface:"ダート",min:1600,max:2000,style:"先行",trait:"local"},
+  {name:"ホクトベガ",surface:"ダート",min:1800,max:2400,style:"先行",trait:"power"},{name:"アブクマポーロ",surface:"ダート",min:1800,max:2400,style:"先行",trait:"local"},
+  {name:"スマートファルコン",surface:"ダート",min:1800,max:2100,style:"逃げ",trait:"speed"},{name:"ヴァーミリアン",surface:"ダート",min:1800,max:2500,style:"差し",trait:"steady"},
+  {name:"コパノリッキー",surface:"ダート",min:1600,max:2000,style:"逃げ",trait:"wild"},{name:"ホッコータルマエ",surface:"ダート",min:1800,max:2100,style:"先行",trait:"steady"},
+  {name:"フリオーソ",surface:"ダート",min:1600,max:2400,style:"先行",trait:"local"},{name:"ワンダーアキュート",surface:"ダート",min:1800,max:2100,style:"差し",trait:"late"},
+  {name:"アジュディミツオー",surface:"ダート",min:1600,max:2400,style:"先行",trait:"local"},{name:"トーシンブリザード",surface:"ダート",min:1400,max:2100,style:"先行",trait:"local"},
+  {name:"ロジータ",surface:"ダート",min:1600,max:2400,style:"先行",trait:"power"},{name:"フジノウェーブ",surface:"ダート",min:1200,max:1600,style:"差し",trait:"local"},
+  {name:"ボンネビルレコード",surface:"ダート",min:1600,max:2400,style:"差し",trait:"late"},{name:"トウケイニセイ",surface:"ダート",min:1600,max:2200,style:"先行",trait:"steady"}
 ];
 const STYLE_PATTERNS = [
   ["逃げ", "先行", "差し", "先行", "差し", "追込", "差し", "追込"],
@@ -93,6 +106,7 @@ let currentRaceVenue = "東京";
 let currentCourseSpec = {route:"",lap:2083.1,straight:525.9,elevation:2.7};
 let opponentAbilities = [];
 let opponentNames = [];
+let opponentRivals = [];
 let fieldAverageAbility = 920;
 let raceSeed = 1;
 let randomState = 1;
@@ -250,19 +264,27 @@ function makeHorse(i, styles) {
   const isPlayer = i === playerNumber-1;
   const opponentIndex=i-(i>playerNumber-1?1:0);
   const opponentAbility = opponentAbilities[opponentIndex] ?? playerSetup.ability;
+  const rival=opponentRivals[opponentIndex]||null;
+  const listedStyle=rival?.style||styles[i];
+  const resolvedStyle=listedStyle==="大逃げ"?"逃げ":listedStyle==="まくり"?"差し":listedStyle;
+  const effectiveStyle=isPlayer?styles[i]:resolvedStyle;
+  const dashBonus=rival?.trait==="speed"?65:rival?.trait==="power"?25:0;
+  const temperament=rival?.trait==="wild"?78:rival?.trait==="steady"?32:35+Math.round(raceRandom()*45);
   return {
     id: i + 1,
-    name: isPlayer ? playerSetup.horseName : opponentNames[opponentIndex],
+    name: isPlayer ? playerSetup.horseName : rival?.name||opponentNames[opponentIndex],
     color: COLORS[i],
-    style: styles[i],
+    style: effectiveStyle,
+    styleLabel:isPlayer?styles[i]:listedStyle,
+    rivalTrait:rival?.trait||null,
     progress: START_PROGRESS - i * .0009,
     // 基本は内ラチ沿い。逃げ・先行ほど内、差し・追込も道中は馬群内で脚をためる。
-    lane: styles[i] === "逃げ" ? 7.25 : styles[i] === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
-    targetLane: styles[i] === "逃げ" ? 7.25 : styles[i] === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
+    lane: effectiveStyle === "逃げ" ? 7.25 : effectiveStyle === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
+    targetLane: effectiveStyle === "逃げ" ? 7.25 : effectiveStyle === "先行" ? 6.45 - (i % 2) * .35 : 5.75 - (i % 3) * .35,
     stamina: 1,
     ability: isPlayer ? playerSetup.ability : opponentAbility,
     heavyTrack: isPlayer ? playerSetup.heavyTrack : 400 + Math.round(raceRandom()*350),
-    dash: isPlayer ? playerSetup.dash : 460 + ((i * 70) % 200),
+    dash: isPlayer ? playerSetup.dash : 460 + ((i * 70) % 200)+dashBonus,
     gateSkill:isPlayer?playerSetup.gateSkill:380+Math.round(raceRandom()*280),
     // プレイヤーの馬体・調子・疲労は実戦能力へ反映済み。
     // ここでは全馬共通の小さな当日変動だけを加える。
@@ -273,14 +295,14 @@ function makeHorse(i, styles) {
     odds: 0,
     popularity: 0,
     trouble: raceRandom(),
-    temperamentValue:isPlayer?playerSetup.temperamentValue:35+Math.round(raceRandom()*45),
+    temperamentValue:isPlayer?playerSetup.temperamentValue:temperament,
     equippedTack:isPlayer?playerSetup.equippedTack:null,
     temperamentTrouble:null,
     gateChecked:false,
     startReaction:"普通",
     temperamentRoll:raceRandom(),
     flowFit: 1,
-    trackBias:trackBiasFor(i+1,styles[i]),
+    trackBias:trackBiasFor(i+1,effectiveStyle),
     stretchRoute: raceRandom() < .58 ? "outside" : "inside",
     routeChosen: false,
     player: isPlayer,
@@ -310,6 +332,14 @@ function buildOpponentNames(){
   return pool.slice(0,7).map(r=>r.name);
 }
 
+function buildOpponentRivals(){
+  const matching=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-100&&TOTAL<=r.max+100);
+  const fallback=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-300&&TOTAL<=r.max+300);
+  const pool=[...(matching.length>=7?matching:fallback.length>=7?fallback:RIVAL_CATALOG.filter(r=>r.surface===raceSurface))];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(raceRandom()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  return pool.slice(0,7);
+}
+
 function resetRace() {
   clearTimeout(gateStartTimer);
   cancelAnimationFrame(raf);
@@ -317,7 +347,8 @@ function resetRace() {
   simulationAccumulator = 0;
   const styles = STYLE_PATTERNS[raceSeed % STYLE_PATTERNS.length];
   opponentAbilities = buildOpponentAbilities();
-  opponentNames = buildOpponentNames();
+  opponentRivals = buildOpponentRivals();
+  opponentNames = opponentRivals.map(r=>r.name);
   playerNumber=1+Math.floor(raceRandom()*8);
   horses = Array.from({ length: 8 }, (_, i) => makeHorse(i, styles));
   visionRanks=new Map(horses.map((h,i)=>[h.id,i+1]));visionRankStamp=0;
@@ -336,7 +367,7 @@ function resetRace() {
   window.dispatchEvent(new CustomEvent("dotkeiba:preview-ready",{detail:{
     weather:playerSetup.weather,going:playerSetup.going,bias:trackBiasLabel(),
     entries:horses.map(h=>({
-      id:h.id,name:h.name,style:h.style,odds:h.odds,popularity:h.popularity,player:h.player,
+      id:h.id,name:h.name,style:h.styleLabel||h.style,odds:h.odds,popularity:h.popularity,player:h.player,
       condition:h.condition>=1.008?"絶好":h.condition>=1.002?"好調":h.condition>=.994?"普通":"下降",
       comment:h.trackBias>1.01?"枠とコース相性が魅力":h.ability>=fieldAverageAbility+25?"地力上位、勝ち負け必至":h.style==="逃げ"&&racePace.escapeCount===1?"単騎なら粘り込み十分":h.style==="追込"&&racePace.escapeCount>=3?"流れ向けば末脚炸裂":"展開ひとつで上位争い"
     }))
@@ -572,6 +603,13 @@ function update(dt, clockDt) {
       if (racePace.escapeCount >= 3 && normalized > .72) styleFactor *= 1.075;
       if (racePace.escapeCount === 1 && normalized > .72) styleFactor *= .94;
     }
+    // 名馬ごとの走り方。大逃げは前半を引き離し、まくりは向正面から進出する。
+    if(h.styleLabel==="大逃げ")styleFactor*=normalized<.58?1.032:normalized>.78?.955:1;
+    if(h.styleLabel==="まくり")styleFactor*=normalized<.42?.975:normalized<.78?1.052:1.015;
+    if(h.rivalTrait==="kick"&&normalized>.76)styleFactor*=1.018;
+    if(h.rivalTrait==="stamina"&&TOTAL>=2400&&normalized>.62)styleFactor*=1.014;
+    if(h.rivalTrait==="steady")styleFactor*=.997+h.stamina*.006;
+    if(h.rivalTrait==="guts"&&normalized>.88)styleFactor*=1.014;
 
     // 1000mの実測時計を後半の消耗へ反映する。
     // 57秒台のような暴走ペースでは、逃げ・先行馬は直線で強く失速する。
@@ -639,8 +677,15 @@ function update(dt, clockDt) {
     // 数ポイント程度の差なら脚質とペース次第で逆転できる強さにする。
     const flowStage = Math.max(0, Math.min(1, (normalized - .38) / .42));
     const flowFactor = 1 + (h.flowFit - 1) * flowStage;
+    const localVenues=["門別","盛岡","浦和","船橋","大井","川崎","金沢","名古屋","園田","高知","佐賀"];
+    const traitFactor=
+      h.rivalTrait==="tokyo"&&currentRaceVenue==="東京"?1.015:
+      h.rivalTrait==="straight"&&currentRaceVenue==="新潟"&&TOTAL===1000?1.022:
+      h.rivalTrait==="local"&&localVenues.includes(currentRaceVenue)?1.014:
+      h.rivalTrait==="power"&&(gradient.type==="up"||raceSurface==="ダート")?1.009:
+      h.rivalTrait==="pace"&&["ハイペース","ややハイ"].includes(racePace.name)?1.012:1;
     let velocity = BASE_PROGRESS_PER_MS * paceControl * abilityFactor * eliteFactor * goingFactor * h.condition * h.trackBias *
-      styleFactor * dashFactor * startFactor * temperamentFactor * tackFactor * curvePenalty * slopePenalty * kick * noise * troubleFactor * flowFactor;
+      styleFactor * dashFactor * startFactor * temperamentFactor * tackFactor * curvePenalty * slopePenalty * kick * noise * troubleFactor * flowFactor * traitFactor;
 
     // 3～4コーナーまでは全馬が内寄り。差し・追込は勝負所で外へ出すか、
     // 内を突いて直線勝負を選ぶ。逃げ馬は最内を維持する。
