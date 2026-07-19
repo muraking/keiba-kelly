@@ -68,6 +68,14 @@ const RIVAL_CATALOG = [
   {name:"ロジータ",surface:"ダート",min:1600,max:2400,style:"先行",trait:"power"},{name:"フジノウェーブ",surface:"ダート",min:1200,max:1600,style:"差し",trait:"local"},
   {name:"ボンネビルレコード",surface:"ダート",min:1600,max:2400,style:"差し",trait:"late"},{name:"トウケイニセイ",surface:"ダート",min:1600,max:2200,style:"先行",trait:"steady"}
 ];
+const FICTIONAL_PREFIXES=["ドット","ピクセル","レトロ","メモリー","サンライズ","ムーン","スター","グランド","ブルー","レッド","シルバー","ゴールド","チェリー","ミント","コスモ","ライト","ノーブル","ブレイブ","ハッピー","ミラクル"];
+const FICTIONAL_SUFFIXES=["ロード","ベル","ランナー","アロー","ギア","ボルト","ミスト","リボン","ハート","エース","キング","クイーン","ソング","フラッシュ","ステップ","リーフ","ウイング","バード","ストーム","ウェーブ"];
+const FICTIONAL_RIVALS=Array.from({length:160},(_,i)=>{
+  const surface=i%3===0?"ダート":"芝",band=i%4;
+  const ranges=[[1000,1400],[1400,1800],[1800,2200],[2200,3200]][band];
+  return{name:`${FICTIONAL_PREFIXES[i%FICTIONAL_PREFIXES.length]}${FICTIONAL_SUFFIXES[(i*7+Math.floor(i/20))%FICTIONAL_SUFFIXES.length]}`,
+    surface,min:ranges[0],max:ranges[1],style:["逃げ","先行","差し","追込"][i%4],trait:i%11===0?"steady":i%13===0?"power":null,fictional:true};
+});
 const STYLE_PATTERNS = [
   ["逃げ", "先行", "差し", "先行", "差し", "追込", "差し", "追込"],
   ["逃げ", "逃げ", "先行", "先行", "差し", "差し", "追込", "追込"],
@@ -120,6 +128,7 @@ let layoutV2 = false;
 let playerNumber = 1;
 let visionRanks = new Map();
 let visionRankStamp = 0;
+const COURSE_PATH_CACHE=new WeakMap();
 // 「通常」を従来シミュレーションの4倍速として扱う。
 // 画面表示の2倍・4倍は通常速度を基準に、それぞれ内部8倍・16倍になる。
 const BASE_PLAYBACK_RATE = 4;
@@ -284,8 +293,9 @@ function trackBiasLabel(){
 function makeHorse(i, styles) {
   const isPlayer = i === playerNumber-1;
   const opponentIndex=i-(i>playerNumber-1?1:0);
-  const opponentAbility = opponentAbilities[opponentIndex] ?? playerSetup.ability;
+  const baseOpponentAbility = opponentAbilities[opponentIndex] ?? playerSetup.ability;
   const rival=opponentRivals[opponentIndex]||null;
+  const opponentAbility=baseOpponentAbility+(rival?.legend?(playerSetup.raceClass==="G1"?22:14):0);
   const listedStyle=rival?.style||styles[i];
   const resolvedStyle=listedStyle==="大逃げ"?"逃げ":listedStyle==="まくり"?"差し":listedStyle;
   const effectiveStyle=isPlayer?styles[i]:resolvedStyle;
@@ -354,11 +364,12 @@ function buildOpponentNames(){
 }
 
 function buildOpponentRivals(){
-  const matching=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-100&&TOTAL<=r.max+100);
-  const fallback=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-300&&TOTAL<=r.max+300);
-  const pool=[...(matching.length>=7?matching:fallback.length>=7?fallback:RIVAL_CATALOG.filter(r=>r.surface===raceSurface))];
-  for(let i=pool.length-1;i>0;i--){const j=Math.floor(raceRandom()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-  return pool.slice(0,7);
+  const shuffle=pool=>{for(let i=pool.length-1;i>0;i--){const j=Math.floor(raceRandom()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}return pool};
+  const graded=["G1","G2","G3"].includes(playerSetup.raceClass);
+  const legendCount=!graded?0:playerSetup.raceClass==="G1"?2:playerSetup.raceClass==="G2"?(raceRandom()<.5?1:2):1;
+  const legendPool=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-150&&TOTAL<=r.max+150).map(r=>({...r,legend:true}));
+  const fictionPool=FICTIONAL_RIVALS.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-200&&TOTAL<=r.max+200);
+  return [...shuffle(legendPool).slice(0,legendCount),...shuffle([...fictionPool]).slice(0,7-legendCount)];
 }
 
 function resetRace() {
@@ -923,7 +934,25 @@ function coursePoint(progress, lane = 3) {
   };
 }
 
-function officialCoursePoint(path,p,lane){
+function smoothedOfficialPath(path){
+  if(COURSE_PATH_CACHE.has(path))return COURSE_PATH_CACHE.get(path);
+  let points=path.map(([x,y],i)=>[180+(x-180)*.92,145+(y-145)*.72]);
+  // ホーム直線はスタンドと平行な一本の直線として固定する。
+  if(points.length>=5){const homeY=points.slice(0,3).reduce((sum,q)=>sum+q[1],0)/3;for(let i=0;i<3;i++)points[i][1]=homeY}
+  // Chaikin補間でコーナーの折れを丸める。場ごとの非対称形状は維持する。
+  for(let pass=0;pass<2;pass++){
+    const next=[];
+    for(let i=0;i<points.length;i++){
+      const a=points[i],b=points[(i+1)%points.length];
+      next.push([a[0]*.75+b[0]*.25,a[1]*.75+b[1]*.25],[a[0]*.25+b[0]*.75,a[1]*.25+b[1]*.75]);
+    }
+    points=next;
+  }
+  COURSE_PATH_CACHE.set(path,points);return points;
+}
+
+function officialCoursePoint(rawPath,p,lane){
+  const path=smoothedOfficialPath(rawPath);
   const closed=path.length>2;
   const segmentCount=closed?path.length:path.length-1;
   const lengths=[];let total=0;
