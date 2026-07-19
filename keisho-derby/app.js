@@ -335,7 +335,7 @@ raceCalendar.filter(r=>r.official).forEach(r=>{
 });
 officialRaceNumbers.forEach(group=>{
   const used=new Set(),key=`${group[0].week}|${group[0].course.split(" ")[0]}`;
-  group.sort((a,b)=>a.officialDate.localeCompare(b.officialDate)).forEach(race=>{
+  group.sort((a,b)=>String(a.officialDate||"").localeCompare(String(b.officialDate||""))).forEach(race=>{
     const candidates=[11,10,9,12];
     const sameSurface=candidates.find(number=>!used.has(number)&&raceCalendar.some(r=>!r.official&&r.program&&`${r.week}|${r.course.split(" ")[0]}`===key&&r.number===number&&r.surface===race.surface));
     race.number=sameSurface??candidates.find(number=>!used.has(number))??11;
