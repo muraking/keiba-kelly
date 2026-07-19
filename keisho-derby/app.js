@@ -1259,7 +1259,7 @@ function playAutoTrainingSequence(steps,modeName,finishText){
         popup.classList.remove("show","auto-sequence");popup.setAttribute("aria-hidden","true");
         trainingAnimationActive=false;
         renderHome(`おまかせ調教を終え、${weekLabel()}から通常調教を選べます。`);
-      },1600);
+      },850);
       return;
     }
     const step=sequence[index];
@@ -1269,8 +1269,8 @@ function playAutoTrainingSequence(steps,modeName,finishText){
     void stage.offsetWidth;
     stage.className=`training-popup-stage ${step.type}`;
     index++;
-    // 走行・坂路・ゲート・森林の1回分の動きを最後まで見せてから切り替える。
-    playAutoTrainingSequence.timer=setTimeout(showNext,1900);
+    // おまかせはテンポを優先し、内容を判別できる約1秒で次へ切り替える。
+    playAutoTrainingSequence.timer=setTimeout(showNext,1000);
   };
   showNext();
 }
