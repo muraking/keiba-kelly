@@ -390,6 +390,8 @@ const CLASS_TIME_ADJUST={
 };
 function raceAgeGroup(){return horseAge()===2?"2歳":"3歳以上"}
 function raceVenue(race){return race.course.split(" ")[0]}
+function isNarGradedRace(race){return String(race?.id||"").startsWith("nar26-")}
+function raceVenueTab(race){return isNarGradedRace(race)?"地方重賞":raceVenue(race)}
 function raceTimingRecord(race){
   const master=window.RACE_TIME_MASTER;
   const venue=raceVenue(race),ageGroup=raceAgeGroup();
@@ -1067,7 +1069,7 @@ function showReservationArrival(race){
 }
 function openReservedRaceWeek(race){
   if(race.overseas){closeReservationArrival();prepareRace(race);return}
-  window.selectedRaceWeek=race.week;window.selectedRaceVenue=raceVenue(race);renderRaces();showScreen("raceSelectScreen");closeReservationArrival();
+  window.selectedRaceWeek=race.week;window.selectedRaceVenue=raceVenueTab(race);renderRaces();showScreen("raceSelectScreen");closeReservationArrival();
 }
 function overseasInviteReason(key){
   return key==="arc"?"宝塚記念を制した走りが欧州関係者の目に留まりました。2400mの世界最高峰、凱旋門賞へ挑戦しませんか？":
@@ -1645,7 +1647,7 @@ function renderRaces(){
   document.querySelector("#raceWeekLabel").textContent=displayLabel;
   document.querySelector("#previousRaceWeek").disabled=displayWeek<=1;
   const periodRaces=raceCalendar.filter(r=>r.week===displayWeek&&r.program&&!r.overseas);
-  const venues=[...new Set(periodRaces.map(raceVenue))];
+  const venues=[...new Set(periodRaces.map(raceVenueTab))];
   if(window.selectedRaceVenue&&!venues.includes(window.selectedRaceVenue))window.selectedRaceVenue="";
   if(!window.selectedRaceVenue)window.selectedRaceVenue=venues[0]||"";
   document.querySelector("#raceVenueTabs").innerHTML=venues.map(v=>`<button data-venue="${v}" class="${window.selectedRaceVenue===v?"selected":""}">${v}</button>`).join("");
@@ -1659,7 +1661,7 @@ function renderRaces(){
     const basic=game.week>=23&&raceAgeTextEligible(r.age||"",targetAge)&&(!raceFemaleOnly(r)||game.candidate?.sex==="牝馬")&&r.condition(game);
     return reservableOnly?r.week>game.week&&basic:(arrived||r.week>game.week)&&basic;
   };
-  const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue)
+  const shown=periodRaces.filter(r=>raceVenueTab(r)===window.selectedRaceVenue)
     .filter(r=>!surfaceFilter||r.surface===surfaceFilter)
     .filter(distanceMatches)
     .filter(r=>!classFilter||r.raceClass===classFilter)
@@ -1688,9 +1690,10 @@ function renderRaces(){
     const reserved=game.reservedRaceId===r.id;
     const wonBefore=game.raceHistory.some(x=>x.raceName===r.name&&x.place===1);
     const gradedWon=["G1","G2","G3"].includes(r.raceClass)&&(wonBefore||(game.gradedTrophies||[]).some(t=>t.raceName===r.name));
-    return `<article class="race-choice ${eligible?"":"locked"} ${reservable?"reservable":""} ${reserved?"reserved":""} ${gradedWon?"won-graded":""}">${gradedWon?'<span class="race-won-trophy" title="勝利済み重賞" aria-label="勝利済み重賞">🏆</span>':""}<b class="race-number">${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
+    const venue=raceVenue(r),narVenue=isNarGradedRace(r)?`<span class="nar-venue-badge">${venue}</span>`:"";
+    return `<article class="race-choice ${eligible?"":"locked"} ${reservable?"reservable":""} ${reserved?"reserved":""} ${gradedWon?"won-graded":""}">${gradedWon?'<span class="race-won-trophy" title="勝利済み重賞" aria-label="勝利済み重賞">🏆</span>':""}<b class="race-number">${narVenue}${r.number||11}R</b><div><small>${officialDate}　${r.course}${reserved?"　★出走予定":""}</small>
     <h3>${r.name}</h3><p>1着賞金 ${r.prize.toLocaleString()}万円　${r.surface} ${developerMode?surfaceAbility:scoutComment(`${r.surface}適性`,surfaceAbility)}</p></div>
-    <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${reason}</button>${reservable||reserved?`<button data-reserve="${r.id}">${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
+    <div class="race-choice-buttons"><button ${eligible?"":"disabled"} data-race="${r.id}">${isNarGradedRace(r)?`${venue}・`:""}${reason}</button>${reservable||reserved?`<button data-reserve="${r.id}">${isNarGradedRace(r)?`${venue}・`:""}${reserved?"予約を解除":"出走予約"}</button>`:""}</div></article>`;
   }).join("")||`<p class="empty-races">この開催場の番組はありません。</p>`;
 }
 function playerAbility(race){
@@ -2128,7 +2131,7 @@ document.querySelector("#tackChoices").onclick=e=>{
 };
 document.querySelector("#goRaceSelectButton").onclick=()=>{
   const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
-  window.selectedRaceWeek=game.week;window.selectedRaceVenue=reserved?raceVenue(reserved):"";renderRaces();showScreen("raceSelectScreen");
+  window.selectedRaceWeek=game.week;window.selectedRaceVenue=reserved?raceVenueTab(reserved):"";renderRaces();showScreen("raceSelectScreen");
 };
 document.querySelector("#reservationArrivalOpen").onclick=()=>{
   const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
