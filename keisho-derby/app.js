@@ -7,7 +7,8 @@ const saveSlotKey=slot=>`${SAVE_KEY_PREFIX}${slot}`;
 window.DotKeibaSaveCompat.copyLegacySave(localStorage,LEGACY_SAVE_KEY,SAVE_KEY_PREFIX,3);
 // 2歳から9歳末までの8年間。旧実装の240週（5年）固定により、
 // 5年目12月以降に番組が消える不具合を防ぐ。
-const CAREER_MAX_WEEKS = 384;
+const YEAR_WEEKS = 52;
+const CAREER_MAX_WEEKS = YEAR_WEEKS * 8;
 const screens = [...document.querySelectorAll(".game-screen")];
 const coats = [["栗毛","#b96e32"],["鹿毛","#74401f"],["黒鹿毛","#3c2a25"],["芦毛","#b9b7ad"]];
 const sires = [
@@ -112,22 +113,23 @@ const raceCalendar = [
   {id:"derby",week:68,name:"日本ダービー GⅠ",raceClass:"G1",course:"東京 芝2400m",surface:"芝",distance:2400,baseTime:143500,prize:30000,difficulty:96,condition:g=>g.priorityRights.includes("日本ダービー")||g.classMoney>=1600},
 ];
 
-// 2026年のJRA開催日割をゲーム内の月4週へ対応させた開催場テーブル。
+// 2026年のJRA開催日割。1要素を実際の1開催週として扱う（全52週）。
 // 新馬は初出走のみ。未出走馬を含む未勝利馬は未勝利戦へ出走できる。
 const JRA_2026_VENUES=[
-  [["中山","京都"],["中山","京都"],["中山","京都"],["東京","京都","小倉"]],
-  [["東京","京都","小倉"],["東京","京都","小倉"],["東京","京都","小倉"],["中山","阪神","小倉"]],
-  [["中山","阪神","小倉"],["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神","中京"]],
-  [["中山","阪神","福島"],["中山","阪神","福島"],["東京","京都","福島"],["東京","京都","新潟"]],
-  [["東京","京都","新潟"],["東京","京都","新潟"],["東京","京都","新潟"],["東京","京都"]],
-  [["東京","阪神"],["東京","阪神","函館"],["東京","阪神","函館"],["福島","小倉","函館"]],
-  [["福島","小倉","函館"],["福島","小倉","函館"],["福島","小倉","札幌"],["新潟","中京","札幌"]],
-  [["新潟","中京","札幌"],["新潟","中京","札幌"],["新潟","中京","札幌"],["新潟","中京","札幌"]],
-  [["中山","阪神","札幌"],["中山","阪神"],["中山","阪神"],["中山","阪神"]],
-  [["東京","京都"],["東京","京都"],["東京","京都","新潟"],["東京","京都","新潟"]],
-  [["東京","京都","福島"],["東京","京都","福島"],["東京","京都","福島"],["東京","京都","福島"]],
-  [["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神","中京"],["中山","阪神"]]
-];
+  "中山・京都","中山・京都","中山・京都","中山・京都・小倉",
+  "東京・京都・小倉","東京・京都・小倉","東京・京都・小倉","東京・阪神・小倉",
+  "中山・阪神・小倉","中山・阪神","中山・阪神・中京","中山・阪神・中京",
+  "中山・阪神・中京","中山・阪神","中山・阪神・福島","中山・阪神・福島",
+  "東京・京都・福島","東京・京都・新潟","東京・京都・新潟","東京・京都・新潟",
+  "東京・京都・新潟","東京・京都","東京・阪神","東京・阪神・函館",
+  "東京・阪神・函館","福島・小倉・函館","福島・小倉・函館","福島・小倉・函館",
+  "福島・小倉・函館","新潟・中京・札幌","新潟・中京・札幌","新潟・中京・札幌",
+  "新潟・中京・札幌","新潟・中京・札幌","新潟・中京・札幌","中山・阪神・札幌",
+  "中山・阪神","中山・阪神","中山・阪神","東京・京都",
+  "東京・京都","東京・京都・新潟","東京・京都・新潟","東京・京都・福島",
+  "東京・京都・福島","東京・京都・福島","東京・京都・福島","東京・京都",
+  "中山・阪神・中京","中山・阪神・中京","中山・阪神","中山・阪神"
+].map(x=>x.split("・"));
 const JRA_COURSE_DISTANCES={
   "札幌":{芝:[1000,1200,1500,1800,2000,2600],ダート:[1000,1700,2400]},
   "函館":{芝:[1000,1200,1700,1800,2000,2600],ダート:[1000,1700,2400]},
@@ -208,27 +210,27 @@ function classMoneyEligible(raceClass,g){
   return false;
 }
 function generatedRaceCondition(raceClass,week,g){
-  const age=2+Math.floor((week-1)/48),yearWeek=(week-1)%48;
-  if(raceClass==="新馬")return age<=3&&!(age===3&&yearWeek>12)&&g.races===0;
-  if(raceClass==="未勝利")return age<=3&&!(age===3&&yearWeek>36)&&g.maiden;
+  const age=2+Math.floor((week-1)/YEAR_WEEKS),yearWeek=(week-1)%YEAR_WEEKS;
+  if(raceClass==="新馬")return age<=3&&!(age===3&&yearWeek>13)&&g.races===0;
+  if(raceClass==="未勝利")return age<=3&&!(age===3&&yearWeek>39)&&g.maiden;
   return classMoneyEligible(raceClass,g);
 }
-function horseAgeAtWeek(week){return Math.min(9,2+Math.floor((week-1)/48))}
+function horseAgeAtWeek(week){return Math.min(9,2+Math.floor((week-1)/YEAR_WEEKS))}
 function programAgeLabel(week){
-  const age=2+Math.floor((week-1)/48),yearWeek=(week-1)%48;
+  const age=2+Math.floor((week-1)/YEAR_WEEKS),yearWeek=(week-1)%YEAR_WEEKS;
   if(age===2)return "2歳";
-  if(age===3&&yearWeek<21)return "3歳";
+  if(age===3&&yearWeek<23)return "3歳";
   if(age===3)return "3歳以上";
-  return yearWeek<21?"4歳以上":"3歳以上";
+  return yearWeek<23?"4歳以上":"3歳以上";
 }
 for(let week=1;week<=CAREER_MAX_WEEKS;week++){
-  const calendarAge=horseAgeAtWeek(week),yearWeek=(week-1)%48,ageLimitedSeason=calendarAge===2||(calendarAge===3&&yearWeek<21),venues=JRA_2026_VENUES[Math.floor(yearWeek/4)][yearWeek%4];
+  const calendarAge=horseAgeAtWeek(week),yearWeek=(week-1)%YEAR_WEEKS,ageLimitedSeason=calendarAge===2||(calendarAge===3&&yearWeek<23),venues=JRA_2026_VENUES[yearWeek];
   venues.forEach(venue=>PROGRAM_RACES.forEach(([number,baseName,baseClass,baseSurface,requestedDistance,prize,difficulty])=>{
     // 条件戦はクラス・開催場・週ごとのプロファイルで馬場と距離を分散する。
     let surface=baseSurface==="mixed"?((week+number)%2===0?"芝":"ダート"):baseSurface;
     let raceClass=baseClass,name=baseName,raceDistanceRequest=requestedDistance;
-    const newRaceClosed=calendarAge>3||(calendarAge===3&&yearWeek>12);
-    const maidenClosed=calendarAge>3||(calendarAge===3&&yearWeek>36);
+    const newRaceClosed=calendarAge>3||(calendarAge===3&&yearWeek>13);
+    const maidenClosed=calendarAge>3||(calendarAge===3&&yearWeek>39);
     if((raceClass==="新馬"&&newRaceClosed)||(raceClass==="未勝利"&&maidenClosed)){
       raceClass=calendarAge>=4&&number>=4?number===6?"3勝":"2勝":"1勝";
       name=`${raceClass}クラス`;
@@ -255,8 +257,9 @@ const OFFICIAL_GRADE_LABEL={G1:"GⅠ",G2:"GⅡ",G3:"GⅢ",Jpn1:"JpnⅠ",Jpn2:"Jp
 const OFFICIAL_PRIZE={G1:12000,G2:6700,G3:4100,Jpn1:8000,Jpn2:4000,Jpn3:2500};
 const OFFICIAL_DIFFICULTY={G1:96,G2:91,G3:86,Jpn1:95,Jpn2:90,Jpn3:85};
 function officialWeek(date,year){
-  const [,month,day]=date.split("-").map(Number),days=new Date(2026,month,0).getDate();
-  return (year-1)*48+(month-1)*4+Math.min(4,Math.max(1,Math.ceil(day/days*4)));
+  const [dateYear,month,day]=date.split("-").map(Number);
+  const firstSunday=Date.UTC(dateYear,0,4),raceDate=Date.UTC(dateYear,month-1,day);
+  return (year-1)*YEAR_WEEKS+Math.min(YEAR_WEEKS,Math.max(1,Math.floor((raceDate-firstSunday)/604800000)+1));
 }
 function raceAgeTextEligible(text,age){
   if(text.includes("2歳")&&age!==2)return false;
@@ -278,7 +281,7 @@ function narAgeText(name){
   return female?"3歳以上牝":"3歳以上";
 }
 function addOfficialRaces(source,prefix){
-  for(let year=1;year<=CAREER_MAX_WEEKS/48;year++)source.forEach((raw,index)=>{
+  for(let year=1;year<=CAREER_MAX_WEEKS/YEAR_WEEKS;year++)source.forEach((raw,index)=>{
     const official={...raw,age:raw.age||narAgeText(raw.name)};
     const raceWeek=officialWeek(raw.date,year);
     const normalizedClass=raw.grade.endsWith("1")?"G1":raw.grade.endsWith("2")?"G2":"G3";
@@ -297,18 +300,18 @@ for(let i=raceCalendar.length-1;i>=0;i--)if(!raceCalendar[i].program&&["G1","G2"
 addOfficialRaces(window.OFFICIAL_JRA_GRADED_2026||[],"jra26");
 addOfficialRaces(window.OFFICIAL_NAR_GRADED_2026||[],"nar26");
 const OVERSEAS_G1=[
-  {key:"dubai-world-cup",offset:12,name:"ドバイワールドカップ GⅠ",venue:"メイダン",surface:"ダート",distance:2000,baseTime:121000,prize:90000},
+  {key:"dubai-world-cup",offset:13,name:"ドバイワールドカップ GⅠ",venue:"メイダン",surface:"ダート",distance:2000,baseTime:121000,prize:90000},
   {key:"king-george",offset:30,name:"キングジョージⅥ世＆クイーンエリザベスS GⅠ",venue:"アスコット",surface:"芝",distance:2400,baseTime:149000,prize:18000},
-  {key:"arc",offset:37,name:"凱旋門賞 GⅠ",venue:"パリロンシャン",surface:"芝",distance:2400,baseTime:148000,prize:40000},
-  {key:"bc-classic",offset:41,name:"ブリーダーズカップクラシック GⅠ",venue:"ブリーダーズカップ",surface:"ダート",distance:2000,baseTime:121000,prize:50000},
-  {key:"hong-kong-sprint",offset:46,name:"香港スプリント GⅠ",venue:"シャティン",surface:"芝",distance:1200,baseTime:69000,prize:24000},
-  {key:"hong-kong-mile",offset:46,name:"香港マイル GⅠ",venue:"シャティン",surface:"芝",distance:1600,baseTime:94300,prize:28000},
-  {key:"hong-kong-cup",offset:46,name:"香港カップ GⅠ",venue:"シャティン",surface:"芝",distance:2000,baseTime:121000,prize:36000},
-  {key:"hong-kong-vase",offset:46,name:"香港ヴァーズ GⅠ",venue:"シャティン",surface:"芝",distance:2400,baseTime:148500,prize:26000}
+  {key:"arc",offset:40,name:"凱旋門賞 GⅠ",venue:"パリロンシャン",surface:"芝",distance:2400,baseTime:148000,prize:40000},
+  {key:"bc-classic",offset:44,name:"ブリーダーズカップクラシック GⅠ",venue:"ブリーダーズカップ",surface:"ダート",distance:2000,baseTime:121000,prize:50000},
+  {key:"hong-kong-sprint",offset:49,name:"香港スプリント GⅠ",venue:"シャティン",surface:"芝",distance:1200,baseTime:69000,prize:24000},
+  {key:"hong-kong-mile",offset:49,name:"香港マイル GⅠ",venue:"シャティン",surface:"芝",distance:1600,baseTime:94300,prize:28000},
+  {key:"hong-kong-cup",offset:49,name:"香港カップ GⅠ",venue:"シャティン",surface:"芝",distance:2000,baseTime:121000,prize:36000},
+  {key:"hong-kong-vase",offset:49,name:"香港ヴァーズ GⅠ",venue:"シャティン",surface:"芝",distance:2400,baseTime:148500,prize:26000}
 ];
-for(let year=1;year<=CAREER_MAX_WEEKS/48;year++)OVERSEAS_G1.forEach((race,index)=>raceCalendar.push({
+for(let year=1;year<=CAREER_MAX_WEEKS/YEAR_WEEKS;year++)OVERSEAS_G1.forEach((race,index)=>raceCalendar.push({
   id:`overseas-${year}-${race.key}`,program:true,official:true,overseas:true,number:8+index%5,
-  week:(year-1)*48+race.offset,name:race.name,raceClass:"G1",course:`${race.venue} ${race.surface}${race.distance}m`,
+  week:(year-1)*YEAR_WEEKS+race.offset,name:race.name,raceClass:"G1",course:`${race.venue} ${race.surface}${race.distance}m`,
   surface:race.surface,distance:race.distance,baseTime:race.baseTime,prize:race.prize,difficulty:97,age:"3歳以上",
   condition:g=>!g.maiden&&g.classMoney>=2500&&(g.gradedTrophies||[]).some(t=>t.grade==="G1")
 }));
@@ -326,7 +329,7 @@ officialJraKeys.forEach(key=>{
       baseTime:Math.round((r.surface==="芝"?60000:63000)*distance/1000)});
   });
 });
-// 月4週へ圧縮して同週・同場に重賞が複数ある場合は9〜11Rへ割り振り、仮番組と差し替える。
+// 同じ開催週・同場に重賞が複数ある場合は9〜12Rへ割り振り、仮番組と差し替える。
 const officialRaceNumbers=new Map();
 raceCalendar.filter(r=>r.official).forEach(r=>{
   const key=`${r.week}|${r.course.split(" ")[0]}`,group=officialRaceNumbers.get(key)||[];
@@ -433,8 +436,8 @@ function hasAnySave(){return [1,2,3].some(slot=>localStorage.getItem(saveSlotKey
 function saveSlotSummary(slot){
   try{
     const saved=JSON.parse(localStorage.getItem(saveSlotKey(slot)));if(!saved?.horseName)return null;
-    const week=Math.max(1,saved.week||1),year=Math.floor((week-1)/48)+1,month=Math.floor(((week-1)%48)/4)+1,weekOfMonth=(week-1)%4+1;
-    return {horseName:saved.horseName,generation:saved.generation||1,date:`${year}年目 ${month}月${weekOfMonth}週`,record:`${saved.races||0}戦${saved.wins||0}勝`,prize:saved.prize||0};
+    const week=Math.max(1,saved.week||1),p=weekCalendarParts(week);
+    return {horseName:saved.horseName,generation:saved.generation||1,date:`${p.year}年目 ${p.month}月${p.weekOfMonth}週`,record:`${saved.races||0}戦${saved.wins||0}勝`,prize:saved.prize||0};
   }catch{return null}
 }
 function renderSaveSlots(mode){
@@ -579,11 +582,16 @@ function beginNextGeneration(partner){
   document.querySelector("#birthMessage").textContent=`${child.coat}の${child.sex}が元気に産まれました。`;
   showScreen("birthScreen");
 }
-function gameYear(){return Math.floor((game.week-1)/48)+1}
-function weekLabel(){const yearWeek=(game.week-1)%48,month=Math.floor(yearWeek/4)+1,w=yearWeek%4+1;return `${gameYear()}年目 ${month}月${w}週`;}
-function horseAge(){return Math.min(9,2+Math.floor((game.week-1)/48));}
+function weekCalendarParts(absoluteWeek){
+  const year=Math.floor((absoluteWeek-1)/YEAR_WEEKS)+1,yearWeek=(absoluteWeek-1)%YEAR_WEEKS;
+  const date=new Date(Date.UTC(2026,0,4+yearWeek*7));
+  return{year,yearWeek,month:date.getUTCMonth()+1,weekOfMonth:Math.ceil(date.getUTCDate()/7)};
+}
+function gameYear(){return weekCalendarParts(game.week).year}
+function weekLabel(){const p=weekCalendarParts(game.week);return `${p.year}年目 ${p.month}月${p.weekOfMonth}週`;}
+function horseAge(){return Math.min(9,2+Math.floor((game.week-1)/YEAR_WEEKS));}
 function maturityRate(){
-  const age=horseAge()+((game.week-1)%48)/48;
+  const age=horseAge()+((game.week-1)%YEAR_WEEKS)/YEAR_WEEKS;
   const curves={
     "早熟":[[2,.82],[3,.97],[4,1],[5,.98],[6,.94],[7,.88]],
     "普通":[[2,.70],[3,.86],[4,.97],[5,1],[6,.98],[7,.93]],
@@ -603,7 +611,7 @@ function growthPeakAge(){
   return game.growthType==="早熟"?4:game.growthType==="晩成"?6:5;
 }
 function growthTrainingMultiplier(){
-  const age=horseAge()+((game.week-1)%48)/48;
+  const age=horseAge()+((game.week-1)%YEAR_WEEKS)/YEAR_WEEKS;
   if(game.growthType==="早熟")return age<3?1.18:age<4?1.08:age<5?.88:.55;
   if(game.growthType==="晩成")return age<3?.55:age<4?.72:age<5?.92:age<7?1.10:.82;
   return age<3?.78:age<4?.95:age<6?1.05:.72;
@@ -613,7 +621,7 @@ function effectivePotentialCap(stat){
   return Math.max(300,base-(game.ageDecline||0));
 }
 function applyWeeklyPeakDecline(){
-  const age=horseAge()+((game.week-1)%48)/48,yearsPast=age-growthPeakAge();
+  const age=horseAge()+((game.week-1)%YEAR_WEEKS)/YEAR_WEEKS,yearsPast=age-growthPeakAge();
   if(yearsPast<=0)return;
   const weekly=(game.growthType==="早熟"?.22:game.growthType==="晩成"?.12:.17)*(1+Math.min(2,yearsPast)*.35);
   game.ageDecline=Math.min(180,(game.ageDecline||0)+weekly);
@@ -658,7 +666,7 @@ function bestWeight(){
   const age=horseAge();
   // 成長分は2～4歳を中心に増加し、5歳末で頭打ち。
   const completedYears=Math.max(0,Math.min(4,age-2));
-  const currentYearProgress=age<6?((game.week-1)%48)/48:0;
+  const currentYearProgress=age<6?((game.week-1)%YEAR_WEEKS)/YEAR_WEEKS:0;
   const yearlyGrowth=[10,7,4,2];
   return Math.round(game.baseBestWeight+
     yearlyGrowth.slice(0,completedYears).reduce((a,b)=>a+b,0)+
@@ -722,8 +730,8 @@ function advanceConditionCycle(actionBonus=0){
 }
 function classLabel(){
   if(game.maiden)return "未勝利";
-  const age=horseAge(),yearWeek=(game.week-1)%48;
-  if((age===2||(age===3&&yearWeek<21))&&game.classMoney>500)return "オープン";
+  const age=horseAge(),yearWeek=(game.week-1)%YEAR_WEEKS;
+  if((age===2||(age===3&&yearWeek<23))&&game.classMoney>500)return "オープン";
   return game.classMoney<=500?"1勝クラス":game.classMoney<=1000?"2勝クラス":game.classMoney<=1600?"3勝クラス":"オープン";
 }
 function displayClassLabel(){return game.races===0?"新馬":classLabel()}
@@ -1573,8 +1581,8 @@ function renderRaces(){
   if(!Number.isFinite(window.selectedRaceWeek))window.selectedRaceWeek=game.week;
   const displayWeek=Math.max(1,Math.min(CAREER_MAX_WEEKS,window.selectedRaceWeek));
   window.selectedRaceWeek=displayWeek;
-  const year=Math.floor((displayWeek-1)/48)+1,yearWeek=(displayWeek-1)%48;
-  const displayLabel=`${year}年目 ${Math.floor(yearWeek/4)+1}月${yearWeek%4+1}週`;
+  const displayParts=weekCalendarParts(displayWeek),year=displayParts.year,yearWeek=displayParts.yearWeek;
+  const displayLabel=`${year}年目 ${displayParts.month}月${displayParts.weekOfMonth}週`;
   document.querySelector("#selectTurn").textContent=displayWeek===game.week?"今週":displayWeek>game.week?`今から${displayWeek-game.week}週後`:"開催終了";
   document.querySelector("#raceWeekLabel").textContent=displayLabel;
   document.querySelector("#previousRaceWeek").disabled=displayWeek<=1;
@@ -1585,13 +1593,13 @@ function renderRaces(){
   document.querySelector("#raceVenueTabs").innerHTML=venues.map(v=>`<button data-venue="${v}" class="${window.selectedRaceVenue===v?"selected":""}">${v}</button>`).join("");
   const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue).sort((a,b)=>(a.number||11)-(b.number||11));
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
-    const arrived=r.week===game.week,debutSeasonOpen=game.week>=21;
+    const arrived=r.week===game.week,debutSeasonOpen=game.week>=23;
     const targetAge=horseAgeAtWeek(r.week),ageEligible=raceAgeTextEligible(r.age||"",targetAge),sexEligible=!String(r.age||"").includes("牝")||game.candidate?.sex==="牝馬";
     const conditionEligible=r.condition(game);
     const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&conditionEligible,surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
     const reservable=!arrived&&r.week>game.week&&ageEligible&&sexEligible&&conditionEligible;
-    const raceYear=Math.floor((r.week-1)/48)+1,raceYearWeek=(r.week-1)%48;
-    const officialDate=r.officialDate?`${Number(r.officialDate.slice(5,7))}月${Number(r.officialDate.slice(8,10))}日（2026公式）`:`${raceYear}年目 ${Math.floor(raceYearWeek/4)+1}月${raceYearWeek%4+1}週`;
+    const raceParts=weekCalendarParts(r.week);
+    const officialDate=r.officialDate?`${Number(r.officialDate.slice(5,7))}月${Number(r.officialDate.slice(8,10))}日（2026公式）`:`${raceParts.year}年目 ${raceParts.month}月${raceParts.weekOfMonth}週`;
     let reason="出走条件外";
     if(eligible)reason="出走する";
     else if(!arrived)reason="未来の予定";
@@ -1650,7 +1658,7 @@ const MONTHLY_RAIN_CHANCE={
   west:[.19,.21,.25,.29,.32,.39,.36,.34,.38,.27,.20,.18]
 };
 function raceCalendarMonth(race){
-  return Math.floor(((race.week-1)%48)/4)+1;
+  return weekCalendarParts(race.week).month;
 }
 function raceDayWeather(race){
   const venue=raceVenue(race),month=raceCalendarMonth(race);

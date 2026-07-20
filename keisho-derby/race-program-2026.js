@@ -1171,6 +1171,19 @@ window.OFFICIAL_JRA_GRADED_2026=[
     "distance": 2500
   }
 ];
+// ゲーム側の検証・表示で使う共通項目を補完する。配列順は既存ID互換のため変更しない。
+window.OFFICIAL_JRA_GRADED_2026=window.OFFICIAL_JRA_GRADED_2026.map((race,index)=>{
+  const day=new Date(`${race.date}T00:00:00+09:00`).getDay();
+  return{
+    ...race,
+    id:`jra-2026-${String(index+1).padStart(3,"0")}`,
+    dayType:day===6?"sat":day===0?"sun":"holiday",
+    sexCondition:String(race.age).includes("牝")?"牝馬限定":String(race.age).includes("牡・牝")?"牡牝":"混合",
+    weightCondition:/金杯|ダイヤモンド|愛知杯|中山牝馬|マーチ|ダービー卿|目黒|七夕|小倉記念|中京記念|新潟記念|京成杯オータム|シリウス|アルゼンチン|福島記念|中日新聞|ターコイズ/.test(race.name)?"ハンデ":/皐月賞|桜花賞|優駿牝馬|東京優駿|NHKマイル|秋華賞|菊花賞|ホープフル|朝日杯|阪神ジュベナイル/.test(race.name)?"馬齢":race.grade==="G1"?"定量":"別定",
+    raceNumber:11
+  };
+});
+
 window.OFFICIAL_NAR_GRADED_2026=[
   {
     "date": "2026-01-21",

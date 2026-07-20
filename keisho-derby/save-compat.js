@@ -4,7 +4,7 @@
   root.DotKeibaSaveCompat=api;
 })(typeof globalThis!=="undefined"?globalThis:this,function(){
   "use strict";
-  const SCHEMA_VERSION=2;
+  const SCHEMA_VERSION=3;
   const ARRAY_FIELDS=[
     "equipment","priorityRights","raceHistory","favoriteRaces","galleryUnlocks","gradedTrophies",
     "tackUnlocked","declinedOverseasInvites","lineage","retirementRecords"
@@ -39,6 +39,25 @@
     else data.currentRaceWeather=null;
     if(saved.injury&&typeof saved.injury==="object"&&!Array.isArray(saved.injury))data.injury=clone(saved.injury);
     else data.injury=null;
+    // v2までは1年48週（月4週固定）。年数と季節を保ったまま52週制へ移す。
+    if(fromVersion<3){
+      const to52=week=>{
+        if(!Number.isFinite(week)||week<1)return week;
+        const oldYear=Math.floor((week-1)/48),oldWeek=(week-1)%48;
+        return oldYear*52+Math.round(oldWeek*51/47)+1;
+      };
+      const programIdTo52=id=>typeof id==="string"?id.replace(/^(p-|supplement-)(\d+)-/,(_,prefix,week)=>`${prefix}${to52(Number(week))}-`):id;
+      data.week=to52(data.week)||1;
+      data.lastRaceWeek=to52(data.lastRaceWeek);
+      data.reservedRaceId=programIdTo52(data.reservedRaceId);
+      data.reservationNotifiedId=programIdTo52(data.reservationNotifiedId);
+      if(data.selectedRace&&Number.isFinite(data.selectedRace.week)){
+        const oldWeek=data.selectedRace.week,newWeek=to52(oldWeek);
+        data.selectedRace.week=newWeek;
+        if(typeof data.selectedRace.id==="string"&&data.selectedRace.id.startsWith(`p-${oldWeek}-`))data.selectedRace.id=data.selectedRace.id.replace(`p-${oldWeek}-`,`p-${newWeek}-`);
+      }
+      data.raceHistory=data.raceHistory.map(item=>Number.isFinite(item?.week)?{...item,week:to52(item.week)}:item);
+    }
     return {data,fromVersion,changed:JSON.stringify(data)!==JSON.stringify(saved)};
   }
 

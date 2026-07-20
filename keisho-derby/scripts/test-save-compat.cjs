@@ -16,7 +16,7 @@ const migrated=migrateSaveData(JSON.parse(JSON.stringify(legacy)),defaults);
 assert.equal(migrated.fromVersion,0);
 assert.equal(migrated.data.saveVersion,SCHEMA_VERSION);
 assert.equal(migrated.data.horseName,"レトロスター");
-assert.equal(migrated.data.week,73);
+assert.equal(migrated.data.week,79);
 assert.equal(migrated.data.speed,612);
 assert.deepEqual(migrated.data.raceHistory,[]);
 assert.deepEqual(migrated.data.equipmentDurability,{});
@@ -35,6 +35,16 @@ assert.equal(repaired.candidate,null);
 const current={...defaults,horseName:"ドットキング",week:145,equipment:["pool"],equipmentDurability:{pool:64},raceHistory:[{raceName:"日本ダービー",place:1}]};
 const roundTrip=migrateSaveData(JSON.parse(JSON.stringify(current)),defaults).data;
 assert.deepEqual(roundTrip,current);
+
+// v2の予約週と通常番組IDも、48週制から52週制へ同時に移行すること。
+const oldReservation={...defaults,saveVersion:2,week:25,lastRaceWeek:24,reservedRaceId:"p-30-東京-11",reservationNotifiedId:"p-30-東京-11",selectedRace:{id:"p-30-東京-11",week:30,name:"予約戦"}};
+const converted=migrateSaveData(oldReservation,defaults).data;
+assert.equal(converted.week,27);
+assert.equal(converted.lastRaceWeek,26);
+assert.equal(converted.selectedRace.week,32);
+assert.equal(converted.selectedRace.id,"p-32-東京-11");
+assert.equal(converted.reservedRaceId,"p-32-東京-11");
+assert.equal(converted.reservationNotifiedId,"p-32-東京-11");
 
 // 旧単一キーからスロット1へ実データ文字列をコピーし、旧キーを消さないこと。
 class MemoryStorage{
