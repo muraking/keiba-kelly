@@ -1266,7 +1266,8 @@ function updateGateBreakCourseMotion(dt){
   horses.forEach(h=>{
     const reactionDelay=h.startReaction==="出遅れ"?260:h.startReaction==="好スタート"?-90:0;
     if(preRaceClock<launchStart+reactionDelay)return;
-    const startSpeed=h.startReaction==="好スタート"?.0145:h.startReaction==="出遅れ"?.0115:.013;
+    // 発馬映像と同じ速度感で、上面コース側もはっきり進ませる。
+    const startSpeed=h.startReaction==="好スタート"?.022:h.startReaction==="出遅れ"?.0165:.0195;
     h.progress+=startSpeed*dt/LAP;
   });
 }
@@ -1310,7 +1311,16 @@ function marginLabel(prev,h){
   const gapMeters=prev.finished&&h.finished
     ? Math.max(0,h.finishTime-prev.finishTime)*.0166
     : Math.max(0,raceDistance(prev)-raceDistance(h));
-  const lengths=gapMeters/2.4;
+  // 1馬身は約2.4m。通常の接戦を誤って「大差」にしないよう、
+  // フレーム間の速度揺れで生じた極端な隣接差だけを写真判定相当に丸める。
+  const rawLengths=gapMeters/2.4;
+  const lengths=rawLengths<=2
+    ? rawLengths
+    : rawLengths<=12
+      ? 2+(rawLengths-2)*.16
+      : rawLengths>=36
+        ? rawLengths
+        : 3.6+(rawLengths-12)*.055;
   if(lengths<.07)return"ハナ";
   if(lengths<.16)return"アタマ";
   if(lengths<.34)return"クビ";
