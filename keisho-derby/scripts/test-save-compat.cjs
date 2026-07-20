@@ -7,7 +7,7 @@ const defaults={
   saveVersion:SCHEMA_VERSION,horseName:"",week:1,trainingsUsed:0,prize:0,farmPoints:0,equipment:[],priorityRights:[],
   speed:0,dash:0,stamina:0,power:0,guts:0,turf:0,dirt:0,raceHistory:[],favoriteRaces:[],galleryUnlocks:["stable"],
   gradedTrophies:[],tackUnlocked:[],declinedOverseasInvites:[],lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},
-  potentialCaps:null,candidate:null,selectedRace:null,currentRaceWeather:null,injury:null,soundness:550,lastRaceAdvice:""
+  potentialCaps:null,candidate:null,selectedRace:null,currentRaceWeather:null,injury:null,soundness:550,lastRaceAdvice:"",lastBreedingPartner:null
 };
 
 // Ver.0相当：単一キー時代の最小限セーブ。新項目がなくても保持して補完できること。
@@ -19,6 +19,7 @@ assert.equal(migrated.data.horseName,"レトロスター");
 assert.equal(migrated.data.week,79);
 assert.equal(migrated.data.speed,612);
 assert.equal(migrated.data.soundness,550);
+assert.equal(migrated.data.lastBreedingPartner,null);
 assert.deepEqual(migrated.data.raceHistory,[]);
 assert.deepEqual(migrated.data.equipmentDurability,{});
 assert.equal(migrated.data.candidate.sex,"牡馬");

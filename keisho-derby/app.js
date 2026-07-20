@@ -65,7 +65,34 @@ const breedingPartners={
     ,{name:"エンドレスメア",cost:15000,record:"GⅠ 1勝",surface:"芝向き",distance:"2200〜3200m",growth:"晩成",level:740}
   ]
 };
+const BREEDING_ARCHETYPES=[
+  {surface:"芝向き",distance:"1000〜1400m",growth:"早熟",soundness:590,label:"スプリント"},
+  {surface:"芝向き",distance:"1400〜1800m",growth:"普通",soundness:560,label:"マイル"},
+  {surface:"芝向き",distance:"1800〜2400m",growth:"普通",soundness:600,label:"クラシック"},
+  {surface:"芝向き",distance:"2400〜3600m",growth:"晩成",soundness:650,label:"ステイヤー"},
+  {surface:"ダート向き",distance:"1000〜1600m",growth:"早熟",soundness:640,label:"サンドスピード"},
+  {surface:"ダート向き",distance:"1600〜2400m",growth:"晩成",soundness:690,label:"ダートパワー"},
+  {surface:"芝・ダート万能",distance:"1400〜2400m",growth:"普通",soundness:570,label:"デュアル"},
+  {surface:"芝向き",distance:"1600〜2800m",growth:"晩成",soundness:760,label:"タフネス"}
+];
+const PARTNER_TIER_DATA=[
+  {cost:0,level:425,record:"未勝利",prefix:["ビギナー","フリー","スタート","ゼロ"]},
+  {cost:500,level:500,record:"1勝クラス",prefix:["ローカル","ライト","ホープ","ライジング"]},
+  {cost:1500,level:570,record:"3勝クラス",prefix:["オープン","ブレイブ","ノーブル","グランド"]},
+  {cost:5000,level:650,record:"重賞級",prefix:["チャンピオン","ロイヤル","プレミア","マジェスティ"]},
+  {cost:15000,level:735,record:"GⅠ級",prefix:["レジェンド","エンペラー","エターナル","キングダム"]},
+  // 最高額でも継承率は従来式のまま。初期能力を保証せず、上限も既存値を維持する。
+  {cost:30000,level:775,record:"世界級",prefix:["ワールド","インペリアル","アルティメット","ミレニアム"]}
+];
+const PARTNER_SUFFIX={"牡馬":["ロード","キング","ボルト","スター"],"牝馬":["ローズ","ハート","ベル","ティアラ"]};
+Object.keys(breedingPartners).forEach(sex=>PARTNER_TIER_DATA.forEach((tier,tierIndex)=>{
+  BREEDING_ARCHETYPES.forEach((type,index)=>{
+    const name=`${tier.prefix[index%tier.prefix.length]}${type.label}${PARTNER_SUFFIX[sex][(index+tierIndex)%4]}`;
+    if(!breedingPartners[sex].some(partner=>partner.name===name))breedingPartners[sex].push({name,cost:tier.cost,record:tier.record,surface:type.surface,distance:type.distance,growth:type.growth,level:tier.level+(index%3-1)*5,soundness:type.soundness});
+  });
+}));
 let currentBreedingChoices=[];
+let currentBreedingPartnerSex="";
 const defaultGame = () => ({
   saveVersion:SAVE_SCHEMA_VERSION,
   horseName:"", week:1, trainingsUsed:0, prize:0, farmPoints:0, equipment:[], classMoney:0, priorityRights:[],
@@ -79,7 +106,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], gradedTrophies:[], candidate:null,
-  reservedRaceId:null,reservationNotifiedId:null,pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},inheritanceComment:"",lastRaceAdvice:""
+  reservedRaceId:null,reservationNotifiedId:null,pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],lastBreedingPartner:null,equipmentDurability:{},equipmentAge:{},inheritanceComment:"",lastRaceAdvice:""
 });
 let game = defaultGame();
 let autoTrainingActive=false;
@@ -524,14 +551,28 @@ function renderRetirement(){
   document.querySelector("#breedingBudget").textContent=`配合予算 ${game.prize.toLocaleString()}万円`;
   const partnerSex=game.candidate?.sex==="牝馬"?"牡馬":"牝馬";
   document.querySelector("#breedingGuide").textContent=`${game.candidate?.sex||"牡馬"}として引退します。相手となる${partnerSex}を選んでください。獲得賞金以内の相手を選べます。`;
-  currentBreedingChoices=[...new Set(breedingPartners[partnerSex].map(partner=>partner.cost))].sort((a,b)=>a-b).map(cost=>{
-    const tier=breedingPartners[partnerSex].filter(partner=>partner.cost===cost);
-    return tier[rnd(0,tier.length-1)];
-  });
-  document.querySelector("#breedingPartners").innerHTML=currentBreedingChoices.map((partner,index)=>{
-    const affordable=game.prize>=partner.cost;
-    return `<article class="breeding-card ${affordable?"":"locked"}"><div><small>${partner.record}</small><h3>${partner.name}</h3><p>${partner.surface}／${partner.distance}／${partner.growth}</p></div><button data-breeding-partner="${index}" data-partner-sex="${partnerSex}" ${affordable?"":"disabled"}>${partner.cost.toLocaleString()}万円</button></article>`;
+  currentBreedingPartnerSex=partnerSex;
+  currentBreedingChoices=[];
+  const tiers=[...new Set(breedingPartners[partnerSex].map(partner=>partner.cost))].sort((a,b)=>a-b);
+  document.querySelector("#breedingTiers").innerHTML=tiers.map(cost=>{
+    const affordable=game.prize>=cost;
+    return `<button class="breeding-tier ${affordable?"":"locked"}" data-breeding-tier="${cost}" ${affordable?"":"disabled"}>${cost===0?"無料":`${cost.toLocaleString()}万円`}<small>${affordable?"候補を見る":"賞金不足"}</small></button>`;
   }).join("");
+  document.querySelector("#breedingPartners").innerHTML='<p class="breeding-candidate-guide">まず配合に使う賞金帯を選んでください。</p>';
+}
+function breedingForbiddenNames(){
+  return new Set([game.candidate?.sire?.[0],game.candidate?.dam?.[0],game.lastBreedingPartner].filter(Boolean));
+}
+function renderBreedingCandidates(cost){
+  const forbidden=breedingForbiddenNames();
+  const pool=breedingPartners[currentBreedingPartnerSex].filter(partner=>partner.cost===cost&&!forbidden.has(partner.name));
+  for(let index=pool.length-1;index>0;index--){const swap=rnd(0,index);[pool[index],pool[swap]]=[pool[swap],pool[index]]}
+  currentBreedingChoices=pool.slice(0,5);
+  document.querySelectorAll("[data-breeding-tier]").forEach(button=>button.classList.toggle("selected",Number(button.dataset.breedingTier)===cost));
+  document.querySelector("#breedingPartners").innerHTML=currentBreedingChoices.map((partner,index)=>{
+    const toughness=(partner.soundness||550)>=700?"丈夫型":(partner.soundness||550)<500?"繊細型":"標準型";
+    return `<article class="breeding-card"><div><small>${partner.record}／${toughness}</small><h3>${partner.name}</h3><p>${partner.surface}／${partner.distance}／${partner.growth}</p></div><button data-breeding-partner="${index}">この馬を選ぶ</button></article>`;
+  }).join("")||'<p class="breeding-candidate-guide">条件に合う候補が見つかりませんでした。別の賞金帯を選んでください。</p>';
 }
 function inheritedStat(parentValue,partnerLevel,variation=55){
   return Math.max(350,Math.min(760,Math.round(parentValue*.38+partnerLevel*.37+rnd(390,540)*.25+rnd(-variation,variation))));
@@ -564,13 +605,13 @@ function beginNextGeneration(partner){
     turf:inheritedStat(game.turf,level,70),dirt:inheritedStat(game.dirt,level,70),heavyTrack:inheritedStat(game.heavyTrack,level,75),
     temperamentValue:Math.max(18,Math.min(88,Math.round(game.temperamentValue*.55+rnd(25,75)*.45))),baseBestWeight:Math.max(400,Math.min(540,Math.round(game.baseBestWeight*.55+rnd(430,500)*.45+rnd(-12,12)))),
     growthType:inheritGrowthType(game.growthType,partner.growth),growthPotential:Math.max(7,Math.min(20,Math.round(game.growthPotential*.45+(level-380)/35+rnd(-2,2)))),distanceMin,distanceMax,
-    soundness:inheritRecoveryTrait(game.soundness),recoveryPower:inheritRecoveryTrait(game.recoveryPower),turnaroundTolerance:inheritRecoveryTrait(game.turnaroundTolerance),...createConditionCycle()
+    soundness:Math.max(300,Math.min(850,Math.round(game.soundness*.55+(partner.soundness||550)*.45+rnd(-55,55)))),recoveryPower:inheritRecoveryTrait(game.recoveryPower),turnaroundTolerance:inheritRecoveryTrait(game.turnaroundTolerance),...createConditionCycle()
   };
   child.temperament=temperamentType(child.temperamentValue);
   child.weight=child.baseBestWeight+rnd(12,20);
   child.potentialCaps=createPotentialCaps(child);
   child.inheritanceComment=inheritanceComparison(child,{...game,potentialCaps:game.potentialCaps,distanceMax:effectiveDistanceRange().max});
-  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired]};
+  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired],lastBreedingPartner:partner.name};
   game={...defaultGame(),...legacy,candidate:child};
   document.querySelector("#candidateNumber").textContent=`${game.generation}世代目`;
   document.querySelector("#candidateTitle").textContent=`${child.coat}の2歳${child.sex}`;
@@ -1975,7 +2016,7 @@ document.querySelector("#confirmNameButton").onclick=()=>{
     document.querySelector("#nameScreen .hint").textContent="馬名はカタカナ2〜10文字で、使用できない表現を含まない名前にしてください。";
     input.focus();return;
   }
-  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,soundness:Number.isFinite(c.soundness)?c.soundness:rnd(420,720),recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
+  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],lastBreedingPartner:game.lastBreedingPartner||null,inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,soundness:Number.isFinite(c.soundness)?c.soundness:rnd(420,720),recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
   renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。${game.generation>1?game.inheritanceComment:"まずは馬体を整えましょう。"}`);showScreen("homeScreen");
 };
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.dataset.back));
@@ -2045,6 +2086,11 @@ document.querySelector("#breedingPartners").onclick=e=>{
   document.querySelector("#inheritConfirmText").textContent=`${game.horseName}を引退させ、${partner.name}との子で次世代を始めます。よろしいですか？`;
   const modal=document.querySelector("#inheritConfirmModal");
   modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+};
+document.querySelector("#breedingTiers").onclick=e=>{
+  const button=e.target.closest("[data-breeding-tier]");
+  if(!button||button.disabled)return;
+  renderBreedingCandidates(Number(button.dataset.breedingTier));
 };
 document.querySelector("#inheritConfirmProceed").onclick=()=>{const partner=pendingBreedingPartner;closeInheritanceConfirm();if(partner)beginNextGeneration(partner)};
 document.querySelector("#inheritConfirmCancel").onclick=closeInheritanceConfirm;

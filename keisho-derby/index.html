@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.10.60</title>
+  <title>ドット競馬 継承ダービー｜Ver. 0.10.61</title>
   <link rel="stylesheet" href="style.css?v=20260721-64">
 </head>
 <body>
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">コース検証テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.60</b>
+        <b class="build-version">Ver. 0.10.61</b>
       </div>
     </section>
 
@@ -228,6 +228,7 @@
       <header class="simple-header"><b>引退・配合</b><span id="breedingBudget">配合予算 0万円</span></header>
       <div class="retirement-hero"><small>現役生活を終えます</small><h2 id="retirementHorseName">ドットスター</h2><p id="retirementSummary">1世代目　0戦0勝　獲得賞金 0万円</p></div>
       <p id="breedingGuide" class="breeding-guide"></p>
+      <div id="breedingTiers" class="breeding-tiers"></div>
       <div id="breedingPartners" class="breeding-partners"></div>
       <button data-back="horseDetailScreen">引退せずにもどる</button>
     </section>
@@ -430,7 +431,7 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260721-12"></script>
-  <script src="app.js?v=20260721-14"></script>
+  <script src="app.js?v=20260721-15"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260721-23"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>

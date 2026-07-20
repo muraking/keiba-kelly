@@ -65,6 +65,10 @@ body {
 .retirement-hero small { font-size:9px;color:#684b29; }.retirement-hero h2 { margin:5px 0;font-size:22px; }.retirement-hero p { margin:0;font-size:10px; }
 .breeding-guide { margin:15px 14px 8px;padding:10px;border:2px solid #7b765f;background:#fffdf1;font-size:10px;line-height:1.7; }
 .breeding-partners { display:grid;gap:8px;margin:10px 14px 16px; }
+.breeding-tiers { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:10px 14px 12px; }
+.breeding-tier { display:flex;min-height:54px;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:3px solid #80652b;background:#fff3c4;color:#33240f;font-weight:800; }
+.breeding-tier small { font-size:8px;font-weight:700; }.breeding-tier.selected { background:#315f3e;color:#fff4ad;border-color:#e6c45a; }.breeding-tier.locked { filter:grayscale(.7);opacity:.52; }
+.breeding-candidate-guide { grid-column:1/-1;margin:8px 0;padding:14px;border:2px dashed #9d8951;background:#fffaf0;text-align:center; }
 .breeding-card { display:grid;grid-template-columns:1fr 82px;align-items:center;gap:8px;padding:10px;border:3px solid #6d5b35;background:#fffdf2;box-shadow:3px 3px #a79a79; }
 .breeding-card h3 { margin:2px 0 4px;font-size:14px; }.breeding-card small { color:#8d4c28;font-size:8px;font-weight:800; }.breeding-card p { margin:0;font-size:8px;line-height:1.5; }
 .breeding-card button { min-height:46px;padding:5px;font-size:10px;font-weight:900; }.breeding-card.locked { opacity:.48;filter:grayscale(.7); }
