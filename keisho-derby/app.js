@@ -1324,8 +1324,10 @@ function renderGallery(){
   saveGame();
 }
 let selectedTrophyGrade="G1";
+let selectedTrophyIndex=null;
 function renderTrophies(grade=selectedTrophyGrade){
   selectedTrophyGrade=grade;
+  selectedTrophyIndex=null;
   const trophies=game.gradedTrophies||[],filtered=trophies.map((t,index)=>({t,index})).filter(x=>x.t.grade===grade).reverse();
   const gradeLabel=grade==="G1"?"GⅠ":grade==="G2"?"GⅡ":"GⅢ";
   document.querySelector("#trophySummary").textContent=`全${trophies.length}個　${gradeLabel} ${filtered.length}個`;
@@ -1334,8 +1336,16 @@ function renderTrophies(grade=selectedTrophyGrade){
   document.querySelector("#trophyHorseDetail").hidden=true;
 }
 function showTrophyHorse(index){
+  const detail=document.querySelector("#trophyHorseDetail");
+  if(selectedTrophyIndex===index){
+    selectedTrophyIndex=null;detail.hidden=true;
+    document.querySelectorAll("[data-trophy-index]").forEach(button=>button.classList.remove("selected"));
+    return;
+  }
   const trophy=(game.gradedTrophies||[])[index];if(!trophy)return;
-  const detail=document.querySelector("#trophyHorseDetail"),color=trophy.horseColor||"#a96232";
+  selectedTrophyIndex=index;
+  document.querySelectorAll("[data-trophy-index]").forEach(button=>button.classList.toggle("selected",Number(button.dataset.trophyIndex)===index));
+  const color=trophy.horseColor||"#a96232";
   detail.innerHTML=`<div class="trophy-detail-stage" style="--horse-color:${color}"><div class="candidate-pixel-horse trophy-detail-horse"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div><div class="winner-wreath"></div></div></div><div><small>${trophy.grade==="G1"?"GⅠ":trophy.grade==="G2"?"GⅡ":"GⅢ"} TROPHY</small><h3>${trophy.raceName}</h3><b>${trophy.horseName}</b><p>${trophy.generation}代目　${trophy.horseAge?`${trophy.horseAge}歳　`:""}${trophy.date||""}</p></div>`;
   detail.hidden=false;detail.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
