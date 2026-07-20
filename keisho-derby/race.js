@@ -673,14 +673,14 @@ function update(dt, clockDt) {
 
     let styleFactor = 1;
     if (h.style === "逃げ") {
-      styleFactor = normalized < .72 ? 1.04 : .965;
+      styleFactor = normalized < .72 ? 1.025 : .96;
       // 単騎逃げなら楽に運べて直線でも粘る。逃げ争いでは終盤に消耗。
       if (racePace.escapeCount === 1) {
-        styleFactor *= normalized < .78 ? 1.014 : 1.045;
+        styleFactor *= normalized < .78 ? 1.01 : 1.025;
       } else if (racePace.escapeCount >= 3 && normalized > .68) {
-        styleFactor *= .92;
+        styleFactor *= .885;
       } else if (racePace.escapeCount === 2 && normalized > .76) {
-        styleFactor *= .96;
+        styleFactor *= .935;
       }
     }
     if (h.style === "先行") {
@@ -690,13 +690,19 @@ function update(dt, clockDt) {
     }
     if (h.style === "差し") {
       styleFactor = normalized < .62 ? .982 : 1.045;
-      if (racePace.escapeCount >= 3 && normalized > .68) styleFactor *= 1.06;
+      if (racePace.escapeCount >= 3 && normalized > .68) styleFactor *= 1.065;
       if (racePace.escapeCount === 1 && normalized > .72) styleFactor *= .965;
     }
     if (h.style === "追込") {
       styleFactor = normalized < .72 ? .965 : 1.078;
       if (racePace.escapeCount >= 3 && normalized > .72) styleFactor *= 1.075;
       if (racePace.escapeCount === 1 && normalized > .72) styleFactor *= .94;
+    }
+    // 長い直線では差し・追込が末脚を生かしやすい。短い直線では補正を付けない。
+    if(normalized>.72&&trackProfile().straight>=450){
+      const straightBoost=Math.min(.025,(trackProfile().straight-430)/5000);
+      if(h.style==="差し")styleFactor*=1+straightBoost;
+      if(h.style==="追込")styleFactor*=1+straightBoost*.8;
     }
     // 名馬ごとの走り方。大逃げは前半を引き離し、まくりは向正面から進出する。
     if(h.styleLabel==="大逃げ")styleFactor*=normalized<.58?1.032:normalized>.78?.955:1;

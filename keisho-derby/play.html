@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.58</title>
-  <link rel="stylesheet" href="style.css?v=20260721-63">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.59</title>
+  <link rel="stylesheet" href="style.css?v=20260721-64">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">コース検証テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.58</b>
+        <b class="build-version">Ver. 0.10.59</b>
       </div>
     </section>
 
@@ -286,6 +286,12 @@
       <div class="race-week-nav"><button id="previousRaceWeek" aria-label="前週">◀ 前週</button><b id="raceWeekLabel">1年目 1月1週</b><button id="nextRaceWeek" aria-label="翌週">翌週 ▶</button></div>
       <p class="race-select-guide">開催場を切り替えると、その会場の1R〜12Rを表示します</p>
       <div id="raceVenueTabs" class="race-venue-tabs"></div>
+      <div class="race-search" aria-label="レース絞り込み">
+        <select id="raceSurfaceFilter" aria-label="馬場"><option value="">芝・ダート</option><option value="芝">芝</option><option value="ダート">ダート</option></select>
+        <select id="raceDistanceFilter" aria-label="距離"><option value="">全距離</option><option value="short">短距離〜1400m</option><option value="mile">マイル1401〜1800m</option><option value="middle">中距離1801〜2400m</option><option value="long">長距離2401m〜</option></select>
+        <select id="raceClassFilter" aria-label="クラス"><option value="">全クラス</option><option value="新馬">新馬</option><option value="未勝利">未勝利</option><option value="1勝">1勝</option><option value="2勝">2勝</option><option value="3勝">3勝</option><option value="オープン">オープン</option><option value="G3">GⅢ</option><option value="G2">GⅡ</option><option value="G1">GⅠ</option></select>
+        <label><input id="raceEligibleOnly" type="checkbox"> 出走可能のみ</label><label><input id="raceReservableOnly" type="checkbox"> 予約可能のみ</label>
+      </div>
       <div id="raceChoices"></div>
       <button data-back="homeScreen">育成へもどる</button>
       <div id="raceSpacingWarningModal" class="auto-training-modal" aria-hidden="true">
@@ -424,9 +430,9 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260721-12"></script>
-  <script src="app.js?v=20260721-13"></script>
+  <script src="app.js?v=20260721-14"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
-  <script src="race.js?v=20260721-21"></script>
+  <script src="race.js?v=20260721-22"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>

@@ -73,7 +73,7 @@ const defaultGame = () => ({
   conditionDirection:1, conditionPhaseWeeks:4, conditionStability:"普通", conditionPeakWeeks:0,
   weight:0, baseBestWeight:0, growthType:"普通", growthPotential:12,
   generation:1, potentialCaps:null, ageDecline:0, distanceMin:1400, distanceMax:2000,
-  injury:null, legCondition:100, recoveryPower:550, turnaroundTolerance:500,
+  injury:null, legCondition:100, soundness:550, recoveryPower:550, turnaroundTolerance:500,
   lastRaceWeek:null, raceLoad:0,
   temperament:"普通",temperamentValue:50,temperamentKnown:false,
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
@@ -409,6 +409,7 @@ function loadGame(slot=activeSaveSlot){
     if(!Number.isFinite(saved?.distanceMin))game.distanceMin=1400;
     if(!Number.isFinite(saved?.distanceMax))game.distanceMax=2000;
     if(!Number.isFinite(saved?.heavyTrack))game.heavyTrack=rnd(420,680);
+    if(!Number.isFinite(saved?.soundness))game.soundness=rnd(420,720);
     if(!Number.isFinite(saved?.recoveryPower))game.recoveryPower=rnd(430,670);
     if(!Number.isFinite(saved?.turnaroundTolerance))game.turnaroundTolerance=rnd(400,650);
     if(!Number.isFinite(saved?.lastRaceWeek))game.lastRaceWeek=null;
@@ -504,7 +505,7 @@ function generateCandidate(){
   const temperamentValue=inheritTemperament(sire,dam);
   const [distanceMin,distanceMax]=createDistanceRange(sire,dam);
   const parentHeavyBase=(sire[2].includes("ダート")?5:0)+(dam[2].includes("ダート")?5:0);
-  const candidate={coat:coat[0],color:coat[1],sex:Math.random()<.5?"牡馬":"牝馬",faceMark:Math.random()<.38,socks:rnd(0,4),eyeType:["優しい","鋭い","好奇心旺盛"][rnd(0,2)],sire,dam,speed:rnd(390,560),dash:rnd(370,540),gateSkill:rnd(380,540),stamina:rnd(390,560),power:rnd(380,550),guts:rnd(370,540),turf,dirt,heavyTrack:Math.max(350,Math.min(800,rnd(430,670)+parentHeavyBase*10)),temperamentValue,temperament:temperamentType(temperamentValue),baseBestWeight,weight:baseBestWeight+rnd(12,20),growthType,growthPotential:rnd(7,15),distanceMin,distanceMax,recoveryPower:rnd(380,760),turnaroundTolerance:rnd(340,740),...createConditionCycle()};
+  const candidate={coat:coat[0],color:coat[1],sex:Math.random()<.5?"牡馬":"牝馬",faceMark:Math.random()<.38,socks:rnd(0,4),eyeType:["優しい","鋭い","好奇心旺盛"][rnd(0,2)],sire,dam,speed:rnd(390,560),dash:rnd(370,540),gateSkill:rnd(380,540),stamina:rnd(390,560),power:rnd(380,550),guts:rnd(370,540),turf,dirt,heavyTrack:Math.max(350,Math.min(800,rnd(430,670)+parentHeavyBase*10)),temperamentValue,temperament:temperamentType(temperamentValue),baseBestWeight,weight:baseBestWeight+rnd(12,20),growthType,growthPotential:rnd(7,15),distanceMin,distanceMax,soundness:rnd(380,780),recoveryPower:rnd(380,760),turnaroundTolerance:rnd(340,740),...createConditionCycle()};
   candidate.potentialCaps=createPotentialCaps(candidate);
   game.candidate=candidate;
   document.querySelector("#candidateTitle").textContent=`${coat[0]}の2歳${candidate.sex}`;
@@ -563,7 +564,7 @@ function beginNextGeneration(partner){
     turf:inheritedStat(game.turf,level,70),dirt:inheritedStat(game.dirt,level,70),heavyTrack:inheritedStat(game.heavyTrack,level,75),
     temperamentValue:Math.max(18,Math.min(88,Math.round(game.temperamentValue*.55+rnd(25,75)*.45))),baseBestWeight:Math.max(400,Math.min(540,Math.round(game.baseBestWeight*.55+rnd(430,500)*.45+rnd(-12,12)))),
     growthType:inheritGrowthType(game.growthType,partner.growth),growthPotential:Math.max(7,Math.min(20,Math.round(game.growthPotential*.45+(level-380)/35+rnd(-2,2)))),distanceMin,distanceMax,
-    recoveryPower:inheritRecoveryTrait(game.recoveryPower),turnaroundTolerance:inheritRecoveryTrait(game.turnaroundTolerance),...createConditionCycle()
+    soundness:inheritRecoveryTrait(game.soundness),recoveryPower:inheritRecoveryTrait(game.recoveryPower),turnaroundTolerance:inheritRecoveryTrait(game.turnaroundTolerance),...createConditionCycle()
   };
   child.temperament=temperamentType(child.temperamentValue);
   child.weight=child.baseBestWeight+rnd(12,20);
@@ -743,7 +744,7 @@ function classAbilityTarget(){
 function legLabel(){return game.legCondition>=85?"良好":game.legCondition>=65?"少し張り":game.legCondition>=45?"注意":"危険"}
 function legCoachComment(){
   if(game.injury)return `${game.injury.name}を発症しています。長期放牧が必要です`;
-  if(game.legCondition>=85)return "すっきりしています。通常の調教を行えます";
+  if(game.legCondition>=85)return game.soundness>=680?"すっきりしています。脚元は丈夫なタイプです":game.soundness<450?"今はすっきりしていますが、脚元は慎重に扱いたいタイプです":"すっきりしています。通常の調教を行えます";
   if(game.legCondition>=65)return "少し張りがあります。プールか軽め調整を挟むと安心です";
   if(game.legCondition>=45)return game.equipment.includes("hotSpring")?"張りが強く出ています。温泉療養を勧めます":"強い調教は避け、森林馬道・プール・休養で戻しましょう";
   return game.equipment.includes("hotSpring")?"故障寸前です。今週は温泉療養か放牧を選んでください":"故障寸前です。調教を中止し、放牧を強く勧めます";
@@ -986,7 +987,7 @@ function renderHome(message="今週の予定を決めましょう。"){
       statRow("芝適性",game.turf,"#72c45e")+statRow("ダート適性",game.dirt,"#c9915b")+
       statRow("道悪適性",game.heavyTrack,"#5aa5c8")+
       statRow("ゲート習熟",game.gateSkill,"#c7a9ef")+
-      statRow("回復力",game.recoveryPower,"#73cfc4")+statRow("連闘適性",game.turnaroundTolerance,"#d9a84c")+
+      statRow("丈夫さ",game.soundness,"#8fc98b")+statRow("回復力",game.recoveryPower,"#73cfc4")+statRow("連闘適性",game.turnaroundTolerance,"#d9a84c")+
       `<div class="trainer-stat"><span>競走負荷</span><b>${game.raceLoad}/100</b></div>`+
       `<div class="trainer-stat"><span>調子の波</span><b>${game.condition}／${game.conditionDirection>0?"上向き":game.conditionDirection<0?"下降中":"維持"}・${game.conditionStability}型（残り${game.conditionPeakWeeks||game.conditionPhaseWeeks}週）</b></div>`
     : "";
@@ -1089,10 +1090,13 @@ function weightedInjury(){
 }
 function injuryRisk(type){
   const intensity={turfSolo:.55,turfPair:1,dirtSolo:.65,dirtPair:1.08,hillSolo:1.05,hillPair:1.22,pool:.08,gate:.35,hotSpring:0}[type]||0;
-  if(game.fatigue<45||intensity===0)return 0;
-  const fatigueRisk=Math.pow((game.fatigue-50)/50,2);
+  if(intensity===0||(game.fatigue<28&&game.legCondition>=65))return 0;
+  const fatigueRisk=Math.pow(Math.max(0,game.fatigue-30)/70,2);
   const legRisk=game.legCondition>=65?1:game.legCondition>=45?1.45:2.1;
-  return Math.min(.075,(.0015+fatigueRisk*.04*intensity)*legRisk);
+  const durabilityRisk=Math.max(.55,Math.min(1.65,(900-game.soundness)/350));
+  const consecutiveRisk=game.trainingsUsed>=2?.0012:0;
+  const autoSafety=autoTrainingActive?.72:1;
+  return Math.min(autoTrainingActive?.05:.075,(.00035+consecutiveRisk+fatigueRisk*.045*intensity)*legRisk*durabilityRisk*autoSafety);
 }
 function sufferInjury(type){
   if(Math.random()>=injuryRisk(type))return null;
@@ -1476,6 +1480,7 @@ function autoTrainingChoice(mode,raceSoon=false,usage={},lastType=""){
   const weightDiff=game.weight-bestWeight();
   if(game.legCondition<48&&game.equipment.includes("hotSpring")&&game.trainingsUsed===0)return "hotSpring";
   if(game.legCondition<62)return game.trainingsUsed===0?"pool":"rest";
+  if(game.soundness<450&&game.fatigue>=32)return game.trainingsUsed===0?"pool":"rest";
   if(game.fatigue>=55)return "rest";
   if(raceSoon){
     if(game.fatigue>=30)return "rest";
@@ -1510,7 +1515,7 @@ function autoTrainingChoice(mode,raceSoon=false,usage={},lastType=""){
   ];
   candidates.forEach(candidate=>{
     const repeated=(usage[candidate.type]||0)*75+(candidate.type===lastType?55:0);
-    const hardPenalty=candidate.type.includes("Pair")&&game.fatigue>=30?80:0;
+    const hardPenalty=candidate.type.includes("Pair")&&(game.fatigue>=30||game.soundness<470)?110:0;
     candidate.score=game[candidate.stat]+repeated+hardPenalty;
   });
   candidates.sort((a,b)=>a.score-b.score);
@@ -1593,7 +1598,22 @@ function renderRaces(){
   if(window.selectedRaceVenue&&!venues.includes(window.selectedRaceVenue))window.selectedRaceVenue="";
   if(!window.selectedRaceVenue)window.selectedRaceVenue=venues[0]||"";
   document.querySelector("#raceVenueTabs").innerHTML=venues.map(v=>`<button data-venue="${v}" class="${window.selectedRaceVenue===v?"selected":""}">${v}</button>`).join("");
-  const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue).sort((a,b)=>(a.number||11)-(b.number||11));
+  const surfaceFilter=document.querySelector("#raceSurfaceFilter")?.value||"";
+  const distanceFilter=document.querySelector("#raceDistanceFilter")?.value||"";
+  const classFilter=document.querySelector("#raceClassFilter")?.value||"";
+  const eligibleOnly=!!document.querySelector("#raceEligibleOnly")?.checked,reservableOnly=!!document.querySelector("#raceReservableOnly")?.checked;
+  const distanceMatches=r=>!distanceFilter||(distanceFilter==="short"?r.distance<=1400:distanceFilter==="mile"?r.distance>1400&&r.distance<=1800:distanceFilter==="middle"?r.distance>1800&&r.distance<=2400:r.distance>2400);
+  const canUseRace=r=>{
+    const arrived=r.week===game.week,targetAge=horseAgeAtWeek(r.week);
+    const basic=game.week>=23&&raceAgeTextEligible(r.age||"",targetAge)&&(!raceFemaleOnly(r)||game.candidate?.sex==="牝馬")&&r.condition(game);
+    return reservableOnly?r.week>game.week&&basic:(arrived||r.week>game.week)&&basic;
+  };
+  const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue)
+    .filter(r=>!surfaceFilter||r.surface===surfaceFilter)
+    .filter(distanceMatches)
+    .filter(r=>!classFilter||r.raceClass===classFilter)
+    .filter(r=>(!eligibleOnly&&!reservableOnly)||canUseRace(r))
+    .sort((a,b)=>(a.number||11)-(b.number||11));
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
     const arrived=r.week===game.week,debutSeasonOpen=game.week>=23;
     const targetAge=horseAgeAtWeek(r.week),ageEligible=raceAgeTextEligible(r.age||"",targetAge),sexEligible=!raceFemaleOnly(r)||game.candidate?.sex==="牝馬";
@@ -1793,6 +1813,7 @@ function sufferPostRaceInjury(race,going){
   if(spacing.gap===1)risk+=.006*toleranceFactor;
   else if(spacing.gap===2)risk+=.0018*toleranceFactor;
   if(game.raceLoad>=75)risk+=(game.raceLoad-70)*.00012;
+  risk*=Math.max(.6,Math.min(1.55,(900-game.soundness)/350));
   if(Math.random()>=Math.min(.025,risk))return null;
   const injury=weightedInjury();
   game.injury={...injury,weeks:rnd(injury.minWeeks,injury.maxWeeks)};
@@ -1954,7 +1975,7 @@ document.querySelector("#confirmNameButton").onclick=()=>{
     document.querySelector("#nameScreen .hint").textContent="馬名はカタカナ2〜10文字で、使用できない表現を含まない名前にしてください。";
     input.focus();return;
   }
-  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
+  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,soundness:Number.isFinite(c.soundness)?c.soundness:rnd(420,720),recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
   renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。${game.generation>1?game.inheritanceComment:"まずは馬体を整えましょう。"}`);showScreen("homeScreen");
 };
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.dataset.back));
@@ -2103,6 +2124,7 @@ document.querySelector("#raceSpacingProceed").onclick=()=>{
 };
 document.querySelector("#raceSpacingCancel").onclick=closeRaceSpacingWarning;
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
+document.querySelectorAll("#raceSurfaceFilter,#raceDistanceFilter,#raceClassFilter,#raceEligibleOnly,#raceReservableOnly").forEach(control=>control.onchange=renderRaces);
 document.querySelector("#previousRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.max(1,(window.selectedRaceWeek||game.week)-1);window.selectedRaceVenue="";renderRaces()};
 document.querySelector("#nextRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.min(CAREER_MAX_WEEKS,(window.selectedRaceWeek||game.week)+1);window.selectedRaceVenue="";renderRaces()};
 document.querySelector("#newspaperRaceButton").onclick=()=>{showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"))};
