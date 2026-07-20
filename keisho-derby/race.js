@@ -141,6 +141,7 @@ let raf = 0;
 let racePace = { name: "平均", escapeCount: 1, timeFactor: 1 };
 let split1000Time = null;
 let measuredPace = "未確定";
+let finishDisplayMargins = new Map();
 let raceSurface = "芝";
 let currentRaceVenue = "東京";
 let raceDirectionOverride = null;
@@ -470,6 +471,7 @@ function resetRace() {
   cheerClock = 0;
   split1000Time = null;
   measuredPace = "未確定";
+  finishDisplayMargins = new Map();
   lastTime = 0;
   commentaryStamp = new Set();
   remainingEl.textContent = `残り ${TOTAL}m`;
@@ -915,7 +917,14 @@ function finishRace() {
   startButton.disabled = true;
   pauseButton.disabled = true;
   speedButton.hidden = true;
-  const winner = order()[0];
+  const finalOrder=order(),winner = finalOrder[0];
+  // 最終表示上の馬同士の間隔を保存し、順位板の着差と画面の見た目を一致させる。
+  finishDisplayMargins=new Map();
+  for(let i=1;i<finalOrder.length;i++){
+    const front=coursePoint(finalOrder[i-1].progress,4.5),back=coursePoint(finalOrder[i].progress,4.5);
+    const pixels=Math.hypot(front.x-back.x,front.y-back.y);
+    finishDisplayMargins.set(finalOrder[i].id,Math.min(12,pixels/14));
+  }
   // 1000m競走では「1000m通過」がそのまま勝ち馬のゴール時刻になる。
   if(TOTAL===1000){
     split1000Time=winner.finishTime;
@@ -1292,7 +1301,7 @@ function updateGateBreakCourseMotion(dt){
     const reactionDelay=h.startReaction==="出遅れ"?260:h.startReaction==="好スタート"?-90:0;
     if(preRaceClock<launchStart+reactionDelay)return;
     // 発馬映像と同じ速度感で、上面コース側もはっきり進ませる。
-    const startSpeed=h.startReaction==="好スタート"?.022:h.startReaction==="出遅れ"?.0165:.0195;
+    const startSpeed=h.startReaction==="好スタート"?.029:h.startReaction==="出遅れ"?.0215:.026;
     h.progress+=startSpeed*dt/LAP;
   });
 }
@@ -1330,7 +1339,7 @@ function drawHorizontalTrack(){
   if(startMarkerVisible())drawMarker(START_PROGRESS,"#35dc5c","START");if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 }
 
-// 実際のゴール時刻差を、そのレースの平均走速から馬身へ換算する。
+// 極端なフレーム差を写真判定表示へ補正し、接戦を「大差」と誤表示しない。
 function marginLabel(prev,h){
   if(state==="ready"||raceClock<600)return"--";
   const timeGap=prev.finished&&h.finished?Math.max(0,h.finishTime-prev.finishTime):null;
@@ -1339,7 +1348,15 @@ function marginLabel(prev,h){
   const gapMeters=prev.finished&&h.finished
     ? timeGap*averageSpeed
     : Math.max(0,raceDistance(prev)-raceDistance(h));
-  const lengths=gapMeters/2.4;
+  const visualLengths=prev.finished&&h.finished?finishDisplayMargins.get(h.id):null;
+  const rawLengths=Number.isFinite(visualLengths)?visualLengths:gapMeters/2.4;
+  const lengths=rawLengths<=2
+    ? rawLengths
+    : rawLengths<=12
+      ? 2+(rawLengths-2)*.16
+      : rawLengths>=36
+        ? rawLengths
+        : 3.6+(rawLengths-12)*.055;
   if(lengths<.07)return"ハナ";
   if(lengths<.16)return"アタマ";
   if(lengths<.34)return"クビ";
