@@ -26,6 +26,12 @@ const first=Date.UTC(2026,0,4);
 const weeks=new Set(races.map(r=>Math.floor((Date.parse(`${r.date}T00:00:00Z`)-first)/604800000)+1));
 assert.ok([...weeks].every(week=>week>=1&&week<=52));
 assert.ok([...weeks].some(week=>week>=27&&week<=36),"夏競馬の重賞が存在する");
+const satsuki=races.find(r=>r.name==="皐月賞");
+assert.ok(satsuki,"皐月賞が存在する");
+assert.equal(satsuki.venue,"中山");
+assert.equal(satsuki.surface,"芝");
+assert.equal(satsuki.distance,2000);
+assert.equal(satsuki.sexCondition,"牡牝");
 
 const app=fs.readFileSync(path.join(__dirname,"..","app.js"),"utf8");
 assert.match(app,/const YEAR_WEEKS = 52/);

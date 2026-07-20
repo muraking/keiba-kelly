@@ -268,10 +268,11 @@ function raceAgeTextEligible(text,age){
   if(text.includes("3歳以上")&&age<3)return false;
   return true;
 }
+function raceFemaleOnly(race){return race?.sexCondition==="牝馬限定"||(!String(race?.age||race||"").includes("牡・牝")&&String(race?.age||race||"").includes("牝"))}
 function officialRaceAgeEligible(race,g,raceWeek=game.week){
   const text=race.age||"";
   if(!raceAgeTextEligible(text,horseAgeAtWeek(raceWeek)))return false;
-  if(text.includes("牝")&&g.candidate?.sex!=="牝馬")return false;
+  if(raceFemaleOnly(race)&&g.candidate?.sex!=="牝馬")return false;
   return true;
 }
 function narAgeText(name){
@@ -1408,7 +1409,7 @@ function playTrainingAnimation(type,label,outcome){
 function playAutoTrainingSequence(steps,modeName,finishText){
   const popup=document.querySelector("#trainingPopup"),stage=document.querySelector("#trainingPopupStage");
   const title=document.querySelector("#trainingPopupTitle"),result=document.querySelector("#trainingPopupResult");
-  const compact=steps.filter((step,index)=>index===0||step.type!==steps[index-1].type).slice(0,5);
+  const compact=steps.slice(0,8);
   const sequence=compact.length?compact:[{type:"rest",label:"休養"}];
   popup.style.setProperty("--popup-horse-color",game.candidate?.color||"#b96e32");
   trainingAnimationActive=true;
@@ -1436,8 +1437,8 @@ function playAutoTrainingSequence(steps,modeName,finishText){
     void stage.offsetWidth;
     stage.className=`training-popup-stage ${step.type}`;
     index++;
-    // おまかせはテンポを優先し、内容を判別できる約1秒で次へ切り替える。
-    playAutoTrainingSequence.timer=setTimeout(showNext,1000);
+    // 全調教を省略せず見せつつ、長く待たせないテンポで切り替える。
+    playAutoTrainingSequence.timer=setTimeout(showNext,650);
   };
   showNext();
 }
@@ -1576,6 +1577,7 @@ function buyEquipment(id){
   const item=equipmentCatalog.find(x=>x.id===id);
   if(!item||game.equipment.includes(id)||game.farmPoints<item.cost)return;
   game.farmPoints-=item.cost;game.equipment.push(id);game.equipmentDurability[id]=item.durability;game.equipmentAge[id]=0;saveGame();renderShop();
+  const homePoints=document.querySelector("#farmPoints");if(homePoints)homePoints.textContent=`${game.farmPoints} FP`;
 }
 function renderRaces(){
   if(!Number.isFinite(window.selectedRaceWeek))window.selectedRaceWeek=game.week;
@@ -1594,7 +1596,7 @@ function renderRaces(){
   const shown=periodRaces.filter(r=>raceVenue(r)===window.selectedRaceVenue).sort((a,b)=>(a.number||11)-(b.number||11));
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
     const arrived=r.week===game.week,debutSeasonOpen=game.week>=23;
-    const targetAge=horseAgeAtWeek(r.week),ageEligible=raceAgeTextEligible(r.age||"",targetAge),sexEligible=!String(r.age||"").includes("牝")||game.candidate?.sex==="牝馬";
+    const targetAge=horseAgeAtWeek(r.week),ageEligible=raceAgeTextEligible(r.age||"",targetAge),sexEligible=!raceFemaleOnly(r)||game.candidate?.sex==="牝馬";
     const conditionEligible=r.condition(game);
     const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&conditionEligible,surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
     const reservable=!arrived&&r.week>game.week&&ageEligible&&sexEligible&&conditionEligible;
@@ -1725,16 +1727,16 @@ function prepareRace(race){
     game.selectedRace={
       id:race.id,name:race.name,raceClass:race.raceClass,course:race.course,
       surface:race.surface,distance:race.distance,prize:race.prize,
-      trialRight:race.trialRight||null,overseas:!!race.overseas
+      trialRight:race.trialRight||null,overseas:!!race.overseas,sexCondition:race.sexCondition||(raceFemaleOnly(race)?"牝馬限定":"混合")
     };
     game.currentRaceWeather=raceWeather;
     saveGame();
-    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
+    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,sex:game.candidate?.sex||"牡馬",sexCondition:race.sexCondition||(raceFemaleOnly(race)?"牝馬限定":"混合"),raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
   }catch(error){
     console.error("race preparation failed",error);
     document.querySelector("#commentary").textContent="レースの読み込みを再試行しています。";
     dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{
-      horseName:game.horseName,raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,
+      horseName:game.horseName,sex:game.candidate?.sex||"牡馬",sexCondition:race.sexCondition||(raceFemaleOnly(race)?"牝馬限定":"混合"),raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,
       condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,
       raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,
       surface:race.surface,heavyTrack:game.heavyTrack,weather:"晴",going:"良",
@@ -1800,7 +1802,7 @@ function showResult(detail){
   const player=detail.order.find(h=>h.player),place=detail.order.findIndex(h=>h.player)+1,r=game.selectedRace;
   const earned=place===1?r.prize:place===2?Math.round(r.prize*.4):place===3?Math.round(r.prize*.25):place<=5?Math.round(r.prize*.1):0;
   game.prize+=earned;game.races++;if(place===1){game.wins++;game.maiden=false}
-  if(game.reservedRaceId===r.id)game.reservedRaceId=null;
+  if(game.reservedRaceId===r.id){game.reservedRaceId=null;game.reservationNotifiedId=r.id;closeReservationArrival()}
   const classMoneyAdd=place===1
     ? (r.raceClass==="新馬"||r.raceClass==="未勝利"?400:r.raceClass==="1勝"?500:r.raceClass==="2勝"?600:r.raceClass==="3勝"?900:r.raceClass==="G3"?1600:r.raceClass==="G2"||r.raceClass==="G1"?Math.round(r.prize*.5):1000)
     : ((["G1","G2","G3"].includes(r.raceClass)&&place===2)?Math.round(r.prize*.2):0);
@@ -2058,10 +2060,27 @@ document.querySelector("#reservationArrivalOpen").onclick=()=>{
 document.querySelector("#reservationArrivalClose").onclick=closeReservationArrival;
 document.querySelector("#raceChoices").onclick=e=>{
   const reserve=e.target.closest("[data-reserve]");
-  if(reserve){game.reservedRaceId=game.reservedRaceId===reserve.dataset.reserve?null:reserve.dataset.reserve;game.reservationNotifiedId=null;saveGame();renderRaces();return}
+  if(reserve){
+    const currentReserved=raceCalendar.find(r=>r.id===game.reservedRaceId),nextRace=raceCalendar.find(r=>r.id===reserve.dataset.reserve);
+    if(currentReserved?.overseas&&currentReserved.id!==reserve.dataset.reserve){
+      document.querySelector(".race-select-guide").textContent=`海外招待「${currentReserved.name}」を予約中です。辞退するまで国内レースへ予約変更できません。`;
+      return;
+    }
+    if(game.pendingOverseasOfferId&&nextRace?.id!==game.pendingOverseasOfferId){
+      const invited=raceCalendar.find(r=>r.id===game.pendingOverseasOfferId);
+      document.querySelector(".race-select-guide").textContent=`${invited?.name||"海外競走"}の招待へ回答してから通常レースを予約してください。`;
+      return;
+    }
+    game.reservedRaceId=game.reservedRaceId===reserve.dataset.reserve?null:reserve.dataset.reserve;game.reservationNotifiedId=null;saveGame();renderRaces();return
+  }
   const button=e.target.closest("[data-race]");
   if(button){
-    const race=raceCalendar.find(r=>r.id===button.dataset.race),warning=raceSpacingCoachWarning(race?.week);
+    const race=raceCalendar.find(r=>r.id===button.dataset.race),currentReserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
+    if(currentReserved?.overseas&&currentReserved.id!==race?.id){
+      document.querySelector(".race-select-guide").textContent=`海外招待「${currentReserved.name}」を予約中です。先に出走または辞退を選んでください。`;
+      return;
+    }
+    const warning=raceSpacingCoachWarning(race?.week);
     if(warning){
       pendingRaceAfterSpacingWarning=race;
       document.querySelector("#raceSpacingWarningText").textContent=warning+"。どうしますか？";

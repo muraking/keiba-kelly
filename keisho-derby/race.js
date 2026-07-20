@@ -69,13 +69,15 @@ const RIVAL_CATALOG = [
   {name:"ロジータ",surface:"ダート",min:1600,max:2400,style:"先行",trait:"power"},{name:"フジノウェーブ",surface:"ダート",min:1200,max:1600,style:"差し",trait:"local"},
   {name:"ボンネビルレコード",surface:"ダート",min:1600,max:2400,style:"差し",trait:"late"},{name:"トウケイニセイ",surface:"ダート",min:1600,max:2200,style:"先行",trait:"steady"}
 ];
+const LEGEND_FEMALES=new Set(["ビリーヴ","ニシノフラワー","ノースフライト","グランアレグリア","ウオッカ","エアグルーヴ","ジェンティルドンナ","ブエナビスタ","ブロードアピール","ラブミーチャン","ホクトベガ","ロジータ"]);
+RIVAL_CATALOG.forEach(rival=>{rival.sex=LEGEND_FEMALES.has(rival.name)?"牝馬":"牡馬"});
 const FICTIONAL_PREFIXES=["ドット","ピクセル","レトロ","メモリー","サンライズ","ムーン","スター","グランド","ブルー","レッド","シルバー","ゴールド","チェリー","ミント","コスモ","ライト","ノーブル","ブレイブ","ハッピー","ミラクル"];
 const FICTIONAL_SUFFIXES=["ロード","ベル","ランナー","アロー","ギア","ボルト","ミスト","リボン","ハート","エース","キング","クイーン","ソング","フラッシュ","ステップ","リーフ","ウイング","バード","ストーム","ウェーブ"];
 const FICTIONAL_RIVALS=Array.from({length:160},(_,i)=>{
   const surface=i%3===0?"ダート":"芝",band=i%4;
-  const ranges=[[1000,1400],[1400,1800],[1800,2200],[2200,3200]][band];
+  const ranges=[[1000,1400],[1400,1800],[1800,2200],[2200,4000]][band];
   return{name:`${FICTIONAL_PREFIXES[i%FICTIONAL_PREFIXES.length]}${FICTIONAL_SUFFIXES[(i*7+Math.floor(i/20))%FICTIONAL_SUFFIXES.length]}`,
-    surface,min:ranges[0],max:ranges[1],style:["逃げ","先行","差し","追込"][i%4],trait:i%11===0?"steady":i%13===0?"power":null,fictional:true};
+    surface,min:ranges[0],max:ranges[1],style:["逃げ","先行","差し","追込"][i%4],trait:i%11===0?"steady":i%13===0?"power":null,sex:i%5===0?"牝馬":i%17===0?"せん馬":"牡馬",fictional:true};
 });
 // 海外GⅠだけに登場する開催地別の強豪。国内番組には混ぜない。
 const OVERSEAS_RIVALS={
@@ -342,6 +344,7 @@ function makeHorse(i, styles) {
   return {
     id: i + 1,
     name: isPlayer ? playerSetup.horseName : rival?.name||opponentNames[opponentIndex],
+    sex:isPlayer?playerSetup.sex:(rival?.sex||"牡馬"),
     color: COLORS[i],
     style: effectiveStyle,
     styleLabel:isPlayer?styles[i]:listedStyle,
@@ -412,11 +415,17 @@ function buildOpponentRivals(){
     const overseasPool=OVERSEAS_RIVALS[currentRaceVenue]||OVERSEAS_RIVALS["アスコット"];
     return shuffle(overseasPool.map(r=>({...r,surface:raceSurface,min:TOTAL,max:TOTAL,overseas:true}))).slice(0,7);
   }
+  const femaleOnly=playerSetup.sexCondition==="牝馬限定";
+  const sexEligible=r=>!femaleOnly||r.sex==="牝馬";
   const graded=["G1","G2","G3"].includes(playerSetup.raceClass);
   const legendCount=!graded?0:playerSetup.raceClass==="G1"?2:playerSetup.raceClass==="G2"?(raceRandom()<.5?1:2):1;
-  const legendPool=RIVAL_CATALOG.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-150&&TOTAL<=r.max+150).map(r=>({...r,legend:true}));
-  const fictionPool=FICTIONAL_RIVALS.filter(r=>r.surface===raceSurface&&TOTAL>=r.min-200&&TOTAL<=r.max+200);
-  return [...shuffle(legendPool).slice(0,legendCount),...shuffle([...fictionPool]).slice(0,7-legendCount)];
+  const legendPool=RIVAL_CATALOG.filter(r=>sexEligible(r)&&r.surface===raceSurface&&TOTAL>=r.min-150&&TOTAL<=r.max+150).map(r=>({...r,legend:true}));
+  const fictionPool=FICTIONAL_RIVALS.filter(r=>sexEligible(r)&&r.surface===raceSurface&&TOTAL>=r.min-250&&TOTAL<=r.max+250);
+  const selected=[...shuffle(legendPool).slice(0,legendCount),...shuffle([...fictionPool]).slice(0,7-legendCount)];
+  const fallback=shuffle(FICTIONAL_RIVALS.filter(r=>sexEligible(r)&&r.surface===raceSurface&&!selected.some(s=>s.name===r.name)));
+  while(selected.length<7&&fallback.length)selected.push(fallback.shift());
+  while(selected.length<7)selected.push({name:`予備登録馬${selected.length+1}`,surface:raceSurface,min:TOTAL,max:TOTAL,style:["逃げ","先行","差し","追込"][selected.length%4],sex:femaleOnly?"牝馬":"牡馬",fictional:true});
+  return selected;
 }
 
 function resetRace() {
@@ -537,8 +546,12 @@ function analyzePace(entries) {
   const ageTwo=playerSetup.age===2;
   const minSplit=TOTAL<=1000
     ? (["G1","G2","G3","オープン"].includes(playerSetup.raceClass)?54500:55500)
-    : raceSurface==="芝"?(ageTwo?59500:58500):(ageTwo?61500:60200);
-  const maxSplit=TOTAL<=1000?60500:raceSurface==="芝"?64500:66500;
+    : TOTAL>=3000
+      ? (raceSurface==="芝"?(ageTwo?62500:61000):(ageTwo?64000:62500))
+      : TOTAL>=2400
+        ? (raceSurface==="芝"?(ageTwo?61000:59800):(ageTwo?62800:61500))
+        : raceSurface==="芝"?(ageTwo?59500:58500):(ageTwo?61500:60200);
+  const maxSplit=TOTAL<=1000?60500:TOTAL>=3000?(raceSurface==="芝"?67000:69000):raceSurface==="芝"?64500:66500;
   const boundedSplit=value=>Math.max(minSplit,Math.min(maxSplit,value));
   if (escapeCount >= 3) {
     return {
@@ -897,6 +910,12 @@ function finishRace() {
   pauseButton.disabled = true;
   speedButton.hidden = true;
   const winner = order()[0];
+  // 1000m競走では「1000m通過」がそのまま勝ち馬のゴール時刻になる。
+  if(TOTAL===1000){
+    split1000Time=winner.finishTime;
+    measuredPace=classify1000mPace(split1000Time);
+    split1000El.textContent=formatTime(split1000Time);
+  }
   const isRecord=Number.isFinite(playerSetup.recordTime)&&winner.finishTime<playerSetup.recordTime;
   finishTimeEl.textContent = formatTime(winner.finishTime);
   setCommentary(isRecord
@@ -1305,22 +1324,16 @@ function drawHorizontalTrack(){
   if(startMarkerVisible())drawMarker(START_PROGRESS,"#35dc5c","START");if(finishMarkerVisible())drawMarker(FINISH_PROGRESS%1,"#ec3d35","GOAL");
 }
 
-// レイアウトV2用の着差表示。JRA表記に合わせ、10馬身超だけを「大差」とする。
+// 実際のゴール時刻差を、そのレースの平均走速から馬身へ換算する。
 function marginLabel(prev,h){
   if(state==="ready"||raceClock<600)return"--";
+  const timeGap=prev.finished&&h.finished?Math.max(0,h.finishTime-prev.finishTime):null;
+  if(timeGap!==null&&timeGap<1)return"同着";
+  const averageSpeed=prev.finished&&h.finished?TOTAL/Math.max(1,(prev.finishTime+h.finishTime)/2):0;
   const gapMeters=prev.finished&&h.finished
-    ? Math.max(0,h.finishTime-prev.finishTime)*.0166
+    ? timeGap*averageSpeed
     : Math.max(0,raceDistance(prev)-raceDistance(h));
-  // 1馬身は約2.4m。通常の接戦を誤って「大差」にしないよう、
-  // フレーム間の速度揺れで生じた極端な隣接差だけを写真判定相当に丸める。
-  const rawLengths=gapMeters/2.4;
-  const lengths=rawLengths<=2
-    ? rawLengths
-    : rawLengths<=12
-      ? 2+(rawLengths-2)*.16
-      : rawLengths>=36
-        ? rawLengths
-        : 3.6+(rawLengths-12)*.055;
+  const lengths=gapMeters/2.4;
   if(lengths<.07)return"ハナ";
   if(lengths<.16)return"アタマ";
   if(lengths<.34)return"クビ";
@@ -1896,7 +1909,7 @@ function startReplayFromGateExit(resetFirst=true){
   state="gateBreak";preRaceClock=0;
   startButton.disabled=true;pauseButton.disabled=true;
   gateSkipButton.hidden=true;speedButton.hidden=true;
-  phaseEl.textContent="全馬収容";
+  phaseEl.textContent="全馬ゲートイン";
   setCommentary("保存リプレイを、発馬機が左へ移動する場面から再生します。",true);
   lastTime=0;raf=requestAnimationFrame(loop);
   gateStartTimer=setTimeout(beginRaceAfterGate,3700);
@@ -1921,7 +1934,7 @@ startButton.addEventListener("click", () => {
       gateStartTimer=setTimeout(()=>{
         if(state!=="gates")return;
         assignStartReactions();
-        state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
+        state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬ゲートイン";
         gateSkipButton.hidden=true;
         setCommentary("全馬、枠内に収まりました。スタートを待ちます。");
         gateStartTimer=setTimeout(beginRaceAfterGate,3700);
@@ -1934,9 +1947,9 @@ gateSkipButton.addEventListener("click",()=>{
   if(state!=="parade"&&state!=="gates")return;
   clearTimeout(gateStartTimer);
   assignStartReactions();
-  state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬収容";
+  state="gateBreak";preRaceClock=0;phaseEl.textContent="全馬ゲートイン";
   gateSkipButton.hidden=true;
-  setCommentary("ゲート入りをスキップしました。全馬収容、スタートを待ちます。");
+  setCommentary("ゲート入りをスキップしました。全馬ゲートイン、スタートを待ちます。");
   gateStartTimer=setTimeout(beginRaceAfterGate,3700);
 });
 
