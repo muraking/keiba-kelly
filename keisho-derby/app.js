@@ -2081,7 +2081,7 @@ function showResult(detail){
     earned,weather:weather.weather,going:weather.going,isRecord:!!player.isRecord,
     age:horseAge(),date:weekLabel(),week:game.week,favorite:false
   });
-+  if(place===1&&["G1","G2","G3"].includes(r.raceClass)){
+  if(place===1&&["G1","G2","G3"].includes(r.raceClass)){
     const existingTrophy=(game.gradedTrophies||[]).find(t=>t.raceName===r.name);
     const finishSnapshot=r.overseas?{time:player.finishTime,weather:weather.weather,going:weather.going,order:detail.order.slice(0,5).map(h=>({id:h.id,name:h.name,color:h.color,horseColor:h.player?(game.candidate?.color||"#a96232"):h.color,player:!!h.player,finishTime:h.finishTime}))}:null;
     if(!existingTrophy)game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",horseAppearance:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])],eyeType:game.candidate?.eyeType||"穏やか",tack:game.equippedTack||"",tackColor:game.equippedTackColor||"#5aa8df"},finishSnapshot,generation:game.generation,date:weekLabel()});
