@@ -865,6 +865,12 @@ function update(dt, clockDt) {
     }
   });
 
+  // 先頭馬が決勝線を越えた瞬間を写真判定として保存する。
+  // 以後の駆け抜けや内部時計補正で、道中の見た目と最終着差が変わらないようにする。
+  if(finishDisplayMargins.size===0&&horses.some(h=>h.finished)){
+    horses.forEach(h=>finishDisplayMargins.set(h.id,Math.max(0,TOTAL-raceDistance(h))));
+  }
+
   remainingEl.textContent = `残り ${remaining}m`;
   raceTimeEl.textContent = formatTime(raceClock);
   if(elevationHorsesEl)horses.forEach(h=>{
@@ -942,8 +948,7 @@ function finishRace() {
   pauseButton.disabled = true;
   speedButton.hidden = true;
   const finalOrder=order(),winner = finalOrder[0];
-  // 着差は駆け抜け後の画面座標ではなく、各馬が決勝線を通過した時刻だけで確定する。
-  finishDisplayMargins=new Map();
+  // 着差は先頭馬が決勝線を通過した瞬間に保存済み。駆け抜け後も同じ値を使う。
   // 1000m競走では「1000m通過」がそのまま勝ち馬のゴール時刻になる。
   if(TOTAL===1000){
     split1000Time=winner.finishTime;
@@ -1378,6 +1383,10 @@ function marginLabel(prev,h){
   if(state==="ready"||raceClock<600)return"--";
   const timeGap=prev.finished&&h.finished?Math.max(0,h.finishTime-prev.finishTime):null;
   if(timeGap!==null&&timeGap<1)return"同着";
+  const snapshotPrev=finishDisplayMargins.get(prev.id),snapshotHorse=finishDisplayMargins.get(h.id);
+  if(Number.isFinite(snapshotPrev)&&Number.isFinite(snapshotHorse)){
+    return marginFromLengths(Math.abs(snapshotHorse-snapshotPrev)/2.4);
+  }
   const averageSpeed=prev.finished&&h.finished?TOTAL/Math.max(1,(prev.finishTime+h.finishTime)/2):0;
   const gapMeters=prev.finished&&h.finished
     ? timeGap*averageSpeed
@@ -1476,11 +1485,11 @@ function drawTrackV2(){
       const winner=centerOrder[0];
       drawVisionWinnerScene(screenX,screenY,screenW,screenH,winner);
       ctx.fillStyle="#10151add";ctx.fillRect(mx+mw*.52,screenY,mw*.48-3,screenH);
-      const confirmedX=mx+mw*.54;
-      ctx.fillStyle="#d83232";ctx.fillRect(confirmedX,my+24,43,21);ctx.fillStyle="#fff";ctx.font="bold 14px sans-serif";ctx.fillText("確定",confirmedX+21.5,my+40);
-      const resultGap=Math.max(9,Math.min(12,(screenH-34)/3));
-      const resultTop=Math.max(my+49,my+mh-resultGap*3-4);
-      centerOrder.slice(0,3).forEach((h,index)=>{const y=resultTop+index*resultGap;ctx.fillStyle="#e8edf0";ctx.font="bold 8px sans-serif";ctx.textAlign="left";ctx.fillText(`${index+1}着 ${h.id}番`,mx+mw*.53,y);ctx.fillStyle=index?"#cfb96f":"#ffe36d";ctx.textAlign="right";ctx.fillText(index?marginLabel(centerOrder[index-1],h):formatTime(h.finishTime),mx+mw-8,y)});
+      const confirmedX=mx+mw*.54,confirmedY=my+23;
+      ctx.fillStyle="#d83232";ctx.fillRect(confirmedX,confirmedY,38,18);ctx.fillStyle="#fff";ctx.font="bold 12px sans-serif";ctx.fillText("確定",confirmedX+19,confirmedY+14);
+      const resultGap=Math.max(8,Math.min(10,(screenH-39)/3));
+      const resultTop=my+50;
+      centerOrder.slice(0,3).forEach((h,index)=>{const y=resultTop+index*resultGap;ctx.fillStyle="#e8edf0";ctx.font="bold 7px sans-serif";ctx.textAlign="left";ctx.fillText(`${index+1}着 ${h.id}番`,mx+mw*.53,y);ctx.fillStyle=index?"#cfb96f":"#ffe36d";ctx.textAlign="right";ctx.fillText(index?marginLabel(centerOrder[index-1],h):formatTime(h.finishTime),mx+mw-8,y)});
     }else if(state==="parade"){
       drawVisionMovingBackdrop(screenX,screenY,screenW,screenH,.012);
       drawVisionGateStructure(screenX,screenY,screenW,screenH);
