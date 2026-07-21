@@ -212,6 +212,7 @@ body {
 .title-menu button { width:100%; margin:5px 0; }
 .title-menu small { display:block; margin-top:12px; color:#9eb4ad; }
 .title-menu .build-version { display:inline-block; margin-top:6px; padding:3px 9px; border:1px solid #d8bd6b; border-radius:12px; color:#fff1b8; background:#142c3b; font-size:11px; letter-spacing:.06em; }
+.save-transfer-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.save-transfer-buttons button{margin:0;font-size:13px;padding:9px 4px}
 .kicker { color: var(--gold); font-size: 11px; letter-spacing: .18em; }
 h1 { margin: 12px 0; color: white; font-size: 35px; line-height: 1.25; }
 h1 span { color: var(--gold); }

@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.13.6</title>
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.13.7</title>
   <link rel="stylesheet" href="style.css?v=20260722-85">
 </head>
 <body class="tester-build">
@@ -50,9 +50,11 @@
         <button id="raceTestButton">コース検証テスト</button>
         <button id="appearanceTestButton">見た目サンプル</button>
         <button id="endingDevAccessButton">エンディング確認</button>
+        <div class="save-transfer-buttons"><button id="exportSaveButton">セーブを書き出す</button><button id="importSaveButton">セーブを読み込む</button></div>
+        <input id="importSaveFile" type="file" accept="application/json,.json" hidden>
         <div id="endingDevButtons" class="ending-dev-buttons" hidden><small>開発者用・エンディング確認</small><button data-ending-preview="domestic-g1">国内GⅠ制覇</button><button data-ending-preview="overseas-g1">海外GⅠ制覇</button><button data-ending-preview="all-graded">全重賞制覇</button></div>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.13.6</b>
+        <b class="build-version">Ver. 0.13.7</b>
       </div>
     </section>
 
@@ -470,7 +472,7 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260722-16"></script>
-  <script src="app.js?v=20260722-37"></script>
+  <script src="app.js?v=20260722-38"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260722-30"></script>
   <script>

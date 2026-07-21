@@ -543,6 +543,33 @@ function loadGame(slot=activeSaveSlot){
   }catch{return false}
 }
 function hasAnySave(){return [1,2,3].some(slot=>localStorage.getItem(saveSlotKey(slot)))}
+const SAVE_BACKUP_FORMAT="keisho-derby-save-backup";
+function buildSaveBackup(){
+  const slots={};
+  [1,2,3].forEach(slot=>{const raw=localStorage.getItem(saveSlotKey(slot));if(raw){try{slots[slot]=JSON.parse(raw)}catch{}}});
+  return {format:SAVE_BACKUP_FORMAT,backupVersion:1,saveSchemaVersion:SAVE_SCHEMA_VERSION,exportedAt:new Date().toISOString(),activeSlot:activeSaveSlot,slots};
+}
+async function exportSaveBackup(){
+  if(!hasAnySave())return alert("書き出せるセーブデータがありません。");
+  const backup=buildSaveBackup(),text=JSON.stringify(backup,null,2),date=new Date().toISOString().slice(0,10).replaceAll("-","");
+  const file=new File([text],`keisho-derby-save-${date}.json`,{type:"application/json"});
+  if(navigator.canShare?.({files:[file]})){try{await navigator.share({title:"継承ダービー セーブデータ",files:[file]});return}catch(error){if(error?.name==="AbortError")return}}
+  const url=URL.createObjectURL(file),link=document.createElement("a");link.href=url;link.download=file.name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function importSaveBackup(file){
+  if(!file)return;
+  try{
+    const backup=JSON.parse(await file.text());
+    if(backup?.format!==SAVE_BACKUP_FORMAT||!backup.slots||typeof backup.slots!=="object")throw new Error("format");
+    const imported={};
+    [1,2,3].forEach(slot=>{const saved=backup.slots[slot];if(saved){imported[slot]=window.DotKeibaSaveCompat.migrateSaveData(saved,defaultGame()).data}});
+    const count=Object.keys(imported).length;if(!count)throw new Error("empty");
+    if(!confirm(`バックアップから${count}件のセーブを読み込みます。\n同じ番号の現在のセーブは上書きされます。よろしいですか？`))return;
+    Object.entries(imported).forEach(([slot,data])=>localStorage.setItem(saveSlotKey(slot),JSON.stringify(data)));
+    activeSaveSlot=Math.max(1,Math.min(3,Number(backup.activeSlot)||1));localStorage.setItem(ACTIVE_SLOT_KEY,String(activeSaveSlot));
+    document.querySelector("#continueButton").disabled=false;alert(`${count}件のセーブデータを復元しました。`);
+  }catch(error){alert("このファイルは継承ダービーのセーブデータとして読み込めませんでした。");}
+}
 function saveSlotSummary(slot){
   try{
     const saved=JSON.parse(localStorage.getItem(saveSlotKey(slot)));if(!saved?.horseName)return null;
@@ -2139,6 +2166,9 @@ document.querySelector("#continueButton").disabled=!hasAnySave();
 document.querySelector("#devModeButton").textContent=developerMode?"開発表示 ON":"開発表示";
 syncDeveloperEndingButtons();
 document.querySelector("#newGameButton").onclick=()=>{renderSaveSlots("new");showScreen("saveSlotScreen")};
+document.querySelector("#exportSaveButton")?.addEventListener("click",exportSaveBackup);
+document.querySelector("#importSaveButton")?.addEventListener("click",()=>document.querySelector("#importSaveFile")?.click());
+document.querySelector("#importSaveFile")?.addEventListener("change",async event=>{await importSaveBackup(event.target.files?.[0]);event.target.value=""});
 const raceTestVenue=document.querySelector("#raceTestVenue"),raceTestDirection=document.querySelector("#raceTestDirection"),raceTestDirectionRow=document.querySelector("#raceTestDirectionRow"),raceTestSurface=document.querySelector("#raceTestSurface"),raceTestDistance=document.querySelector("#raceTestDistance");
 const TEST_SURFACE_LABEL={turf:"芝",dirt:"ダート",banei:"ばんえい"};
 // NAR公式コースレコードに掲載されている施行実績距離。検証画面だけで使用する。
