@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.13.7</title>
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.13.8</title>
   <link rel="stylesheet" href="style.css?v=20260722-85">
 </head>
 <body class="tester-build">
@@ -47,14 +47,14 @@
         <h1>ドット競馬<br><span>継承ダービー</span></h1>
         <button class="primary big" id="newGameButton">はじめから</button>
         <button id="continueButton">つづきから</button>
-        <button id="raceTestButton">コース検証テスト</button>
-        <button id="appearanceTestButton">見た目サンプル</button>
-        <button id="endingDevAccessButton">エンディング確認</button>
+        <button id="raceTestButton" hidden>コース検証テスト</button>
+        <button id="appearanceTestButton" hidden>見た目サンプル</button>
+        <button id="endingDevAccessButton" hidden>エンディング確認</button>
         <div class="save-transfer-buttons"><button id="exportSaveButton">セーブを書き出す</button><button id="importSaveButton">セーブを読み込む</button></div>
         <input id="importSaveFile" type="file" accept="application/json,.json" hidden>
         <div id="endingDevButtons" class="ending-dev-buttons" hidden><small>開発者用・エンディング確認</small><button data-ending-preview="domestic-g1">国内GⅠ制覇</button><button data-ending-preview="overseas-g1">海外GⅠ制覇</button><button data-ending-preview="all-graded">全重賞制覇</button></div>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.13.7</b>
+        <b class="build-version">Ver. 0.13.8</b>
       </div>
     </section>
 
@@ -219,7 +219,7 @@
         <button id="historyButton">戦歴</button>
         <button id="galleryButton">ギャラリー</button>
         <button id="trophyButton">トロフィー</button>
-        <button id="devModeButton">開発表示</button>
+        <button id="devModeButton" hidden>開発表示</button>
         <button id="resetGameButton">最初から</button>
       </div>
     </section>
