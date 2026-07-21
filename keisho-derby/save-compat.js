@@ -4,7 +4,7 @@
   root.DotKeibaSaveCompat=api;
 })(typeof globalThis!=="undefined"?globalThis:this,function(){
   "use strict";
-  const SCHEMA_VERSION=5;
+  const SCHEMA_VERSION=6;
   const ARRAY_FIELDS=[
     "equipment","priorityRights","raceHistory","favoriteRaces","galleryUnlocks","gradedTrophies",
     "tackUnlocked","declinedOverseasInvites","lineage","retirementRecords","raceReservations","overseasReservations","reservationNotifiedIds"
@@ -21,6 +21,7 @@
     if(!saved||typeof saved!=="object"||Array.isArray(saved))throw new TypeError("invalid save data");
     const fromVersion=Number.isInteger(saved.saveVersion)&&saved.saveVersion>=0?saved.saveVersion:0;
     const data={...clone(defaults),...clone(saved),saveVersion:SCHEMA_VERSION};
+    if(typeof saved.equippedTackColor!=="string"||!saved.equippedTackColor)data.equippedTackColor=defaults.equippedTackColor||"#5aa8df";
     ARRAY_FIELDS.forEach(field=>{
       data[field]=Array.isArray(saved[field])?clone(saved[field]):clone(defaults[field]||[]);
     });

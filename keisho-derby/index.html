@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.11.1</title>
-  <link rel="stylesheet" href="style.css?v=20260721-70">
+  <title>ドット競馬 継承ダービー｜Ver. 0.12.0</title>
+  <link rel="stylesheet" href="style.css?v=20260721-71">
 </head>
 <body>
   <main class="phone">
@@ -50,7 +50,7 @@
         <button id="raceTestButton">コース検証テスト</button>
         <button id="appearanceTestButton">見た目サンプル</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.11.1</b>
+        <b class="build-version">Ver. 0.12.0</b>
       </div>
     </section>
 
@@ -166,7 +166,7 @@
       <div class="stats" id="horseStats"></div>
       <section class="coach-message">
         <span class="pixel-trainer" aria-label="調教師"><i class="trainer-hair"></i><i class="trainer-face"></i><i class="trainer-eye eye-left"></i><i class="trainer-eye eye-right"></i><i class="trainer-nose"></i><i class="trainer-mouth"></i><i class="trainer-body"></i><b class="trainer-caption">調教師</b></span>
-        <div class="coach-copy"><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b><span>脚元</span><b id="legConditionComment">脚元を確認しています</b></div><div id="tackChoices" class="tack-choices"></div></div>
+        <div class="coach-copy"><p id="homeMessage">今日の調教を選びましょう。</p><div class="coach-vitals"><span id="conditionText">調子：普通</span><span>馬体重 <strong id="horseWeight">--kg</strong>・<small id="horseWeightCondition">状態確認中</small></span></div><div class="coach-observation"><span>所見</span><b id="temperamentComment">気性を観察しています</b><span>脚元</span><b id="legConditionComment">脚元を確認しています</b></div></div>
       </section>
       <div class="training-menu-head"><b>調教メニュー</b><span>今週 <strong id="turnsLeft">0/2</strong></span></div>
       <div class="auto-training-panel"><button id="autoTrainingButton">おまかせ調教 4週間</button></div>
@@ -223,6 +223,7 @@
     <section id="horseDetailScreen" class="game-screen detail-screen">
       <header class="simple-header"><b>愛馬詳細</b><span id="detailAge">2歳</span></header>
       <div id="detailHorseStage" class="detail-horse-stage">
+        <i class="detail-sun"></i><i class="detail-cloud detail-cloud-one"></i><i class="detail-cloud detail-cloud-two"></i>
         <div class="candidate-pixel-horse detail-pixel-horse">
           <div class="candidate-body"></div><div class="candidate-neck"></div>
           <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
@@ -231,6 +232,8 @@
         <p id="horseReaction">馬がこちらを見ています。タッチしてみましょう。</p>
       </div>
       <div id="horseDetailInfo" class="horse-detail-info"></div>
+      <button id="detailTackButton">馬具を変更する</button>
+      <div id="detailTackPanel" class="detail-tack-panel" hidden><b>装着する馬具</b><div id="tackChoices" class="tack-choices"></div><b>馬具の色</b><div id="tackColorChoices" class="tack-color-choices"></div><p id="tackColorGuide">馬具を選ぶと色を変更できます。</p></div>
       <button id="lineageButton">血統図を見る</button>
       <button class="retire-button" id="retireHorseButton">引退して次世代へ</button>
       <button data-back="homeScreen">育成へもどる</button>
@@ -458,10 +461,10 @@
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
-  <script src="save-compat.js?v=20260721-14"></script>
-  <script src="app.js?v=20260721-20"></script>
+  <script src="save-compat.js?v=20260721-15"></script>
+  <script src="app.js?v=20260721-21"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
-  <script src="race.js?v=20260721-27"></script>
+  <script src="race.js?v=20260721-28"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>

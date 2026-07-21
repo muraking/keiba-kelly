@@ -390,6 +390,7 @@ function makeHorse(i, styles) {
     trouble: raceRandom(),
     temperamentValue:isPlayer?playerSetup.temperamentValue:temperament,
     equippedTack:isPlayer?playerSetup.equippedTack:null,
+    equippedTackColor:isPlayer?(playerSetup.equippedTackColor||"#5aa8df"):"#5aa8df",
     temperamentTrouble:null,
     gateChecked:false,
     startReaction:"普通",
@@ -1166,7 +1167,7 @@ function drawPixelHorse(h, pos) {
   ctx.fillText(h.id, Math.round(pos.x), Math.round(pos.y - 6));
   if(h.equippedTack){
     const tack=local(5,-2);
-    ctx.fillStyle=h.equippedTack==="hood"?"#5aa8df":h.equippedTack==="blinkers"?"#e94e45":"#f0c84b";
+    ctx.fillStyle=h.equippedTackColor||(h.equippedTack==="hood"?"#5aa8df":h.equippedTack==="blinkers"?"#e94e45":"#f0c84b");
     ctx.fillRect(tack.x-2,tack.y-2,4,4);
   }
   if(h.player){
@@ -1196,6 +1197,12 @@ function drawVisionCandidateHorse(x,y,h,scale=.62){
   const face=appearance.faceMarkType||"none";
   if(face!=="none"){ctx.fillStyle="#eee9d9";if(face==="star")ctx.fillRect(23,-20,5,5);else if(face==="snip")ctx.fillRect(27,-15,6,4);else{ctx.fillRect(22,-22,5,11);if(face==="doubleBlaze")ctx.fillRect(28,-21,3,10);if(face==="starSnip")ctx.fillRect(29,-15,4,4)}}
   ctx.fillStyle="#2d211a";const mane=appearance.maneStyle||"standard";ctx.fillRect(7,-18,mane==="long"?8:mane==="short"?3:5,mane==="upright"?17:mane==="long"?25:20);
+  if(h.equippedTack){
+    ctx.fillStyle=h.equippedTackColor||"#5aa8df";
+    if(h.equippedTack==="hood"){ctx.fillRect(16,-23,17,7);ctx.fillRect(17,-16,5,5)}
+    else if(h.equippedTack==="blinkers"){ctx.fillRect(23,-20,7,5);ctx.fillStyle="#24313a";ctx.fillRect(27,-19,3,3)}
+    else if(h.equippedTack==="cheekpieces")ctx.fillRect(19,-15,10,4);
+  }
   ctx.fillStyle=h.color;ctx.fillRect(-12,-4,14,9);
   ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(h.id,-5,4);
   ctx.restore();

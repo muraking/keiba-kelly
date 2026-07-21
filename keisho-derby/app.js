@@ -152,7 +152,7 @@ const defaultGame = () => ({
   injury:null, legCondition:100, soundness:550, recoveryPower:550, turnaroundTolerance:500,
   lastRaceWeek:null, raceLoad:0,
   temperament:"普通",temperamentValue:50,temperamentKnown:false,
-  tackUnlocked:[],equippedTack:null,temperamentObservations:0,
+  tackUnlocked:[],equippedTack:null,equippedTackColor:"#5aa8df",temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], gradedTrophies:[], candidate:null,
   reservedRaceId:null,reservationNotifiedId:null,raceReservations:[],overseasReservations:[],reservationNotifiedIds:[],pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],lastBreedingPartner:null,equipmentDurability:{},equipmentAge:{},inheritanceComment:"",lastRaceAdvice:""
@@ -162,6 +162,7 @@ let autoTrainingActive=false;
 let trainingAnimationActive=false;
 let pendingRaceAfterSpacingWarning=null;
 let developerMode=localStorage.getItem("dotKeibaDeveloperMode")==="1";
+let detailHorseMotionTimer=null,detailHorseMotionIndex=0;
 const ABILITY_STATS=["speed","dash","stamina","power","guts","turf","dirt","heavyTrack"];
 
 const raceCalendar = [
@@ -485,7 +486,7 @@ function classBenchmarkTime(race){
   return Math.round(record+(secondsPerKm+twoYearOldExtra)*race.distance);
 }
 
-function showScreen(id){ screens.forEach(s=>s.classList.toggle("active",s.id===id)); scrollTo(0,0); }
+function showScreen(id){ screens.forEach(s=>s.classList.toggle("active",s.id===id));if(id!=="horseDetailScreen"&&detailHorseMotionTimer){clearInterval(detailHorseMotionTimer);detailHorseMotionTimer=null}scrollTo(0,0); }
 function saveGame(){ game.saveVersion=SAVE_SCHEMA_VERSION;localStorage.setItem(saveSlotKey(activeSaveSlot),JSON.stringify(game)); }
 function loadGame(slot=activeSaveSlot){
   try{
@@ -524,6 +525,7 @@ function loadGame(slot=activeSaveSlot){
     if(!Number.isFinite(saved?.temperamentValue))game.temperamentValue=rnd(30,75);
     if(!saved?.temperament)game.temperament=temperamentType(game.temperamentValue);
     if(!Array.isArray(saved?.tackUnlocked))game.tackUnlocked=[];
+    if(typeof saved?.equippedTackColor!=="string")game.equippedTackColor="#5aa8df";
     if(!game.equipmentDurability||typeof game.equipmentDurability!=="object")game.equipmentDurability={};
     if(!game.equipmentAge||typeof game.equipmentAge!=="object")game.equipmentAge={};
     game.equipment.forEach(id=>{if(!Number.isFinite(game.equipmentDurability[id]))game.equipmentDurability[id]=equipmentCatalog.find(x=>x.id===id)?.durability||80});
@@ -969,6 +971,10 @@ const tackCatalog={
   blinkers:{name:"ブリンカー",desc:"前方へ集中。掛かりには注意"},
   cheekpieces:{name:"チークピーシズ",desc:"馬群での集中力を補助"}
 };
+const TACK_COLORS=[
+  {name:"青",value:"#5aa8df"},{name:"赤",value:"#e94e45"},{name:"黄",value:"#f0c84b"},{name:"緑",value:"#51a85b"},
+  {name:"白",value:"#f2ead7"},{name:"黒",value:"#25282b"},{name:"桃",value:"#ed82a7"},{name:"紫",value:"#8759b7"},{name:"橙",value:"#ed8a3c"},{name:"水色",value:"#69cfda"}
+];
 function trainerTemperamentComment(){
   if(!game.temperamentKnown)return "まだ性格を見極めている段階です";
   if(game.temperament==="荒い")return "力みやすく、折り合いに注意が必要です";
@@ -1039,9 +1045,17 @@ function renderTack(){
       game.tackUnlocked.map(id=>`<button data-tack="${id}" class="${game.equippedTack===id?"selected":""}">${tackCatalog[id].name}<small>${tackCatalog[id].desc}</small></button>`).join("")
     : "";
 }
+function renderDetailTackPanel(){
+  renderTack();
+  const colors=document.querySelector("#tackColorChoices");
+  colors.innerHTML=TACK_COLORS.map(color=>`<button data-tack-color="${color.value}" class="${game.equippedTackColor===color.value?"selected":""}" style="--choice-color:${color.value}" title="${color.name}"><i></i><span>${color.name}</span></button>`).join("");
+  colors.querySelectorAll("button").forEach(button=>button.disabled=!game.equippedTack);
+  document.querySelector("#tackColorGuide").textContent=game.equippedTack?`${tackCatalog[game.equippedTack].name}・${TACK_COLORS.find(c=>c.value===game.equippedTackColor)?.name||"青"}を装着中です。`:game.tackUnlocked.length?"馬具を選ぶと色を変更できます。":"調教やレースを重ねると、調教師から馬具が提案されます。";
+}
 function applyHorseAppearance(el){
   if(!el)return;
   applyAppearanceToElement(el,game.candidate);
+  el.style.setProperty("--tack-color",game.equippedTackColor||"#5aa8df");
   ["hood","blinkers","cheekpieces"].forEach(id=>el.classList.toggle(`tack-${id}`,game.equippedTack===id));
 }
 const APPEARANCE_FACE_LABELS={none:"顔白なし",star:"星",blaze:"流星",doubleBlaze:"二本流星",snip:"鼻白",starSnip:"星・鼻白",bald:"大流星"};
@@ -1075,15 +1089,23 @@ function loadAppearanceSample(appearance){
   document.querySelector("#appearanceFaceSelect").value=appearance.faceMarkType;document.querySelector("#appearanceManeSelect").value=appearance.maneStyle;document.querySelector("#appearanceTailSelect").value=appearance.tailStyle;
   document.querySelector("#appearanceFrontSockSelect").value=String(appearance.legMarks[0]||0);document.querySelector("#appearanceBackSockSelect").value=String(appearance.legMarks[2]||0);updateAppearancePreview();
 }
+function startDetailHorseMotion(){
+  if(detailHorseMotionTimer)clearInterval(detailHorseMotionTimer);
+  const stage=document.querySelector("#detailHorseStage"),horse=stage?.querySelector(".detail-pixel-horse");if(!horse)return;
+  const motions=[{className:"detail-motion-idle",text:"こちらの様子をじっと見ています。"},{className:"detail-motion-approach",text:"興味深そうに近寄ってきました。"},{className:"detail-motion-hop",text:"元気に小さく跳ねています。"},{className:"detail-motion-rest",text:"安心したのか、ゆっくり伏せました。"},{className:"detail-motion-wake",text:"耳を動かしながら起き上がりました。"}];
+  const next=()=>{horse.classList.remove(...motions.map(m=>m.className),"horse-happy");const motion=motions[detailHorseMotionIndex++%motions.length];horse.classList.add(motion.className);const reaction=document.querySelector("#horseReaction");if(reaction)reaction.textContent=motion.text};
+  next();detailHorseMotionTimer=setInterval(next,4700);
+}
 function renderHorseDetail(){
   const stage=document.querySelector("#detailHorseStage");
   applyHorseAppearance(stage);
+  startDetailHorseMotion();
   document.querySelector("#detailAge").textContent=`${horseAge()}歳 ${game.candidate?.sex||""}・${gameYear()}年目`;
   document.querySelector("#horseDetailInfo").innerHTML=`<h2>${game.horseName}</h2><dl>
     <dt>性別・毛色</dt><dd>${game.candidate?.sex||"牡馬"}・${game.candidate?.coat||"栗毛"}・${({none:"顔白なし",star:"星",blaze:"流星",doubleBlaze:"二本流星",snip:"鼻白",starSnip:"星・鼻白",bald:"大流星"})[game.candidate?.appearanceDNA?.faceMarkType||"none"]}</dd>
     <dt>外見</dt><dd>たてがみ ${({short:"短め",standard:"標準",long:"長め",upright:"立ち",wavy:"波打ち"})[game.candidate?.appearanceDNA?.maneStyle||"standard"]}・尻尾 ${({short:"短め",standard:"標準",long:"長め",wavy:"波打ち",raised:"上向き"})[game.candidate?.appearanceDNA?.tailStyle||"standard"]}</dd>
     <dt>目つき</dt><dd>${game.candidate?.eyeType||"穏やか"}</dd><dt>性格</dt><dd>${trainerTemperamentComment()}</dd>
-    <dt>馬体</dt><dd>${game.weight}kg・${weightComment()}</dd><dt>馬具</dt><dd>${game.equippedTack?tackCatalog[game.equippedTack].name:"なし"}</dd>
+    <dt>馬体</dt><dd>${game.weight}kg・${weightComment()}</dd><dt>馬具</dt><dd>${game.equippedTack?`${tackCatalog[game.equippedTack].name}（${TACK_COLORS.find(c=>c.value===game.equippedTackColor)?.name||"青"}）`:"なし"}</dd>
     <dt>戦績</dt><dd>${game.races}戦${game.wins}勝・${game.prize.toLocaleString()}万円</dd><dt>好感度</dt><dd>${game.affection<3?"まだ少し緊張":game.affection<8?"心を開いてきた":"とても懐いている"}</dd></dl>`;
 }
 function renderLineage(){
@@ -1449,11 +1471,11 @@ function showTrophyHorse(index){
   const trophy=(game.gradedTrophies||[])[index];if(!trophy)return;
   selectedTrophyIndex=index;
   document.querySelectorAll("[data-trophy-index]").forEach(button=>button.classList.toggle("selected",Number(button.dataset.trophyIndex)===index));
-  const currentHorseAppearance=trophy.horseName===game.horseName&&Number(trophy.generation)===Number(game.generation)?{...normalizeAppearanceDNA(game.candidate),tack:game.equippedTack}:{};
+  const currentHorseAppearance=trophy.horseName===game.horseName&&Number(trophy.generation)===Number(game.generation)?{...normalizeAppearanceDNA(game.candidate),tack:game.equippedTack,tackColor:game.equippedTackColor}:{};
   const appearance=trophy.horseAppearance||currentHorseAppearance;
   const color=appearance.color||trophy.horseColor||"#a96232";
   const appearanceClass=[appearanceClassNames(appearance),appearance.faceMark&&!appearance.faceMarkType?"face-blaze":"",Number(appearance.socks)>0&&!appearance.legMarks?"front-sock-1 back-sock-1":"",appearance.tack?`tack-${appearance.tack}`:""].filter(Boolean).join(" ");
-  detail.innerHTML=`<div class="trophy-detail-stage ${appearanceClass}" style="--horse-color:${color};--active-horse-color:${color}"><div class="candidate-pixel-horse trophy-detail-horse"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div><div class="winner-wreath"></div></div></div><div><small>${trophy.grade==="G1"?"GⅠ":trophy.grade==="G2"?"GⅡ":"GⅢ"} TROPHY</small><h3>${trophy.raceName}</h3><b>${trophy.horseName}</b><p>${trophy.generation}代目　${trophy.horseAge?`${trophy.horseAge}歳　`:""}${trophy.date||""}</p></div>`;
+  detail.innerHTML=`<div class="trophy-detail-stage ${appearanceClass}" style="--horse-color:${color};--active-horse-color:${color};--tack-color:${appearance.tackColor||"#5aa8df"}"><div class="candidate-pixel-horse trophy-detail-horse"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div><div class="winner-wreath"></div></div></div><div><small>${trophy.grade==="G1"?"GⅠ":trophy.grade==="G2"?"GⅡ":"GⅢ"} TROPHY</small><h3>${trophy.raceName}</h3><b>${trophy.horseName}</b><p>${trophy.generation}代目　${trophy.horseAge?`${trophy.horseAge}歳　`:""}${trophy.date||""}</p></div>`;
   detail.hidden=false;detail.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function train(type){
@@ -1910,12 +1932,12 @@ function prepareRace(race){
     };
     game.currentRaceWeather=raceWeather;
     saveGame();
-    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,sex:game.candidate?.sex||"牡馬",appearance:game.candidate?.appearanceDNA||null,sexCondition:race.sexCondition||(raceFemaleOnly(race)?"牝馬限定":"混合"),raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
+    dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{horseName:game.horseName,sex:game.candidate?.sex||"牡馬",appearance:game.candidate?.appearanceDNA||null,sexCondition:race.sexCondition||(raceFemaleOnly(race)?"牝馬限定":"混合"),raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,surface:race.surface,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,heavyTrack:game.heavyTrack,temperament:game.temperament,temperamentValue:game.temperamentValue,equippedTack:game.equippedTack,equippedTackColor:game.equippedTackColor,weather:raceWeather.weather,going:raceWeather.going,raceMonth:raceWeather.month,baseTime:benchmarkTime,benchmarkTime,recordTime,recordVerified:timingRecord.verified,layoutV2:true}}));
   }catch(error){
     console.error("race preparation failed",error);
     document.querySelector("#commentary").textContent="レースの読み込みを再試行しています。";
     dispatchEvent(new CustomEvent("dotkeiba:prepare",{detail:{
-      horseName:game.horseName,sex:game.candidate?.sex||"牡馬",appearance:game.candidate?.appearanceDNA||null,sexCondition:race.sexCondition||(raceFemaleOnly(race)?"牝馬限定":"混合"),raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,
+      horseName:game.horseName,sex:game.candidate?.sex||"牡馬",appearance:game.candidate?.appearanceDNA||null,sexCondition:race.sexCondition||(raceFemaleOnly(race)?"牝馬限定":"混合"),raceName:race.name,age:horseAge(),ability:playerAbility(race),dash:game.dash,gateSkill:game.gateSkill,equippedTack:game.equippedTack,equippedTackColor:game.equippedTackColor,
       condition:game.condition,fatigue:game.fatigue,difficulty:race.difficulty*10,
       raceClass:race.raceClass,overseas:!!race.overseas,venue:raceVenue(race),distance:race.distance,direction:race.direction||null,courseAuditMode:!!race.courseAuditMode,
       surface:race.surface,heavyTrack:game.heavyTrack,weather:"晴",going:"良",
@@ -2000,7 +2022,7 @@ function showResult(detail){
     earned,weather:weather.weather,going:weather.going,isRecord:!!player.isRecord,
     age:horseAge(),date:weekLabel(),week:game.week,favorite:false
   });
-  if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",horseAppearance:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])],eyeType:game.candidate?.eyeType||"穏やか",tack:game.equippedTack||""},generation:game.generation,date:weekLabel()});
+  if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",horseAppearance:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])],eyeType:game.candidate?.eyeType||"穏やか",tack:game.equippedTack||"",tackColor:game.equippedTackColor||"#5aa8df"},generation:game.generation,date:weekLabel()});
   checkOverseasInvitation(r,place);
   refreshGalleryUnlocks();
   const spacingBeforeRace=raceIntervalState(game.week);
@@ -2176,7 +2198,7 @@ document.querySelector("#galleryButton").onclick=()=>{renderGallery();showScreen
 document.querySelector("#trophyButton").onclick=()=>{renderTrophies("G1");showScreen("trophyScreen")};
 document.querySelector("#trophyTabs").onclick=e=>{const button=e.target.closest("[data-trophy-grade]");if(button)renderTrophies(button.dataset.trophyGrade)};
 document.querySelector("#trophyGrid").onclick=e=>{const button=e.target.closest("[data-trophy-index]");if(button)showTrophyHorse(Number(button.dataset.trophyIndex))};
-const openHorseDetail=()=>{renderHorseDetail();showScreen("horseDetailScreen")};
+const openHorseDetail=()=>{document.querySelector("#detailTackPanel").hidden=true;document.querySelector("#detailTackButton").textContent="馬具を変更する";renderHorseDetail();showScreen("horseDetailScreen")};
 document.querySelector("#lineageButton").onclick=()=>{renderLineage();showScreen("lineageScreen")};
 document.querySelector("#homeHorse").onclick=e=>{e.stopPropagation();openHorseDetail()};
 document.querySelector("#homeHorse").onkeydown=e=>{
@@ -2195,6 +2217,7 @@ document.querySelector("#detailHorseStage").onclick=()=>{
   document.querySelector("#detailHorseStage").classList.remove("horse-happy");void document.querySelector("#detailHorseStage").offsetWidth;document.querySelector("#detailHorseStage").classList.add("horse-happy");
   saveGame();
 };
+document.querySelector("#detailTackButton").onclick=()=>{const panel=document.querySelector("#detailTackPanel");panel.hidden=!panel.hidden;if(!panel.hidden)renderDetailTackPanel();document.querySelector("#detailTackButton").textContent=panel.hidden?"馬具を変更する":"馬具メニューを閉じる"};
 document.querySelector("#retireHorseButton").onclick=()=>{renderRetirement();showScreen("retirementScreen")};
 let pendingBreedingPartner=null;
 function closeInheritanceConfirm(){
@@ -2239,8 +2262,9 @@ document.querySelector("#tackChoices").onclick=e=>{
   const button=e.target.closest("[data-tack]");
   if(!button)return;
   game.equippedTack=button.dataset.tack||null;
-  renderHome(game.equippedTack?`${tackCatalog[game.equippedTack].name}を装着しました。`:"馬具を外しました。");
+  saveGame();renderHorseDetail();renderDetailTackPanel();
 };
+document.querySelector("#tackColorChoices").onclick=e=>{const button=e.target.closest("[data-tack-color]");if(!button||!game.equippedTack)return;game.equippedTackColor=button.dataset.tackColor;saveGame();renderHorseDetail();renderDetailTackPanel()};
 document.querySelector("#goRaceSelectButton").onclick=()=>{
   const reserved=dueReservedRace();
   window.selectedRaceWeek=game.week;window.selectedRaceVenue=reserved?raceVenueTab(reserved):"";renderRaces();showScreen("raceSelectScreen");

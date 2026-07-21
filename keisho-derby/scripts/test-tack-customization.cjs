@@ -1,0 +1,23 @@
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const path=require("node:path");
+const root=path.resolve(__dirname,"..");
+const read=name=>fs.readFileSync(path.join(root,name),"utf8");
+const app=read("app.js"),race=read("race.js"),css=read("style.css"),html=read("index.html");
+
+assert.match(html,/id="detailTackButton"/);
+assert.match(html,/id="tackColorChoices"/);
+assert.match(html,/class="detail-sun"/);
+assert.match(html,/class="detail-cloud/);
+assert.match(app,/const TACK_COLORS=/);
+assert.match(app,/function renderDetailTackPanel\(/);
+assert.match(app,/detail-motion-rest/);
+assert.match(app,/detail-motion-wake/);
+assert.match(app,/equippedTackColor/);
+assert.match(race,/equippedTackColor/);
+assert.match(css,/\.detail-tack-panel/);
+assert.match(css,/\.tack-color-choices/);
+assert.match(css,/\.detail-motion-approach/);
+assert.match(css,/\.detail-motion-rest/);
+assert.match(css,/\.detail-motion-wake/);
+console.log("tack customization and detail motion: OK");
