@@ -2257,6 +2257,7 @@ document.querySelector("#historyList").onclick=e=>{
 };
 document.querySelector("#galleryButton").onclick=()=>{renderGallery();showScreen("galleryScreen")};
 document.querySelector("#endingGalleryGrid").onclick=e=>{const button=e.target.closest("[data-ending-replay]");if(button)showEnding(button.dataset.endingReplay,true)};
+document.querySelector("#endingDevAccessButton").onclick=()=>{developerMode=true;localStorage.setItem("dotKeibaDeveloperMode","1");syncDeveloperEndingButtons()};
 document.querySelector("#endingDevButtons").onclick=e=>{const button=e.target.closest("[data-ending-preview]");if(button)showEnding(button.dataset.endingPreview,true)};
 document.querySelector("#trophyButton").onclick=()=>{renderTrophies("G1");showScreen("trophyScreen")};
 document.querySelector("#trophyTabs").onclick=e=>{const button=e.target.closest("[data-trophy-grade]");if(button)renderTrophies(button.dataset.trophyGrade)};

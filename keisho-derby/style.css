@@ -9,7 +9,7 @@
 }
 
 * { box-sizing: border-box; }
-.tester-build #raceTestButton,.tester-build #appearanceTestButton,.tester-build #devModeButton,.tester-build #endingDevButtons { display:none !important; }
+.tester-build #raceTestButton,.tester-build #appearanceTestButton,.tester-build #devModeButton,.tester-build #endingDevAccessButton,.tester-build #endingDevButtons { display:none !important; }
 
 body {
   margin: 0;
