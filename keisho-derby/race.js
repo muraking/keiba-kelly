@@ -341,6 +341,13 @@ function trackBiasLabel(){
   return `${frame}・${run}`;
 }
 
+const RACE_COAT_COLORS=["#b5662f","#bd7137","#a95a2a","#8d4528","#70401f","#794724","#63371d","#342723","#292829","#1f2225","#aaa99f","#bbb9ae"];
+function randomOpponentAppearance(){
+  const pick=list=>list[Math.floor(raceRandom()*list.length)];
+  return{color:pick(RACE_COAT_COLORS),faceMarkType:pick(["none","none","none","star","blaze","snip","starSnip"]),
+    legMarks:Array.from({length:4},()=>raceRandom()<.25?(raceRandom()<.72?1:2):0),maneStyle:pick(["short","standard","long","upright","wavy"]),tailStyle:pick(["short","standard","long","wavy","raised"])};
+}
+
 function makeHorse(i, styles) {
   const isPlayer = i === playerNumber-1;
   const opponentIndex=i-(i>playerNumber-1?1:0);
@@ -352,11 +359,14 @@ function makeHorse(i, styles) {
   const effectiveStyle=isPlayer?styles[i]:resolvedStyle;
   const dashBonus=rival?.trait==="speed"?65:rival?.trait==="power"?25:0;
   const temperament=rival?.trait==="wild"?78:rival?.trait==="steady"?32:35+Math.round(raceRandom()*45);
+  const appearance=isPlayer&&playerSetup.appearance?{...playerSetup.appearance}:randomOpponentAppearance();
   return {
     id: i + 1,
     name: isPlayer ? playerSetup.horseName : rival?.name||opponentNames[opponentIndex],
     sex:isPlayer?playerSetup.sex:(rival?.sex||"牡馬"),
     color: COLORS[i],
+    coatColor:appearance.color||"#a9612f",
+    appearance,
     style: effectiveStyle,
     styleLabel:isPlayer?styles[i]:listedStyle,
     rivalTrait:rival?.trait||null,
@@ -1136,12 +1146,14 @@ function drawPixelHorse(h, pos) {
     ctx.fillStyle = color;
     ctx.fillRect(p.x, p.y, Math.max(2, w * scale), Math.max(2, hh * scale));
   };
-  block(-2, 0, "#492812", 4, 2);
-  block(2, -1, "#7b461f", 2, 2);
-  block(-1, -2, h.color, 2, 1);
-  block(0, -3, h.color);
+  const coat=h.coatColor||"#7b461f",mark=h.appearance?.faceMarkType||"none",legs=h.appearance?.legMarks||[];
+  block(-2, 0, coat, 4, 2);
+  block(2, -1, coat, 2, 2);
+  block(-1, -2, coat, 2, 1);
+  block(0, -3, mark==="none"?coat:"#eee9d9");
   block(-2, 2, "#17120e");
   block(1, 2, "#17120e");
+  if(legs[0])block(1,2,"#eee9d9",1,legs[0]);if(legs[2])block(-2,2,"#eee9d9",1,legs[2]);
 
   ctx.fillStyle = h.color;
   ctx.fillRect(Math.round(pos.x - 4), Math.round(pos.y - 13), 9, 9);
@@ -1166,16 +1178,24 @@ function drawPixelHorse(h, pos) {
 
 function drawVisionCandidateHorse(x,y,h,scale=.62){
   ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
-  const coat=h.player?"#d08a42":"#a9612f";
+  const appearance=h.appearance||{},coat=h.coatColor||appearance.color||(h.player?"#d08a42":"#a9612f");
   const motionClock=state==="running"||state==="runout"?raceClock:preRaceClock+waitingMotionClock;
   const stride=(Math.floor(motionClock/105)+h.id)%2;
   ctx.fillStyle=coat;ctx.strokeStyle="#3c2418";ctx.lineWidth=2;
   ctx.fillRect(-22,-6,34,16);ctx.strokeRect(-22,-6,34,16);
   ctx.fillRect(8,-17,10,24);ctx.strokeRect(8,-17,10,24);
   ctx.fillRect(15,-23,18,13);ctx.strokeRect(15,-23,18,13);
-  ctx.fillRect(-28,-5+(stride?1:-1),8,5);
+  const tailStyle=appearance.tailStyle||"standard",tailLength=tailStyle==="long"?14:tailStyle==="short"?6:9,tailY=tailStyle==="raised"?-10:-5+(stride?1:-1);
+  ctx.fillStyle=tailStyle==="wavy"?"#2d211a":coat;ctx.fillRect(-20-tailLength,tailY,tailLength,tailStyle==="wavy"?7:5);
+  ctx.fillStyle=coat;
   ctx.fillRect(-17+(stride?3:0),9,5,15);ctx.fillRect(4-(stride?3:0),9,5,15);
   ctx.fillRect(-7-(stride?3:0),9,4,13);ctx.fillRect(10+(stride?3:0),9,4,13);
+  const legs=appearance.legMarks||[];ctx.fillStyle="#eee9d9";
+  if(legs[0])ctx.fillRect(4-(stride?3:0),legs[0]===2?13:18,5,legs[0]===2?11:6);
+  if(legs[2])ctx.fillRect(-17+(stride?3:0),legs[2]===2?13:18,5,legs[2]===2?11:6);
+  const face=appearance.faceMarkType||"none";
+  if(face!=="none"){ctx.fillStyle="#eee9d9";if(face==="star")ctx.fillRect(23,-20,5,5);else if(face==="snip")ctx.fillRect(27,-15,6,4);else{ctx.fillRect(22,-22,5,11);if(face==="doubleBlaze")ctx.fillRect(28,-21,3,10);if(face==="starSnip")ctx.fillRect(29,-15,4,4)}}
+  ctx.fillStyle="#2d211a";const mane=appearance.maneStyle||"standard";ctx.fillRect(7,-18,mane==="long"?8:mane==="short"?3:5,mane==="upright"?17:mane==="long"?25:20);
   ctx.fillStyle=h.color;ctx.fillRect(-12,-4,14,9);
   ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(h.id,-5,4);
   ctx.restore();

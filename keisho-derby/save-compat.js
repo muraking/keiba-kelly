@@ -4,7 +4,7 @@
   root.DotKeibaSaveCompat=api;
 })(typeof globalThis!=="undefined"?globalThis:this,function(){
   "use strict";
-  const SCHEMA_VERSION=4;
+  const SCHEMA_VERSION=5;
   const ARRAY_FIELDS=[
     "equipment","priorityRights","raceHistory","favoriteRaces","galleryUnlocks","gradedTrophies",
     "tackUnlocked","declinedOverseasInvites","lineage","retirementRecords","raceReservations","overseasReservations","reservationNotifiedIds"
@@ -32,6 +32,11 @@
     if(saved.candidate&&typeof saved.candidate==="object"&&!Array.isArray(saved.candidate)){
       data.candidate=clone(saved.candidate);
       if(!data.candidate.sex)data.candidate.sex="牡馬";
+      if(!data.candidate.appearanceDNA||typeof data.candidate.appearanceDNA!=="object"){
+        const sockCount=Math.max(0,Math.min(4,Number(data.candidate.socks)||0));
+        data.candidate.appearanceDNA={coat:data.candidate.coat||"栗毛",color:data.candidate.color||"#b96e32",shade:0,
+          faceMarkType:data.candidate.faceMark?"blaze":"none",legMarks:Array.from({length:4},(_,i)=>i<sockCount?1:0),maneStyle:"standard",tailStyle:"standard"};
+      }
     }else data.candidate=null;
     if(saved.selectedRace&&typeof saved.selectedRace==="object"&&!Array.isArray(saved.selectedRace))data.selectedRace=clone(saved.selectedRace);
     else data.selectedRace=null;

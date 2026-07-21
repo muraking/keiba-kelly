@@ -1,4 +1,4 @@
-const CACHE = 'keiba-kelly-v94';
+const CACHE = 'keiba-kelly-v95';
 const BASE = self.location.pathname.replace('/sw.js', '');
 const ASSETS = [
   BASE + '/',

@@ -24,6 +24,9 @@ assert.deepEqual(migrated.data.raceReservations,[]);
 assert.deepEqual(migrated.data.raceHistory,[]);
 assert.deepEqual(migrated.data.equipmentDurability,{});
 assert.equal(migrated.data.candidate.sex,"牡馬");
+assert.equal(migrated.data.candidate.appearanceDNA.coat,"栗毛");
+assert.equal(migrated.data.candidate.appearanceDNA.faceMarkType,"none");
+assert.deepEqual(migrated.data.candidate.appearanceDNA.legMarks,[0,0,0,0]);
 
 // 途中版相当：追加フィールドがnullでも、利用時に例外になる型を残さないこと。
 const malformed={...legacy,equipment:null,raceHistory:null,priorityRights:null,equipmentDurability:null,candidate:null};
