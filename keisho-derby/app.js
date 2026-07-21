@@ -1477,11 +1477,9 @@ function showEnding(id,preview=false){
   showScreen("endingScreen");
 }
 function renderEndingGallery(){
-  const container=document.querySelector("#endingGalleryGrid");if(!container)return;
-  container.innerHTML=Object.entries(ENDING_DEFINITIONS).map(([id,item])=>{
-    const unlocked=(game.endingUnlocks||[]).includes(id),progress=endingProgress(id);
-    return `<button class="ending-gallery-card ${unlocked?"unlocked":"locked"}" ${unlocked?`data-ending-replay="${id}"`:"disabled"}><small>${item.chapter}</small><b>${unlocked?item.title:"？？？？？？"}</b><span>${progress.completed} / ${progress.total}</span></button>`;
-  }).join("");
+  const container=document.querySelector("#endingGalleryGrid"),section=document.querySelector("#endingGallerySection");if(!container||!section)return;
+  const unlockedIds=Object.keys(ENDING_DEFINITIONS).filter(id=>(game.endingUnlocks||[]).includes(id));section.hidden=unlockedIds.length===0;
+  container.innerHTML=unlockedIds.map(id=>{const item=ENDING_DEFINITIONS[id];return `<button class="ending-gallery-card unlocked" data-ending-replay="${id}"><small>${item.chapter}</small><b>${item.title}</b><span>もう一度見る</span></button>`}).join("");
 }
 function syncDeveloperEndingButtons(){const controls=document.querySelector("#endingDevButtons");if(controls)controls.hidden=!developerMode}
 function renderGallery(){
@@ -1506,34 +1504,27 @@ function renderGallery(){
   saveGame();
 }
 let selectedTrophyGrade="G1";
-let selectedTrophyIndex=null;
+let selectedTrophyIndex=null,renderedTrophyCatalog=[];
+function trophyCatalog(grade){const unique=new Map();raceCalendar.filter(r=>r.raceClass===grade).sort((a,b)=>(a.week-b.week)||a.name.localeCompare(b.name,"ja")).forEach(r=>{if(!unique.has(r.name))unique.set(r.name,r)});return [...unique.values()]}
 function renderTrophies(grade=selectedTrophyGrade){
   selectedTrophyGrade=grade;
   selectedTrophyIndex=null;
-  const trophies=game.gradedTrophies||[],filtered=trophies.map((t,index)=>({t,index})).filter(x=>x.t.grade===grade).reverse();
+  const trophies=game.gradedTrophies||[],winsByRace=new Map();trophies.filter(t=>t.grade===grade).forEach(t=>{if(!winsByRace.has(t.raceName))winsByRace.set(t.raceName,t)});renderedTrophyCatalog=trophyCatalog(grade).map(r=>({race:r,trophy:winsByRace.get(r.name)||null}));
   const gradeLabel=grade==="G1"?"GⅠ":grade==="G2"?"GⅡ":"GⅢ";
-  document.querySelector("#trophySummary").textContent=`全${trophies.length}個　${gradeLabel} ${filtered.length}個`;
+  document.querySelector("#trophySummary").textContent=`${gradeLabel} ${renderedTrophyCatalog.filter(x=>x.trophy).length}／${renderedTrophyCatalog.length}`;
   document.querySelectorAll("[data-trophy-grade]").forEach(button=>button.classList.toggle("selected",button.dataset.trophyGrade===grade));
-  document.querySelector("#trophyGrid").innerHTML=filtered.length?filtered.map(({t,index})=>`<button class="trophy-card grade-${t.grade.toLowerCase()}" data-trophy-index="${index}"><span class="trophy-cup-icon">♛</span><b>${t.raceName}</b><small>${t.date||""}</small></button>`).join(""):`<p class="empty-archive">まだ${grade==="G1"?"GⅠ":grade==="G2"?"GⅡ":"GⅢ"}のトロフィーはありません。</p>`;
-  document.querySelector("#trophyHorseDetail").hidden=true;
+  document.querySelector("#trophyGrid").innerHTML=renderedTrophyCatalog.map(({race,trophy},index)=>`<button class="trophy-card grade-${grade.toLowerCase()} ${trophy?"won":"locked"}" data-trophy-index="${index}"><span class="trophy-cup-icon">♛</span><b>${race.name}</b><small>${trophy?trophy.date||"獲得済み":"未獲得"}</small>${trophy?`<span class="trophy-winner-name" data-trophy-horse="${index}">${trophy.horseName}<small>この馬を見る</small></span>`:""}</button>`).join("");closeTrophyHorse();
 }
 function showTrophyHorse(index){
-  const detail=document.querySelector("#trophyHorseDetail");
-  if(selectedTrophyIndex===index){
-    selectedTrophyIndex=null;detail.hidden=true;
-    document.querySelectorAll("[data-trophy-index]").forEach(button=>button.classList.remove("selected"));
-    return;
-  }
-  const trophy=(game.gradedTrophies||[])[index];if(!trophy)return;
-  selectedTrophyIndex=index;
-  document.querySelectorAll("[data-trophy-index]").forEach(button=>button.classList.toggle("selected",Number(button.dataset.trophyIndex)===index));
+  const detail=document.querySelector("#trophyHorseDetail"),modal=document.querySelector("#trophyHorseModal");const trophy=renderedTrophyCatalog[index]?.trophy;if(!trophy)return;
   const currentHorseAppearance=trophy.horseName===game.horseName&&Number(trophy.generation)===Number(game.generation)?{...normalizeAppearanceDNA(game.candidate),tack:game.equippedTack,tackColor:game.equippedTackColor}:{};
   const appearance=trophy.horseAppearance||currentHorseAppearance;
   const color=appearance.color||trophy.horseColor||"#a96232";
   const appearanceClass=[appearanceClassNames(appearance),appearance.faceMark&&!appearance.faceMarkType?"face-blaze":"",Number(appearance.socks)>0&&!appearance.legMarks?"front-sock-1 back-sock-1":"",appearance.tack?`tack-${appearance.tack}`:""].filter(Boolean).join(" ");
   detail.innerHTML=`<div class="trophy-detail-stage ${appearanceClass}" style="--horse-color:${color};--active-horse-color:${color};--tack-color:${appearance.tackColor||"#5aa8df"}"><div class="candidate-pixel-horse trophy-detail-horse"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div><div class="winner-wreath"></div></div></div><div><small>${trophy.grade==="G1"?"GⅠ":trophy.grade==="G2"?"GⅡ":"GⅢ"} TROPHY</small><h3>${trophy.raceName}</h3><b>${trophy.horseName}</b><p>${trophy.generation}代目　${trophy.horseAge?`${trophy.horseAge}歳　`:""}${trophy.date||""}</p></div>`;
-  detail.hidden=false;detail.scrollIntoView({behavior:"smooth",block:"nearest"});
+  modal.classList.add("show");modal.setAttribute("aria-hidden","false");
 }
+function closeTrophyHorse(){const modal=document.querySelector("#trophyHorseModal");if(modal){modal.classList.remove("show");modal.setAttribute("aria-hidden","true")}}
 function train(type){
   if(trainingAnimationActive&&!autoTrainingActive)return;
   if(game.injury)return renderHome(`${game.injury.name}のため調教できません。長期放牧が必要です。`);
@@ -2068,7 +2059,7 @@ function showResult(detail){
     earned,weather:weather.weather,going:weather.going,isRecord:!!player.isRecord,
     age:horseAge(),date:weekLabel(),week:game.week,favorite:false
   });
-  if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",horseAppearance:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])],eyeType:game.candidate?.eyeType||"穏やか",tack:game.equippedTack||"",tackColor:game.equippedTackColor||"#5aa8df"},generation:game.generation,date:weekLabel()});
+  if(place===1&&["G1","G2","G3"].includes(r.raceClass)&&!(game.gradedTrophies||[]).some(t=>t.raceName===r.name))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",horseAppearance:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])],eyeType:game.candidate?.eyeType||"穏やか",tack:game.equippedTack||"",tackColor:game.equippedTackColor||"#5aa8df"},generation:game.generation,date:weekLabel()});
   checkEndingUnlocks();
   checkOverseasInvitation(r,place);
   refreshGalleryUnlocks();
@@ -2261,7 +2252,8 @@ document.querySelector("#endingDevAccessButton").onclick=()=>{developerMode=true
 document.querySelector("#endingDevButtons").onclick=e=>{const button=e.target.closest("[data-ending-preview]");if(button)showEnding(button.dataset.endingPreview,true)};
 document.querySelector("#trophyButton").onclick=()=>{renderTrophies("G1");showScreen("trophyScreen")};
 document.querySelector("#trophyTabs").onclick=e=>{const button=e.target.closest("[data-trophy-grade]");if(button)renderTrophies(button.dataset.trophyGrade)};
-document.querySelector("#trophyGrid").onclick=e=>{const button=e.target.closest("[data-trophy-index]");if(button)showTrophyHorse(Number(button.dataset.trophyIndex))};
+document.querySelector("#trophyGrid").onclick=e=>{const horse=e.target.closest("[data-trophy-horse]");if(horse){e.stopPropagation();showTrophyHorse(Number(horse.dataset.trophyHorse));return}const button=e.target.closest("[data-trophy-index]");if(!button||button.classList.contains("locked"))return;const index=Number(button.dataset.trophyIndex),same=selectedTrophyIndex===index;selectedTrophyIndex=same?null:index;document.querySelectorAll("[data-trophy-index]").forEach(card=>card.classList.toggle("selected",!same&&Number(card.dataset.trophyIndex)===index))};
+document.querySelector("#trophyHorseModal").onclick=closeTrophyHorse;
 const openHorseDetail=()=>{document.querySelector("#detailTackPanel").hidden=true;document.querySelector("#detailTackButton").textContent="馬具を変更する";renderHorseDetail();showScreen("horseDetailScreen")};
 document.querySelector("#lineageButton").onclick=()=>{renderLineage();showScreen("lineageScreen")};
 document.querySelector("#homeHorse").onclick=e=>{e.stopPropagation();openHorseDetail()};

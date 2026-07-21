@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.13.1</title>
-  <link rel="stylesheet" href="style.css?v=20260722-81">
+  <title>ドット競馬 継承ダービー｜Ver. 0.13.2</title>
+  <link rel="stylesheet" href="style.css?v=20260722-82">
 </head>
 <body>
   <main class="phone">
@@ -52,7 +52,7 @@
         <button id="endingDevAccessButton">エンディング確認</button>
         <div id="endingDevButtons" class="ending-dev-buttons" hidden><small>開発者用・エンディング確認</small><button data-ending-preview="domestic-g1">国内GⅠ制覇</button><button data-ending-preview="overseas-g1">海外GⅠ制覇</button><button data-ending-preview="all-graded">全重賞制覇</button></div>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.13.1</b>
+        <b class="build-version">Ver. 0.13.2</b>
       </div>
     </section>
 
@@ -281,7 +281,7 @@
       <header class="simple-header"><b>ギャラリー</b><span id="gallerySummary">0 / 0</span></header>
       <p class="archive-intro">育成やレースで思い出のドット絵が解放されます。</p>
       <div id="galleryGrid" class="gallery-grid"></div>
-      <h2 class="ending-gallery-title">エンディング</h2><div id="endingGalleryGrid" class="ending-gallery-grid"></div>
+      <section id="endingGallerySection" class="ending-gallery-section" hidden><h2 class="ending-gallery-title">エンディング</h2><div id="endingGalleryGrid" class="ending-gallery-grid"></div></section>
       <button data-back="homeScreen">育成へもどる</button>
     </section>
 
@@ -290,7 +290,7 @@
       <p class="archive-intro">勝ち取ったGⅠ・GⅡ・GⅢのトロフィーが世代を超えて残ります。</p>
       <nav id="trophyTabs" class="trophy-tabs"><button data-trophy-grade="G1" class="selected">GⅠ</button><button data-trophy-grade="G2">GⅡ</button><button data-trophy-grade="G3">GⅢ</button></nav>
       <div id="trophyGrid" class="trophy-grid"></div>
-      <article id="trophyHorseDetail" class="trophy-horse-detail" hidden></article>
+      <div id="trophyHorseModal" class="trophy-horse-modal" aria-hidden="true"><article id="trophyHorseDetail" class="trophy-horse-detail"></article></div>
       <button data-back="homeScreen">育成へもどる</button>
     </section>
 
@@ -469,7 +469,7 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260722-16"></script>
-  <script src="app.js?v=20260722-32"></script>
+  <script src="app.js?v=20260722-33"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260722-30"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
