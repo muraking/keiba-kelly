@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.11.0</title>
-  <link rel="stylesheet" href="style.css?v=20260721-69">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.11.1</title>
+  <link rel="stylesheet" href="style.css?v=20260721-70">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -48,8 +48,9 @@
         <button class="primary big" id="newGameButton">はじめから</button>
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">コース検証テスト</button>
+        <button id="appearanceTestButton">見た目サンプル</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.11.0</b>
+        <b class="build-version">Ver. 0.11.1</b>
       </div>
     </section>
 
@@ -71,6 +72,25 @@
       </div>
       <div id="raceTestCourseSummary" class="race-test-course-summary"></div>
       <button class="primary big" id="raceTestStartButton">この条件でレース開始</button>
+      <button data-back="titleScreen">タイトルへもどる</button>
+    </section>
+
+    <section id="appearanceTestScreen" class="game-screen appearance-test-screen">
+      <header class="simple-header"><b>見た目サンプル</b><span>開発者用・外見DNA確認</span></header>
+      <div class="appearance-preview-panel">
+        <div id="appearancePreviewHorse" class="candidate-pixel-horse appearance-preview-horse" aria-label="外見組み合わせプレビュー">
+          <div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
+        </div>
+        <b id="appearancePreviewName">栗毛・顔白なし</b><small id="appearancePreviewCode"></small>
+      </div>
+      <div class="appearance-test-controls">
+        <label>毛色<select id="appearanceCoatSelect"></select></label><label>顔模様<select id="appearanceFaceSelect"></select></label>
+        <label>たてがみ<select id="appearanceManeSelect"></select></label><label>尻尾<select id="appearanceTailSelect"></select></label>
+        <label>前脚<select id="appearanceFrontSockSelect"><option value="0">白なし</option><option value="1">短い白</option><option value="2">長い白</option></select></label>
+        <label>後脚<select id="appearanceBackSockSelect"><option value="0">白なし</option><option value="1">短い白</option><option value="2">長い白</option></select></label>
+      </div>
+      <button id="appearanceRandomButton">ランダムな組み合わせ</button>
+      <h2 class="appearance-sample-title">代表組み合わせ</h2><div id="appearanceSampleGrid" class="appearance-sample-grid"></div>
       <button data-back="titleScreen">タイトルへもどる</button>
     </section>
 
@@ -439,7 +459,7 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260721-14"></script>
-  <script src="app.js?v=20260721-19"></script>
+  <script src="app.js?v=20260721-20"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260721-27"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>

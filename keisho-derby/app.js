@@ -1044,6 +1044,37 @@ function applyHorseAppearance(el){
   applyAppearanceToElement(el,game.candidate);
   ["hood","blinkers","cheekpieces"].forEach(id=>el.classList.toggle(`tack-${id}`,game.equippedTack===id));
 }
+const APPEARANCE_FACE_LABELS={none:"顔白なし",star:"星",blaze:"流星",doubleBlaze:"二本流星",snip:"鼻白",starSnip:"星・鼻白",bald:"大流星"};
+const APPEARANCE_MANE_LABELS={short:"短め",standard:"標準",long:"長め",upright:"立ち",wavy:"波打ち"};
+const APPEARANCE_TAIL_LABELS={short:"短め",standard:"標準",long:"長め",wavy:"波打ち",raised:"上向き"};
+const appearanceHorseMarkup=()=>`<div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>`;
+function appearanceCandidate(appearance){return{coat:appearance.coat,color:appearance.color,appearanceDNA:{...appearance,legMarks:[...(appearance.legMarks||[0,0,0,0])]}}}
+function selectedAppearanceSample(){
+  const [coat,color]=document.querySelector("#appearanceCoatSelect").value.split("|");
+  return{coat,color,shade:0,faceMarkType:document.querySelector("#appearanceFaceSelect").value,maneStyle:document.querySelector("#appearanceManeSelect").value,tailStyle:document.querySelector("#appearanceTailSelect").value,
+    legMarks:[Number(document.querySelector("#appearanceFrontSockSelect").value),0,Number(document.querySelector("#appearanceBackSockSelect").value),0]};
+}
+function updateAppearancePreview(){
+  const appearance=selectedAppearanceSample(),preview=document.querySelector("#appearancePreviewHorse");
+  applyAppearanceToElement(preview,appearanceCandidate(appearance));
+  document.querySelector("#appearancePreviewName").textContent=`${appearance.coat}・${APPEARANCE_FACE_LABELS[appearance.faceMarkType]}`;
+  document.querySelector("#appearancePreviewCode").textContent=`たてがみ ${APPEARANCE_MANE_LABELS[appearance.maneStyle]}／尻尾 ${APPEARANCE_TAIL_LABELS[appearance.tailStyle]}／前脚${appearance.legMarks[0]}・後脚${appearance.legMarks[2]}`;
+}
+function renderAppearanceTest(){
+  const coatSelect=document.querySelector("#appearanceCoatSelect");
+  coatSelect.innerHTML=Object.entries(coatPalettes).flatMap(([name,colors])=>colors.map((color,index)=>`<option value="${name}|${color}">${name} 色調${index+1}</option>`)).join("");
+  document.querySelector("#appearanceFaceSelect").innerHTML=FACE_MARK_TYPES.map(id=>`<option value="${id}">${APPEARANCE_FACE_LABELS[id]}</option>`).join("");
+  document.querySelector("#appearanceManeSelect").innerHTML=MANE_STYLES.map(id=>`<option value="${id}">${APPEARANCE_MANE_LABELS[id]}</option>`).join("");
+  document.querySelector("#appearanceTailSelect").innerHTML=TAIL_STYLES.map(id=>`<option value="${id}">${APPEARANCE_TAIL_LABELS[id]}</option>`).join("");
+  const variants=Object.entries(coatPalettes).flatMap(([coat,colors])=>colors.map((color,index)=>({coat,color,shade:index,faceMarkType:FACE_MARK_TYPES[(index+Object.keys(coatPalettes).indexOf(coat))%FACE_MARK_TYPES.length],maneStyle:MANE_STYLES[(index*2+coat.length)%MANE_STYLES.length],tailStyle:TAIL_STYLES[(index+coat.length)%TAIL_STYLES.length],legMarks:[index%3,0,(index+1)%3,0]})));
+  document.querySelector("#appearanceSampleGrid").innerHTML=variants.map((a,index)=>`<button class="appearance-sample-card ${appearanceClassNames(a)}" data-appearance-sample="${index}" style="--horse-color:${a.color}"><span class="candidate-pixel-horse">${appearanceHorseMarkup()}</span><small>${a.coat}${index%3+1}・${APPEARANCE_FACE_LABELS[a.faceMarkType]}</small></button>`).join("");
+  window.appearanceSampleVariants=variants;updateAppearancePreview();
+}
+function loadAppearanceSample(appearance){
+  const coatValue=`${appearance.coat}|${appearance.color}`;document.querySelector("#appearanceCoatSelect").value=coatValue;
+  document.querySelector("#appearanceFaceSelect").value=appearance.faceMarkType;document.querySelector("#appearanceManeSelect").value=appearance.maneStyle;document.querySelector("#appearanceTailSelect").value=appearance.tailStyle;
+  document.querySelector("#appearanceFrontSockSelect").value=String(appearance.legMarks[0]||0);document.querySelector("#appearanceBackSockSelect").value=String(appearance.legMarks[2]||0);updateAppearancePreview();
+}
 function renderHorseDetail(){
   const stage=document.querySelector("#detailHorseStage");
   applyHorseAppearance(stage);
@@ -2070,6 +2101,13 @@ function openRaceTestSetup(){
   updateRaceTestSurfaces();showScreen("raceTestSetupScreen");
 }
 document.querySelector("#raceTestButton").onclick=openRaceTestSetup;
+document.querySelector("#appearanceTestButton").onclick=()=>{if(document.body.classList.contains("tester-build"))return;renderAppearanceTest();showScreen("appearanceTestScreen")};
+document.querySelectorAll("#appearanceCoatSelect,#appearanceFaceSelect,#appearanceManeSelect,#appearanceTailSelect,#appearanceFrontSockSelect,#appearanceBackSockSelect").forEach(select=>select.onchange=updateAppearancePreview);
+document.querySelector("#appearanceRandomButton").onclick=()=>{
+  const appearances=window.appearanceSampleVariants||[];if(!appearances.length)return;
+  const base={...appearances[rnd(0,appearances.length-1)]};base.faceMarkType=FACE_MARK_TYPES[rnd(0,FACE_MARK_TYPES.length-1)];base.maneStyle=MANE_STYLES[rnd(0,MANE_STYLES.length-1)];base.tailStyle=TAIL_STYLES[rnd(0,TAIL_STYLES.length-1)];base.legMarks=[rnd(0,2),0,rnd(0,2),0];loadAppearanceSample(base);
+};
+document.querySelector("#appearanceSampleGrid").onclick=event=>{const button=event.target.closest("[data-appearance-sample]");if(button)loadAppearanceSample((window.appearanceSampleVariants||[])[Number(button.dataset.appearanceSample)])};
 raceTestVenue.onchange=updateRaceTestSurfaces;raceTestSurface.onchange=updateRaceTestDistances;raceTestDistance.onchange=updateRaceTestSummary;
 raceTestDirection.onchange=updateRaceTestSummary;
 document.querySelector("#raceTestStartButton").onclick=()=>{
