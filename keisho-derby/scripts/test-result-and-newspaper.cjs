@@ -1,0 +1,14 @@
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const path=require("node:path");
+const root=path.resolve(__dirname,"..");
+const html=fs.readFileSync(path.join(root,"index.html"),"utf8");
+const app=fs.readFileSync(path.join(root,"app.js"),"utf8");
+const css=fs.readFileSync(path.join(root,"style.css"),"utf8");
+assert.match(html,/id="resultRaceBanner"/);
+assert.match(html,/id="resultRaceName"/);
+assert.doesNotMatch(html,/id="resultOrder"/);
+assert.match(app,/h\.popularity\}番人気/);
+assert.match(app,/grade-\$\{r\.raceClass\.toLowerCase\(\)\}/);
+assert.match(css,/\.result-race-banner\.grade-g1/);
+console.log("result banner and newspaper popularity: OK");

@@ -2038,6 +2038,12 @@ function showResult(detail){
   game.lastRaceAdvice=raceSuitabilityAdvice(r,place)+(newlyUnlockedTack?`。${tackCatalog[newlyUnlockedTack].name}を使えるようにしました。上の愛馬をタッチして、愛馬詳細の「馬具を変更する」から装着してみてください`:"");
   game.week++;game.trainingsUsed=0;saveGame();
   document.querySelector("#resultPlace").textContent=`${place}着`;document.querySelector("#resultHorseName").textContent=game.horseName;
+  const resultBanner=document.querySelector("#resultRaceBanner");
+  const gradeClass=["G1","G2","G3"].includes(r.raceClass)?`grade-${r.raceClass.toLowerCase()}`:"grade-regular";
+  resultBanner.className=`result-race-banner ${gradeClass}`;
+  document.querySelector("#resultRaceGrade").textContent=r.raceClass==="G1"?"GⅠ・RACE RESULT":r.raceClass==="G2"?"GⅡ・RACE RESULT":r.raceClass==="G3"?"GⅢ・RACE RESULT":`${r.raceClass||"一般"}・RACE RESULT`;
+  document.querySelector("#resultRaceName").textContent=r.name;
+  document.querySelector("#resultRaceCourse").textContent=`${r.course}　${weather.weather}・${weather.going}`;
   document.querySelector("#resultFrame").textContent=player.id;document.querySelector("#resultFrame").style.background=player.color;
   const resultHorseScene=document.querySelector("#resultHorseScene");
   resultHorseScene.classList.remove("is-winner","is-placed","is-defeated");
@@ -2062,7 +2068,6 @@ function showResult(detail){
   document.querySelector("#resultPrize").textContent=`${(earned*10000).toLocaleString()}円`;
   document.querySelector("#resultFP").textContent=`${fpEarned}`;
   document.querySelector("#postRaceCondition").textContent=resultRaceReview(r,player,place,detail.measuredPace);
-  document.querySelector("#resultOrder").innerHTML=detail.order.slice(0,5).map((h,i)=>`<div><span>${i+1}</span><b>${h.name}</b><small>${h.odds.toFixed(1)}倍</small></div>`).join("");
   showScreen("resultScreen");
 }
 
@@ -2341,7 +2346,7 @@ addEventListener("dotkeiba:preview-ready",e=>{
     return `<article class="newspaper-entry ${h.player?"player":""}">
       <span class="news-number frame-${h.id}">${h.id}</span><b class="news-mark">${mark}</b>
       <div><h3>${h.name}${h.player?' <small>愛馬</small>':""}</h3>${runningStyleChart}<p>調子 ${h.condition}</p><small>${h.comment}</small></div>
-      <strong>${h.odds.toFixed(1)}<small>倍</small></strong>
+      <strong>${h.odds.toFixed(1)}<small>倍</small><em>${h.popularity}番人気</em></strong>
     </article>`;
   }).join("");
 });

@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.12.3</title>
-  <link rel="stylesheet" href="style.css?v=20260722-73">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.12.4</title>
+  <link rel="stylesheet" href="style.css?v=20260722-74">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -50,7 +50,7 @@
         <button id="raceTestButton">コース検証テスト</button>
         <button id="appearanceTestButton">見た目サンプル</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.12.3</b>
+        <b class="build-version">Ver. 0.12.4</b>
       </div>
     </section>
 
@@ -406,7 +406,11 @@
     </section>
 
     <section id="resultScreen" class="game-screen result-screen">
-      <p class="kicker">RACE RESULT</p>
+      <div id="resultRaceBanner" class="result-race-banner">
+        <small id="resultRaceGrade">RACE RESULT</small>
+        <h1 id="resultRaceName">レース名</h1>
+        <p id="resultRaceCourse">東京 芝1600m</p>
+      </div>
       <h2 id="resultPlace">1着</h2>
       <div class="result-horse"><span id="resultFrame">1</span><b id="resultHorseName">ドットスター</b></div>
       <div id="resultHorseScene" class="result-horse-scene is-winner" aria-label="レース後の愛馬">
@@ -431,7 +435,6 @@
         <span>調教師のレース評</span>
         <p id="postRaceCondition">調教師が馬の状態を確認しています。</p>
       </div>
-      <div id="resultOrder" class="result-order"></div>
       <button class="primary big" id="returnHomeButton">育成へ戻る</button>
     </section>
     <div id="inheritConfirmModal" class="auto-training-modal" aria-hidden="true">
@@ -462,7 +465,7 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260721-15"></script>
-  <script src="app.js?v=20260722-24"></script>
+  <script src="app.js?v=20260722-25"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260721-29"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
