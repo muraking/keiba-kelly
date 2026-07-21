@@ -8,7 +8,8 @@ const html=fs.readFileSync(path.join(root,"index.html"),"utf8");
 function ok(condition,message){if(!condition)throw new Error(message)}
 
 ok(race.includes("finishDisplayMargins.size===0&&horses.some(h=>h.finished)"),"先頭馬のゴール時点で写真判定距離を保存していません");
-ok(race.includes("Math.abs(snapshotHorse-snapshotPrev)/2.4"),"最終着差が保存した写真判定距離を使用していません");
+ok(race.includes("Math.hypot(front.x-back.x,front.y-back.y)/14"),"着差が画面上の馬体間隔を使用していません");
+ok(race.includes("finishDisplayMargins.set(snapshotOrder[i].id"),"ゴール時の画面上の着差を保存していません");
 ok(!race.includes("Number.isFinite(visualLengths)?visualLengths"),"駆け抜け後の画面座標が着差へ残っています");
 ok(race.includes('"メイダン":{turn:"左"'),"メイダンの回り方向が未設定です");
 ok(race.includes('"パリロンシャン":{turn:"右"'),"パリロンシャンの回り方向が未設定です");

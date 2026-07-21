@@ -865,10 +865,14 @@ function update(dt, clockDt) {
     }
   });
 
-  // 先頭馬が決勝線を越えた瞬間を写真判定として保存する。
-  // 以後の駆け抜けや内部時計補正で、道中の見た目と最終着差が変わらないようにする。
+  // 先頭馬が決勝線を越えた瞬間の「画面上の馬体間隔」を写真判定として保存する。
+  // コースを縮小表示しているため、実距離をそのまま馬身へ直すと見た目と食い違う。
   if(finishDisplayMargins.size===0&&horses.some(h=>h.finished)){
-    horses.forEach(h=>finishDisplayMargins.set(h.id,Math.max(0,TOTAL-raceDistance(h))));
+    const snapshotOrder=order();
+    for(let i=1;i<snapshotOrder.length;i++){
+      const front=coursePoint(snapshotOrder[i-1].progress,4.5),back=coursePoint(snapshotOrder[i].progress,4.5);
+      finishDisplayMargins.set(snapshotOrder[i].id,Math.hypot(front.x-back.x,front.y-back.y)/14);
+    }
   }
 
   remainingEl.textContent = `残り ${remaining}m`;
@@ -1383,15 +1387,10 @@ function marginLabel(prev,h){
   if(state==="ready"||raceClock<600)return"--";
   const timeGap=prev.finished&&h.finished?Math.max(0,h.finishTime-prev.finishTime):null;
   if(timeGap!==null&&timeGap<1)return"同着";
-  const snapshotPrev=finishDisplayMargins.get(prev.id),snapshotHorse=finishDisplayMargins.get(h.id);
-  if(Number.isFinite(snapshotPrev)&&Number.isFinite(snapshotHorse)){
-    return marginFromLengths(Math.abs(snapshotHorse-snapshotPrev)/2.4);
-  }
-  const averageSpeed=prev.finished&&h.finished?TOTAL/Math.max(1,(prev.finishTime+h.finishTime)/2):0;
-  const gapMeters=prev.finished&&h.finished
-    ? timeGap*averageSpeed
-    : Math.max(0,raceDistance(prev)-raceDistance(h));
-  return marginFromLengths(gapMeters/2.4);
+  const snapshotLengths=finishDisplayMargins.get(h.id);
+  if(Number.isFinite(snapshotLengths))return marginFromLengths(snapshotLengths);
+  const front=coursePoint(prev.progress,4.5),back=coursePoint(h.progress,4.5);
+  return marginFromLengths(Math.hypot(front.x-back.x,front.y-back.y)/14);
 }
 
 // レイアウトV2：縦画面のまま上から「コース（横長）→ターフビジョン→高低差」を積む。
