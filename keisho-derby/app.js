@@ -154,7 +154,7 @@ const defaultGame = () => ({
   temperament:"普通",temperamentValue:50,temperamentKnown:false,
   tackUnlocked:[],equippedTack:null,equippedTackColor:"#5aa8df",temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
-  raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], gradedTrophies:[], candidate:null,
+  raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], gradedTrophies:[], endingUnlocks:[],endingSeen:[],pendingEndings:[],candidate:null,
   reservedRaceId:null,reservationNotifiedId:null,raceReservations:[],overseasReservations:[],reservationNotifiedIds:[],pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],lastBreedingPartner:null,equipmentDurability:{},equipmentAge:{},inheritanceComment:"",lastRaceAdvice:""
 });
 let game = defaultGame();
@@ -521,6 +521,9 @@ function loadGame(slot=activeSaveSlot){
     if(!Array.isArray(saved?.favoriteRaces))game.favoriteRaces=[];
     if(!Array.isArray(saved?.galleryUnlocks))game.galleryUnlocks=["stable"];
     if(!Array.isArray(saved?.gradedTrophies))game.gradedTrophies=(game.raceHistory||[]).filter(x=>x.place===1&&["G1","G2","G3"].includes(x.raceClass)).map(x=>({raceName:x.raceName,grade:x.raceClass,horseName:game.horseName,generation:game.generation,date:x.date}));
+    if(!Array.isArray(saved?.endingUnlocks))game.endingUnlocks=[];
+    if(!Array.isArray(saved?.endingSeen))game.endingSeen=[];
+    if(!Array.isArray(saved?.pendingEndings))game.pendingEndings=[];
     if(!Array.isArray(saved?.declinedOverseasInvites))game.declinedOverseasInvites=[];
     if(!Number.isFinite(saved?.temperamentValue))game.temperamentValue=rnd(30,75);
     if(!saved?.temperament)game.temperament=temperamentType(game.temperamentValue);
@@ -689,7 +692,7 @@ function beginNextGeneration(partner){
   child.weight=child.baseBestWeight+rnd(12,20);
   child.potentialCaps=createPotentialCaps(child);
   child.inheritanceComment=inheritanceComparison(child,{...game,potentialCaps:game.potentialCaps,distanceMax:effectiveDistanceRange().max});
-  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired],lastBreedingPartner:partner.name};
+  const legacy={generation:game.generation+1,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],endingUnlocks:[...(game.endingUnlocks||[])],endingSeen:[...(game.endingSeen||[])],pendingEndings:[...(game.pendingEndings||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage,retired],retirementRecords:[...game.retirementRecords,retired],lastBreedingPartner:partner.name};
   game={...defaultGame(),...legacy,candidate:child};
   document.querySelector("#candidateNumber").textContent=`${game.generation}世代目`;
   document.querySelector("#candidateTitle").textContent=`${child.coat}の2歳${child.sex}`;
@@ -1432,7 +1435,57 @@ function deleteFavoriteRace(index){
   saveGame();
   renderHistory();
 }
+const ENDING_DEFINITIONS={
+  "domestic-g1":{chapter:"ENDING I",title:"日本競馬の頂点",scene:"domestic",message:"世代を越えて受け継いだ夢が、日本最高峰の舞台をすべて照らしました。歴代の愛馬たちが築いた、ひとつの大きな物語です。"},
+  "overseas-g1":{chapter:"ENDING II",title:"世界を駆けた血統",scene:"overseas",message:"海を越え、世界の強豪に挑み続けた血統。その蹄跡は、遠い競馬場にも確かに刻まれました。"},
+  "all-graded":{chapter:"FINAL ENDING",title:"継承ダービー",scene:"legend",message:"すべての重賞を制し、トロフィールームは歴代の愛馬の記憶で満たされました。この血統の物語は、まだ続く。"}
+};
+function uniqueRaceNames(filter){return [...new Set(raceCalendar.filter(filter).map(r=>r.name))]}
+function endingTargets(id){
+  if(id==="domestic-g1")return uniqueRaceNames(r=>r.raceClass==="G1"&&!r.overseas&&centralJraVenues.has(raceVenue(r)));
+  if(id==="overseas-g1")return uniqueRaceNames(r=>r.raceClass==="G1"&&r.overseas);
+  return uniqueRaceNames(r=>["G1","G2","G3"].includes(r.raceClass)&&!r.overseas&&centralJraVenues.has(raceVenue(r)));
+}
+function endingProgress(id){
+  const targets=endingTargets(id),wins=new Set((game.gradedTrophies||[]).map(t=>t.raceName));
+  const completed=targets.filter(name=>wins.has(name)),missing=targets.filter(name=>!wins.has(name));
+  return {completed:completed.length,total:targets.length,missing,complete:targets.length>0&&missing.length===0};
+}
+function checkEndingUnlocks(){
+  game.endingUnlocks=Array.isArray(game.endingUnlocks)?game.endingUnlocks:[];
+  game.endingSeen=Array.isArray(game.endingSeen)?game.endingSeen:[];
+  game.pendingEndings=Array.isArray(game.pendingEndings)?game.pendingEndings:[];
+  Object.keys(ENDING_DEFINITIONS).forEach(id=>{
+    if(!endingProgress(id).complete||game.endingUnlocks.includes(id))return;
+    game.endingUnlocks.push(id);
+    if(!game.endingSeen.includes(id)&&!game.pendingEndings.includes(id))game.pendingEndings.push(id);
+  });
+}
+let endingPreviewMode=false;
+function showEnding(id,preview=false){
+  const definition=ENDING_DEFINITIONS[id];if(!definition)return;
+  endingPreviewMode=preview;
+  const progress=endingProgress(id),scene=document.querySelector("#endingScene");
+  scene.className=`ending-scene ${definition.scene}`;
+  document.querySelector("#endingChapter").textContent=preview?`${definition.chapter}・開発確認`:definition.chapter;
+  document.querySelector("#endingTitle").textContent=definition.title;
+  document.querySelector("#endingMessage").textContent=definition.message;
+  const missing=progress.missing.slice(0,4).join("、");
+  document.querySelector("#endingProgress").innerHTML=`<b>${progress.completed} / ${progress.total}</b><span>${progress.complete?"COMPLETE":missing?`未制覇：${missing}${progress.missing.length>4?" ほか":""}`:"対象レースなし"}</span>`;
+  document.querySelector("#endingContinueButton").textContent=preview?"開発メニューへ戻る":"物語を続ける";
+  applyAppearanceToElement(document.querySelector("#endingScene .ending-horse"),game.candidate||{});
+  showScreen("endingScreen");
+}
+function renderEndingGallery(){
+  const container=document.querySelector("#endingGalleryGrid");if(!container)return;
+  container.innerHTML=Object.entries(ENDING_DEFINITIONS).map(([id,item])=>{
+    const unlocked=(game.endingUnlocks||[]).includes(id),progress=endingProgress(id);
+    return `<button class="ending-gallery-card ${unlocked?"unlocked":"locked"}" ${unlocked?`data-ending-replay="${id}"`:"disabled"}><small>${item.chapter}</small><b>${unlocked?item.title:"？？？？？？"}</b><span>${progress.completed} / ${progress.total}</span></button>`;
+  }).join("");
+}
+function syncDeveloperEndingButtons(){const controls=document.querySelector("#endingDevButtons");if(controls)controls.hidden=!developerMode}
 function renderGallery(){
+  checkEndingUnlocks();
   refreshGalleryUnlocks();
   const unlocked=galleryCatalog.filter(x=>game.galleryUnlocks.includes(x.id)).length;
   document.querySelector("#gallerySummary").textContent=`思い出 ${unlocked}／${galleryCatalog.length}`;
@@ -1449,6 +1502,7 @@ function renderGallery(){
     </article>`;
   }).join("");
   document.querySelector("#galleryGrid").innerHTML=memoryCards;
+  renderEndingGallery();
   saveGame();
 }
 let selectedTrophyGrade="G1";
@@ -2015,6 +2069,7 @@ function showResult(detail){
     age:horseAge(),date:weekLabel(),week:game.week,favorite:false
   });
   if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",horseAppearance:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])],eyeType:game.candidate?.eyeType||"穏やか",tack:game.equippedTack||"",tackColor:game.equippedTackColor||"#5aa8df"},generation:game.generation,date:weekLabel()});
+  checkEndingUnlocks();
   checkOverseasInvitation(r,place);
   refreshGalleryUnlocks();
   const spacingBeforeRace=raceIntervalState(game.week);
@@ -2064,6 +2119,7 @@ function showResult(detail){
 
 document.querySelector("#continueButton").disabled=!hasAnySave();
 document.querySelector("#devModeButton").textContent=developerMode?"開発表示 ON":"開発表示";
+syncDeveloperEndingButtons();
 document.querySelector("#newGameButton").onclick=()=>{renderSaveSlots("new");showScreen("saveSlotScreen")};
 const raceTestVenue=document.querySelector("#raceTestVenue"),raceTestDirection=document.querySelector("#raceTestDirection"),raceTestDirectionRow=document.querySelector("#raceTestDirectionRow"),raceTestSurface=document.querySelector("#raceTestSurface"),raceTestDistance=document.querySelector("#raceTestDistance");
 const TEST_SURFACE_LABEL={turf:"芝",dirt:"ダート",banei:"ばんえい"};
@@ -2160,7 +2216,7 @@ document.querySelector("#confirmNameButton").onclick=()=>{
     document.querySelector("#nameScreen .hint").textContent="馬名はカタカナ2〜10文字で、使用できない表現を含まない名前にしてください。";
     input.focus();return;
   }
-  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],lastBreedingPartner:game.lastBreedingPartner||null,inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,soundness:Number.isFinite(c.soundness)?c.soundness:rnd(420,720),recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
+  const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],endingUnlocks:[...(game.endingUnlocks||[])],endingSeen:[...(game.endingSeen||[])],pendingEndings:[...(game.pendingEndings||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],lastBreedingPartner:game.lastBreedingPartner||null,inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,soundness:Number.isFinite(c.soundness)?c.soundness:rnd(420,720),recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
   renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。${game.generation>1?game.inheritanceComment:"まずは馬体を整えましょう。"}`);showScreen("homeScreen");
 };
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>{
@@ -2200,6 +2256,8 @@ document.querySelector("#historyList").onclick=e=>{
   if(replayButton)replayFavoriteRace(Number(replayButton.dataset.favoriteReplay));
 };
 document.querySelector("#galleryButton").onclick=()=>{renderGallery();showScreen("galleryScreen")};
+document.querySelector("#endingGalleryGrid").onclick=e=>{const button=e.target.closest("[data-ending-replay]");if(button)showEnding(button.dataset.endingReplay,true)};
+document.querySelector("#endingDevButtons").onclick=e=>{const button=e.target.closest("[data-ending-preview]");if(button)showEnding(button.dataset.endingPreview,true)};
 document.querySelector("#trophyButton").onclick=()=>{renderTrophies("G1");showScreen("trophyScreen")};
 document.querySelector("#trophyTabs").onclick=e=>{const button=e.target.closest("[data-trophy-grade]");if(button)renderTrophies(button.dataset.trophyGrade)};
 document.querySelector("#trophyGrid").onclick=e=>{const button=e.target.closest("[data-trophy-index]");if(button)showTrophyHorse(Number(button.dataset.trophyIndex))};
@@ -2260,6 +2318,7 @@ document.querySelector("#devModeButton").onclick=()=>{
   developerMode=!developerMode;
   localStorage.setItem("dotKeibaDeveloperMode",developerMode?"1":"0");
   document.querySelector("#devModeButton").textContent=developerMode?"開発表示 ON":"開発表示";
+  syncDeveloperEndingButtons();
   renderHome(developerMode?"内部能力と素質上限を表示しています。":"調教師コメント表示に戻しました。");
 };
 document.querySelector("#equipmentCards").onclick=e=>{if(e.target.dataset.equipment)buyEquipment(e.target.dataset.equipment)};
@@ -2342,7 +2401,8 @@ addEventListener("dotkeiba:preview-ready",e=>{
   }).join("");
 });
 document.querySelector("#resetGameButton").onclick=()=>{if(confirm(`セーブ${activeSaveSlot}の育成データを消しますか？`)){localStorage.removeItem(saveSlotKey(activeSaveSlot));game=defaultGame();document.querySelector("#continueButton").disabled=!hasAnySave();showScreen("titleScreen")}};
-document.querySelector("#returnHomeButton").onclick=()=>{renderHome(postRaceTrainerComment().replace(/^調教師「|」$/g,""));showScreen("homeScreen")};
+document.querySelector("#returnHomeButton").onclick=()=>{const pending=(game.pendingEndings||[])[0];if(pending){showEnding(pending);return}renderHome(postRaceTrainerComment().replace(/^調教師「|」$/g,""));showScreen("homeScreen")};
+document.querySelector("#endingContinueButton").onclick=()=>{if(endingPreviewMode){showScreen("titleScreen");return}const finished=(game.pendingEndings||[]).shift();if(finished&&!game.endingSeen.includes(finished))game.endingSeen.push(finished);saveGame();const next=(game.pendingEndings||[])[0];if(next){showEnding(next);return}renderHome(postRaceTrainerComment().replace(/^調教師「|」$/g,""));showScreen("homeScreen")};
 addEventListener("dotkeiba:finished",e=>showResult(e.detail));
 addEventListener("dotkeiba:favorite",e=>{
   const favorite={...e.detail,savedAt:Date.now()};

@@ -6,7 +6,7 @@ const {SCHEMA_VERSION,migrateSaveData,copyLegacySave}=require(path.join(__dirnam
 const defaults={
   saveVersion:SCHEMA_VERSION,horseName:"",week:1,trainingsUsed:0,prize:0,farmPoints:0,equipment:[],priorityRights:[],
   speed:0,dash:0,stamina:0,power:0,guts:0,turf:0,dirt:0,raceHistory:[],favoriteRaces:[],galleryUnlocks:["stable"],
-  gradedTrophies:[],tackUnlocked:[],declinedOverseasInvites:[],lineage:[],retirementRecords:[],raceReservations:[],overseasReservations:[],reservationNotifiedIds:[],equipmentDurability:{},equipmentAge:{},
+  gradedTrophies:[],endingUnlocks:[],endingSeen:[],pendingEndings:[],tackUnlocked:[],declinedOverseasInvites:[],lineage:[],retirementRecords:[],raceReservations:[],overseasReservations:[],reservationNotifiedIds:[],equipmentDurability:{},equipmentAge:{},
   potentialCaps:null,candidate:null,selectedRace:null,currentRaceWeather:null,injury:null,soundness:550,lastRaceAdvice:"",lastBreedingPartner:null,reservedRaceId:null,reservationNotifiedId:null,equippedTackColor:"#5aa8df"
 };
 
@@ -24,6 +24,9 @@ assert.equal(migrated.data.lastBreedingPartner,null);
 assert.deepEqual(migrated.data.raceReservations,[]);
 assert.deepEqual(migrated.data.raceHistory,[]);
 assert.deepEqual(migrated.data.equipmentDurability,{});
+assert.deepEqual(migrated.data.endingUnlocks,[]);
+assert.deepEqual(migrated.data.endingSeen,[]);
+assert.deepEqual(migrated.data.pendingEndings,[]);
 assert.equal(migrated.data.candidate.sex,"牡馬");
 assert.equal(migrated.data.candidate.appearanceDNA.coat,"栗毛");
 assert.equal(migrated.data.candidate.appearanceDNA.faceMarkType,"none");

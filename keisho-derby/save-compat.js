@@ -4,10 +4,11 @@
   root.DotKeibaSaveCompat=api;
 })(typeof globalThis!=="undefined"?globalThis:this,function(){
   "use strict";
-  const SCHEMA_VERSION=6;
+  const SCHEMA_VERSION=7;
   const ARRAY_FIELDS=[
     "equipment","priorityRights","raceHistory","favoriteRaces","galleryUnlocks","gradedTrophies",
-    "tackUnlocked","declinedOverseasInvites","lineage","retirementRecords","raceReservations","overseasReservations","reservationNotifiedIds"
+    "tackUnlocked","declinedOverseasInvites","lineage","retirementRecords","raceReservations","overseasReservations","reservationNotifiedIds",
+    "endingUnlocks","endingSeen","pendingEndings"
   ];
   const OBJECT_FIELDS=["equipmentDurability","equipmentAge"];
 

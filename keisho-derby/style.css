@@ -9,7 +9,7 @@
 }
 
 * { box-sizing: border-box; }
-.tester-build #raceTestButton,.tester-build #appearanceTestButton,.tester-build #devModeButton { display:none !important; }
+.tester-build #raceTestButton,.tester-build #appearanceTestButton,.tester-build #devModeButton,.tester-build #endingDevButtons { display:none !important; }
 
 body {
   margin: 0;
@@ -1220,6 +1220,15 @@ button:disabled { opacity: .45; cursor: default; }
 .race-layout2 .race-commentary-wide { display:none; }
 .race-layout2 .race-commentary-wide { min-height:126px; }
 .race-layout2 .race-commentary-wide p { font-size:13px;line-height:1.6; }
+
+/* エンディング */
+.ending-dev-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0;padding:7px;border:2px solid #7b5a24;background:#fff0b8}.ending-dev-buttons[hidden]{display:none}.ending-dev-buttons small{grid-column:1/-1;color:#593c14;font-weight:700}.ending-dev-buttons button{padding:7px 3px;font-size:9px}
+.ending-gallery-title{margin:18px 0 8px;padding-bottom:5px;border-bottom:3px double #8e6b28;font-size:16px;color:#4a3514}.ending-gallery-grid{display:grid;gap:8px;margin-bottom:14px}.ending-gallery-card{display:grid;grid-template-columns:1fr auto;text-align:left;padding:12px;border:3px solid #75531c;background:#fff3c7;color:#38270d;box-shadow:inset 0 0 0 2px #d2ac55}.ending-gallery-card small{grid-column:1/-1;color:#986f21}.ending-gallery-card b{font-size:14px}.ending-gallery-card span{font-weight:700}.ending-gallery-card.locked{filter:grayscale(1);opacity:.68}
+.ending-screen{min-height:720px;padding:14px;background:linear-gradient(#0d2631,#071319);color:#fff;text-align:center}.ending-scene{position:relative;height:330px;overflow:hidden;border:5px solid #e8c65c;background:#72c9e8;box-shadow:inset 0 0 0 3px #503914;image-rendering:pixelated}.ending-sky{position:absolute;inset:0 0 42%;background:#6bc4e5}.ending-sun{position:absolute;right:34px;top:26px;width:42px;height:42px;background:#ffe46c;border:7px solid #f4bd3b;border-radius:50%}.ending-cloud{position:absolute;width:55px;height:15px;background:#fff;box-shadow:13px -10px 0 #fff,33px -4px 0 #fff}.ending-cloud.one{left:28px;top:46px}.ending-cloud.two{right:135px;top:84px;transform:scale(.7)}
+.ending-stand{position:absolute;left:0;right:0;bottom:0;height:128px;background:linear-gradient(#56687a 0 18%,#d7d9ce 18% 28%,#536779 28% 65%,#4f913e 65%);border-top:7px solid #273745}.ending-stand i{position:relative;display:inline-block;width:8px;height:8px;margin:36px 8px 0;background:#ffdf60;box-shadow:8px 7px 0 #f3f0e6,-5px 13px 0 #e55b54}.ending-horse{position:absolute!important;left:50%!important;bottom:38px!important;top:auto!important;transform:translateX(-50%) scale(2.05)!important;z-index:5}
+.ending-trophy-row{display:none;position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:4}.ending-trophy-row i{display:inline-block;width:26px;height:28px;margin:0 34px;background:#ffd64d;border:4px solid #9c6714;clip-path:polygon(15% 0,85% 0,73% 62%,58% 62%,58% 82%,82% 82%,82% 100%,18% 100%,18% 82%,42% 82%,42% 62%,27% 62%)}.ending-globe{display:none;position:absolute;left:50%;top:50px;width:150px;height:150px;transform:translateX(-50%);border:8px solid #e6f5ff;border-radius:50%;box-shadow:inset 0 0 0 6px #2f76a1}.ending-globe:before,.ending-globe:after,.ending-globe i{content:"";position:absolute;border:4px solid #e6f5ff;border-radius:50%}.ending-globe:before{inset:20px 52px}.ending-globe:after{left:8px;right:8px;top:66px}.ending-globe i{inset:8px 28px}
+.ending-lineage{display:none;position:absolute;left:8%;right:8%;top:74px;height:82px;border-top:5px solid #f1d674}.ending-lineage i{display:inline-block;width:31px;height:22px;margin:13px 15px;background:#a86232;box-shadow:10px -10px 0 -2px #a86232,4px 21px 0 -10px #2d2119,-10px 21px 0 -10px #2d2119}.ending-scene.domestic .ending-trophy-row,.ending-scene.overseas .ending-globe,.ending-scene.legend .ending-trophy-row,.ending-scene.legend .ending-lineage{display:block}.ending-scene.overseas .ending-stand{background:linear-gradient(#38546d 0 20%,#dfe5e7 20% 29%,#526b7d 29% 64%,#3a8641 64%)}
+.ending-chapter{display:block;margin-top:18px;color:#f5ce5b;letter-spacing:3px}.ending-screen h1{margin:6px 0 8px;font-size:25px;color:#ffe276;text-shadow:2px 2px #73471a}.ending-message{min-height:76px;margin:0 auto;max-width:540px;font-size:14px;line-height:1.8}.ending-progress{display:grid;gap:3px;margin:8px auto 14px;padding:9px;max-width:500px;border:2px solid #866d37;background:#101d22}.ending-progress b{font-size:18px;color:#ffe276}.ending-progress span{font-size:10px;color:#d9e1dd}.ending-credit{margin:11px 0 15px}.ending-credit small{display:block;color:#8fa4ad;letter-spacing:2px}.ending-credit b{display:block;margin-top:4px;color:#fff;font-size:18px;letter-spacing:1px}.ending-screen .primary{width:min(100%,440px)}
 
 /* 凡例・区間表示・大きな高低差図はキャンバス内へ統合。 */
 .course-wrap > .legend,
