@@ -1169,7 +1169,7 @@ function renderHome(message="今週の予定を決めましょう。"){
   const trainingLocked=autoTrainingActive||trainingAnimationActive||reservationDue;
   document.querySelectorAll("[data-action]").forEach(b=>b.disabled=injured||game.trainingsUsed>=2||trainingLocked);
   document.querySelector("#goRaceSelectButton").disabled=injured;
-  document.querySelector("#nextWeekButton").disabled=injured||reservationDue;
+  document.querySelector("#nextWeekButton").disabled=false;
   document.querySelector("#autoTrainingButton").disabled=injured||trainingLocked;
   document.querySelector("#voluntaryPastureButton").disabled=injured||trainingLocked;
   document.querySelector("#pastureButton").hidden=!injured;
@@ -2174,7 +2174,12 @@ document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>{
 document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>train(b.dataset.action));
 document.querySelector("#pastureButton").onclick=sendToPasture;
 document.querySelector("#voluntaryPastureButton").onclick=voluntaryPasture;
-document.querySelector("#nextWeekButton").onclick=()=>advanceWeek(false);
+document.querySelector("#nextWeekButton").onclick=()=>{
+  if(game.injury)return renderHome(`${game.injury.name}の治療中です。翌週へ進むには「復帰まで放牧」を選んでください。`);
+  const reserved=dueReservedRace();
+  if(reserved){showReservationArrival(reserved);return}
+  advanceWeek(false);
+};
 const autoTrainingModal=document.querySelector("#autoTrainingModal");
 const closeAutoTrainingModal=()=>{autoTrainingModal.classList.remove("show");autoTrainingModal.setAttribute("aria-hidden","true")};
 document.querySelector("#autoTrainingButton").onclick=()=>{
