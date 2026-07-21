@@ -6,8 +6,8 @@ const {SCHEMA_VERSION,migrateSaveData,copyLegacySave}=require(path.join(__dirnam
 const defaults={
   saveVersion:SCHEMA_VERSION,horseName:"",week:1,trainingsUsed:0,prize:0,farmPoints:0,equipment:[],priorityRights:[],
   speed:0,dash:0,stamina:0,power:0,guts:0,turf:0,dirt:0,raceHistory:[],favoriteRaces:[],galleryUnlocks:["stable"],
-  gradedTrophies:[],tackUnlocked:[],declinedOverseasInvites:[],lineage:[],retirementRecords:[],equipmentDurability:{},equipmentAge:{},
-  potentialCaps:null,candidate:null,selectedRace:null,currentRaceWeather:null,injury:null,soundness:550,lastRaceAdvice:"",lastBreedingPartner:null
+  gradedTrophies:[],tackUnlocked:[],declinedOverseasInvites:[],lineage:[],retirementRecords:[],raceReservations:[],overseasReservations:[],reservationNotifiedIds:[],equipmentDurability:{},equipmentAge:{},
+  potentialCaps:null,candidate:null,selectedRace:null,currentRaceWeather:null,injury:null,soundness:550,lastRaceAdvice:"",lastBreedingPartner:null,reservedRaceId:null,reservationNotifiedId:null
 };
 
 // Ver.0相当：単一キー時代の最小限セーブ。新項目がなくても保持して補完できること。
@@ -20,6 +20,7 @@ assert.equal(migrated.data.week,79);
 assert.equal(migrated.data.speed,612);
 assert.equal(migrated.data.soundness,550);
 assert.equal(migrated.data.lastBreedingPartner,null);
+assert.deepEqual(migrated.data.raceReservations,[]);
 assert.deepEqual(migrated.data.raceHistory,[]);
 assert.deepEqual(migrated.data.equipmentDurability,{});
 assert.equal(migrated.data.candidate.sex,"牡馬");
@@ -45,8 +46,19 @@ assert.equal(converted.week,27);
 assert.equal(converted.lastRaceWeek,26);
 assert.equal(converted.selectedRace.week,32);
 assert.equal(converted.selectedRace.id,"p-32-東京-11");
-assert.equal(converted.reservedRaceId,"p-32-東京-11");
-assert.equal(converted.reservationNotifiedId,"p-32-東京-11");
+assert.equal(converted.reservedRaceId,null);
+assert.equal(converted.reservationNotifiedId,null);
+assert.deepEqual(converted.raceReservations,["p-32-東京-11"]);
+assert.deepEqual(converted.reservationNotifiedIds,["p-32-東京-11"]);
+
+// v3の単一予約を通常・海外の複数予約へ分離すること。
+const oldDomesticReservation=migrateSaveData({...defaults,saveVersion:3,reservedRaceId:"p-30-東京-11",reservationNotifiedId:"p-30-東京-11"},defaults).data;
+assert.deepEqual(oldDomesticReservation.raceReservations,["p-30-東京-11"]);
+assert.deepEqual(oldDomesticReservation.overseasReservations,[]);
+assert.deepEqual(oldDomesticReservation.reservationNotifiedIds,["p-30-東京-11"]);
+const oldOverseasReservation=migrateSaveData({...defaults,saveVersion:3,reservedRaceId:"overseas-1-arc"},defaults).data;
+assert.deepEqual(oldOverseasReservation.raceReservations,[]);
+assert.deepEqual(oldOverseasReservation.overseasReservations,["overseas-1-arc"]);
 
 // 旧単一キーからスロット1へ実データ文字列をコピーし、旧キーを消さないこと。
 class MemoryStorage{

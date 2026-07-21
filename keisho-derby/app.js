@@ -106,7 +106,7 @@ const defaultGame = () => ({
   tackUnlocked:[],equippedTack:null,temperamentObservations:0,
   races:0, wins:0, maiden:true, selectedRace:null, currentRaceWeather:null,
   raceHistory:[], favoriteRaces:[], galleryUnlocks:["stable"], gradedTrophies:[], candidate:null,
-  reservedRaceId:null,reservationNotifiedId:null,pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],lastBreedingPartner:null,equipmentDurability:{},equipmentAge:{},inheritanceComment:"",lastRaceAdvice:""
+  reservedRaceId:null,reservationNotifiedId:null,raceReservations:[],overseasReservations:[],reservationNotifiedIds:[],pendingOverseasOfferId:null,declinedOverseasInvites:[], affection:0, lineage:[],retirementRecords:[],lastBreedingPartner:null,equipmentDurability:{},equipmentAge:{},inheritanceComment:"",lastRaceAdvice:""
 });
 let game = defaultGame();
 let autoTrainingActive=false;
@@ -392,6 +392,30 @@ function raceAgeGroup(){return horseAge()===2?"2歳":"3歳以上"}
 function raceVenue(race){return race.course.split(" ")[0]}
 function isNarGradedRace(race){return String(race?.id||"").startsWith("nar26-")}
 function raceVenueTab(race){return isNarGradedRace(race)?"地方重賞":raceVenue(race)}
+function reservationIds(){return [...(game.raceReservations||[]),...(game.overseasReservations||[])]}
+function reservedRaces(){return reservationIds().map(id=>raceCalendar.find(r=>r.id===id)).filter(Boolean).sort((a,b)=>a.week-b.week)}
+function isRaceReserved(id){return reservationIds().includes(id)}
+function setRaceReservation(race,reserved){
+  const field=race.overseas?"overseasReservations":"raceReservations",other=race.overseas?"raceReservations":"overseasReservations";
+  game[field]=Array.isArray(game[field])?game[field]:[];game[other]=Array.isArray(game[other])?game[other]:[];
+  if(reserved){
+    // 同じ開催週は実際に1走しかできないため、先に入れた予定を置き換える。
+    [...game.raceReservations,...game.overseasReservations].forEach(id=>{
+      const existing=raceCalendar.find(r=>r.id===id);
+      if(existing?.week===race.week&&id!==race.id){game.raceReservations=game.raceReservations.filter(x=>x!==id);game.overseasReservations=game.overseasReservations.filter(x=>x!==id)}
+    });
+    if(!game[field].includes(race.id))game[field].push(race.id);
+  }else game[field]=game[field].filter(id=>id!==race.id);
+  game.reservationNotifiedIds=(game.reservationNotifiedIds||[]).filter(id=>id!==race.id);
+}
+function nextReservedRace(){return reservedRaces().find(r=>r.week>=game.week)||null}
+function dueReservedRace(){return reservedRaces().find(r=>r.week===game.week)||null}
+function reservationWeekLabel(race){const p=weekCalendarParts(race.week);return `${p.year}年目 ${p.month}月${p.weekOfMonth}週`}
+function renderReservationList(){
+  const races=reservedRaces().filter(r=>r.week>=game.week),domestic=races.filter(r=>!r.overseas),overseas=races.filter(r=>r.overseas);
+  const section=(title,items,overseasSection=false)=>items.length?`<h3 class="reservation-list-section">${title}</h3>${items.map(r=>`<article class="reservation-list-item ${overseasSection?"overseas":""}"><div><b>${r.name}</b><small>${reservationWeekLabel(r)}／${r.course}${r.week===game.week?"／今週":""}</small></div><button data-cancel-reservation="${r.id}">予約取消</button></article>`).join("")}`:"";
+  document.querySelector("#reservationList").innerHTML=section("国内レース",domestic)+section("海外招待",overseas,true)||'<p class="reservation-list-empty">予約しているレースはありません。</p>';
+}
 function raceTimingRecord(race){
   const master=window.RACE_TIME_MASTER;
   const venue=raceVenue(race),ageGroup=raceAgeGroup();
@@ -1012,11 +1036,12 @@ function renderHome(message="今週の予定を決めましょう。"){
   updateStableWeather();
   document.querySelector("#conditionText").textContent=`調子：${conditionLabel()}／脚元：${legLabel()}`;
   const debutWeek=Math.min(...raceCalendar.filter(r=>r.raceClass==="新馬").map(r=>r.week));
-  const reservedRace=raceCalendar.find(r=>r.id===game.reservedRaceId);
+  const reservedRace=nextReservedRace();
   const weeksToRace=reservedRace?Math.max(0,reservedRace.week-game.week):null;
   document.querySelector("#nextRaceButtonText").textContent=reservedRace
     ? `次走：${reservedRace.name}（${weeksToRace===0?"今週":`${weeksToRace}週後`}）`
     : game.races>0?"次走予約なし":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
+  document.querySelector("#reservationCount").textContent=`${reservedRaces().filter(r=>r.week>=game.week).length}件`;
   const fatigueMessage=fatigueCoachComment();
   document.querySelector("#homeMessage").textContent=message.includes(fatigueMessage)
     ? message.trim()
@@ -1041,26 +1066,26 @@ function renderHome(message="今週の予定を決めましょう。"){
   trainingScene.classList.add(game.fatigue>=75?"horse-exhausted":game.fatigue>=45?"horse-tired":game.fatigue<20&&game.condition>=55?"horse-vigorous":"horse-normal");
   renderTack();
   const injured=!!game.injury;
-  const reservationDue=raceCalendar.some(r=>r.id===game.reservedRaceId&&r.week===game.week);
+  const reservationDue=!!dueReservedRace();
   const trainingLocked=autoTrainingActive||trainingAnimationActive||reservationDue;
   document.querySelectorAll("[data-action]").forEach(b=>b.disabled=injured||game.trainingsUsed>=2||trainingLocked);
   document.querySelector("#goRaceSelectButton").disabled=injured;
-  document.querySelector("#nextWeekButton").disabled=injured;
+  document.querySelector("#nextWeekButton").disabled=injured||reservationDue;
   document.querySelector("#autoTrainingButton").disabled=injured||trainingLocked;
   document.querySelector("#voluntaryPastureButton").disabled=injured||trainingLocked;
   document.querySelector("#pastureButton").hidden=!injured;
   document.querySelector("#hotSpringButton").hidden=!game.equipment.includes("hotSpring");
   if(injured)document.querySelector("#pastureWeeks").textContent=`${game.injury.name}・${game.injury.weeks}週間を一括進行`;
   saveGame();
-  const arrivedReservation=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
-  if(arrivedReservation&&game.reservationNotifiedId!==arrivedReservation.id)queueMicrotask(()=>showReservationArrival(arrivedReservation));
+  const arrivedReservation=dueReservedRace();
+  if(arrivedReservation&&!game.reservationNotifiedIds.includes(arrivedReservation.id))queueMicrotask(()=>showReservationArrival(arrivedReservation));
   else if(game.pendingOverseasOfferId)queueMicrotask(showOverseasInvitation);
 }
 function closeReservationArrival(){
   const modal=document.querySelector("#reservationArrivalModal");modal.classList.remove("show");modal.setAttribute("aria-hidden","true");
 }
 function showReservationArrival(race){
-  game.reservationNotifiedId=race.id;saveGame();
+  if(!game.reservationNotifiedIds.includes(race.id))game.reservationNotifiedIds.push(race.id);saveGame();
   document.querySelector("#reservationArrivalRace").textContent=`${race.course}　${race.name}`;
   document.querySelector("#reservationArrivalTitle").textContent=race.overseas?"海外GⅠの遠征週です！":"予約レースの開催週です！";
   document.querySelector("#reservationArrivalAction").textContent=race.overseas?"海外GⅠへ出走":"レース選択へ";
@@ -1174,7 +1199,7 @@ function sendToPasture(){
 }
 function voluntaryPasture(){
   if(game.injury)return sendToPasture();
-  const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week>=game.week&&r.week<=game.week+4);
+  const reserved=reservedRaces().find(r=>r.week>=game.week&&r.week<=game.week+4);
   if(reserved)return renderHome(`${reserved.name}を予約しています。放牧すると間に合わないため、予約を見直してください。`);
   const before={speed:game.speed,dash:game.dash,stamina:game.stamina,power:game.power,guts:game.guts};
   for(let i=0;i<4;i++)advanceWeek(true);
@@ -1525,7 +1550,7 @@ function advanceWeek(rest=false){
     else if(game.weight<target-3)game.weight++;
   }
   const equipmentNotice=ageEquipment();
-  const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
+  const reserved=nextReservedRace();
   const notice=reserved&&reserved.week===game.week?` 予約していた「${reserved.name}」の開催週です。`:reserved&&reserved.week-game.week===1?` 来週は予約した「${reserved.name}」です。`:"";
   renderHome(`${notice} ${equipmentNotice} ${conditionTrendComment()}`.trim());
 }
@@ -1583,7 +1608,7 @@ function runAutoTraining(mode){
   let completed=0,stoppedForRace=false;
   autoTrainingActive=true;
   for(let i=0;i<4;i++){
-    const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
+    const reserved=nextReservedRace();
     if(reserved&&reserved.week===game.week){stoppedForRace=true;break}
     const raceSoon=!!reserved&&reserved.week===game.week+1;
     while(game.trainingsUsed<2&&!game.injury){
@@ -1607,7 +1632,7 @@ function runAutoTraining(mode){
   const stopText=game.injury?`${game.injury.name}を発症したため途中で中止しました。`:stoppedForRace?"予約レースの開催週です。調教は締め切られ、出走確認へ進みます。":"4週間を終えました。";
   renderHome(`おまかせ調教（${modeName}）で${game.week-startWeek}週間進めました。${menu||"調教なし"}。${stopText}${broken.length?` ${broken.join("、")}が故障しました。`:""} ${nextTrainingAdvice()}`);
   playAutoTrainingSequence(animationSteps,modeName,stopText);
-  const dueRace=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
+  const dueRace=dueReservedRace();
   if(dueRace)setTimeout(()=>showReservationArrival(dueRace),Math.min(2200,650+animationSteps.length*180));
   saveGame();
 }
@@ -1687,7 +1712,7 @@ function renderRaces(){
     else if(game.maiden)reason="未勝利馬条件";
     else if(["1勝","2勝","3勝","オープン"].includes(r.raceClass))reason=`現在は${classLabel()}`;
     else reason="条件を満たしていないため除外";
-    const reserved=game.reservedRaceId===r.id;
+    const reserved=isRaceReserved(r.id);
     const wonBefore=game.raceHistory.some(x=>x.raceName===r.name&&x.place===1);
     const gradedWon=["G1","G2","G3"].includes(r.raceClass)&&(wonBefore||(game.gradedTrophies||[]).some(t=>t.raceName===r.name));
     const venue=raceVenue(r),narVenue=isNarGradedRace(r)?`<span class="nar-venue-badge">${venue}</span>`:"";
@@ -1877,7 +1902,7 @@ function showResult(detail){
   const player=detail.order.find(h=>h.player),place=detail.order.findIndex(h=>h.player)+1,r=game.selectedRace;
   const earned=place===1?r.prize:place===2?Math.round(r.prize*.4):place===3?Math.round(r.prize*.25):place<=5?Math.round(r.prize*.1):0;
   game.prize+=earned;game.races++;if(place===1){game.wins++;game.maiden=false}
-  if(game.reservedRaceId===r.id){game.reservedRaceId=null;game.reservationNotifiedId=r.id;closeReservationArrival()}
+  if(isRaceReserved(r.id)){setRaceReservation(r,false);if(!game.reservationNotifiedIds.includes(r.id))game.reservationNotifiedIds.push(r.id);closeReservationArrival()}
   const classMoneyAdd=place===1
     ? (r.raceClass==="新馬"||r.raceClass==="未勝利"?400:r.raceClass==="1勝"?500:r.raceClass==="2勝"?600:r.raceClass==="3勝"?900:r.raceClass==="G3"?1600:r.raceClass==="G2"||r.raceClass==="G1"?Math.round(r.prize*.5):1000)
     : ((["G1","G2","G3"].includes(r.raceClass)&&place===2)?Math.round(r.prize*.2):0);
@@ -2109,7 +2134,7 @@ document.querySelector("#inheritConfirmProceed").onclick=()=>{const partner=pend
 document.querySelector("#inheritConfirmCancel").onclick=closeInheritanceConfirm;
 document.querySelector("#overseasInviteAccept").onclick=()=>{
   const race=raceCalendar.find(item=>item.id===game.pendingOverseasOfferId);if(!race)return closeOverseasInvitation();
-  game.reservedRaceId=race.id;game.reservationNotifiedId=null;game.pendingOverseasOfferId=null;saveGame();closeOverseasInvitation();
+  setRaceReservation(race,true);game.pendingOverseasOfferId=null;saveGame();closeOverseasInvitation();
   renderHome(`${race.name}からの招待を受けました。${Math.max(1,race.week-game.week)}週後の海外遠征へ向けて仕上げましょう。`);
 };
 document.querySelector("#overseasInviteDecline").onclick=()=>{
@@ -2130,36 +2155,34 @@ document.querySelector("#tackChoices").onclick=e=>{
   renderHome(game.equippedTack?`${tackCatalog[game.equippedTack].name}を装着しました。`:"馬具を外しました。");
 };
 document.querySelector("#goRaceSelectButton").onclick=()=>{
-  const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId&&r.week===game.week);
+  const reserved=dueReservedRace();
   window.selectedRaceWeek=game.week;window.selectedRaceVenue=reserved?raceVenueTab(reserved):"";renderRaces();showScreen("raceSelectScreen");
 };
 document.querySelector("#reservationArrivalOpen").onclick=()=>{
-  const reserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
+  const reserved=dueReservedRace()||nextReservedRace();
   if(reserved)openReservedRaceWeek(reserved);else closeReservationArrival();
 };
 document.querySelector("#reservationArrivalClose").onclick=closeReservationArrival;
+const reservationListModal=document.querySelector("#reservationListModal");
+const closeReservationList=()=>{reservationListModal.classList.remove("show");reservationListModal.setAttribute("aria-hidden","true")};
+document.querySelector("#reservationListButton").onclick=()=>{renderReservationList();reservationListModal.classList.add("show");reservationListModal.setAttribute("aria-hidden","false")};
+document.querySelector("#reservationListClose").onclick=closeReservationList;
+reservationListModal.onclick=e=>{if(e.target===reservationListModal)closeReservationList()};
+document.querySelector("#reservationList").onclick=e=>{
+  const button=e.target.closest("[data-cancel-reservation]");if(!button)return;
+  const race=raceCalendar.find(r=>r.id===button.dataset.cancelReservation);if(!race)return;
+  if(race.overseas&&!game.declinedOverseasInvites.includes(race.id))game.declinedOverseasInvites.push(race.id);
+  setRaceReservation(race,false);saveGame();renderReservationList();renderHome(`${race.name}の予約を取り消しました。`);
+};
 document.querySelector("#raceChoices").onclick=e=>{
   const reserve=e.target.closest("[data-reserve]");
   if(reserve){
-    const currentReserved=raceCalendar.find(r=>r.id===game.reservedRaceId),nextRace=raceCalendar.find(r=>r.id===reserve.dataset.reserve);
-    if(currentReserved?.overseas&&currentReserved.id!==reserve.dataset.reserve){
-      document.querySelector(".race-select-guide").textContent=`海外招待「${currentReserved.name}」を予約中です。辞退するまで国内レースへ予約変更できません。`;
-      return;
-    }
-    if(game.pendingOverseasOfferId&&nextRace?.id!==game.pendingOverseasOfferId){
-      const invited=raceCalendar.find(r=>r.id===game.pendingOverseasOfferId);
-      document.querySelector(".race-select-guide").textContent=`${invited?.name||"海外競走"}の招待へ回答してから通常レースを予約してください。`;
-      return;
-    }
-    game.reservedRaceId=game.reservedRaceId===reserve.dataset.reserve?null:reserve.dataset.reserve;game.reservationNotifiedId=null;saveGame();renderRaces();return
+    const nextRace=raceCalendar.find(r=>r.id===reserve.dataset.reserve);if(!nextRace)return;
+    setRaceReservation(nextRace,!isRaceReserved(nextRace.id));saveGame();renderRaces();return
   }
   const button=e.target.closest("[data-race]");
   if(button){
-    const race=raceCalendar.find(r=>r.id===button.dataset.race),currentReserved=raceCalendar.find(r=>r.id===game.reservedRaceId);
-    if(currentReserved?.overseas&&currentReserved.id!==race?.id){
-      document.querySelector(".race-select-guide").textContent=`海外招待「${currentReserved.name}」を予約中です。先に出走または辞退を選んでください。`;
-      return;
-    }
+    const race=raceCalendar.find(r=>r.id===button.dataset.race);
     const warning=raceSpacingCoachWarning(race?.week);
     if(warning){
       pendingRaceAfterSpacingWarning=race;

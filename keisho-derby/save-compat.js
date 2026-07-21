@@ -4,10 +4,10 @@
   root.DotKeibaSaveCompat=api;
 })(typeof globalThis!=="undefined"?globalThis:this,function(){
   "use strict";
-  const SCHEMA_VERSION=3;
+  const SCHEMA_VERSION=4;
   const ARRAY_FIELDS=[
     "equipment","priorityRights","raceHistory","favoriteRaces","galleryUnlocks","gradedTrophies",
-    "tackUnlocked","declinedOverseasInvites","lineage","retirementRecords"
+    "tackUnlocked","declinedOverseasInvites","lineage","retirementRecords","raceReservations","overseasReservations","reservationNotifiedIds"
   ];
   const OBJECT_FIELDS=["equipmentDurability","equipmentAge"];
 
@@ -58,6 +58,13 @@
       }
       data.raceHistory=data.raceHistory.map(item=>Number.isFinite(item?.week)?{...item,week:to52(item.week)}:item);
     }
+    // v3までは国内・海外共通の単一予約。通常予約と海外招待予約へ分離する。
+    if(fromVersion<4&&data.reservedRaceId){
+      const target=String(data.reservedRaceId).startsWith("overseas-")?data.overseasReservations:data.raceReservations;
+      if(!target.includes(data.reservedRaceId))target.push(data.reservedRaceId);
+    }
+    if(fromVersion<4&&data.reservationNotifiedId&&!data.reservationNotifiedIds.includes(data.reservationNotifiedId))data.reservationNotifiedIds.push(data.reservationNotifiedId);
+    data.reservedRaceId=null;data.reservationNotifiedId=null;
     return {data,fromVersion,changed:JSON.stringify(data)!==JSON.stringify(saved)};
   }
 

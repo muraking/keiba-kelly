@@ -596,6 +596,8 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .reservation-flag { display:inline-block;margin:3px 0 7px;padding:3px 8px;border:2px solid #245f38;background:#46a65b;color:#fff;font-size:10px;font-weight:900; }
 .race-select-main { display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px; }
 .race-select-main small { color:#fff0ac;font-size:9px; }
+.race-home-actions{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:7px}.race-home-actions>button{min-height:58px}.race-home-actions #reservationListButton{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-color:#d7b852;background:#263d35;color:#fff2ad;font-weight:900}.race-home-actions #reservationListButton small{color:#d9e8d4}
+.reservation-list-dialog{width:min(92%,430px);max-height:78vh;overflow:auto}.reservation-list{display:grid;gap:7px;margin:10px 0}.reservation-list-section{margin:7px 0 2px;color:#8b5d22;text-align:left}.reservation-list-item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:8px;border:3px solid #8d7747;background:#fffaf0;text-align:left}.reservation-list-item.overseas{border-color:#3c6d87;background:#e7f4f7}.reservation-list-item small,.reservation-list-item b{display:block}.reservation-list-item small{margin-top:3px;font-size:8px;color:#695b3d}.reservation-list-item button{padding:7px;background:#9a3c2c;color:#fff;border-color:#552014;font-size:9px}.reservation-list-empty{padding:14px;border:2px dashed #9a895e;background:#fffdf5}
 .stats > div, .fatigue-row {
   display:grid;
   grid-template-columns:65px 1fr 72px;

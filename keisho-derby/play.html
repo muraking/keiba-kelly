@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.63</title>
-  <link rel="stylesheet" href="style.css?v=20260721-66">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.10.64</title>
+  <link rel="stylesheet" href="style.css?v=20260721-67">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -49,7 +49,7 @@
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton">コース検証テスト</button>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.10.63</b>
+        <b class="build-version">Ver. 0.10.64</b>
       </div>
     </section>
 
@@ -189,7 +189,7 @@
         <button id="hotSpringButton" class="training-condition hot-spring-button" data-action="hotSpring" hidden>温泉療養<br><small>週2回分・脚元回復 大</small></button>
         <button id="pastureButton" class="pasture-button" hidden>復帰までスキップ<br><small id="pastureWeeks">長期放牧</small></button>
       </nav>
-      <button class="primary big race-select-main" id="goRaceSelectButton"><span>レースに出走</span><small id="nextRaceButtonText">次走予定を確認</small></button>
+      <div class="race-home-actions"><button class="primary big race-select-main" id="goRaceSelectButton"><span>レースに出走</span><small id="nextRaceButtonText">次走予定を確認</small></button><button id="reservationListButton"><span>予約確認</span><small id="reservationCount">0件</small></button></div>
       <div class="sub-actions">
         <button id="shopButton">設備ショップ</button>
         <button id="historyButton">戦歴</button>
@@ -427,13 +427,21 @@
         <button id="overseasInviteDecline" class="auto-training-cancel">今回は見送る</button>
       </div>
     </div>
+    <div id="reservationListModal" class="auto-training-modal reservation-list-modal" aria-hidden="true">
+      <div class="auto-training-dialog reservation-list-dialog" role="dialog" aria-modal="true" aria-labelledby="reservationListTitle">
+        <b id="reservationListTitle">予約レース一覧</b>
+        <p>国内レースと海外招待は別々に予約できます。同じ週には1レースだけ出走できます。</p>
+        <div id="reservationList" class="reservation-list"></div>
+        <button id="reservationListClose" class="auto-training-cancel">閉じる</button>
+      </div>
+    </div>
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
-  <script src="save-compat.js?v=20260721-12"></script>
-  <script src="app.js?v=20260721-17"></script>
+  <script src="save-compat.js?v=20260721-13"></script>
+  <script src="app.js?v=20260721-18"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
-  <script src="race.js?v=20260721-23"></script>
+  <script src="race.js?v=20260721-24"></script>
   <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
 </body>
 </html>

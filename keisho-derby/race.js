@@ -539,27 +539,40 @@ function calculateOdds(entries) {
   });
 }
 
+function neutral1000mSplit(){
+  // 距離が延びるほど序盤1000mは落ち着く。最終時計の単純比例は使わない。
+  const turf=[[1000,55.0],[1200,56.6],[1400,57.8],[1600,58.8],[1800,59.7],[2000,60.3],[2200,60.8],[2400,61.2],[2600,61.7],[3000,62.5],[3200,62.9],[3600,63.7]];
+  const dirt=[[1000,58.0],[1200,59.1],[1400,60.0],[1600,60.8],[1800,61.5],[2000,62.0],[2200,62.5],[2400,63.0],[2600,63.5],[3000,64.1],[3200,64.5],[3600,65.2]];
+  const table=raceSurface==="芝"?turf:dirt;
+  let base=table.at(-1)[1];
+  for(let i=0;i<table.length;i++){
+    if(TOTAL<=table[i][0]){
+      if(i===0)base=table[i][1];
+      else{const [d0,s0]=table[i-1],[d1,s1]=table[i];base=s0+(s1-s0)*(TOTAL-d0)/(d1-d0)}
+      break;
+    }
+  }
+  const classAdjustment=playerSetup.raceClass==="新馬"||playerSetup.raceClass==="未勝利"?1:
+    playerSetup.raceClass==="1勝"?.7:playerSetup.raceClass==="2勝"?.5:playerSetup.raceClass==="3勝"?.3:playerSetup.raceClass==="オープン"?.15:0;
+  const ageAdjustment=playerSetup.age===2?.75:0;
+  // 1000m戦は通過ではなく走破時計なので、レース基準時計を優先する。
+  if(TOTAL===1000&&Number.isFinite(playerSetup.baseTime))base=playerSetup.baseTime/1000;
+  return (base+classAdjustment+ageAdjustment)*1000;
+}
+
 function analyzePace(entries) {
   const escapeCount = entries.filter(h => h.style === "逃げ").length;
-  const splitNoise = (raceRandom() - .5) * 500;
+  const splitNoise = (raceRandom() - .5) * 600;
   const finishNoise = (raceRandom() - .5) * 1800;
   const distanceBase = playerSetup.baseTime || TOTAL * 62;
-  const baseSplit = distanceBase * 1000 / TOTAL;
-  const ageTwo=playerSetup.age===2;
-  const minSplit=TOTAL<=1000
-    ? (["G1","G2","G3","オープン"].includes(playerSetup.raceClass)?54500:55500)
-    : TOTAL>=3000
-      ? (raceSurface==="芝"?(ageTwo?62500:61000):(ageTwo?64000:62500))
-      : TOTAL>=2400
-        ? (raceSurface==="芝"?(ageTwo?61000:59800):(ageTwo?62800:61500))
-        : raceSurface==="芝"?(ageTwo?59500:58500):(ageTwo?61500:60200);
-  const maxSplit=TOTAL<=1000?60500:TOTAL>=3000?(raceSurface==="芝"?67000:69000):raceSurface==="芝"?64500:66500;
+  const baseSplit = neutral1000mSplit();
+  const minSplit=baseSplit-(TOTAL===1000?1200:2200),maxSplit=baseSplit+(TOTAL===1000?1200:2400);
   const boundedSplit=value=>Math.max(minSplit,Math.min(maxSplit,value));
   if (escapeCount >= 3) {
     return {
       name: "ハイペース",
       escapeCount,
-      targetSplit: boundedSplit(baseSplit - 900 + splitNoise),
+      targetSplit: boundedSplit(baseSplit - 1450 + splitNoise),
       targetFinish: distanceBase - 300 + finishNoise,
     };
   }
@@ -567,7 +580,7 @@ function analyzePace(entries) {
     return {
       name: "ややハイ",
       escapeCount,
-      targetSplit: boundedSplit(baseSplit - 400 + splitNoise),
+      targetSplit: boundedSplit(baseSplit - 700 + splitNoise),
       targetFinish: distanceBase + finishNoise,
     };
   }
@@ -575,14 +588,14 @@ function analyzePace(entries) {
     return {
       name: "スローペース",
       escapeCount,
-      targetSplit: boundedSplit(baseSplit + 500 + splitNoise),
+      targetSplit: boundedSplit(baseSplit + 200 + splitNoise),
       targetFinish: distanceBase + 600 + finishNoise,
     };
   }
   return {
     name: "超スロー",
     escapeCount,
-    targetSplit: boundedSplit(baseSplit + 1300 + splitNoise),
+    targetSplit: boundedSplit(baseSplit + 1100 + splitNoise),
     targetFinish: distanceBase + 1400 + finishNoise,
   };
 }
@@ -663,10 +676,10 @@ function update(dt, clockDt) {
     const slopeDrain = currentGradient.type === "up" ? .045 * currentGradient.strength : 0;
     let measuredDrain = 0;
     if (split1000Time !== null) {
-      const splitSeconds = split1000Time / 1000;
-      if (splitSeconds < 58.5) {
+      const splitDelta = (split1000Time-neutral1000mSplit()) / 1000;
+      if (splitDelta < -1.4) {
         measuredDrain = h.style === "逃げ" ? .28 : h.style === "先行" ? .16 : .03;
-      } else if (splitSeconds < 60) {
+      } else if (splitDelta < -.6) {
         measuredDrain = h.style === "逃げ" ? .16 : h.style === "先行" ? .09 : .015;
       }
     }
@@ -717,21 +730,22 @@ function update(dt, clockDt) {
     // 1000mの実測時計を後半の消耗へ反映する。
     // 57秒台のような暴走ペースでは、逃げ・先行馬は直線で強く失速する。
     if (split1000Time !== null && normalized > .43) {
-      const splitSeconds = split1000Time / 1000;
+      const splitDelta = (split1000Time-neutral1000mSplit()) / 1000;
       const lateStage = Math.min(1, Math.max(0, (normalized - .43) / .57));
-      if (splitSeconds < 58.5) {
+      if (splitDelta < -1.4) {
         if (h.style === "逃げ") styleFactor *= 1 - .25 * lateStage;
         if (h.style === "先行") styleFactor *= 1 - .14 * lateStage;
-        if (h.style === "差し") styleFactor *= 1 + .09 * lateStage;
-        if (h.style === "追込") styleFactor *= 1 + .13 * lateStage;
-      } else if (splitSeconds < 60) {
+        if (h.style === "差し") styleFactor *= 1 + .11 * lateStage;
+        if (h.style === "追込") styleFactor *= 1 + .16 * lateStage;
+      } else if (splitDelta < -.6) {
         if (h.style === "逃げ") styleFactor *= 1 - .14 * lateStage;
         if (h.style === "先行") styleFactor *= 1 - .07 * lateStage;
-        if (h.style === "差し") styleFactor *= 1 + .05 * lateStage;
-        if (h.style === "追込") styleFactor *= 1 + .08 * lateStage;
-      } else if (splitSeconds > 62) {
+        if (h.style === "差し") styleFactor *= 1 + .065 * lateStage;
+        if (h.style === "追込") styleFactor *= 1 + .10 * lateStage;
+      } else if (splitDelta > 1.2) {
         if (h.style === "逃げ") styleFactor *= 1 + .055 * lateStage;
         if (h.style === "先行") styleFactor *= 1 + .025 * lateStage;
+        if (h.style === "差し") styleFactor *= 1 - .025 * lateStage;
         if (h.style === "追込") styleFactor *= 1 - .055 * lateStage;
       }
     }
@@ -957,11 +971,11 @@ function finishRace() {
 }
 
 function classify1000mPace(milliseconds) {
-  const seconds = milliseconds / 1000;
-  if (seconds < 58.5) return "超ハイペース";
-  if (seconds < 60) return "ハイペース";
-  if (seconds < 61.5) return "平均ペース";
-  if (seconds < 63) return "スローペース";
+  const delta=(milliseconds-neutral1000mSplit())/1000;
+  if (delta < -1.4) return "超ハイペース";
+  if (delta < -.6) return "ハイペース";
+  if (delta <= .7) return "平均ペース";
+  if (delta <= 1.5) return "スローペース";
   return "超スローペース";
 }
 
