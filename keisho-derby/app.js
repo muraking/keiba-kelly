@@ -1372,8 +1372,11 @@ function showTrophyHorse(index){
   const trophy=(game.gradedTrophies||[])[index];if(!trophy)return;
   selectedTrophyIndex=index;
   document.querySelectorAll("[data-trophy-index]").forEach(button=>button.classList.toggle("selected",Number(button.dataset.trophyIndex)===index));
-  const color=trophy.horseColor||"#a96232";
-  detail.innerHTML=`<div class="trophy-detail-stage" style="--horse-color:${color}"><div class="candidate-pixel-horse trophy-detail-horse"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div><div class="winner-wreath"></div></div></div><div><small>${trophy.grade==="G1"?"GⅠ":trophy.grade==="G2"?"GⅡ":"GⅢ"} TROPHY</small><h3>${trophy.raceName}</h3><b>${trophy.horseName}</b><p>${trophy.generation}代目　${trophy.horseAge?`${trophy.horseAge}歳　`:""}${trophy.date||""}</p></div>`;
+  const currentHorseAppearance=trophy.horseName===game.horseName&&Number(trophy.generation)===Number(game.generation)?{color:game.candidate?.color,coat:game.candidate?.coat,faceMark:game.candidate?.faceMark,socks:game.candidate?.socks,eyeType:game.candidate?.eyeType,tack:game.equippedTack}:{};
+  const appearance=trophy.horseAppearance||currentHorseAppearance;
+  const color=appearance.color||trophy.horseColor||"#a96232";
+  const appearanceClass=[appearance.faceMark?"has-face-mark":"",Number(appearance.socks)>0?"has-socks":"",appearance.tack?`tack-${appearance.tack}`:""].filter(Boolean).join(" ");
+  detail.innerHTML=`<div class="trophy-detail-stage ${appearanceClass}" style="--horse-color:${color};--active-horse-color:${color}"><div class="candidate-pixel-horse trophy-detail-horse"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div><div class="winner-wreath"></div></div></div><div><small>${trophy.grade==="G1"?"GⅠ":trophy.grade==="G2"?"GⅡ":"GⅢ"} TROPHY</small><h3>${trophy.raceName}</h3><b>${trophy.horseName}</b><p>${trophy.generation}代目　${trophy.horseAge?`${trophy.horseAge}歳　`:""}${trophy.date||""}</p></div>`;
   detail.hidden=false;detail.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function train(type){
@@ -1679,21 +1682,21 @@ function renderRaces(){
   const surfaceFilter=document.querySelector("#raceSurfaceFilter")?.value||"";
   const distanceFilter=document.querySelector("#raceDistanceFilter")?.value||"";
   const classFilter=document.querySelector("#raceClassFilter")?.value||"";
-  const eligibleOnly=!!document.querySelector("#raceEligibleOnly")?.checked,reservableOnly=!!document.querySelector("#raceReservableOnly")?.checked;
+  const eligibleOnly=!!document.querySelector("#raceEligibleOnly")?.checked;
   const distanceMatches=r=>!distanceFilter||(distanceFilter==="short"?r.distance<=1400:distanceFilter==="mile"?r.distance>1400&&r.distance<=1800:distanceFilter==="middle"?r.distance>1800&&r.distance<=2400:r.distance>2400);
   const canUseRace=r=>{
     const arrived=r.week===game.week,targetAge=horseAgeAtWeek(r.week);
-    const basic=game.week>=23&&raceAgeTextEligible(r.age||"",targetAge)&&(!raceFemaleOnly(r)||game.candidate?.sex==="牝馬")&&r.condition(game);
-    return reservableOnly?r.week>game.week&&basic:(arrived||r.week>game.week)&&basic;
+    const basic=r.week>=23&&raceAgeTextEligible(r.age||"",targetAge)&&(!raceFemaleOnly(r)||game.candidate?.sex==="牝馬")&&r.condition(game);
+    return (arrived||r.week>game.week)&&basic;
   };
   const shown=periodRaces.filter(r=>raceVenueTab(r)===window.selectedRaceVenue)
     .filter(r=>!surfaceFilter||r.surface===surfaceFilter)
     .filter(distanceMatches)
     .filter(r=>!classFilter||r.raceClass===classFilter)
-    .filter(r=>(!eligibleOnly&&!reservableOnly)||canUseRace(r))
+    .filter(r=>!eligibleOnly||canUseRace(r))
     .sort((a,b)=>(a.number||11)-(b.number||11));
   document.querySelector("#raceChoices").innerHTML=shown.map(r=>{
-    const arrived=r.week===game.week,debutSeasonOpen=game.week>=23;
+    const arrived=r.week===game.week,debutSeasonOpen=r.week>=23;
     const targetAge=horseAgeAtWeek(r.week),ageEligible=raceAgeTextEligible(r.age||"",targetAge),sexEligible=!raceFemaleOnly(r)||game.candidate?.sex==="牝馬";
     const conditionEligible=r.condition(game);
     const eligible=arrived&&debutSeasonOpen&&ageEligible&&sexEligible&&conditionEligible,surfaceAbility=r.surface==="芝"?game.turf:game.dirt;
@@ -1920,7 +1923,7 @@ function showResult(detail){
     earned,weather:weather.weather,going:weather.going,isRecord:!!player.isRecord,
     age:horseAge(),date:weekLabel(),week:game.week,favorite:false
   });
-  if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",generation:game.generation,date:weekLabel()});
+  if(place===1&&["G1","G2","G3"].includes(r.raceClass))game.gradedTrophies.push({raceName:r.name,grade:r.raceClass,horseName:game.horseName,horseAge:horseAge(),horseColor:game.candidate?.color||"#a96232",horseCoat:game.candidate?.coat||"栗毛",horseAppearance:{color:game.candidate?.color||"#a96232",coat:game.candidate?.coat||"栗毛",faceMark:!!game.candidate?.faceMark,socks:Number(game.candidate?.socks||0),eyeType:game.candidate?.eyeType||"穏やか",tack:game.equippedTack||""},generation:game.generation,date:weekLabel()});
   checkOverseasInvitation(r,place);
   refreshGalleryUnlocks();
   const spacingBeforeRace=raceIntervalState(game.week);
@@ -2206,7 +2209,7 @@ document.querySelector("#raceSpacingProceed").onclick=()=>{
 };
 document.querySelector("#raceSpacingCancel").onclick=closeRaceSpacingWarning;
 document.querySelector("#raceVenueTabs").onclick=e=>{const b=e.target.closest("[data-venue]");if(b){window.selectedRaceVenue=b.dataset.venue;renderRaces()}};
-document.querySelectorAll("#raceSurfaceFilter,#raceDistanceFilter,#raceClassFilter,#raceEligibleOnly,#raceReservableOnly").forEach(control=>control.onchange=renderRaces);
+document.querySelectorAll("#raceSurfaceFilter,#raceDistanceFilter,#raceClassFilter,#raceEligibleOnly").forEach(control=>control.onchange=renderRaces);
 document.querySelector("#previousRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.max(1,(window.selectedRaceWeek||game.week)-1);window.selectedRaceVenue="";renderRaces()};
 document.querySelector("#nextRaceWeek").onclick=()=>{window.selectedRaceWeek=Math.min(CAREER_MAX_WEEKS,(window.selectedRaceWeek||game.week)+1);window.selectedRaceVenue="";renderRaces()};
 document.querySelector("#newspaperRaceButton").onclick=()=>{showScreen("raceScreen");dispatchEvent(new CustomEvent("dotkeiba:auto-start"))};

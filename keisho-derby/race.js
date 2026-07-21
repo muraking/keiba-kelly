@@ -222,6 +222,11 @@ const TRACK_PROFILES={
   "高知":{turn:"右",straight:200,elevation:1.58,straightShare:.24,roundness:.75,facility:"hill",innerBias:-.004,frontBias:.018},
   "佐賀":{turn:"右",straight:200,elevation:1.0,straightShare:.24,roundness:.75,facility:"garden",innerBias:.018,frontBias:.019},
   "帯広":{turn:"直線",straight:200,elevation:1.6,straightShare:1,roundness:0,facility:"banei",innerBias:0,frontBias:0},
+  "メイダン":{turn:"左",straight:450,elevation:0,straightShare:.34,roundness:1.08,facility:"overseas",innerBias:.002,frontBias:-.002},
+  "アスコット":{turn:"右",straight:500,elevation:22,straightShare:.36,roundness:1.02,facility:"overseas",innerBias:0,frontBias:-.004},
+  "パリロンシャン":{turn:"右",straight:533,elevation:10,straightShare:.36,roundness:1.08,facility:"overseas",innerBias:.001,frontBias:-.004},
+  "ブリーダーズカップ":{turn:"左",straight:376,elevation:0,straightShare:.32,roundness:1.00,facility:"overseas",innerBias:.004,frontBias:0},
+  "シャティン":{turn:"右",straight:430,elevation:0,straightShare:.34,roundness:1.04,facility:"overseas",innerBias:.003,frontBias:-.002},
 };
 function trackProfile(){
   const base=TRACK_PROFILES[currentRaceVenue]||TRACK_PROFILES["東京"];
@@ -257,6 +262,11 @@ const COURSE_LAPS = {
   "園田": { "ダート": 1051 },
   "高知": { "ダート": 1100 },
   "佐賀": { "ダート": 1100 },
+  "メイダン": { "芝": 2400, "ダート": 1750 },
+  "アスコット": { "芝": 2800 },
+  "パリロンシャン": { "芝": 2400 },
+  "ブリーダーズカップ": { "芝": 1800, "ダート": 1600 },
+  "シャティン": { "芝": 1900 },
 };
 // JRA公式コースデータ（Aコース）に基づく、距離別の内・外回り。
 // 混合はスタート後に外回りから内回りへ合流する長距離専用形態。
@@ -932,13 +942,8 @@ function finishRace() {
   pauseButton.disabled = true;
   speedButton.hidden = true;
   const finalOrder=order(),winner = finalOrder[0];
-  // 最終表示上の馬同士の間隔を保存し、順位板の着差と画面の見た目を一致させる。
+  // 着差は駆け抜け後の画面座標ではなく、各馬が決勝線を通過した時刻だけで確定する。
   finishDisplayMargins=new Map();
-  for(let i=1;i<finalOrder.length;i++){
-    const front=coursePoint(finalOrder[i-1].progress,4.5),back=coursePoint(finalOrder[i].progress,4.5);
-    const pixels=Math.hypot(front.x-back.x,front.y-back.y);
-    finishDisplayMargins.set(finalOrder[i].id,Math.min(12,pixels/14));
-  }
   // 1000m競走では「1000m通過」がそのまま勝ち馬のゴール時刻になる。
   if(TOTAL===1000){
     split1000Time=winner.finishTime;
@@ -1034,7 +1039,7 @@ function baseCoursePoint(progress, lane = 3) {
   // 画面上部の横長コースへ写像する。ホーム直線（縦型では右端）が上辺＝スタンド側。
   return{
     x:-0.7+pt.y*.723,
-    y:50+(332-pt.x)*.632,
+    y:50+(332-pt.x)*.632-(trackProfile().facility==="overseas"?10:0),
     angle:Math.atan2(-.632*Math.cos(pt.angle),.723*Math.sin(pt.angle)),
     curve:pt.curve,
   };
@@ -1354,23 +1359,7 @@ function drawHorizontalTrack(){
 }
 
 // 極端なフレーム差を写真判定表示へ補正し、接戦を「大差」と誤表示しない。
-function marginLabel(prev,h){
-  if(state==="ready"||raceClock<600)return"--";
-  const timeGap=prev.finished&&h.finished?Math.max(0,h.finishTime-prev.finishTime):null;
-  if(timeGap!==null&&timeGap<1)return"同着";
-  const averageSpeed=prev.finished&&h.finished?TOTAL/Math.max(1,(prev.finishTime+h.finishTime)/2):0;
-  const gapMeters=prev.finished&&h.finished
-    ? timeGap*averageSpeed
-    : Math.max(0,raceDistance(prev)-raceDistance(h));
-  const visualLengths=prev.finished&&h.finished?finishDisplayMargins.get(h.id):null;
-  const rawLengths=Number.isFinite(visualLengths)?visualLengths:gapMeters/2.4;
-  const lengths=rawLengths<=2
-    ? rawLengths
-    : rawLengths<=12
-      ? 2+(rawLengths-2)*.16
-      : rawLengths>=36
-        ? rawLengths
-        : 3.6+(rawLengths-12)*.055;
+function marginFromLengths(lengths){
   if(lengths<.07)return"ハナ";
   if(lengths<.16)return"アタマ";
   if(lengths<.34)return"クビ";
@@ -1384,6 +1373,16 @@ function marginLabel(prev,h){
   if(fraction===2)return`${whole} 1/2`;
   if(fraction===3)return`${whole} 3/4`;
   return`${whole}`;
+}
+function marginLabel(prev,h){
+  if(state==="ready"||raceClock<600)return"--";
+  const timeGap=prev.finished&&h.finished?Math.max(0,h.finishTime-prev.finishTime):null;
+  if(timeGap!==null&&timeGap<1)return"同着";
+  const averageSpeed=prev.finished&&h.finished?TOTAL/Math.max(1,(prev.finishTime+h.finishTime)/2):0;
+  const gapMeters=prev.finished&&h.finished
+    ? timeGap*averageSpeed
+    : Math.max(0,raceDistance(prev)-raceDistance(h));
+  return marginFromLengths(gapMeters/2.4);
 }
 
 // レイアウトV2：縦画面のまま上から「コース（横長）→ターフビジョン→高低差」を積む。
