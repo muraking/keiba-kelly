@@ -2167,7 +2167,10 @@ document.querySelector("#confirmNameButton").onclick=()=>{
   const c=game.candidate,legacy={generation:game.generation,farmPoints:game.farmPoints,equipment:[...game.equipment],equipmentDurability:{...game.equipmentDurability},equipmentAge:{...game.equipmentAge},galleryUnlocks:[...game.galleryUnlocks],gradedTrophies:[...(game.gradedTrophies||[])],favoriteRaces:[...game.favoriteRaces],lineage:[...game.lineage],retirementRecords:[...game.retirementRecords],lastBreedingPartner:game.lastBreedingPartner||null,inheritanceComment:c.inheritanceComment||""};game={...defaultGame(),...legacy,horseName:name,speed:c.speed,dash:c.dash,gateSkill:c.gateSkill,stamina:c.stamina,power:c.power,guts:c.guts,turf:c.turf,dirt:c.dirt,heavyTrack:c.heavyTrack,temperament:c.temperament,temperamentValue:c.temperamentValue,baseBestWeight:c.baseBestWeight,weight:c.weight,growthType:c.growthType,growthPotential:c.growthPotential,potentialCaps:c.potentialCaps,distanceMin:c.distanceMin,distanceMax:c.distanceMax,soundness:Number.isFinite(c.soundness)?c.soundness:rnd(420,720),recoveryPower:c.recoveryPower,turnaroundTolerance:c.turnaroundTolerance,condition:c.condition,conditionDirection:c.conditionDirection,conditionPhaseWeeks:c.conditionPhaseWeeks,conditionStability:c.conditionStability,conditionPeakWeeks:c.conditionPeakWeeks,candidate:c};
   renderHome(`入厩しました。現在${game.weight}kg、${weightComment()}。${game.generation>1?game.inheritanceComment:"まずは馬体を整えましょう。"}`);showScreen("homeScreen");
 };
-document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>showScreen(b.dataset.back));
+document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>{
+  if(b.dataset.back==="homeScreen")applyHorseAppearance(document.querySelector("#trainingScene"));
+  showScreen(b.dataset.back);
+});
 document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>train(b.dataset.action));
 document.querySelector("#pastureButton").onclick=sendToPasture;
 document.querySelector("#voluntaryPastureButton").onclick=voluntaryPasture;
@@ -2263,9 +2266,9 @@ document.querySelector("#tackChoices").onclick=e=>{
   const button=e.target.closest("[data-tack]");
   if(!button)return;
   game.equippedTack=button.dataset.tack||null;
-  saveGame();renderHorseDetail();renderDetailTackPanel();
+  saveGame();renderHorseDetail();renderDetailTackPanel();applyHorseAppearance(document.querySelector("#trainingScene"));
 };
-document.querySelector("#tackColorChoices").onclick=e=>{const button=e.target.closest("[data-tack-color]");if(!button||!game.equippedTack)return;game.equippedTackColor=button.dataset.tackColor;saveGame();renderHorseDetail();renderDetailTackPanel()};
+document.querySelector("#tackColorChoices").onclick=e=>{const button=e.target.closest("[data-tack-color]");if(!button||!game.equippedTack)return;game.equippedTackColor=button.dataset.tackColor;saveGame();renderHorseDetail();renderDetailTackPanel();applyHorseAppearance(document.querySelector("#trainingScene"))};
 document.querySelector("#goRaceSelectButton").onclick=()=>{
   const reserved=dueReservedRace();
   window.selectedRaceWeek=game.week;window.selectedRaceVenue=reserved?raceVenueTab(reserved):"";renderRaces();showScreen("raceSelectScreen");
