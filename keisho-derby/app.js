@@ -547,6 +547,13 @@ function loadGame(slot=activeSaveSlot){
 }
 function hasAnySave(){return [1,2,3].some(slot=>localStorage.getItem(saveSlotKey(slot)))}
 const SAVE_BACKUP_FORMAT="keisho-derby-save-backup";
+const ENCRYPTED_SAVE_FORMAT="keisho-derby-encrypted-backup";
+const SAVE_CRYPTO_CONTEXT="keisho-derby-bastudio-save-v1::bloodline-and-turf";
+function bytesToBase64(bytes){let binary="";for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(binary)}
+function base64ToBytes(text){const binary=atob(text);return Uint8Array.from(binary,character=>character.charCodeAt(0))}
+async function saveCryptoKey(){const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(SAVE_CRYPTO_CONTEXT));return crypto.subtle.importKey("raw",digest,{name:"AES-GCM"},false,["encrypt","decrypt"])}
+async function encryptSaveBackup(backup){const iv=crypto.getRandomValues(new Uint8Array(12)),key=await saveCryptoKey(),plain=new TextEncoder().encode(JSON.stringify(backup)),cipher=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,plain);return {format:ENCRYPTED_SAVE_FORMAT,encryption:"AES-GCM",version:1,iv:bytesToBase64(iv),data:bytesToBase64(new Uint8Array(cipher))}}
+async function decodeSaveBackup(wrapper){if(wrapper?.format!==ENCRYPTED_SAVE_FORMAT)return wrapper;const key=await saveCryptoKey(),iv=base64ToBytes(wrapper.iv),cipher=base64ToBytes(wrapper.data),plain=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,cipher);return JSON.parse(new TextDecoder().decode(plain))}
 function buildSaveBackup(){
   const slots={};
   [1,2,3].forEach(slot=>{const raw=localStorage.getItem(saveSlotKey(slot));if(raw){try{slots[slot]=JSON.parse(raw)}catch{}}});
@@ -554,7 +561,8 @@ function buildSaveBackup(){
 }
 async function exportSaveBackup(){
   if(!hasAnySave())return alert("書き出せるセーブデータがありません。");
-  const backup=buildSaveBackup(),text=JSON.stringify(backup,null,2);
+  if(!crypto?.subtle)return alert("このブラウザではセーブデータを暗号化できません。");
+  const backup=await encryptSaveBackup(buildSaveBackup()),text=JSON.stringify(backup,null,2);
   const file=new File([text],"keisho-derby-save.json",{type:"application/json"});
   if(navigator.canShare?.({files:[file]})){try{await navigator.share({title:"継承ダービー セーブデータ",files:[file]});return}catch(error){if(error?.name==="AbortError")return}}
   const url=URL.createObjectURL(file),link=document.createElement("a");link.href=url;link.download=file.name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -562,7 +570,7 @@ async function exportSaveBackup(){
 async function importSaveBackup(file){
   if(!file)return;
   try{
-    const backup=JSON.parse(await file.text());
+    const backup=await decodeSaveBackup(JSON.parse(await file.text()));
     if(backup?.format!==SAVE_BACKUP_FORMAT||!backup.slots||typeof backup.slots!=="object")throw new Error("format");
     const imported={};
     [1,2,3].forEach(slot=>{const saved=backup.slots[slot];if(saved){imported[slot]=window.DotKeibaSaveCompat.migrateSaveData(saved,defaultGame()).data}});
