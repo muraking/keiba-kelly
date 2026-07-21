@@ -1203,6 +1203,7 @@ function drawVisionCandidateHorse(x,y,h,scale=.62){
     else if(h.equippedTack==="blinkers"){ctx.fillRect(23,-20,7,5);ctx.fillStyle="#24313a";ctx.fillRect(27,-19,3,3)}
     else if(h.equippedTack==="cheekpieces")ctx.fillRect(19,-15,10,4);
   }
+  if(h.equippedTack!=="blinkers"){ctx.fillStyle="#101416";ctx.fillRect(28,-19,3,3)}
   ctx.fillStyle=h.color;ctx.fillRect(-12,-4,14,9);
   ctx.fillStyle=numberTextColor(h.id);ctx.font="bold 8px sans-serif";ctx.textAlign="center";ctx.fillText(h.id,-5,4);
   ctx.restore();

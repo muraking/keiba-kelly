@@ -1564,7 +1564,7 @@ function train(type){
   const proposed=game.temperament==="荒い"||game.temperament==="前向き"?"blinkers":game.temperament==="臆病"?"hood":game.temperamentObservations>=4?"cheekpieces":null;
   if(proposed&&!game.tackUnlocked.includes(proposed)&&Math.random()<.38){
     game.tackUnlocked.push(proposed);
-    tackMessage+=` 調教師から${tackCatalog[proposed].name}を試す提案がありました。`;
+    tackMessage+=` ${tackCatalog[proposed].name}を使えるようにしました。上の愛馬をタッチして、愛馬詳細の「馬具を変更する」から装着してみてください。`;
   }
   const coachComment=trainingCoachComment(type,outcome,gains);
   renderHome(`${coachComment} ${nextTrainingAdvice()} ${conditionTrendComment()} 現在${game.weight}kg、${weightComment()}。${tackMessage}`);
@@ -2015,8 +2015,9 @@ function showResult(detail){
   game.farmPoints+=fpEarned;
   const weather=game.currentRaceWeather||{weather:"晴",going:"良"};
   const playerTrouble=player.temperamentTrouble;
-  if(playerTrouble==="掛かり"&&!game.tackUnlocked.includes("blinkers"))game.tackUnlocked.push("blinkers");
-  if((playerTrouble==="出遅れ"||playerTrouble==="物見")&&!game.tackUnlocked.includes("hood"))game.tackUnlocked.push("hood");
+  let newlyUnlockedTack=null;
+  if(playerTrouble==="掛かり"&&!game.tackUnlocked.includes("blinkers")){game.tackUnlocked.push("blinkers");newlyUnlockedTack="blinkers"}
+  if((playerTrouble==="出遅れ"||playerTrouble==="物見")&&!game.tackUnlocked.includes("hood")){game.tackUnlocked.push("hood");newlyUnlockedTack="hood"}
   game.raceHistory.push({
     raceName:r.name,raceClass:r.raceClass,course:r.course,place,time:player.finishTime,split1000:detail.split1000,final3F:player.final3F,
     earned,weather:weather.weather,going:weather.going,isRecord:!!player.isRecord,
@@ -2034,7 +2035,7 @@ function showResult(detail){
   game.weight=Math.max(330,game.weight-rnd(4,7));
   sufferPostRaceInjury(r,weather.going);
   game.lastRaceWeek=game.week;
-  game.lastRaceAdvice=raceSuitabilityAdvice(r,place);
+  game.lastRaceAdvice=raceSuitabilityAdvice(r,place)+(newlyUnlockedTack?`。${tackCatalog[newlyUnlockedTack].name}を使えるようにしました。上の愛馬をタッチして、愛馬詳細の「馬具を変更する」から装着してみてください`:"");
   game.week++;game.trainingsUsed=0;saveGame();
   document.querySelector("#resultPlace").textContent=`${place}着`;document.querySelector("#resultHorseName").textContent=game.horseName;
   document.querySelector("#resultFrame").textContent=player.id;document.querySelector("#resultFrame").style.background=player.color;
