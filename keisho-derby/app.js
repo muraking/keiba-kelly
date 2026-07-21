@@ -1330,6 +1330,7 @@ const equipmentCatalog=[
   {id:"hotSpring",name:"馬用温泉施設",cost:260,grade:"療養設備",desc:"温泉療養を解放。週2回分で脚元と疲労を大きく回復",durability:90,icon:"湯"},
   {id:"supportShoes",name:"治療用蹄鉄セット",cost:105,grade:"装蹄設備",desc:"強い調教による脚元への負担をさらに軽減",durability:80,icon:"蹄"},
 ];
+const equipmentIconMarkup=item=>`<div class="equipment-icon equipment-${item.id}" role="img" aria-label="${item.name}のドット絵"><i></i><i></i><i></i><i></i></div>`;
 function equipmentCondition(item){
   const value=game.equipmentDurability[item.id]??item.durability,ratio=value/item.durability;
   return ratio>.72?"新品同様":ratio>.42?"良好":ratio>.18?"劣化しています":"故障寸前";
@@ -1744,7 +1745,7 @@ function renderShop(){
   document.querySelector("#equipmentCards").innerHTML=equipmentCatalog.map(item=>{
     const owned=game.equipment.includes(item.id),canBuy=game.farmPoints>=item.cost;
     return `<article class="equipment-card ${owned?"owned":""}">
-      <div class="equipment-icon">${item.icon}</div>
+      ${equipmentIconMarkup(item)}
       <div><small>${item.grade}</small><h3>${item.name}</h3><p>${item.desc}</p>${owned?`<b class="equipment-condition">状態：${equipmentCondition(item)}</b>`:""}</div>
       <button data-equipment="${item.id}" ${owned||!canBuy?"disabled":""}>${owned?"所有中":`${item.cost} FP`}</button>
     </article>`;
@@ -1756,7 +1757,7 @@ function renderEquipmentStatus(){
     const item=equipmentCatalog.find(x=>x.id===id);
     if(!item)return "";
     const weeks=game.equipmentAge[id]||0;
-    return `<article class="stable-equipment-card"><div class="equipment-icon">${item.icon}</div><div><small>${item.grade}</small><h3>${item.name}</h3><p>購入から ${weeks}週経過</p><b>状態：${equipmentCondition(item)}</b></div></article>`;
+    return `<article class="stable-equipment-card">${equipmentIconMarkup(item)}<div><small>${item.grade}</small><h3>${item.name}</h3><p>購入から ${weeks}週経過</p><b>状態：${equipmentCondition(item)}</b></div></article>`;
   }).join(""):'<p class="empty-equipment">まだ設備を持っていません。設備ショップで購入できます。</p>';
 }
 function buyEquipment(id){

@@ -1,0 +1,10 @@
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const path=require("node:path");
+const root=path.resolve(__dirname,"..");
+const app=fs.readFileSync(path.join(root,"app.js"),"utf8");
+const css=fs.readFileSync(path.join(root,"style.css"),"utf8");
+assert.match(app,/equipmentIconMarkup/);
+["treadmill","walker","gps","waterWalker","startingGate","iceBath","solarium","massage","haySteamer","altitude","hotSpring","supportShoes"].forEach(id=>assert.match(css,new RegExp(`\\.equipment-${id}`)));
+assert.match(css,/shopPoints/);
+console.log("equipment pixel icons and FP header: OK");
