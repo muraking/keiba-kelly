@@ -10,6 +10,8 @@ window.DotKeibaSaveCompat.copyLegacySave(localStorage,LEGACY_SAVE_KEY,SAVE_KEY_P
 const YEAR_WEEKS = 52;
 const CAREER_MAX_WEEKS = YEAR_WEEKS * 8;
 const screens = [...document.querySelectorAll(".game-screen")];
+document.querySelectorAll(".ending-credit").forEach(element=>element.remove());
+if(document.querySelector("#endingCompanyCard"))document.querySelector("#endingCompanyCard").textContent="Studio B☆A Co., Ltd.";
 const coatPalettes={
   "栗毛":["#b5662f","#bd7137","#c47b3a","#a95a2a"],"栃栗毛":["#8d4528","#984d2b","#7e3d27"],
   "鹿毛":["#70401f","#794724","#63371d","#85502a"],"黒鹿毛":["#342723","#3d2c27","#2c2422"],
