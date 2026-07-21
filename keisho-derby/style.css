@@ -1245,6 +1245,12 @@ button:disabled { opacity: .45; cursor: default; }
 .course-wrap > .slope-status,
 .course-wrap > .elevation-map { display:none; }
 
+
+/* 血統アルバム */
+.lineage-tree .lineage-horse{grid-template-columns:96px minmax(0,1fr);align-items:stretch}.lineage-photo{position:relative;display:grid;place-items:center;min-height:92px;padding:7px;border:3px solid #735326;background:linear-gradient(#76c7df 0 55%,#629d48 55%);box-shadow:3px 3px #8f856c}.lineage-photo:before{content:"";position:absolute;left:45px;top:-18px;width:4px;height:18px;background:#c29432}.lineage-photo .ending-mini-horse{transform:scale(1.25)}.lineage-photo>small{position:absolute;left:3px;right:3px;bottom:3px;padding:2px;background:#13241dcc;color:#fff5bd;font-size:7px}.lineage-record-modal{display:none;position:fixed;inset:0;z-index:85;place-items:center;padding:16px;background:#061018d9}.lineage-record-modal.show{display:grid}.lineage-record-modal>article{width:min(540px,100%);max-height:82vh;overflow:auto;border:5px solid #c99f43;background:#f8efd2;color:#292319;box-shadow:0 8px #080c0a}.lineage-record-modal header{display:grid;grid-template-columns:86px 1fr;gap:10px;align-items:center;padding:14px;background:linear-gradient(#76c7df 0 48%,#5d9747 48%);color:#fff;text-shadow:1px 1px #263d2b}.lineage-record-modal header .ending-mini-horse{transform:scale(1.35)}.lineage-record-modal h2{margin:2px 0;color:#fff4a5}.lineage-record-modal header p{margin:0;font-size:9px}.lineage-race-list{padding:8px}.lineage-race-list p{display:grid;grid-template-columns:42px 1fr;gap:3px;margin:0;padding:7px;border-bottom:1px dashed #b3a886}.lineage-race-list p.winner{background:#fff0a8}.lineage-race-list p b{grid-row:1/3;color:#78541b}.lineage-race-list p small{font-size:7px;color:#746d5e}.lineage-record-missing{display:block!important;text-align:center}.lineage-close-note{display:block;padding:8px;text-align:center;color:#71623d}
+
+.lineage-photo .ending-mini-horse i:before,.lineage-photo .ending-mini-horse i:after{display:none}
+
 @media (max-width: 370px) {
   body { padding: 0; }
   .phone { border-width: 0; border-radius: 0; }

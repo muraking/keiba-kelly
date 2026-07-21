@@ -672,7 +672,7 @@ function inheritanceComparison(child,parent){
   return comments.join("。")+"。これからの調教で見極めていきましょう。";
 }
 function beginNextGeneration(partner){
-  const retired={name:game.horseName,sex:game.candidate?.sex||"牡馬",generation:game.generation,races:game.races,wins:game.wins,prize:game.prize,growthType:game.growthType,distanceMin:game.distanceMin,distanceMax:effectiveDistanceRange().max,coat:game.candidate?.coat||"栗毛",appearanceDNA:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])]},sire:game.candidate?.sire?.[0]||"不明",dam:game.candidate?.dam?.[0]||"不明"};
+  const retired={name:game.horseName,sex:game.candidate?.sex||"牡馬",generation:game.generation,races:game.races,wins:game.wins,prize:game.prize,growthType:game.growthType,distanceMin:game.distanceMin,distanceMax:effectiveDistanceRange().max,coat:game.candidate?.coat||"栗毛",horseColor:game.candidate?.color||"#a96232",appearanceDNA:{...normalizeAppearanceDNA(game.candidate),legMarks:[...(game.candidate?.appearanceDNA?.legMarks||[0,0,0,0])]},equippedTack:game.equippedTack||"",equippedTackColor:game.equippedTackColor||"#5aa8df",raceHistory:(game.raceHistory||[]).map(r=>({...r})),sire:game.candidate?.sire?.[0]||"不明",dam:game.candidate?.dam?.[0]||"不明"};
   const partnerTuple=[partner.name,partner.record,partner.distance,partner.growth];
   const currentTuple=[game.horseName,`${game.races}戦${game.wins}勝`,`${Math.round(game.distanceMin/100)*100}〜${Math.round(effectiveDistanceRange().max/100)*100}m`,game.growthType];
   const sire=retired.sex==="牡馬"?currentTuple:partnerTuple;
@@ -1111,13 +1111,16 @@ function renderHorseDetail(){
     <dt>馬体</dt><dd>${game.weight}kg・${weightComment()}</dd><dt>馬具</dt><dd>${game.equippedTack?`${tackCatalog[game.equippedTack].name}（${TACK_COLORS.find(c=>c.value===game.equippedTackColor)?.name||"青"}）`:"なし"}</dd>
     <dt>戦績</dt><dd>${game.races}戦${game.wins}勝・${game.prize.toLocaleString()}万円</dd><dt>好感度</dt><dd>${game.affection<3?"まだ少し緊張":game.affection<8?"心を開いてきた":"とても懐いている"}</dd></dl>`;
 }
+let renderedLineageHistory=[];
 function renderLineage(){
   const sire=game.candidate?.sire?.[0]||"不明",dam=game.candidate?.dam?.[0]||"不明";
   document.querySelector("#lineageGeneration").textContent=`現在${game.generation}代目`;
   document.querySelector("#lineageCurrent").innerHTML=`<small>CURRENT HORSE・${game.generation}代目</small><h2>${game.horseName}</h2><p>${game.candidate?.sex||"牡馬"}・${game.candidate?.coat||"栗毛"}　${game.races}戦${game.wins}勝</p><div class="lineage-parents"><span><small>父</small><b>${sire}</b></span><span><small>母</small><b>${dam}</b></span></div>`;
-  const history=[...game.lineage].sort((a,b)=>b.generation-a.generation);
-  document.querySelector("#lineageTree").innerHTML=history.length?history.map(horse=>`<article class="lineage-horse"><i></i><div><small>${horse.generation}代目・${horse.sex||"--"}・${horse.coat||"--"}</small><h3>${horse.name}</h3><p>${horse.races}戦${horse.wins}勝　${Number(horse.prize||0).toLocaleString()}万円</p><p class="lineage-parent-names">父 ${horse.sire||"記録なし"} ／ 母 ${horse.dam||"記録なし"}</p></div></article>`).join(""):`<p class="lineage-empty">まだ継承前です。この愛馬から血統の歴史が始まります。</p>`;
+  renderedLineageHistory=[...game.lineage].sort((a,b)=>b.generation-a.generation);
+  document.querySelector("#lineageTree").innerHTML=renderedLineageHistory.length?renderedLineageHistory.map((horse,index)=>`<article class="lineage-horse"><button class="lineage-photo" data-lineage-record="${index}" aria-label="${horse.name}の引退時記録を見る">${endingHorseMarkup(horse,index)}<small>引退時</small></button><div><small>${horse.generation}代目・${horse.sex||"--"}・${horse.coat||"--"}</small><h3>${horse.name}</h3><p>${horse.races}戦${horse.wins}勝　${Number(horse.prize||0).toLocaleString()}万円</p><p class="lineage-parent-names">父 ${horse.sire||"記録なし"} ／ 母 ${horse.dam||"記録なし"}</p></div></article>`).join(""):`<p class="lineage-empty">まだ継承前です。この愛馬から血統の歴史が始まります。</p>`;
 }
+function showLineageRecord(index){const horse=renderedLineageHistory[index];if(!horse)return;const modal=document.querySelector("#lineageRecordModal"),detail=document.querySelector("#lineageRecordDetail"),history=Array.isArray(horse.raceHistory)?horse.raceHistory:[];detail.innerHTML=`<header>${endingHorseMarkup(horse,index)}<div><small>${horse.generation}代目・引退時アルバム</small><h2>${horse.name}</h2><p>${horse.races}戦${horse.wins}勝　獲得賞金 ${Number(horse.prize||0).toLocaleString()}万円</p></div></header><div class="lineage-race-list">${history.length?[...history].reverse().map(r=>`<p class="${r.place===1?"winner":""}"><b>${r.place}着</b><span>${r.raceName}</span><small>${r.date||""}　${r.course||""}</small></p>`).join(""):'<p class="lineage-record-missing">旧世代のため個別レース記録はありません。</p>'}</div><small class="lineage-close-note">タップして閉じる</small>`;modal.classList.add("show");modal.setAttribute("aria-hidden","false")}
+function closeLineageRecord(){const modal=document.querySelector("#lineageRecordModal");modal.classList.remove("show");modal.setAttribute("aria-hidden","true")}
 function renderHome(message="今週の予定を決めましょう。"){
   const trainerVariants=["trainer-suit","trainer-sunglasses","trainer-cowboy","trainer-female","trainer-veteran","trainer-young"];
   document.querySelectorAll(".pixel-trainer").forEach(trainer=>{
@@ -1357,6 +1360,8 @@ function ageEquipment(){
   if(broken.length)return `${broken.join("、")}が故障しました。設備ショップから買い直せます。`;
   return warnings[0]||"";
 }
+function lifetimeTotal(field){return (game.retirementRecords||[]).reduce((sum,h)=>sum+Number(h[field]||0),Number(game[field]||0))}
+function lifetimeRaces(){return [...(game.retirementRecords||[]).flatMap(h=>h.raceHistory||[]),...(game.raceHistory||[])]}
 const galleryCatalog=[
   {id:"stable",title:"はじめての入厩",trophy:"bronze",condition:()=>true,desc:"厩舎で始まった育成の日々"},
   {id:"debut",title:"ターフへ",trophy:"bronze",condition:g=>g.races>=1,desc:"記念すべき初出走"},
@@ -1390,7 +1395,13 @@ const galleryCatalog=[
   {id:"fifthGen",title:"小さな王朝",trophy:"grand",condition:g=>g.generation>=5,desc:"5代目まで血をつないだ"},
   {id:"tenthGen",title:"継承の物語",trophy:"record",condition:g=>g.generation>=10,desc:"10代続く大血統"},
   {id:"million",title:"賞金王への道",trophy:"gold",condition:g=>g.prize>=10000,desc:"獲得賞金1億円を達成"},
-  {id:"fiveMillion",title:"伝説の稼ぎ手",trophy:"grand",condition:g=>g.prize>=50000,desc:"獲得賞金5億円を達成"}
+  {id:"fiveMillion",title:"伝説の稼ぎ手",trophy:"grand",condition:g=>g.prize>=50000,desc:"獲得賞金5億円を達成"},
+  {id:"gen7",title:"七代の蹄跡",trophy:"gold",condition:g=>g.generation>=7,desc:"7代にわたり血統を継承"},{id:"gen15",title:"血統年代記",trophy:"record",condition:g=>g.generation>=15,desc:"15代続く愛馬の歴史"},{id:"gen20",title:"二十代王朝",trophy:"grand",condition:g=>g.generation>=20,desc:"20代の大血統を築いた"},{id:"gen30",title:"終わらない物語",trophy:"record",condition:g=>g.generation>=30,desc:"30代にわたり夢を継承"},{id:"gen50",title:"永遠の血脈",trophy:"record",condition:g=>g.generation>=50,desc:"50代へ到達した伝説の系譜"},
+  {id:"lifeWin10",title:"一族十勝",trophy:"silver",condition:()=>lifetimeTotal("wins")>=10,desc:"血統通算10勝"},{id:"lifeWin25",title:"勝利を継ぐ者",trophy:"gold",condition:()=>lifetimeTotal("wins")>=25,desc:"血統通算25勝"},{id:"lifeWin50",title:"五十の歓声",trophy:"grand",condition:()=>lifetimeTotal("wins")>=50,desc:"血統通算50勝"},{id:"lifeWin100",title:"百勝一族",trophy:"record",condition:()=>lifetimeTotal("wins")>=100,desc:"血統通算100勝"},
+  {id:"lifeRace100",title:"百戦の系譜",trophy:"gold",condition:()=>lifetimeTotal("races")>=100,desc:"血統通算100戦"},{id:"lifeRace250",title:"旅を続ける血統",trophy:"grand",condition:()=>lifetimeTotal("races")>=250,desc:"血統通算250戦"},{id:"lifeRace500",title:"五百の蹄音",trophy:"record",condition:()=>lifetimeTotal("races")>=500,desc:"血統通算500戦"},
+  {id:"lifePrize10",title:"一族の宝庫",trophy:"gold",condition:()=>lifetimeTotal("prize")>=100000,desc:"血統通算賞金10億円"},{id:"lifePrize30",title:"黄金の系譜",trophy:"grand",condition:()=>lifetimeTotal("prize")>=300000,desc:"血統通算賞金30億円"},{id:"lifePrize100",title:"競馬史の財宝",trophy:"record",condition:()=>lifetimeTotal("prize")>=1000000,desc:"血統通算賞金100億円"},
+  {id:"graded5",title:"重賞ハンター",trophy:"silver",condition:g=>(g.gradedTrophies||[]).length>=5,desc:"異なる重賞を5勝"},{id:"graded15",title:"重賞コレクター",trophy:"gold",condition:g=>(g.gradedTrophies||[]).length>=15,desc:"異なる重賞を15勝"},{id:"graded30",title:"全国行脚",trophy:"grand",condition:g=>(g.gradedTrophies||[]).length>=30,desc:"異なる重賞を30勝"},{id:"graded60",title:"トロフィーホール",trophy:"record",condition:g=>(g.gradedTrophies||[]).length>=60,desc:"異なる重賞を60勝"},
+  {id:"g1three",title:"GⅠの主役",trophy:"gold",condition:g=>(g.gradedTrophies||[]).filter(t=>t.grade==="G1").length>=3,desc:"異なるGⅠを3勝"},{id:"g1ten",title:"十冠の血統",trophy:"grand",condition:g=>(g.gradedTrophies||[]).filter(t=>t.grade==="G1").length>=10,desc:"異なるGⅠを10勝"},{id:"overseas3",title:"世界への足跡",trophy:"grand",condition:()=>lifetimeRaces().filter(r=>r.place===1&&OVERSEAS_G1.some(o=>String(r.raceName||"").startsWith(o.name))).length>=3,desc:"海外GⅠを3勝"},{id:"turfDirtLegacy",title:"二つの王道",trophy:"record",condition:()=>lifetimeRaces().some(r=>r.place===1&&String(r.course).includes("芝"))&&lifetimeRaces().some(r=>r.place===1&&String(r.course).includes("ダート")),desc:"血統で芝・ダート双方を制覇"},{id:"whiteLegacy",title:"白き奇跡",trophy:"record",condition:g=>g.candidate?.coat==="白毛"||(g.retirementRecords||[]).some(h=>h.coat==="白毛"),desc:"白毛馬が血統に誕生"}
 ];
 function refreshGalleryUnlocks(){
   galleryCatalog.forEach(item=>{
@@ -2267,6 +2278,8 @@ document.querySelector("#trophyGrid").onclick=e=>{const horse=e.target.closest("
 document.querySelector("#trophyHorseModal").onclick=closeTrophyHorse;
 const openHorseDetail=()=>{document.querySelector("#detailTackPanel").hidden=true;document.querySelector("#detailTackButton").textContent="馬具を変更する";renderHorseDetail();showScreen("horseDetailScreen")};
 document.querySelector("#lineageButton").onclick=()=>{renderLineage();showScreen("lineageScreen")};
+document.querySelector("#lineageTree").onclick=e=>{const button=e.target.closest("[data-lineage-record]");if(button)showLineageRecord(Number(button.dataset.lineageRecord))};
+document.querySelector("#lineageRecordModal").onclick=closeLineageRecord;
 document.querySelector("#homeHorse").onclick=e=>{e.stopPropagation();openHorseDetail()};
 document.querySelector("#homeHorse").onkeydown=e=>{
   if(e.key!=="Enter"&&e.key!==" ")return;
