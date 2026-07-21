@@ -553,8 +553,8 @@ function buildSaveBackup(){
 }
 async function exportSaveBackup(){
   if(!hasAnySave())return alert("書き出せるセーブデータがありません。");
-  const backup=buildSaveBackup(),text=JSON.stringify(backup,null,2),date=new Date().toISOString().slice(0,10).replaceAll("-","");
-  const file=new File([text],`keisho-derby-save-${date}.json`,{type:"application/json"});
+  const backup=buildSaveBackup(),text=JSON.stringify(backup,null,2);
+  const file=new File([text],"keisho-derby-save.json",{type:"application/json"});
   if(navigator.canShare?.({files:[file]})){try{await navigator.share({title:"継承ダービー セーブデータ",files:[file]});return}catch(error){if(error?.name==="AbortError")return}}
   const url=URL.createObjectURL(file),link=document.createElement("a");link.href=url;link.download=file.name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
