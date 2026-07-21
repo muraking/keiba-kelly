@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.13.5</title>
+  <title>ドット競馬 継承ダービー｜Ver. 0.13.6</title>
   <link rel="stylesheet" href="style.css?v=20260722-85">
 </head>
 <body>
@@ -52,7 +52,7 @@
         <button id="endingDevAccessButton">エンディング確認</button>
         <div id="endingDevButtons" class="ending-dev-buttons" hidden><small>開発者用・エンディング確認</small><button data-ending-preview="domestic-g1">国内GⅠ制覇</button><button data-ending-preview="overseas-g1">海外GⅠ制覇</button><button data-ending-preview="all-graded">全重賞制覇</button></div>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.13.5</b>
+        <b class="build-version">Ver. 0.13.6</b>
       </div>
     </section>
 
@@ -470,9 +470,19 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260722-16"></script>
-  <script src="app.js?v=20260722-36"></script>
+  <script src="app.js?v=20260722-37"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260722-30"></script>
-  <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}</script>
+  <script>
+    // 旧HTMLと新JSがキャッシュ更新中に混在しても、タイトル操作だけは失わない。
+    (()=>{
+      const bind=(id,handler)=>{const button=document.getElementById(id);if(button&&!button.onclick)button.onclick=handler};
+      bind("newGameButton",()=>{renderSaveSlots("new");showScreen("saveSlotScreen")});
+      bind("continueButton",()=>{renderSaveSlots("continue");showScreen("saveSlotScreen")});
+      bind("raceTestButton",()=>{updateRaceTestSummary();showScreen("raceTestSetupScreen")});
+      bind("appearanceTestButton",()=>{renderAppearanceTest();showScreen("appearanceTestScreen")});
+    })();
+    if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"))}
+  </script>
 </body>
 </html>

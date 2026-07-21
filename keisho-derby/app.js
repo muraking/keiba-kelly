@@ -2280,11 +2280,11 @@ document.querySelector("#endingDevButtons").onclick=e=>{const button=e.target.cl
 document.querySelector("#trophyButton").onclick=()=>{renderTrophies("G1");showScreen("trophyScreen")};
 document.querySelector("#trophyTabs").onclick=e=>{const button=e.target.closest("[data-trophy-grade]");if(button)renderTrophies(button.dataset.trophyGrade)};
 document.querySelector("#trophyGrid").onclick=e=>{const horse=e.target.closest("[data-trophy-horse]");if(horse){e.stopPropagation();showTrophyHorse(Number(horse.dataset.trophyHorse));return}const button=e.target.closest("[data-trophy-index]");if(!button||button.classList.contains("locked"))return;const index=Number(button.dataset.trophyIndex),same=selectedTrophyIndex===index;selectedTrophyIndex=same?null:index;document.querySelectorAll("[data-trophy-index]").forEach(card=>card.classList.toggle("selected",!same&&Number(card.dataset.trophyIndex)===index))};
-document.querySelector("#trophyHorseModal").onclick=closeTrophyHorse;
+document.querySelector("#trophyHorseModal")?.addEventListener("click",closeTrophyHorse);
 const openHorseDetail=()=>{document.querySelector("#detailTackPanel").hidden=true;document.querySelector("#detailTackButton").textContent="馬具を変更する";renderHorseDetail();showScreen("horseDetailScreen")};
 document.querySelector("#lineageButton").onclick=()=>{renderLineage();showScreen("lineageScreen")};
-document.querySelector("#lineageTree").onclick=e=>{const button=e.target.closest("[data-lineage-record]");if(button)showLineageRecord(Number(button.dataset.lineageRecord))};
-document.querySelector("#lineageRecordModal").onclick=closeLineageRecord;
+document.querySelector("#lineageTree")?.addEventListener("click",e=>{const button=e.target.closest("[data-lineage-record]");if(button)showLineageRecord(Number(button.dataset.lineageRecord))});
+document.querySelector("#lineageRecordModal")?.addEventListener("click",closeLineageRecord);
 document.querySelector("#homeHorse").onclick=e=>{e.stopPropagation();openHorseDetail()};
 document.querySelector("#homeHorse").onkeydown=e=>{
   if(e.key!=="Enter"&&e.key!==" ")return;
