@@ -862,11 +862,11 @@ function classAbilityTarget(){
 }
 function legLabel(){return game.legCondition>=85?"良好":game.legCondition>=65?"少し張り":game.legCondition>=45?"注意":"危険"}
 function legCoachComment(){
-  if(game.injury)return `${game.injury.name}を発症しています。長期放牧が必要です`;
-  if(game.legCondition>=85)return game.soundness>=680?"すっきりしています。脚元は丈夫なタイプです":game.soundness<450?"今はすっきりしていますが、脚元は慎重に扱いたいタイプです":"すっきりしています。通常の調教を行えます";
-  if(game.legCondition>=65)return "少し張りがあります。プールか軽め調整を挟むと安心です";
-  if(game.legCondition>=45)return game.equipment.includes("hotSpring")?"張りが強く出ています。温泉療養を勧めます":"強い調教は避け、森林馬道・プール・休養で戻しましょう";
-  return game.equipment.includes("hotSpring")?"故障寸前です。今週は温泉療養か放牧を選んでください":"故障寸前です。調教を中止し、放牧を強く勧めます";
+  if(game.injury)return `${game.injury.name}です。長期放牧が必要です`;
+  if(game.legCondition>=85)return game.soundness>=680?"良好。丈夫な脚元です":game.soundness<450?"良好ですが、慎重に扱いましょう":"脚元は良好です";
+  if(game.legCondition>=65)return "少し張りがあります。軽めが安心です";
+  if(game.legCondition>=45)return game.equipment.includes("hotSpring")?"張りが強め。温泉療養がおすすめです":"張りが強め。軽めか休養にしましょう";
+  return game.equipment.includes("hotSpring")?"故障寸前です。温泉療養か放牧を":"故障寸前です。放牧を勧めます";
 }
 function raceConditionModifier(){
   if(game.condition>=85)return 30;
@@ -964,7 +964,7 @@ function raceSuitabilityAdvice(race,place){
       : `${basics[0][1]}をもう少し伸ばしたいところです`;
     hints.push(`このクラスで戦うには${shortage}。ここを重点的に鍛えると、内容が変わってきそうです`);
   }
-  return hints.join("。")+"。";
+  return hints.join("。");
 }
 const tackCatalog={
   hood:{name:"メンコ",desc:"音への反応と出遅れを軽減"},
@@ -984,12 +984,12 @@ function trainerTemperamentComment(){
   return "気性は安定しています";
 }
 function fatigueCoachComment(){
-  if(game.injury)return `${game.injury.name}を発症しています。今は調教せず、長期放牧で回復を待ちましょう。`;
-  if(game.fatigue>=80)return "疲れが限界に近づいています。この状態で調教を続けると故障につながります。今週は休ませてください。";
-  if(game.fatigue>=65)return "かなり疲れがたまっています。このまま強い調教を続けると故障するかもしれません。休養を考えましょう。";
-  if(game.fatigue>=45)return "疲れがたまってきています。脚元への負担が大きい調教は、少し控えた方がよさそうです。";
-  if(game.fatigue>=25)return "少し疲れが見えます。様子を見ながら調教を選びましょう。";
-  return "元気があります。今週もしっかり動けそうです。";
+  if(game.injury)return `${game.injury.name}です。長期放牧で回復を待ちましょう。`;
+  if(game.fatigue>=80)return "疲れは限界です。故障を避けるため休ませましょう。";
+  if(game.fatigue>=65)return "疲れが強めです。休養を考えましょう。";
+  if(game.fatigue>=45)return "疲れがたまっています。強い調教は控えましょう。";
+  if(game.fatigue>=25)return "少し疲れています。軽めがよさそうです。";
+  return "元気です。今週もしっかり動けます。";
 }
 function raceIntervalState(targetWeek=game.week){
   if(!Number.isFinite(game.lastRaceWeek))return {gap:null,label:"初出走",level:"none"};
@@ -1142,9 +1142,10 @@ function renderHome(message="今週の予定を決めましょう。"){
     : game.races>0?"次走予約なし":game.week<debutWeek?`新馬戦まであと${debutWeek-game.week}週`:"新馬戦へ出走できます";
   document.querySelector("#reservationCount").textContent=`${reservedRaces().filter(r=>r.week>=game.week).length}件`;
   const fatigueMessage=fatigueCoachComment();
-  document.querySelector("#homeMessage").textContent=message.includes(fatigueMessage)
-    ? message.trim()
-    : `${message} ${fatigueMessage}`.trim();
+  const addFatigue=!!game.injury||game.fatigue>=25||message==="今週の予定を決めましょう。";
+  document.querySelector("#homeMessage").textContent=(message.includes(fatigueMessage)||!addFatigue
+    ? message
+    : `${message} ${fatigueMessage}`).replace(/。{2,}/g,"。").trim();
   applyHorseAppearance(document.querySelector("#trainingScene"));
   const statsEl=document.querySelector("#horseStats");
   statsEl.hidden=!developerMode;
@@ -1567,7 +1568,7 @@ function train(type){
     tackMessage+=` ${tackCatalog[proposed].name}を使えるようにしました。上の愛馬をタッチして、愛馬詳細の「馬具を変更する」から装着してみてください。`;
   }
   const coachComment=trainingCoachComment(type,outcome,gains);
-  renderHome(`${coachComment} ${nextTrainingAdvice()} ${conditionTrendComment()} 現在${game.weight}kg、${weightComment()}。${tackMessage}`);
+  renderHome(`${coachComment} ${nextTrainingAdvice()} 馬体重${game.weight}kg、${weightComment()}。${tackMessage}`);
 }
 function playTrainingAnimation(type,label,outcome){
   if(autoTrainingActive)return;
@@ -1961,26 +1962,15 @@ function resultRaceReview(race,player,place,pace){
 }
 function postRaceTrainerComment(){
   const comments=[];
-  if(game.injury)return `調教師「レース後に${game.injury.name}が判明しました。無理はできません。${game.injury.weeks}週間の長期放牧が必要です。 ${game.lastRaceAdvice||""}」`;
-  if(game.fatigue>=75)comments.push("かなり疲れが残っています。次週は休養を優先した方がいいでしょう");
-  else if(game.fatigue>=52)comments.push("レースの疲れが見えます。強い調教は避けたいところです");
-  else comments.push("レース後としては疲れも軽く、回復は早そうです");
-
-  const weightDiff=game.weight-bestWeight();
-  if(weightDiff<=-12)comments.push("馬体が細くなっています。しっかり食べさせて戻しましょう");
-  else if(weightDiff>=12)comments.push("まだ馬体には余裕があります");
-  else comments.push("馬体重は良い範囲に収まっています");
-
-  if(game.legCondition<45)comments.push("脚元に強い張りがあります。念のため慎重に見ていきます");
-  else if(game.legCondition<70)comments.push("脚元に少し張りがあるので、軽めの調整がよさそうです");
-  else comments.push("脚元に大きな問題はありません");
-
-  comments.push(recoveryTraitComment());
-  if(game.raceLoad>=75)comments.push("最近の競走負荷がかなり重なっています。間隔を空けて疲れを抜きたいところです");
-  else if(game.raceLoad>=45)comments.push("ここ数走の負荷が少し蓄積しています。次走までの間隔には注意しましょう");
-  comments.push(conditionTrendComment());
+  if(game.injury)return `調教師「${game.injury.name}が判明しました。${game.injury.weeks}週間の放牧が必要です。${game.lastRaceAdvice||""}」`;
+  if(game.fatigue>=75)comments.push("疲れが強く残っています。次週は休養を");
+  else if(game.fatigue>=52)comments.push("レースの疲れがあります。強い調教は避けましょう");
+  else comments.push("疲れは軽く、回復も順調です");
+  if(game.legCondition<45)comments.push("脚元に強い張りがあります。慎重に進めましょう");
+  else if(game.legCondition<70)comments.push("脚元に少し張りがあります。軽めがよさそうです");
+  if(game.raceLoad>=75)comments.push("競走負荷が重なっています。間隔を空けましょう");
   if(game.lastRaceAdvice)comments.push(game.lastRaceAdvice);
-  return `調教師「${comments.join("。")}。」`;
+  return `調教師「${comments.join("。").replace(/。{2,}/g,"。")}。」`;
 }
 function sufferPostRaceInjury(race,going){
   let risk=.0005;
@@ -2342,7 +2332,7 @@ addEventListener("dotkeiba:preview-ready",e=>{
   document.querySelector("#newspaperEntries").innerHTML=e.detail.entries.map(h=>{
     const mark=marks[h.popularity-1]||"";
     const styleKey=h.style==="追込"?"追":h.style==="先行"?"先":h.style==="差し"?"差":"逃";
-    const runningStyleChart=`<div class="news-running-style" aria-label="脚質 ${h.style}"><small>脚質</small>${["逃","先","差","追"].map(label=>`<span class="${label===styleKey?"selected":""}"><i>${label}</i>${label===styleKey?'<b class="running-style-arrow" aria-hidden="true"></b>':""}</span>`).join("")}</div>`;
+    const runningStyleChart=`<div class="news-running-style" aria-label="脚質 ${h.style}"><small>脚質</small>${["逃","先","差","追"].map(label=>`<span class="${label===styleKey?"selected":""}" aria-label="${label}">${label===styleKey?'<b class="running-style-arrow" aria-hidden="true"></b>':""}</span>`).join("")}</div>`;
     return `<article class="newspaper-entry ${h.player?"player":""}">
       <span class="news-number frame-${h.id}">${h.id}</span><b class="news-mark">${mark}</b>
       <div class="news-horse-copy"><h3>${h.name}${h.player?' <small>愛馬</small>':""}</h3><div class="news-compact-row">${runningStyleChart}<div class="news-assessment"><b>調子 ${h.condition}</b><small title="${h.comment}">評価 ${h.comment}</small></div></div></div>

@@ -1,4 +1,4 @@
-const CACHE="keisho-derby-20260722-35";
+const CACHE="keisho-derby-20260722-37";
 const ASSETS=["./","./index.html","./play.html","./style.css","./save-compat.js","./app.js","./course-layout-data.js","./race.js","./race-time-data.js","./race-program-2026.js","./manifest.json"];
 self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener("activate",event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key))))));

@@ -1982,7 +1982,7 @@ function startReplayFromGateExit(resetFirst=true){
   startButton.disabled=true;pauseButton.disabled=true;
   gateSkipButton.hidden=true;speedButton.hidden=true;
   phaseEl.textContent="全馬ゲートイン";
-  setCommentary("保存リプレイを、発馬機が左へ移動する場面から再生します。",true);
+  setCommentary("",true);
   lastTime=0;raf=requestAnimationFrame(loop);
   gateStartTimer=setTimeout(beginRaceAfterGate,3700);
 }

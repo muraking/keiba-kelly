@@ -53,7 +53,7 @@ body {
 .news-running-style span { position:relative;display:block;width:19px;height:19px;border:1px solid #333;border-right:0;background:#fff;text-align:center; }
 .news-running-style span:last-child { border-right:1px solid #333; }
 .news-running-style span i { position:absolute;left:0;right:0;top:1px;font-size:7px;font-style:normal;color:#555;line-height:1; }
-.news-running-style span b { position:absolute;left:0;right:0;bottom:0;color:#111;font-size:11px;line-height:1; }.news-running-style .running-style-arrow{left:7px;right:auto;bottom:2px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:9px solid #111;font-size:0}
+.news-running-style span b { position:absolute;color:#111;font-size:11px;line-height:1; }.news-running-style .running-style-arrow{left:50%;right:auto;top:50%;bottom:auto;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:9px solid #111;transform:translate(-50%,-50%);font-size:0}
 .news-running-style span.selected { background:#eee;box-shadow:inset 0 0 0 1px #777; }
 .newspaper-loading { padding:30px;text-align:center; }
 .newspaper-actions { display:grid;grid-template-columns:1fr;gap:5px;margin-top:7px; }.newspaper-actions #newspaperRaceButton{min-height:48px;width:100%;font-size:16px;letter-spacing:.08em;box-shadow:4px 4px #392719}
@@ -126,7 +126,7 @@ body {
 .race-week-nav{display:grid;grid-template-columns:82px 1fr 82px;align-items:center;gap:6px;padding:10px 10px 7px;background:#16241d}.race-week-nav button{padding:8px 4px;font-size:10px}.race-week-nav b{text-align:center;color:#ffe082;font-size:12px}.race-week-nav button:disabled{opacity:.3}.race-select-guide{margin:0;padding:5px 12px;background:#16241d;color:#cdd8ce;font-size:9px;text-align:center}
 .race-venue-tabs button{flex:1 1 calc(20% - 5px);min-width:56px;font-size:12px;font-weight:900}.race-venue-tabs:empty{display:none}
 .nar-venue-badge{display:block;max-width:100%;margin:0 0 2px;padding:1px 2px;border:1px solid #fff0a3;background:#84452b;color:#fff5ce;font-size:7px;line-height:1.15;white-space:nowrap}
-.race-search{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 10px;background:#20352a;border-top:1px solid #607867}.race-search select{min-width:0;padding:7px 4px;border:1px solid #a79255;background:#fffbe7;color:#253128;font-size:10px}.race-search label{display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 4px;background:#e9e4c9;color:#2b322b;border:1px solid #a79255;font-size:9px;font-weight:800}.race-search label:last-child{grid-column:span 2}.race-search input{width:14px;height:14px}
+.race-search{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 10px;background:#20352a;border-top:1px solid #607867}.race-search select{min-width:0;padding:7px 4px;border:1px solid #a79255;background:#fffbe7;color:#253128;font-size:10px}.race-search label{grid-column:1/-1;justify-self:end;display:flex;align-items:center;gap:6px;width:auto;margin-top:2px;padding:4px 8px;border:1px solid #8d9b7e;border-radius:14px;background:#eef0df;color:#2b322b;font-size:9px;font-weight:800;line-height:1}.race-search input{appearance:none;width:27px;height:15px;margin:0;border:2px solid #667363;border-radius:10px;background:radial-gradient(circle at 5px 50%,#fff 0 4px,transparent 5px),#9ca69a}.race-search input:checked{border-color:#b88e31;background:radial-gradient(circle at 18px 50%,#fff 0 4px,transparent 5px),#d7ad43}.race-search label:has(input:checked){border-color:#c09a42;background:#fff2bd}
 
 .title-screen,
 .setup-screen,
@@ -860,15 +860,15 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .coach-message::before { display:none; }
 .coach-message::before { content:"調"; position:absolute; left:10px; top:12px; display:grid; place-items:center; width:32px; height:38px; border:3px solid #322617; background:linear-gradient(#e8c49c 0 42%,#314a6d 42%); color:#21170f; font-weight:900; box-shadow:4px 4px #7b692f; }
 
-.result-screen { padding-top: 55px; }
+.result-screen { padding:42px 24px 20px; }
 .result-race-banner{position:relative;margin:-37px -10px 13px;padding:10px 9px 9px;border:4px solid #826a31;background:#17251f;color:#fff8d3;box-shadow:inset 0 0 0 2px #d2bd73,4px 4px #22472f}.result-race-banner small{display:block;color:#d7c783;font-size:9px;font-weight:900;letter-spacing:.12em}.result-race-banner h1{margin:4px 0 2px;color:#fff;font-size:20px;line-height:1.2;text-shadow:2px 2px #182019}.result-race-banner p{margin:0;color:#e4e0c5;font-size:9px;font-weight:800}.result-race-banner.grade-g3{border-color:#a8663f;background:#352820;box-shadow:inset 0 0 0 3px #d39a62,4px 4px #4e3828}.result-race-banner.grade-g2{border-color:#c9cdd0;background:linear-gradient(#48515b,#202b34);box-shadow:inset 0 0 0 3px #f1f4f3,5px 5px #273e3b}.result-race-banner.grade-g1{padding-top:13px;border:6px double #ffe06b;background:linear-gradient(#7c241e,#351411);box-shadow:inset 0 0 0 3px #d48832,0 0 0 3px #6d3d17,6px 6px #203b2c}.result-race-banner.grade-g1::before,.result-race-banner.grade-g1::after{content:"◆";position:absolute;top:8px;color:#ffe16a;font-size:17px}.result-race-banner.grade-g1::before{left:9px}.result-race-banner.grade-g1::after{right:9px}.result-race-banner.grade-g1 h1{color:#fff0a0;font-size:24px;text-shadow:3px 3px #551b16}
-.result-screen h2 { margin:5px 0 18px; color:#ffe16a; font-size:52px; text-shadow:4px 4px #5b2a18; }
+.result-screen h2 { margin:3px 0 9px; color:#ffe16a; font-size:44px; line-height:1;text-shadow:4px 4px #5b2a18; }
 .result-horse { display:flex; justify-content:center; align-items:center; gap:10px; color:white; font-size:19px; }
 .result-horse span { display:grid; place-items:center; width:30px; height:30px; background:#eee; color:#111; border:2px solid #d7bd67; }
 .result-horse-scene {
   position:relative;
-  height:128px;
-  margin:12px 0 8px;
+  height:116px;
+  margin:7px 0 6px;
   overflow:hidden;
   border:3px solid #d7bd67;
   background:linear-gradient(#73c7df 0 58%,#76ad52 58% 75%,#4d873c 75%);
@@ -896,13 +896,13 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 @keyframes resultHorseSad { 0%,100%{transform:translateY(4px)}50%{transform:translateY(7px)} }
 @keyframes resultHeadDown { 0%,100%{transform:rotate(12deg) translateY(2px)}50%{transform:rotate(24deg) translateY(5px)} }
 @keyframes resultTear { 0%{transform:translateY(-2px);opacity:0}25%{opacity:1}100%{transform:translateY(12px);opacity:0} }
-.result-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin:24px 0 14px; }
-.result-grid div { padding:13px 5px; border:1px solid #927534; background:#050a10; }
-.result-grid small { display:block; color:#9eb0bb; }
-.result-grid b { display:block; margin-top:5px; color:white; font-size:17px; }
+.result-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:8px 0; }
+.result-grid div { min-width:0;padding:6px 2px;border:1px solid #927534;background:#050a10; }
+.result-grid div:nth-child(4){grid-column:1/3}.result-grid small { display:block;color:#9eb0bb;font-size:8px;white-space:nowrap; }
+.result-grid b { display:block;overflow:hidden;margin-top:2px;color:white;font-size:13px;line-height:1.2;text-overflow:ellipsis;white-space:nowrap; }
 .result-screen > p:not(.kicker) { color:#d8e5dc; }
 .post-race-condition {
-  margin:14px 0 18px;
+  margin:8px 0 10px;
   border:3px solid #d4b75e;
   background:#fff9df;
   color:#30270f;
@@ -919,9 +919,9 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 }
 .post-race-condition p {
   margin:0;
-  padding:12px;
+  padding:8px 10px;
   font-size:11px;
-  line-height:1.8;
+  line-height:1.55;
 }
 .result-order { margin:16px 0; border-top:1px solid #6d5b31; }
 .result-order div { display:grid; grid-template-columns:28px 1fr 55px; gap:7px; padding:7px; border-bottom:1px solid #51472f; color:white; text-align:left; font-size:11px; }
