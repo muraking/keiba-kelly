@@ -2342,10 +2342,10 @@ addEventListener("dotkeiba:preview-ready",e=>{
   document.querySelector("#newspaperEntries").innerHTML=e.detail.entries.map(h=>{
     const mark=marks[h.popularity-1]||"";
     const styleKey=h.style==="追込"?"追":h.style==="先行"?"先":h.style==="差し"?"差":"逃";
-    const runningStyleChart=`<div class="news-running-style" aria-label="脚質 ${h.style}"><small>脚質</small>${["逃","先","差","追"].map(label=>`<span class="${label===styleKey?"selected":""}"><i>${label}</i><b>${label===styleKey?"◀":""}</b></span>`).join("")}</div>`;
+    const runningStyleChart=`<div class="news-running-style" aria-label="脚質 ${h.style}"><small>脚質</small>${["逃","先","差","追"].map(label=>`<span class="${label===styleKey?"selected":""}"><i>${label}</i>${label===styleKey?'<b class="running-style-arrow" aria-hidden="true"></b>':""}</span>`).join("")}</div>`;
     return `<article class="newspaper-entry ${h.player?"player":""}">
       <span class="news-number frame-${h.id}">${h.id}</span><b class="news-mark">${mark}</b>
-      <div><h3>${h.name}${h.player?' <small>愛馬</small>':""}</h3>${runningStyleChart}<p>調子 ${h.condition}</p><small>${h.comment}</small></div>
+      <div class="news-horse-copy"><h3>${h.name}${h.player?' <small>愛馬</small>':""}</h3><div class="news-compact-row">${runningStyleChart}<div class="news-assessment"><b>調子 ${h.condition}</b><small title="${h.comment}">評価 ${h.comment}</small></div></div></div>
       <strong>${h.odds.toFixed(1)}<small>倍</small><em>${h.popularity}番人気</em></strong>
     </article>`;
   }).join("");
