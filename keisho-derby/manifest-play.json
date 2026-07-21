@@ -1,0 +1,15 @@
+{
+  "name": "ドット競馬 継承ダービー（テストプレイ版）",
+  "short_name": "継承ダービー",
+  "description": "ドット絵の競走馬育成・血統継承ゲーム",
+  "start_url": "./play.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#02060b",
+  "theme_color": "#07111d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src": "../icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "../icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
