@@ -1539,9 +1539,9 @@ function deleteFavoriteRace(index){
   renderHistory();
 }
 const ENDING_DEFINITIONS={
-  "domestic-g1":{chapter:"ENDING I",title:"日本競馬の頂点",scene:"domestic",message:"世代を越えて受け継いだ夢が、日本最高峰の舞台をすべて照らしました。歴代の愛馬たちが築いた、ひとつの大きな物語です。"},
-  "overseas-g1":{chapter:"ENDING II",title:"世界を駆けた血統",scene:"overseas",message:"海を越え、世界の強豪に挑み続けた血統。その蹄跡は、遠い競馬場にも確かに刻まれました。"},
-  "all-graded":{chapter:"FINAL ENDING",title:"継承ダービー",scene:"legend",message:"すべての重賞を制し、トロフィールームは歴代の愛馬の記憶で満たされました。この血統の物語は、まだ続く。"}
+  "domestic-g1":{chapter:"ENDING I",title:"日本競馬の頂点",scene:"domestic",message:"世代を越えて、夢は受け継がれました。歴代の愛馬たちは、日本最高峰の舞台をすべて駆け抜けました。その蹄跡は、ひとつの大きな物語になりました。"},
+  "overseas-g1":{chapter:"ENDING II",title:"世界を駆けた血統",scene:"overseas",message:"受け継いだ夢は、海を越えました。愛馬たちは、世界の強豪へ何度も挑み続けました。その蹄跡は、遠い競馬場にも確かに刻まれました。"},
+  "all-graded":{chapter:"FINAL ENDING",title:"継承ダービー",scene:"legend",message:"すべての重賞に、勝利の記憶が刻まれました。トロフィールームは、歴代の愛馬たちの物語で満たされました。この血統の夢は、これからも走り続けます。"}
 };
 function uniqueRaceNames(filter){return [...new Set(raceCalendar.filter(filter).map(r=>r.name))]}
 function endingTargets(id){
@@ -1582,11 +1582,11 @@ function endingEntries(id,preview){
 function endingFinale(id){
   clearEndingTimers();const screen=document.querySelector("#endingScreen"),cinematic=document.querySelector("#endingCinematic"),company=document.querySelector("#endingCompanyCard"),message=document.querySelector("#endingMessage");
   cinematic.innerHTML="";document.querySelectorAll(".ending-credit").forEach(element=>element.remove());company.innerHTML=studioLogoMarkup();screen.classList.remove("playing","company-only");screen.classList.add("finale");company.hidden=true;
-  const original=ENDING_DEFINITIONS[id]?.message||"",text=id==="domestic-g1"?original.replace("。歴代","。\n歴代"):original;message.textContent="";message.classList.add("typing");
+  const original=ENDING_DEFINITIONS[id]?.message||"",text=(original.match(/[^。！？]+[。！？]?/g)||[original]).map(line=>line.trim()).filter(Boolean).join("\n");message.textContent="";message.classList.add("typing");
   [...text].forEach((character,index)=>endingLater(()=>{message.textContent+=character},500+index*58));
   const typingEnd=500+[...text].length*58;
-  endingLater(()=>{message.classList.remove("typing");screen.classList.remove("finale");screen.classList.add("company-only");company.hidden=false},typingEnd+1900);
-  endingLater(()=>{document.querySelector("#endingContinueButton").hidden=false;document.querySelector("#endingSkipButton").hidden=true},typingEnd+4700);
+  endingLater(()=>{message.classList.remove("typing");screen.classList.remove("finale");screen.classList.add("company-only");company.hidden=false},typingEnd+3500);
+  endingLater(()=>{document.querySelector("#endingContinueButton").hidden=false;document.querySelector("#endingSkipButton").hidden=true},typingEnd+6500);
 }
 function playDomesticEnding(entries){
   const cinematic=document.querySelector("#endingCinematic");let index=0;cinematic.innerHTML='<div class="ending-domestic-flow"></div>';const flow=cinematic.firstElementChild;
