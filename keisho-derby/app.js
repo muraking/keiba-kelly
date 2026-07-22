@@ -489,7 +489,9 @@ function classBenchmarkTime(race){
   return Math.round(record+(secondsPerKm+twoYearOldExtra)*race.distance);
 }
 
-function showScreen(id){ screens.forEach(s=>s.classList.toggle("active",s.id===id));if(id!=="horseDetailScreen"&&detailHorseMotionTimer){clearInterval(detailHorseMotionTimer);detailHorseMotionTimer=null}scrollTo(0,0); }
+const titleBgm=document.querySelector("#titleBgm"),titleBgmButton=document.querySelector("#titleBgmButton");let titleBgmOn=false;if(titleBgm)titleBgm.volume=.34;
+async function toggleTitleBgm(){if(!titleBgm)return;if(titleBgmOn){titleBgm.pause();titleBgmOn=false}else{try{await titleBgm.play();titleBgmOn=true}catch{return}}titleBgmButton.textContent=titleBgmOn?"■ タイトルBGMを停止":"♪ タイトルBGMを再生";titleBgmButton.classList.toggle("playing",titleBgmOn)}
+function showScreen(id){ screens.forEach(s=>s.classList.toggle("active",s.id===id));if(id!=="titleScreen"&&titleBgm&&!titleBgm.paused)titleBgm.pause();else if(id==="titleScreen"&&titleBgmOn)titleBgm.play().catch(()=>{});if(id!=="horseDetailScreen"&&detailHorseMotionTimer){clearInterval(detailHorseMotionTimer);detailHorseMotionTimer=null}scrollTo(0,0); }
 function saveGame(){ game.saveVersion=SAVE_SCHEMA_VERSION;localStorage.setItem(saveSlotKey(activeSaveSlot),JSON.stringify(game)); }
 function loadGame(slot=activeSaveSlot){
   try{
@@ -2177,6 +2179,7 @@ document.querySelector("#continueButton").disabled=!hasAnySave();
 document.querySelector("#devModeButton").textContent=developerMode?"開発表示 ON":"開発表示";
 syncDeveloperEndingButtons();
 document.querySelector("#newGameButton").onclick=()=>{renderSaveSlots("new");showScreen("saveSlotScreen")};
+titleBgmButton?.addEventListener("click",toggleTitleBgm);
 document.querySelector("#exportSaveButton")?.addEventListener("click",exportSaveBackup);
 document.querySelector("#importSaveButton")?.addEventListener("click",()=>document.querySelector("#importSaveFile")?.click());
 document.querySelector("#importSaveFile")?.addEventListener("change",async event=>{await importSaveBackup(event.target.files?.[0]);event.target.value=""});
