@@ -1388,6 +1388,7 @@ function voluntaryPasture(){
   renderHome(`4週間の放牧から戻りました。疲れと脚元はしっかり回復しています。馬体は${game.weight}kgです。${decline}`);
 }
 function openPastureConfirm(){
+  if(trainingAnimationActive||autoTrainingActive)return;
   const modal=document.querySelector("#pastureConfirmModal");
   modal?.classList.add("show");modal?.setAttribute("aria-hidden","false");
 }
@@ -1788,6 +1789,7 @@ function playTrainingAnimation(type,label,outcome){
   trainingAnimationActive=true;
   document.querySelectorAll("[data-action]").forEach(button=>button.disabled=true);
   document.querySelector("#autoTrainingButton").disabled=true;
+  document.querySelector("#voluntaryPastureButton").disabled=true;
   popup.classList.add("show");
   popup.setAttribute("aria-hidden","false");
   stage.className=`training-popup-stage ${type}`;
@@ -1808,6 +1810,7 @@ function playAutoTrainingSequence(steps,modeName,finishText){
   trainingAnimationActive=true;
   document.querySelectorAll("[data-action]").forEach(button=>button.disabled=true);
   document.querySelector("#autoTrainingButton").disabled=true;
+  document.querySelector("#voluntaryPastureButton").disabled=true;
   popup.classList.add("show","auto-sequence");popup.setAttribute("aria-hidden","false");
   clearTimeout(playAutoTrainingSequence.timer);
   let index=0;
