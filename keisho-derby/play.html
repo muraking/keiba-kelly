@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest-play.json">
-  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.15.0</title>
-  <link rel="stylesheet" href="style.css?v=20260723-92">
+  <title>ドット競馬 継承ダービー｜テストプレイ版 Ver. 0.16.1</title>
+  <link rel="stylesheet" href="style.css?v=20260723-93">
 </head>
 <body class="tester-build">
   <main class="phone">
@@ -46,7 +46,11 @@
         <p class="kicker">8BIT HORSE RACING</p>
         <h1>ドット競馬<br><span>継承ダービー</span></h1>
         <audio id="titleBgm" src="title-theme.wav" loop preload="metadata"></audio>
-        <button id="titleBgmButton" class="title-bgm-button">♪ タイトルBGMを再生</button>
+        <audio id="trainingBgm" src="training-theme.wav" loop preload="metadata"></audio>
+        <audio id="gateOpenSfx" src="gate-open.wav" preload="auto"></audio>
+        <audio id="hoofSfx" src="hoof-loop.wav" loop preload="auto"></audio>
+        <audio id="crowdSfx" src="crowd-straight.wav" loop preload="auto"></audio>
+        <button id="titleBgmButton" class="title-bgm-button">♪ BGMを再生</button>
         <button class="primary big" id="newGameButton">はじめから</button>
         <button id="continueButton">つづきから</button>
         <button id="raceTestButton" hidden>コース検証テスト</button>
@@ -54,9 +58,14 @@
         <button id="endingDevAccessButton" hidden>エンディング確認</button>
         <div class="save-transfer-buttons"><button id="exportSaveButton">セーブを書き出す</button><button id="importSaveButton">セーブを読み込む</button></div>
         <input id="importSaveFile" type="file" accept="application/json,.json" hidden>
-        <div id="endingDevButtons" class="ending-dev-buttons" hidden><small>開発者用・エンディング確認</small><button data-ending-preview="domestic-g1">国内GⅠ制覇</button><button data-ending-preview="overseas-g1">海外GⅠ制覇</button><button data-ending-preview="all-graded">全重賞制覇</button></div>
+        <div id="endingDevButtons" class="ending-dev-buttons" hidden>
+          <small>開発者用・エンディング確認</small>
+          <button data-ending-preview="domestic-g1">国内GⅠ制覇</button>
+          <button data-ending-preview="overseas-g1">海外GⅠ制覇</button>
+          <button data-ending-preview="all-graded">全重賞制覇</button>
+        </div>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.15.0</b>
+        <b class="build-version">Ver. 0.16.1</b>
       </div>
     </section>
 
@@ -221,6 +230,7 @@
         <button id="historyButton">戦歴</button>
         <button id="galleryButton">ギャラリー</button>
         <button id="trophyButton">トロフィー</button>
+        <button id="settingsButton">設定</button>
         <button id="devModeButton" hidden>開発表示</button>
         <button id="resetGameButton">最初から</button>
       </div>
@@ -444,7 +454,30 @@
       </div>
       <button class="primary big" id="returnHomeButton">育成へ戻る</button>
     </section>
-    <section id="endingScreen" class="game-screen ending-screen" aria-live="polite"><div id="endingScene" class="ending-scene"><div class="ending-sky"><i class="ending-sun"></i><i class="ending-cloud one"></i><i class="ending-cloud two"></i></div><div class="ending-stand"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="ending-globe" aria-hidden="true"><i></i></div><div class="ending-trophy-row" aria-hidden="true"><i></i><i></i><i></i></div><div class="ending-lineage" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="candidate-pixel-horse ending-horse" aria-label="歴代の愛馬"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div></div><div id="endingCinematic" class="ending-cinematic"></div></div><small id="endingChapter" class="ending-chapter">ENDING</small><h1 id="endingTitle">日本競馬の頂点</h1><p id="endingMessage" class="ending-message"></p><div id="endingProgress" class="ending-progress"></div><div class="ending-credit"><small>PRODUCED BY</small><b>MuraShige Studio Co Ltd</b></div><div id="endingCompanyCard" class="ending-company-card" hidden>MuraShige Studio Co Ltd</div><button id="endingSkipButton" class="ending-skip">演出を早送り</button><button id="endingContinueButton" class="primary big">物語を続ける</button></section>
+
+    <section id="endingScreen" class="game-screen ending-screen" aria-live="polite">
+      <div id="endingScene" class="ending-scene">
+        <div class="ending-sky"><i class="ending-sun"></i><i class="ending-cloud one"></i><i class="ending-cloud two"></i></div>
+        <div class="ending-stand"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="ending-globe" aria-hidden="true"><i></i></div>
+        <div class="ending-trophy-row" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="ending-lineage" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="candidate-pixel-horse ending-horse" aria-label="歴代の愛馬">
+          <div class="candidate-body"></div><div class="candidate-neck"></div>
+          <div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div>
+          <div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div>
+        </div>
+        <div id="endingCinematic" class="ending-cinematic"></div>
+      </div>
+      <small id="endingChapter" class="ending-chapter">ENDING</small>
+      <h1 id="endingTitle">日本競馬の頂点</h1>
+      <p id="endingMessage" class="ending-message"></p>
+      <div id="endingProgress" class="ending-progress"></div>
+      <div class="ending-credit"><small>PRODUCED BY</small><b>MuraShige Studio Co Ltd</b></div>
+      <div id="endingCompanyCard" class="ending-company-card" hidden>MuraShige Studio Co Ltd</div>
+      <button id="endingSkipButton" class="ending-skip">演出を早送り</button>
+      <button id="endingContinueButton" class="primary big">物語を続ける</button>
+    </section>
     <div id="inheritConfirmModal" class="auto-training-modal" aria-hidden="true">
       <div class="auto-training-dialog race-warning-dialog" role="dialog" aria-modal="true" aria-labelledby="inheritConfirmTitle">
         <b id="inheritConfirmTitle">次世代への継承確認</b>
@@ -469,13 +502,21 @@
         <button id="reservationListClose" class="auto-training-cancel">閉じる</button>
       </div>
     </div>
+    <div id="audioSettingsModal" class="auto-training-modal audio-settings-modal" aria-hidden="true">
+      <div class="auto-training-dialog audio-settings-dialog" role="dialog" aria-modal="true" aria-labelledby="audioSettingsTitle">
+        <h2 id="audioSettingsTitle">サウンド設定</h2>
+        <button id="bgmSettingButton" class="audio-setting-row"><span><b>BGM</b><small>タイトル・育成画面の音楽</small></span><strong>OFF</strong></button>
+        <button id="sfxSettingButton" class="audio-setting-row"><span><b>効果音</b><small>ゲート・蹄・スタンドの歓声</small></span><strong>ON</strong></button>
+        <button id="audioSettingsCloseButton" class="auto-training-cancel">閉じる</button>
+      </div>
+    </div>
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260722-16"></script>
-  <script src="app.js?v=20260723-45"></script>
+  <script src="app.js?v=20260723-47"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
-  <script src="race.js?v=20260722-30"></script>
+  <script src="race.js?v=20260723-31"></script>
   <script>
     (()=>{
       const bind=(id,handler)=>{const button=document.getElementById(id);if(button&&!button.onclick)button.onclick=handler};

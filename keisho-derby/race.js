@@ -159,6 +159,13 @@ let archiveReplay = false;
 let horizontalLayout = false;
 let layoutV2 = false;
 let courseAuditMode = false;
+let raceAudioState = "idle";
+function syncRaceAudio(running=false,crowd=false){
+  const next=`${running?1:0}:${crowd?1:0}`;
+  if(next===raceAudioState)return;
+  raceAudioState=next;
+  window.dispatchEvent(new CustomEvent("dotkeiba:race-audio",{detail:{running,crowd}}));
+}
 let drawingCourseTrace = false;
 // スタンド下配置を本編でも共通使用。走路はスタンドに近づけつつ接触させない。
 const COURSE_Y_SHIFT = 6;
@@ -484,6 +491,7 @@ function resetRace() {
     }))
   }}));
   state = "ready";
+  syncRaceAudio(false,false);
   raceClock = 0;
   preRaceClock = 0;
   weatherClock = 0;
@@ -894,6 +902,7 @@ function update(dt, clockDt) {
     dot.style.left=`${1+normalized*98}%`;dot.style.bottom=`${5+courseElevation(h.progress)}px`;
   });
   const homeStraight=Math.round(trackProfile().straight);
+  syncRaceAudio(true,remaining>0&&remaining<=homeStraight);
   phaseEl.textContent =
     remaining === 0 ? "確定" :
     remaining <= homeStraight ? "最後の直線" :
@@ -959,6 +968,7 @@ function updateCommentary(remaining) {
 function finishRace() {
   if(state==="runout"||state==="finished")return;
   state = "runout";
+  syncRaceAudio(false,false);
   startButton.disabled = true;
   pauseButton.disabled = true;
   speedButton.hidden = true;
@@ -1939,9 +1949,14 @@ function loop(time) {
   // 雨雪はレース倍速と切り離し、ゲート演出中から一定速度で動かす。
   if(state!=="paused"&&state!=="ready"&&state!=="finished")weatherClock+=realDt;
   if(state==="parade"||state==="gates"||state==="gateBreak"){
+    const previousPreRaceClock=preRaceClock;
     preRaceClock+=realDt;
     if(state==="parade"||state==="gates")waitingMotionClock+=realDt;
-    if(state==="gateBreak")updateGateBreakCourseMotion(realDt);
+    if(state==="gateBreak"){
+      updateGateBreakCourseMotion(realDt);
+      if(previousPreRaceClock<2150&&preRaceClock>=2150)window.dispatchEvent(new CustomEvent("dotkeiba:gate-open"));
+      syncRaceAudio(preRaceClock>=2150,false);
+    }else syncRaceAudio(false,false);
     draw();
   } else if (state === "running") {
     cheerClock += realDt;
@@ -1953,6 +1968,7 @@ function loop(time) {
     draw();
     renderRanking();
   } else if(state==="runout"){
+    syncRaceAudio(false,false);
     updateRunout(simulationDt);
     draw();
   }
