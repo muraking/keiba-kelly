@@ -1590,7 +1590,7 @@ function endingFinale(id){
 }
 function playDomesticEnding(entries){
   const cinematic=document.querySelector("#endingCinematic");let index=0;cinematic.innerHTML='<div class="ending-domestic-flow"></div>';const flow=cinematic.firstElementChild;
-  const next=()=>{if(index>=entries.length)return endingLater(()=>endingFinale(activeEndingId),900);const entry=entries[index++];flow.innerHTML=`<article class="ending-race-card flowing"><small>GⅠ MEMORY ${String(index).padStart(2,"0")}</small><h2>${entry.raceName}</h2>${endingHorseMarkup(entry,index)}<b>${entry.horseName}</b><span>${entry.generation||1}代目</span></article>`;endingLater(next,4200)};next();
+  const next=()=>{if(index>=entries.length)return endingLater(()=>endingFinale(activeEndingId),4200);const entry=entries[index++];flow.insertAdjacentHTML("beforeend",`<article class="ending-race-card flowing"><small>GⅠ MEMORY ${String(index).padStart(2,"0")}</small><h2>${entry.raceName}</h2>${endingHorseMarkup(entry,index)}<b>${entry.horseName}</b><span>${entry.generation||1}代目</span></article>`);const card=flow.lastElementChild;endingLater(()=>card?.remove(),4300);endingLater(next,1400)};next();
 }
 function playOverseasEnding(entries){
   const cinematic=document.querySelector("#endingCinematic");let index=0;
