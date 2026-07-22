@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.16.1</title>
-  <link rel="stylesheet" href="style.css?v=20260723-93">
+  <title>ドット競馬 継承ダービー｜Ver. 0.16.2</title>
+  <link rel="stylesheet" href="style.css?v=20260723-94">
 </head>
 <body>
   <main class="phone">
@@ -65,7 +65,7 @@
           <button data-ending-preview="all-graded">全重賞制覇</button>
         </div>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.16.1</b>
+        <b class="build-version">Ver. 0.16.2</b>
       </div>
     </section>
 
@@ -510,11 +510,19 @@
         <button id="audioSettingsCloseButton" class="auto-training-cancel">閉じる</button>
       </div>
     </div>
+    <div id="pastureConfirmModal" class="auto-training-modal" aria-hidden="true">
+      <div class="auto-training-dialog race-warning-dialog pasture-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="pastureConfirmTitle">
+        <b id="pastureConfirmTitle">放牧の確認</b>
+        <p>4週間、厩舎へ帰ってきません。放牧に出してよろしいですか？</p>
+        <button id="pastureConfirmYes" class="race-warning-proceed"><strong>放牧に出す</strong><small>4週間進みます</small></button>
+        <button id="pastureConfirmNo" class="auto-training-cancel">やめる</button>
+      </div>
+    </div>
   </main>
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260722-16"></script>
-  <script src="app.js?v=20260723-47"></script>
+  <script src="app.js?v=20260723-48"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260723-31"></script>
   <script>

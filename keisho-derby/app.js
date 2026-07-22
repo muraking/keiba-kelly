@@ -496,6 +496,16 @@ try{audioPrefs={...audioPrefs,...JSON.parse(localStorage.getItem(AUDIO_SETTINGS_
 let titleBgmOn=!!audioPrefs.bgm,activeScreenId="titleScreen";
 if(titleBgm)titleBgm.volume=.32;if(trainingBgm)trainingBgm.volume=.27;if(gateOpenSfx)gateOpenSfx.volume=.62;if(hoofSfx)hoofSfx.volume=.34;if(crowdSfx)crowdSfx.volume=.42;
 function pauseAudio(audio,rewind=false){if(!audio)return;audio.pause();if(rewind)audio.currentTime=0}
+let gameAudioUnlocked=false;
+function unlockGameAudio(){
+  if(gameAudioUnlocked)return;
+  gameAudioUnlocked=true;
+  [gateOpenSfx,hoofSfx,crowdSfx].filter(Boolean).forEach(audio=>{
+    const wasMuted=audio.muted;audio.muted=true;
+    audio.play().then(()=>{audio.pause();audio.currentTime=0;audio.muted=wasMuted}).catch(()=>{audio.muted=wasMuted});
+  });
+}
+document.addEventListener("pointerdown",unlockGameAudio,{once:true,capture:true});
 function saveAudioPrefs(){try{localStorage.setItem(AUDIO_SETTINGS_KEY,JSON.stringify(audioPrefs))}catch{}}
 function renderAudioSettings(){
   titleBgmOn=!!audioPrefs.bgm;
@@ -1395,6 +1405,14 @@ function voluntaryPasture(){
   }
   renderHome(`4週間の放牧から戻りました。疲れと脚元はしっかり回復しています。馬体は${game.weight}kgです。${decline}`);
 }
+function openPastureConfirm(){
+  const modal=document.querySelector("#pastureConfirmModal");
+  modal?.classList.add("show");modal?.setAttribute("aria-hidden","false");
+}
+function closePastureConfirm(){
+  const modal=document.querySelector("#pastureConfirmModal");
+  modal?.classList.remove("show");modal?.setAttribute("aria-hidden","true");
+}
 const equipmentCatalog=[
   {id:"treadmill",name:"高性能トレッドミル",cost:120,grade:"坂路設備",desc:"坂路調教のパワー成長を補助",durability:80,icon:"走"},
   {id:"walker",name:"ウォーキングマシン",cost:90,grade:"回復設備",desc:"週送り時の疲労回復+8",durability:100,icon:"歩"},
@@ -2283,7 +2301,7 @@ titleBgmButton?.addEventListener("click",toggleTitleBgm);
 const audioSettingsModal=document.querySelector("#audioSettingsModal");
 document.querySelector("#settingsButton")?.addEventListener("click",()=>{renderAudioSettings();audioSettingsModal?.classList.add("show");audioSettingsModal?.setAttribute("aria-hidden","false")});
 document.querySelector("#bgmSettingButton")?.addEventListener("click",()=>{audioPrefs.bgm=!audioPrefs.bgm;saveAudioPrefs();renderAudioSettings();syncBgm()});
-document.querySelector("#sfxSettingButton")?.addEventListener("click",()=>{audioPrefs.sfx=!audioPrefs.sfx;saveAudioPrefs();renderAudioSettings();if(!audioPrefs.sfx){pauseAudio(gateOpenSfx,true);pauseAudio(hoofSfx);pauseAudio(crowdSfx)}});
+document.querySelector("#sfxSettingButton")?.addEventListener("click",()=>{audioPrefs.sfx=!audioPrefs.sfx;saveAudioPrefs();renderAudioSettings();if(!audioPrefs.sfx){pauseAudio(gateOpenSfx,true);pauseAudio(hoofSfx);pauseAudio(crowdSfx)}else if(gateOpenSfx){gateOpenSfx.currentTime=0;gateOpenSfx.play().catch(()=>{})}});
 document.querySelector("#audioSettingsCloseButton")?.addEventListener("click",()=>{audioSettingsModal?.classList.remove("show");audioSettingsModal?.setAttribute("aria-hidden","true")});
 document.querySelector("#exportSaveButton")?.addEventListener("click",exportSaveBackup);
 document.querySelector("#importSaveButton")?.addEventListener("click",()=>document.querySelector("#importSaveFile")?.click());
@@ -2392,7 +2410,9 @@ document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>{
 });
 document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>train(b.dataset.action));
 document.querySelector("#pastureButton").onclick=sendToPasture;
-document.querySelector("#voluntaryPastureButton").onclick=voluntaryPasture;
+document.querySelector("#voluntaryPastureButton").onclick=openPastureConfirm;
+document.querySelector("#pastureConfirmYes")?.addEventListener("click",()=>{closePastureConfirm();voluntaryPasture()});
+document.querySelector("#pastureConfirmNo")?.addEventListener("click",closePastureConfirm);
 document.querySelector("#nextWeekButton").onclick=()=>{
   if(game.injury)return renderHome(`${game.injury.name}の治療中です。翌週へ進むには「復帰まで放牧」を選んでください。`);
   const reserved=dueReservedRace();

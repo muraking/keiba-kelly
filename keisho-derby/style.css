@@ -748,6 +748,7 @@ input { width: 100%; padding: 14px; border: 2px solid var(--gold); background: #
 .home-screen > .big { width:calc(100% - 20px); margin:7px 10px; }
 .sub-actions { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; padding:4px 10px 14px; }
 .audio-settings-dialog{width:min(90%,390px);border-color:#b78a35;background:#fff6d7}.audio-settings-dialog h2{margin:0 0 12px;padding:8px;border:3px solid #795a24;background:#294738;color:#ffe47a;text-align:center}.audio-settings-dialog .audio-setting-row{display:grid;grid-template-columns:1fr 58px;align-items:center;width:100%;margin:8px 0;padding:10px;border:3px solid #8b7340;background:#fffdf2;color:#302817;text-align:left}.audio-setting-row span{display:grid;gap:3px}.audio-setting-row b{font-size:13px}.audio-setting-row small{font-size:8px;color:#6b634f}.audio-setting-row strong{padding:7px 3px;border:2px solid #6e3e2a;background:#8a4132;color:#fff;text-align:center}.audio-setting-row.is-on strong{border-color:#285c38;background:#3c8b50}.audio-settings-dialog>.auto-training-cancel{text-align:center}
+.pasture-confirm-dialog>p{margin:10px 0;padding:12px;border:2px solid #9b7b41;background:#fffdf1;font-size:12px;font-weight:800;line-height:1.8;text-align:center}.pasture-confirm-dialog>button{display:grid;width:100%;margin:7px 0;text-align:center}.pasture-confirm-dialog>button small{margin-top:2px}
 .sub-actions button {
   background:#e6f0e2;
   color:#263a2b;
