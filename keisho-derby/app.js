@@ -515,7 +515,7 @@ function renderAudioSettings(){
 function syncBgm(){
   pauseAudio(titleBgm);pauseAudio(trainingBgm);
   if(!titleBgmOn)return;
-  const target=activeScreenId==="titleScreen"?titleBgm:activeScreenId==="homeScreen"?trainingBgm:null;
+  const target=activeScreenId==="titleScreen"?titleBgm:activeScreenId!=="raceScreen"?trainingBgm:null;
   target?.play().catch(()=>{});
 }
 async function toggleTitleBgm(){
