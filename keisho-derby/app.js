@@ -489,31 +489,21 @@ function classBenchmarkTime(race){
   return Math.round(record+(secondsPerKm+twoYearOldExtra)*race.distance);
 }
 
-const titleBgm=document.querySelector("#titleBgm"),trainingBgm=document.querySelector("#trainingBgm"),gateOpenSfx=document.querySelector("#gateOpenSfx"),hoofSfx=document.querySelector("#hoofSfx"),crowdSfx=document.querySelector("#crowdSfx"),titleBgmButton=document.querySelector("#titleBgmButton");
+const titleBgm=document.querySelector("#titleBgm"),titleBgmButton=document.querySelector("#titleBgmButton");
 const AUDIO_SETTINGS_KEY="dotKeibaAudioSettings";
-let audioPrefs={bgm:false,sfx:true};
+let audioPrefs={bgm:false};
 try{audioPrefs={...audioPrefs,...JSON.parse(localStorage.getItem(AUDIO_SETTINGS_KEY)||"{}")}}catch{}
 let titleBgmOn=!!audioPrefs.bgm,activeScreenId="titleScreen";
-if(titleBgm)titleBgm.volume=.32;if(trainingBgm)trainingBgm.volume=.27;if(gateOpenSfx)gateOpenSfx.volume=.62;if(hoofSfx)hoofSfx.volume=.34;if(crowdSfx)crowdSfx.volume=.42;
+if(titleBgm)titleBgm.volume=.32;
 function pauseAudio(audio,rewind=false){if(!audio)return;audio.pause();if(rewind)audio.currentTime=0}
-let gameAudioUnlocked=false;
-function unlockGameAudio(){
-  if(gameAudioUnlocked)return;
-  gameAudioUnlocked=true;
-  [gateOpenSfx,hoofSfx,crowdSfx].filter(Boolean).forEach(audio=>{
-    const wasMuted=audio.muted;audio.muted=true;
-    audio.play().then(()=>{audio.pause();audio.currentTime=0;audio.muted=wasMuted}).catch(()=>{audio.muted=wasMuted});
-  });
-}
-document.addEventListener("pointerdown",unlockGameAudio,{once:true,capture:true});
 function saveAudioPrefs(){try{localStorage.setItem(AUDIO_SETTINGS_KEY,JSON.stringify(audioPrefs))}catch{}}
 function renderAudioSettings(){
   titleBgmOn=!!audioPrefs.bgm;
   if(titleBgmButton){titleBgmButton.textContent=titleBgmOn?"■ BGMを停止":"♪ BGMを再生";titleBgmButton.classList.toggle("playing",titleBgmOn)}
-  [["#bgmSettingButton",audioPrefs.bgm],["#sfxSettingButton",audioPrefs.sfx]].forEach(([selector,on])=>{const button=document.querySelector(selector);if(!button)return;button.classList.toggle("is-on",!!on);const label=button.querySelector("strong");if(label)label.textContent=on?"ON":"OFF"});
+  [["#bgmSettingButton",audioPrefs.bgm]].forEach(([selector,on])=>{const button=document.querySelector(selector);if(!button)return;button.classList.toggle("is-on",!!on);const label=button.querySelector("strong");if(label)label.textContent=on?"ON":"OFF"});
 }
 function syncBgm(){
-  pauseAudio(titleBgm);pauseAudio(trainingBgm);
+  pauseAudio(titleBgm);
   if(!titleBgmOn)return;
   const target=activeScreenId==="titleScreen"?titleBgm:null;
   target?.play().catch(()=>{});
@@ -524,16 +514,8 @@ async function toggleTitleBgm(){
 }
 function showScreen(id){
   activeScreenId=id;screens.forEach(s=>s.classList.toggle("active",s.id===id));syncBgm();
-  if(id!=="raceScreen"){pauseAudio(hoofSfx);pauseAudio(crowdSfx)}
   if(id!=="horseDetailScreen"&&detailHorseMotionTimer){clearInterval(detailHorseMotionTimer);detailHorseMotionTimer=null}scrollTo(0,0);
 }
-addEventListener("dotkeiba:gate-open",()=>{if(!audioPrefs.sfx||!gateOpenSfx)return;gateOpenSfx.currentTime=0;gateOpenSfx.play().catch(()=>{})});
-addEventListener("dotkeiba:race-audio",e=>{
-  if(!audioPrefs.sfx){pauseAudio(hoofSfx);pauseAudio(crowdSfx);return}
-  const running=!!e.detail?.running,crowd=!!e.detail?.crowd;
-  if(running){if(hoofSfx?.paused)hoofSfx.play().catch(()=>{})}else pauseAudio(hoofSfx);
-  if(crowd){if(crowdSfx?.paused)crowdSfx.play().catch(()=>{})}else pauseAudio(crowdSfx);
-});
 renderAudioSettings();
 function saveGame(){ game.saveVersion=SAVE_SCHEMA_VERSION;localStorage.setItem(saveSlotKey(activeSaveSlot),JSON.stringify(game)); }
 function loadGame(slot=activeSaveSlot){
@@ -2301,7 +2283,6 @@ titleBgmButton?.addEventListener("click",toggleTitleBgm);
 const audioSettingsModal=document.querySelector("#audioSettingsModal");
 document.querySelector("#settingsButton")?.addEventListener("click",()=>{renderAudioSettings();audioSettingsModal?.classList.add("show");audioSettingsModal?.setAttribute("aria-hidden","false")});
 document.querySelector("#bgmSettingButton")?.addEventListener("click",()=>{audioPrefs.bgm=!audioPrefs.bgm;saveAudioPrefs();renderAudioSettings();syncBgm()});
-document.querySelector("#sfxSettingButton")?.addEventListener("click",()=>{audioPrefs.sfx=!audioPrefs.sfx;saveAudioPrefs();renderAudioSettings();if(!audioPrefs.sfx){pauseAudio(gateOpenSfx,true);pauseAudio(hoofSfx);pauseAudio(crowdSfx)}else if(gateOpenSfx){gateOpenSfx.currentTime=0;gateOpenSfx.play().catch(()=>{})}});
 document.querySelector("#audioSettingsCloseButton")?.addEventListener("click",()=>{audioSettingsModal?.classList.remove("show");audioSettingsModal?.setAttribute("aria-hidden","true")});
 document.querySelector("#exportSaveButton")?.addEventListener("click",exportSaveBackup);
 document.querySelector("#importSaveButton")?.addEventListener("click",()=>document.querySelector("#importSaveFile")?.click());
