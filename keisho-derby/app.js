@@ -17,9 +17,10 @@ const coatPalettes={
   "栗毛":["#b5662f","#bd7137","#c47b3a","#a95a2a"],"栃栗毛":["#8d4528","#984d2b","#7e3d27"],
   "鹿毛":["#70401f","#794724","#63371d","#85502a"],"黒鹿毛":["#342723","#3d2c27","#2c2422"],
   "青鹿毛":["#292829","#303034","#242529"],"青毛":["#1f2225","#25282b","#191c20"],
-  "芦毛":["#aaa99f","#bbb9ae","#969890","#cbc8bb"],"白毛":["#eee9dd","#f4f0e5","#e5e2da"]
+  "芦毛":["#aaa99f","#bbb9ae","#969890","#cbc8bb"],"白毛":["#fffef8","#fbfaf5","#f5f6f3"]
 };
 const coats = [["栗毛","#b96e32"],["栃栗毛","#8d4528"],["鹿毛","#74401f"],["黒鹿毛","#3c2a25"],["青鹿毛","#292829"],["青毛","#1f2225"],["芦毛","#b9b7ad"]];
+function horseDisplayColor(appearance,fallback="#b96e32"){return appearance?.coat==="白毛"?coatPalettes["白毛"][(Number(appearance.shade)||0)%coatPalettes["白毛"].length]:appearance?.color||fallback}
 const FACE_MARK_TYPES=["none","star","blaze","doubleBlaze","snip","starSnip","bald"];
 const MANE_STYLES=["short","standard","long","upright","wavy"];
 const TAIL_STYLES=["short","standard","long","wavy","raised"];
@@ -46,7 +47,9 @@ function normalizeAppearanceDNA(candidate){
   if(!candidate)return null;
   const legacyLegs=Array.from({length:4},(_,i)=>i<Number(candidate.socks||0)?1:0);
   const source=candidate.appearanceDNA&&typeof candidate.appearanceDNA==="object"?candidate.appearanceDNA:{};
-  candidate.appearanceDNA={coat:source.coat||candidate.coat||"栗毛",color:source.color||candidate.color||"#b96e32",shade:Number(source.shade)||0,
+  const normalizedCoat=source.coat||candidate.coat||"栗毛",normalizedShade=Number(source.shade)||0;
+  const normalizedColor=normalizedCoat==="白毛"?coatPalettes["白毛"][normalizedShade%coatPalettes["白毛"].length]:source.color||candidate.color||"#b96e32";
+  candidate.appearanceDNA={coat:normalizedCoat,color:normalizedColor,shade:normalizedShade,
     faceMarkType:FACE_MARK_TYPES.includes(source.faceMarkType)?source.faceMarkType:(candidate.faceMark?"blaze":"none"),
     legMarks:Array.isArray(source.legMarks)&&source.legMarks.length===4?source.legMarks.map(v=>Math.max(0,Math.min(2,Number(v)||0))):legacyLegs,
     maneStyle:MANE_STYLES.includes(source.maneStyle)?source.maneStyle:"standard",tailStyle:TAIL_STYLES.includes(source.tailStyle)?source.tailStyle:"standard"};
@@ -1569,7 +1572,7 @@ const ENDING_MOCK_HORSES=["ドットスター","ピクセルエース","ミン�
 function clearEndingTimers(){endingTimers.forEach(clearTimeout);endingTimers=[]}
 function endingLater(fn,delay){const timer=setTimeout(fn,delay);endingTimers.push(timer);return timer}
 function endingHorseMarkup(entry,index=0){
-  const a=entry?.horseAppearance||entry?.appearanceDNA||{},color=a.color||entry?.horseColor||["#9b542e","#6f3f2b","#b46a35","#55423a","#d0c4aa"][index%5],classes=appearanceClassNames(a);
+  const a=entry?.horseAppearance||entry?.appearanceDNA||{},color=horseDisplayColor(a,entry?.horseColor||["#9b542e","#6f3f2b","#b46a35","#55423a","#d0c4aa"][index%5]),classes=appearanceClassNames(a);
   const tack=a.tack||entry?.equippedTack||"",tackColor=a.tackColor||entry?.equippedTackColor||"#5aa8df";
   return `<div class="candidate-pixel-horse ending-memory-horse ${classes} ${tack?`tack-${tack}`:""}" style="--horse-color:${color};--active-horse-color:${color};--tack-color:${tackColor}"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div></div>`;
 }
@@ -1682,7 +1685,7 @@ function showTrophyHorse(index){
   const trophy=renderedTrophyCatalog[index]?.trophy;if(!trophy)return;
   const currentHorseAppearance=trophy.horseName===game.horseName&&Number(trophy.generation)===Number(game.generation)?{...normalizeAppearanceDNA(game.candidate),tack:game.equippedTack,tackColor:game.equippedTackColor}:{};
   const appearance=trophy.horseAppearance||currentHorseAppearance;
-  const color=appearance.color||trophy.horseColor||"#a96232";
+  const color=horseDisplayColor(appearance,trophy.horseColor||"#a96232");
   const appearanceClass=[appearanceClassNames(appearance),appearance.faceMark&&!appearance.faceMarkType?"face-blaze":"",Number(appearance.socks)>0&&!appearance.legMarks?"front-sock-1 back-sock-1":"",appearance.tack?`tack-${appearance.tack}`:""].filter(Boolean).join(" ");
   detail.innerHTML=`<div class="trophy-detail-stage ${appearanceClass}" style="--horse-color:${color};--active-horse-color:${color};--tack-color:${appearance.tackColor||"#5aa8df"}"><div class="candidate-pixel-horse trophy-detail-horse"><div class="candidate-body"></div><div class="candidate-neck"></div><div class="candidate-head"><i class="candidate-eye"></i><i class="candidate-ear"></i></div><div class="candidate-tail"></div><div class="candidate-leg front"></div><div class="candidate-leg back"></div><div class="winner-wreath"></div></div></div><div><small>${trophy.grade==="G1"?"GⅠ":trophy.grade==="G2"?"GⅡ":"GⅢ"} TROPHY</small><h3>${trophy.raceName}</h3><b>${trophy.horseName}</b><p>${trophy.generation}代目　${trophy.horseAge?`${trophy.horseAge}歳　`:""}${trophy.date||""}</p></div>`;
   modal.classList.add("show");modal.setAttribute("aria-hidden","false");
