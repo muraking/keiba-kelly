@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="継承ダービー">
   <link rel="manifest" href="manifest.json">
-  <title>ドット競馬 継承ダービー｜Ver. 0.16.4</title>
-  <link rel="stylesheet" href="style.css?v=20260723-94">
+  <title>ドット競馬 継承ダービー｜Ver. 0.16.5</title>
+  <link rel="stylesheet" href="style.css?v=20260723-95">
 </head>
 <body>
   <main class="phone">
@@ -46,7 +46,6 @@
         <p class="kicker">8BIT HORSE RACING</p>
         <h1>ドット競馬<br><span>継承ダービー</span></h1>
         <audio id="titleBgm" src="title-theme.wav" loop preload="metadata"></audio>
-        <audio id="trainingBgm" src="training-theme.wav" loop preload="metadata"></audio>
         <audio id="gateOpenSfx" src="gate-open.wav" preload="auto"></audio>
         <audio id="hoofSfx" src="hoof-loop.wav" loop preload="auto"></audio>
         <audio id="crowdSfx" src="crowd-straight.wav" loop preload="auto"></audio>
@@ -65,7 +64,7 @@
           <button data-ending-preview="all-graded">全重賞制覇</button>
         </div>
         <small>育成体験版</small>
-        <b class="build-version">Ver. 0.16.4</b>
+        <b class="build-version">Ver. 0.16.5</b>
       </div>
     </section>
 
@@ -505,7 +504,7 @@
     <div id="audioSettingsModal" class="auto-training-modal audio-settings-modal" aria-hidden="true">
       <div class="auto-training-dialog audio-settings-dialog" role="dialog" aria-modal="true" aria-labelledby="audioSettingsTitle">
         <h2 id="audioSettingsTitle">サウンド設定</h2>
-        <button id="bgmSettingButton" class="audio-setting-row"><span><b>BGM</b><small>タイトル・育成画面の音楽</small></span><strong>OFF</strong></button>
+        <button id="bgmSettingButton" class="audio-setting-row"><span><b>BGM</b><small>タイトル画面の音楽</small></span><strong>OFF</strong></button>
         <button id="sfxSettingButton" class="audio-setting-row"><span><b>効果音</b><small>ゲート・蹄・スタンドの歓声</small></span><strong>ON</strong></button>
         <button id="audioSettingsCloseButton" class="auto-training-cancel">閉じる</button>
       </div>
@@ -522,7 +521,7 @@
   <script src="race-time-data.js?v=20260718-17"></script>
   <script src="race-program-2026.js?v=20260721-4"></script>
   <script src="save-compat.js?v=20260722-16"></script>
-  <script src="app.js?v=20260723-50"></script>
+  <script src="app.js?v=20260723-51"></script>
   <script src="course-layout-data.js?v=20260719-1"></script>
   <script src="race.js?v=20260723-31"></script>
   <script>
