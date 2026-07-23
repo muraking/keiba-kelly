@@ -2,7 +2,7 @@
 
 The discovery year is 2024 and the complete OOS test year is 2025.
 
-Version: v2026.07.24.2
+Version: v2026.07.24.3
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import numpy as np
 from search_longshot_edges import iter_races, stats, ticket_sets
 
 
-VERSION = "v2026.07.24.2"
+VERSION = "v2026.07.24.3"
 MIN_TRAIN_RACES = 100
 MIN_WEAK_FAVORITE_RACES = 50
 
@@ -107,6 +107,9 @@ def build(oos_path: str, result_path: str, features_path: str):
                     )
                     stakes[name] = 100.0 * len(combinations_)
             records.append({
+                "race_id": race_id,
+                "date": date,
+                "axis_num": axis["num"],
                 "regime": regime,
                 "year": int(date[:4]),
                 "odds": axis["odds"],
