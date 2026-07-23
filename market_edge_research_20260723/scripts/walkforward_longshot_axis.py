@@ -4,7 +4,7 @@ A longshot must be both unpopular by odds and positively rated by the fully
 OOS pure model relative to market probability. One axis horse is selected per
 race before evaluating win/place and combination bet structures.
 
-Version: v2026.07.23.3
+Version: v2026.07.23.4
 """
 
 from __future__ import annotations
@@ -117,15 +117,22 @@ def longshot_tickets(rows: list[dict]) -> dict[str, tuple[str, list[str]]]:
         )
         for minimum in (0.45, 0.55):
             if partner_probability >= minimum:
-                result[
-                    f"{prefix}:santan_first_2_partner{minimum:.2f}"
-                ] = (
-                    "santan",
-                    [
-                        f"{axis['num']}>{a['num']}>{b['num']}"
-                        for a, b in itertools.permutations(partners[:2], 2)
-                    ],
-                )
+                for ticket_name in (
+                    "tan",
+                    "fuku",
+                    "umaren_1",
+                    "umaren_2",
+                    "wide_1",
+                    "wide_2",
+                    "sanfuku_1",
+                    "sanfuku_3",
+                    "santan_first_2",
+                ):
+                    base_name = f"{prefix}:{ticket_name}"
+                    if base_name in result:
+                        result[
+                            f"{base_name}_partner{minimum:.2f}"
+                        ] = result[base_name]
     return result
 
 
@@ -263,7 +270,7 @@ def run(oos_path: str, result_path: str) -> dict:
             }
         )
     return {
-        "version": "v2026.07.23.3",
+        "version": "v2026.07.23.4",
         "oos_predictions": oos_path,
         "result_database": result_path,
         "joined_races": joined_races,
