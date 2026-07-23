@@ -2,7 +2,7 @@
 """
 市場オッズを基準に、構造化特徴量が追加情報を持つかを年次walk-forwardで検証する。
 
-Version: v2026.07.23.4
+Version: v2026.07.23.5
 
 重要:
 - win_odds は最終オッズの可能性があるため、本検証のROIは「実購入可能性」ではなく
@@ -24,7 +24,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import brier_score_loss, log_loss, roc_auc_score
 
 
-VERSION = "v2026.07.23.4"
+VERSION = "v2026.07.23.5"
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 REPORTS = ROOT / "reports"
@@ -434,6 +434,7 @@ def monthly_report(oos: pd.DataFrame) -> list[dict]:
 
 
 def main() -> None:
+    global DATA, REPORTS
     parser = argparse.ArgumentParser()
     parser.add_argument("--tag", choices=["local", "jra"], required=True)
     parser.add_argument("--years", nargs="+", type=int, default=[2024, 2025, 2026])
@@ -443,8 +444,17 @@ def main() -> None:
         default="full",
         help="full=市場派生+競馬特徴、struct=競馬特徴のみ、market=市場派生のみ",
     )
+    parser.add_argument(
+        "--export-oos",
+        action="store_true",
+        help="完全OOSの馬単位予測をCSVへ保存する",
+    )
+    parser.add_argument("--data-dir", type=Path, default=DATA)
+    parser.add_argument("--reports-dir", type=Path, default=REPORTS)
     args = parser.parse_args()
 
+    DATA = args.data_dir.resolve()
+    REPORTS = args.reports_dir.resolve()
     REPORTS.mkdir(exist_ok=True)
     df = load(args.tag)
     drop = ID_COLS | LABEL_COLS | EVAL_COLS
@@ -499,6 +509,34 @@ def main() -> None:
     )
     out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"saved: {out}")
+    if args.export_oos:
+        oos_columns = [
+            "race_id",
+            "date",
+            "venue",
+            "umaban",
+            "horse_id",
+            "popularity",
+            "win_odds",
+            "finish_pos",
+            "is_win",
+            "tan_payout",
+            "place_payout",
+            "p_market",
+            "p_struct",
+            "p_combo",
+            "delta",
+            "danger",
+            "danger_pct",
+            "ev_combo",
+        ]
+        oos_out = REPORTS / (
+            f"oos_predictions_{args.tag}_{args.variant}_{VERSION[1:]}.csv"
+        )
+        oos.loc[:, oos_columns].to_csv(
+            oos_out, index=False, date_format="%Y-%m-%d"
+        )
+        print(f"saved: {oos_out} ({len(oos):,} rows)")
 
 
 if __name__ == "__main__":
