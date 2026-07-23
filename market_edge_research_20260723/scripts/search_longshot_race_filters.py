@@ -1,10 +1,11 @@
 """Search race-quality filters before placing longshot-axis bets.
 
 The longshot profiles are fixed from prior analysis. This stage searches only
-race participation filters: favorite strength, field size, two-year-old races,
-and historical-data coverage. Selection is nested walk-forward.
+race participation segments: favorite strength, field size, two-year-old races,
+and historical-data coverage. Each segment can be included, excluded, or left
+unrestricted. Selection is nested walk-forward.
 
-Version: v2026.07.23.1
+Version: v2026.07.23.3
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ import numpy as np
 from search_longshot_edges import iter_races, stats, ticket_sets
 
 
-VERSION = "v2026.07.23.1"
+VERSION = "v2026.07.23.3"
 MIN_DISCOVERY_RACES = 200
 PROFILES = (
     {
@@ -135,19 +136,53 @@ def build(oos_path: str, result_path: str, features_path: str):
 
 
 def filter_grid():
-    for favorite_max, field_min, exclude_two, cover3, avg_past in itertools.product(
-        (0.45, 0.55, 0.65, 1.00),
-        (8, 10, 12),
-        (True,),
-        (0.60, 0.80),
-        (3.0, 5.0),
+    favorite_bands = (
+        ("all", 0.00, 1.01),
+        ("weak", 0.00, 0.45),
+        ("normal", 0.45, 0.55),
+        ("strong", 0.55, 0.65),
+        ("dominant", 0.65, 1.01),
+    )
+    field_bands = (
+        ("all", 0, 100),
+        ("small", 0, 10),
+        ("medium", 10, 12),
+        ("large", 12, 100),
+    )
+    age_modes = ("all", "exclude_all_two", "only_all_two")
+    coverage_bands = (
+        ("all", 0.00, 1.01),
+        ("low", 0.00, 0.60),
+        ("medium", 0.60, 0.80),
+        ("high", 0.80, 1.01),
+    )
+    history_bands = (
+        ("all", 0.00, 100.0),
+        ("short", 0.00, 3.00),
+        ("medium", 3.00, 5.00),
+        ("long", 5.00, 100.0),
+    )
+    for favorite, field, age_mode, coverage, history in itertools.product(
+        favorite_bands,
+        field_bands,
+        age_modes,
+        coverage_bands,
+        history_bands,
     ):
         yield {
-            "favorite_max": favorite_max,
-            "field_min": field_min,
-            "exclude_two": exclude_two,
-            "cover3": cover3,
-            "avg_past": avg_past,
+            "favorite_band": favorite[0],
+            "favorite_min": favorite[1],
+            "favorite_max": favorite[2],
+            "field_band": field[0],
+            "field_min": field[1],
+            "field_max": field[2],
+            "age_mode": age_mode,
+            "coverage_band": coverage[0],
+            "cover3_min": coverage[1],
+            "cover3_max": coverage[2],
+            "history_band": history[0],
+            "avg_past_min": history[1],
+            "avg_past_max": history[2],
         }
 
 
@@ -181,12 +216,18 @@ def run(oos_path: str, result_path: str, features_path: str) -> dict:
         selected &= columns["odds"] < profile["odds_max"]
         selected &= columns["market_rank"] >= profile["rank_min"]
         selected &= columns["partner_sum"] >= profile["partner"]
+        selected &= columns["favorite_market"] >= race_filter["favorite_min"]
         selected &= columns["favorite_market"] < race_filter["favorite_max"]
         selected &= columns["field_size"] >= race_filter["field_min"]
-        if race_filter["exclude_two"]:
+        selected &= columns["field_size"] < race_filter["field_max"]
+        if race_filter["age_mode"] == "exclude_all_two":
             selected &= columns["all_two_year"] == 0
-        selected &= columns["cover3"] >= race_filter["cover3"]
-        selected &= columns["avg_past"] >= race_filter["avg_past"]
+        elif race_filter["age_mode"] == "only_all_two":
+            selected &= columns["all_two_year"] == 1
+        selected &= columns["cover3"] >= race_filter["cover3_min"]
+        selected &= columns["cover3"] < race_filter["cover3_max"]
+        selected &= columns["avg_past"] >= race_filter["avg_past_min"]
+        selected &= columns["avg_past"] < race_filter["avg_past_max"]
         return selected
 
     walkforward = []
@@ -222,6 +263,7 @@ def run(oos_path: str, result_path: str, features_path: str) -> dict:
         })
 
     robust = []
+    segment_candidates = []
     for profile in PROFILES:
         for race_filter in filters:
             masks = {year: mask(profile, race_filter, (year,)) for year in (2024, 2025, 2026)}
@@ -230,6 +272,20 @@ def run(oos_path: str, result_path: str, features_path: str) -> dict:
                     str(year): stats(returns[structure], stakes[structure], selected)
                     for year, selected in masks.items()
                 }
+                if all(item["races"] >= 100 for item in yearly.values()):
+                    overall = stats(
+                        returns[structure],
+                        stakes[structure],
+                        mask(profile, race_filter, (2024, 2025, 2026)),
+                    )
+                    segment_candidates.append({
+                        "structure": structure,
+                        "profile": profile,
+                        "race_filter": race_filter,
+                        "yearly": yearly,
+                        "overall": overall,
+                        "min_year_roi": min(item["roi"] for item in yearly.values()),
+                    })
                 if all(
                     item["races"] >= MIN_DISCOVERY_RACES and item["roi"] > 100
                     for item in yearly.values()
@@ -247,6 +303,38 @@ def run(oos_path: str, result_path: str, features_path: str) -> dict:
                         "overall": overall,
                     })
     robust.sort(key=lambda item: (item["overall"]["lcb90"], item["overall"]["roi"]), reverse=True)
+
+    dimensions = {
+        "favorite_band": ("all", "weak", "normal", "strong", "dominant"),
+        "field_band": ("all", "small", "medium", "large"),
+        "age_mode": ("all", "exclude_all_two", "only_all_two"),
+        "coverage_band": ("all", "low", "medium", "high"),
+        "history_band": ("all", "short", "medium", "long"),
+    }
+    best_by_segment = []
+    for dimension, values in dimensions.items():
+        for value in values:
+            for structure in structures:
+                eligible = [
+                    item for item in segment_candidates
+                    if item["race_filter"][dimension] == value
+                    and item["structure"] == structure
+                ]
+                if not eligible:
+                    continue
+                best = max(
+                    eligible,
+                    key=lambda item: (
+                        item["min_year_roi"],
+                        item["overall"]["lcb90"],
+                        item["overall"]["roi"],
+                    ),
+                )
+                best_by_segment.append({
+                    "dimension": dimension,
+                    "segment": value,
+                    **best,
+                })
     return {
         "version": VERSION,
         "records": len(records),
@@ -255,8 +343,11 @@ def run(oos_path: str, result_path: str, features_path: str) -> dict:
         "ticket_structures": structures,
         "walkforward": walkforward,
         "robust_three_year_candidates": robust[:100],
+        "best_by_segment": best_by_segment,
         "limitations": [
-            "race-quality filters are searched after earlier longshot analysis",
+            "race-participation segments are searched after earlier longshot analysis",
+            "segment discovery has a large multiple-testing burden",
+            "best-by-segment results require at least 100 races in every year",
             "independent future shadow validation is mandatory",
         ],
     }
