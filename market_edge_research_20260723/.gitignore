@@ -1,0 +1,13 @@
+data/*
+backups/*
+reports/*.csv
+reports/*.json
+reports/*.parquet
+*.log
+__pycache__/
+*.pyc
+
+!data/.gitkeep
+!backups/.gitkeep
+!reports/.gitkeep
+
