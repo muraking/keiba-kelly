@@ -4,7 +4,7 @@ This process does not import or launch keiba_ai.live_probs.  It directly uses
 the low-level scraper, feature builder and odds client, then applies the
 leakage-safe research model and fixed shadow strategy.
 
-Version: v2026.07.25.6
+Version: v2026.07.25.7
 """
 
 from __future__ import annotations
@@ -42,9 +42,10 @@ from keiba_ai.scrape_local import (
 import walkforward_jra_pedigree_training as enhanced
 import walkforward_market_edge as research
 from jra_shadow_strategy import evaluate_snapshot, format_discord
+from standalone_display import circled, pace_lines, relative_styles
 
 
-VERSION = "v2026.07.25.6"
+VERSION = "v2026.07.25.7"
 MARKS = ("◎", "○", "▲", "△", "☆", "注")
 CHECK_SECONDS = 30
 
@@ -236,9 +237,18 @@ def calculate_index(
         int(row.umaban): float(value)
         for row, value in zip(target.itertuples(), probability)
     }
+    styles = relative_styles({
+        str(int(row.umaban)): (
+            float(row.h_avg_early3)
+            if hasattr(row, "h_avg_early3") and pd.notna(row.h_avg_early3)
+            else None
+        )
+        for row in target.itertuples()
+    })
     return {
         "p": {str(key): round(value, 7) for key, value in pure.items()},
         "h": {str(key): value for key, value in names.items()},
+        "s": styles,
         "w": actual_weight,
         "t": datetime.now(JST).strftime("%H:%M"),
         "version": VERSION,
@@ -311,6 +321,14 @@ def calculate_all_indices(
             "h": {
                 str(key): value for key, value in card["names"].items()
             },
+            "s": relative_styles({
+                str(int(row["umaban"])): (
+                    float(row["h_avg_early3"])
+                    if "h_avg_early3" in group and pd.notna(row["h_avg_early3"])
+                    else None
+                )
+                for _, row in group.iterrows()
+            }),
             "w": card["weight_ok"],
             "t": datetime.now(JST).strftime("%H:%M"),
             "version": VERSION,
@@ -323,7 +341,7 @@ def format_index(meta: dict, snapshot: dict, phase: str) -> str:
     title = f"{meta['venue']}{meta['race_num']}R {meta.get('race_name', '')}".strip()
     lines = [
         f"{MARKS[index] if index < len(MARKS) else '　'}"
-        f"{number} {snapshot['h'].get(number, '')} "
+        f"{circled(number)} {snapshot['h'].get(number, '')} "
         f"{snapshot['p'][number]:.1%}"
         for index, number in enumerate(order)
     ]
@@ -331,6 +349,8 @@ def format_index(meta: dict, snapshot: dict, phase: str) -> str:
     return (
         f"📊 JRA独立指数 {phase} {title}\n"
         f"血統・調教込み / {weight}\n"
+        + "\n".join(pace_lines(snapshot))
+        + "\n"
         + "\n".join(lines)
         + f"\nVersion {VERSION}"
     )

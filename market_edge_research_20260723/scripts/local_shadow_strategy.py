@@ -4,12 +4,14 @@ The rules are frozen from the 2024-2026 OOS research. They are shadow
 recommendations, not automatic wagering rules, because the same period was
 used to discover the segments.
 
-Version: v2026.07.25.8
+Version: v2026.07.25.9
 """
 
 from __future__ import annotations
 
-VERSION = "v2026.07.25.8"
+VERSION = "v2026.07.25.9"
+
+from standalone_display import circled, circled_ticket
 
 
 def _market_probabilities(odds: dict[int, float]) -> dict[int, float]:
@@ -295,11 +297,11 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
         return base + f"👀 見: {decision['reason']}\nVersion {VERSION}"
     names = snapshot.get("h", {})
     axis = str(decision["axis"])
-    tickets = " / ".join(decision["tickets"])
+    tickets = " / ".join(circled_ticket(ticket) for ticket in decision["tickets"])
     tier = decision.get("confidence_tier", "A")
     message = (
         base
-        + f"🕳️ 軸 {axis} {names.get(axis, '')} / {decision['bet_type']}\n"
+        + f"🕳️ 軸 {circled(axis)} {names.get(axis, '')} / {decision['bet_type']}\n"
         + f"買い目 {tickets}（各100円・計{decision['stake_yen']}円）\n"
         + f"固定ルール {decision['rule']} / {tier}ランクshadow検証"
     )
@@ -309,7 +311,8 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
         for item in extras:
             lines.append(
                 f"【{item['rank']}】{item['bet_type']} "
-                f"{' / '.join(item['tickets'])}（{item['evidence']}）"
+                f"{' / '.join(circled_ticket(ticket) for ticket in item['tickets'])}"
+                f"（{item['evidence']}）"
             )
         message += "\n".join(lines)
     return message + f"\nVersion {VERSION}"

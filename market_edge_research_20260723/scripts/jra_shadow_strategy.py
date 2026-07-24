@@ -3,15 +3,16 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.25.1
+Version: v2026.07.25.2
 """
 
 from __future__ import annotations
 
 from itertools import combinations
+from standalone_display import circled, circled_ticket
 
 
-VERSION = "v2026.07.25.1"
+VERSION = "v2026.07.25.2"
 MARKET_BLEND_ALPHA = 0.10
 
 
@@ -125,9 +126,10 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
     name = decision.get("axis_name") or ""
     message = (
         f"🧪 JRA shadow {race_name} [{stamp}]\n"
-        f"{decision['bet_type']}：{' / '.join(decision['tickets'])}"
+        f"{decision['bet_type']}："
+        f"{' / '.join(circled_ticket(ticket) for ticket in decision['tickets'])}"
         f"（各100円・計{decision['stake_yen']}円）\n"
-        f"軸 {axis} {name} {decision['odds']:.1f}倍 "
+        f"軸 {circled(axis)} {name} {decision['odds']:.1f}倍 "
         f"{decision['market_rank']}番人気\n"
         f"AI {decision['ai_probability']:.1%} / 市場 "
         f"{decision['market_probability']:.1%} / 比率 "
@@ -137,10 +139,10 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
     )
     message += (
         "\n―― 人が判断する参考買い目 ――\n"
-        f"【参考・非推奨】単勝 {axis}"
+        f"【参考・非推奨】単勝 {circled(axis)}"
         "（ライブ計算可能条件の2025年ROI 69.2%）\n"
         f"【参考・非推奨】ワイド "
-        f"{' / '.join(_tickets(axis, decision['partners'], 'ワイド'))}"
+        f"{' / '.join(circled_ticket(ticket) for ticket in _tickets(axis, decision['partners'], 'ワイド'))}"
         "（ライブ計算可能条件の2025年ROI 99.3%）"
     )
     return message + f"\nVersion {VERSION}"

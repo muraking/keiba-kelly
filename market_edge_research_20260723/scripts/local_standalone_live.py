@@ -3,7 +3,7 @@
 This service does not import or launch keiba_ai.live_probs. It directly uses
 the low-level local card parser and structural feature builder.
 
-Version: v2026.07.25.9
+Version: v2026.07.25.10
 """
 
 from __future__ import annotations
@@ -37,9 +37,10 @@ from keiba_ai.scrape_local import (
 
 import walkforward_market_edge as research
 from local_shadow_strategy import evaluate_snapshot, format_discord
+from standalone_display import circled, pace_lines, relative_styles
 
 
-VERSION = "v2026.07.25.9"
+VERSION = "v2026.07.25.10"
 MAX_TRAIN_ROWS = 350_000
 MAX_RUN_ROWS = 200_000
 MODEL_CACHE_VERSION = 1
@@ -240,6 +241,14 @@ def _snapshots_from_target(
                 if pd.notna(row["h_n_past"]) else 0
                 for _, row in group.iterrows()
             },
+            "s": relative_styles({
+                str(int(row["umaban"])): (
+                    float(row["h_avg_early3"])
+                    if "h_avg_early3" in group and pd.notna(row["h_avg_early3"])
+                    else None
+                )
+                for _, row in group.iterrows()
+            }),
             "w": card["weight_ok"],
             "t": datetime.now(JST).strftime("%H:%M"),
             "version": VERSION,
@@ -335,13 +344,15 @@ def format_index(meta: dict, snapshot: dict, phase: str) -> str:
     order = sorted(snapshot["p"], key=lambda number: -snapshot["p"][number])
     lines = [
         f"{MARKS[index] if index < len(MARKS) else '　'}"
-        f"{number} {snapshot['h'].get(number, '')} {snapshot['p'][number]:.1%}"
+        f"{circled(number)} {snapshot['h'].get(number, '')} {snapshot['p'][number]:.1%}"
         for index, number in enumerate(order)
     ]
     title = f"{meta['venue']}{meta['race_num']}R {meta.get('race_name', '')}".strip()
     weight = "実測馬体重取得済み" if snapshot.get("w") else "過去馬体重で補完"
     return (
         f"🏇 地方独立指数 {phase} {title}\n構造指数 / {weight}\n"
+        + "\n".join(pace_lines(snapshot))
+        + "\n"
         + "\n".join(lines)
         + f"\nVersion {VERSION}"
     )
