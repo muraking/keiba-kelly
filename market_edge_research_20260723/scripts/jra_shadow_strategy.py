@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.25.2
+Version: v2026.07.25.3
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket
 
 
-VERSION = "v2026.07.25.2"
+VERSION = "v2026.07.25.3"
 MARKET_BLEND_ALPHA = 0.10
 
 
@@ -53,64 +53,98 @@ def evaluate_snapshot(snapshot: dict) -> dict:
     combo = {num: value / combo_total for num, value in raw_combo.items()}
     market_order = sorted(common, key=lambda num: (-market[num], num))
     rank = {num: index + 1 for index, num in enumerate(market_order)}
+    pure_order = sorted(common, key=lambda num: (-pure[num], num))
+    pure_rank = {num: index + 1 for index, num in enumerate(pure_order)}
     favorite_probability = market[market_order[0]]
+    private_flags = {
+        int(number) for number in (snapshot.get("x") or [])
+        if int(number) in common
+    }
+    context_signal = any(
+        pure_rank[number] <= 3 and rank[number] - pure_rank[number] >= 3
+        for number in private_flags
+    )
+    context_axis = pure_order[1] if len(pure_order) >= 2 else None
     axes = [
         num for num in common
         if 4 <= odds[num] < 20 and 2 <= rank[num] <= 10
     ]
-    if not axes:
-        return {"action": "NO_BET", "reason": "中穴軸候補なし"}
-    axis = max(
-        axes,
-        key=lambda num: (
-            pure[num] - market[num],
-            pure[num],
-            -odds[num],
-        ),
-    )
-    partners = sorted(
-        (other for other in common if other != axis),
-        key=lambda other: (-combo[other], other),
-    )
-    ratio = pure[axis] / max(market[axis], 1e-9)
-    delta = pure[axis] - market[axis]
-    partner_sum = sum(combo[other] for other in partners[:2])
-    eligible = (
-        10 <= odds[axis] < 20
-        and 3 <= rank[axis] < 7
-        and favorite_probability < 0.35
-        and ratio >= 1.00
-        and delta >= 0.02
-        and partner_sum >= 0.45
-        and len(common) >= 12
-    )
-    if not eligible:
+    if axes:
+        axis = max(
+            axes,
+            key=lambda num: (
+                pure[num] - market[num],
+                pure[num],
+                -odds[num],
+            ),
+        )
+        partners = sorted(
+            (other for other in common if other != axis),
+            key=lambda other: (-combo[other], other),
+        )
+        ratio = pure[axis] / max(market[axis], 1e-9)
+        delta = pure[axis] - market[axis]
+        partner_sum = sum(combo[other] for other in partners[:2])
+        eligible = (
+            10 <= odds[axis] < 20
+            and 3 <= rank[axis] < 7
+            and favorite_probability < 0.35
+            and ratio >= 1.00
+            and delta >= 0.02
+            and partner_sum >= 0.45
+            and len(common) >= 12
+        )
+        if eligible:
+            tickets = _tickets(axis, partners, "三連複")
+            return {
+                "action": "SHADOW_BET",
+                "axis": axis,
+                "axis_name": names.get(axis, ""),
+                "odds": odds[axis],
+                "market_rank": rank[axis],
+                "ai_probability": pure[axis],
+                "market_probability": market[axis],
+                "ratio": ratio,
+                "delta": delta,
+                "partner_sum": partner_sum,
+                "partners": partners,
+                "bet_type": "三連複",
+                "tickets": tickets,
+                "stake_yen": 100 * len(tickets),
+                "confidence_tier": "A",
+                "weight_status": (
+                    "取得済み（急変は別途警告対象）"
+                    if snapshot.get("w") else
+                    "未取得（買い確定不可）"
+                ),
+            }
+    if context_signal and context_axis is not None:
         return {
-            "action": "NO_BET",
-            "reason": "独立指数の固定三連複ルール非該当",
-            "favorite_market_probability": favorite_probability,
+            "action": "SHADOW_BET",
+            "axis": context_axis,
+            "axis_name": names.get(context_axis, ""),
+            "odds": odds[context_axis],
+            "market_rank": rank[context_axis],
+            "ai_probability": pure[context_axis],
+            "market_probability": market[context_axis],
+            "ratio": pure[context_axis] / max(market[context_axis], 1e-9),
+            "delta": pure[context_axis] - market[context_axis],
+            "partners": [],
+            "bet_type": "単勝",
+            "tickets": [str(context_axis)],
+            "stake_yen": 100,
+            "confidence_tier": "C",
+            "rule": "市場順位乖離×構造指数2位",
+            "weight_status": (
+                "取得済み（急変は別途警告対象）"
+                if snapshot.get("w") else
+                "未取得（買い確定不可）"
+            ),
         }
-    tickets = _tickets(axis, partners, "三連複")
     return {
-        "action": "SHADOW_BET",
-        "axis": axis,
-        "axis_name": names.get(axis, ""),
-        "odds": odds[axis],
-        "market_rank": rank[axis],
-        "ai_probability": pure[axis],
-        "market_probability": market[axis],
-        "ratio": ratio,
-        "delta": delta,
-        "partner_sum": partner_sum,
-        "partners": partners,
-        "bet_type": "三連複",
-        "tickets": tickets,
-        "stake_yen": 100 * len(tickets),
-        "weight_status": (
-            "取得済み（急変は別途警告対象）"
-            if snapshot.get("w") else
-            "未取得（買い確定不可）"
-        ),
+        "action": "NO_BET",
+        "reason": "独立指数の固定ルール非該当",
+        "favorite_market_probability": favorite_probability,
     }
 
 
@@ -124,8 +158,9 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         )
     axis = decision["axis"]
     name = decision.get("axis_name") or ""
+    tier = decision.get("confidence_tier", "A")
     message = (
-        f"🧪 JRA shadow {race_name} [{stamp}]\n"
+        f"🧪 JRA shadow {race_name} [{stamp}] 【{tier}ランク】\n"
         f"{decision['bet_type']}："
         f"{' / '.join(circled_ticket(ticket) for ticket in decision['tickets'])}"
         f"（各100円・計{decision['stake_yen']}円）\n"
@@ -137,6 +172,12 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         f"馬体重：{decision['weight_status']}\n"
         f"⚠️ 自動購入なし・shadow検証専用"
     )
+    if tier == "C":
+        return (
+            message
+            + f"\n条件：{decision.get('rule', '構造指数候補')}"
+            + f"\nVersion {VERSION}"
+        )
     message += (
         "\n―― 人が判断する参考買い目 ――\n"
         f"【参考・非推奨】単勝 {circled(axis)}"

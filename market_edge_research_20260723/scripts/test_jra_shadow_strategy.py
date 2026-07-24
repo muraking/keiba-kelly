@@ -1,6 +1,6 @@
 """Regression tests for the JRA shadow decision rules.
 
-Version: v2026.07.25.2
+Version: v2026.07.25.3
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ import unittest
 from jra_shadow_strategy import evaluate_snapshot, format_discord
 
 
-VERSION = "v2026.07.25.2"
+VERSION = "v2026.07.25.3"
 
 
 def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict:
@@ -35,6 +35,27 @@ class StrategyTest(unittest.TestCase):
     def test_missing_odds_is_no_bet(self) -> None:
         result = evaluate_snapshot({"p": {"1": 1.0}, "o": {}})
         self.assertEqual(result["action"], "NO_BET")
+
+    def test_private_context_returns_anonymous_c_rank_win(self) -> None:
+        snap = snapshot(12.0, 0.18)
+        snap["p"] = {
+            "1": .25, "2": .20, "3": .16, "4": .12, "5": .08, "6": .06,
+            "7": .04, "8": .03, "9": .02, "10": .015, "11": .015, "12": .01,
+        }
+        snap["o"] = {
+            "1": 2.0, "2": 8.0, "3": 3.0, "4": 4.0, "5": 5.0, "6": 6.0,
+            "7": 7.0, "8": 9.0, "9": 10.0, "10": 12.0, "11": 15.0, "12": 20.0,
+        }
+        snap["x"] = ["2"]
+        result = evaluate_snapshot(snap)
+        self.assertEqual(result["action"], "SHADOW_BET")
+        self.assertEqual(result["confidence_tier"], "C")
+        self.assertEqual(result["bet_type"], "単勝")
+        self.assertEqual(result["axis"], 2)
+        message = format_discord("東京1R", snap, result)
+        self.assertIn("【Cランク】", message)
+        self.assertIn("単勝：②", message)
+        self.assertNotIn("イルカ", message)
 
     def test_never_returns_unknown_action(self) -> None:
         result = evaluate_snapshot(snapshot(12.0, 0.18))

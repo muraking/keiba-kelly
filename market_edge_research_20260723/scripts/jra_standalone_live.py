@@ -4,7 +4,7 @@ This process does not import or launch keiba_ai.live_probs.  It directly uses
 the low-level scraper, feature builder and odds client, then applies the
 leakage-safe research model and fixed shadow strategy.
 
-Version: v2026.07.25.7
+Version: v2026.07.25.8
 """
 
 from __future__ import annotations
@@ -45,7 +45,7 @@ from jra_shadow_strategy import evaluate_snapshot, format_discord
 from standalone_display import circled, pace_lines, relative_styles
 
 
-VERSION = "v2026.07.25.7"
+VERSION = "v2026.07.25.8"
 MARKS = ("◎", "○", "▲", "△", "☆", "注")
 CHECK_SECONDS = 30
 
@@ -65,6 +65,19 @@ def fetch_card(session, race_id: str) -> tuple[dict, list[dict]]:
     if not html:
         return {}, []
     return parse_shutuba(html, race_id)
+
+
+def refresh_private_race_context() -> None:
+    """Refresh the private race-context source before feature construction."""
+    try:
+        from keiba_ai.iruka_history import update_recent
+        from keiba_ai import features as feature_module
+
+        update_recent()
+        if hasattr(feature_module, "_IRUKA_CACHE"):
+            feature_module._IRUKA_CACHE["path"] = None
+    except Exception as error:
+        print(f"[standalone {VERSION}] private context refresh skipped: {error}", flush=True)
 
 
 def build_schedule(session, date_iso: str) -> dict[str, dict]:
@@ -249,6 +262,10 @@ def calculate_index(
         "p": {str(key): round(value, 7) for key, value in pure.items()},
         "h": {str(key): value for key, value in names.items()},
         "s": styles,
+        "x": [
+            str(int(row.umaban)) for row in target.itertuples()
+            if getattr(row, "is_iruka", 0) > 0
+        ],
         "w": actual_weight,
         "t": datetime.now(JST).strftime("%H:%M"),
         "version": VERSION,
@@ -329,6 +346,10 @@ def calculate_all_indices(
                 )
                 for _, row in group.iterrows()
             }),
+            "x": [
+                str(int(row["umaban"])) for _, row in group.iterrows()
+                if "is_iruka" in group and float(row.get("is_iruka") or 0) > 0
+            ],
             "w": card["weight_ok"],
             "t": datetime.now(JST).strftime("%H:%M"),
             "version": VERSION,
@@ -516,6 +537,7 @@ def main() -> None:
     if not schedule:
         print(f"{date_iso}: JRA対象レースなし", flush=True)
         return
+    refresh_private_race_context()
     if args.mode == "preday":
         existing = load_state(args.state, date_iso)
         if all(
