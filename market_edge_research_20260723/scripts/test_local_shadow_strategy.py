@@ -1,6 +1,6 @@
 """Regression tests for the independent local-racing strategy.
 
-Version: v2026.07.25.2
+Version: v2026.07.25.3
 """
 
 from __future__ import annotations
@@ -73,7 +73,7 @@ class LocalStrategyTest(unittest.TestCase):
         self.assertEqual(result["bet_type"], "三連複")
         self.assertEqual(len(result["tickets"]), 1)
 
-    def test_normal_favorite_second_place_candidate_is_rejected(self) -> None:
+    def test_normal_favorite_never_restores_second_place_trifecta(self) -> None:
         snap = self.base()
         snap["o"]["1"] = 1.5
         snap["p"] = {key: value for key, value in snap["p"].items() if int(key) <= 10}
@@ -82,7 +82,9 @@ class LocalStrategyTest(unittest.TestCase):
             "field_size": 10, "all_two_year": False, "cover3": .9, "avg_past": 5,
         }
         result = evaluate_snapshot(snap)
-        self.assertEqual(result["action"], "NO_BET")
+        self.assertEqual(result["rule"], "B_QUALITY_SANFUKU")
+        self.assertEqual(result["confidence_tier"], "B")
+        self.assertEqual(result["bet_type"], "三連複")
 
 
 if __name__ == "__main__":

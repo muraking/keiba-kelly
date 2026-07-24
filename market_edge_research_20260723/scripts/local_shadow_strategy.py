@@ -4,12 +4,12 @@ The rules are frozen from the 2024-2026 OOS research. They are shadow
 recommendations, not automatic wagering rules, because the same period was
 used to discover the segments.
 
-Version: v2026.07.25.6
+Version: v2026.07.25.7
 """
 
 from __future__ import annotations
 
-VERSION = "v2026.07.25.6"
+VERSION = "v2026.07.25.7"
 
 
 def _market_probabilities(odds: dict[int, float]) -> dict[int, float]:
@@ -192,6 +192,30 @@ def evaluate_snapshot(snapshot: dict) -> dict:
             if len(partners) == 2 and sum(pure[number] for number in partners) >= 0.45:
                 return {
                     "action": "SHADOW_BET", "rule": "QUALITY_LARGE_FIELD_SANFUKU",
+                    "confidence_tier": "A",
+                    "bet_type": "三連複", "axis": axis, "partners": partners,
+                    "tickets": [_trio(axis, *partners)], "stake_yen": 100,
+                    "quality": quality, "version": VERSION,
+                }
+
+    # B tier increases participation without relaxing the A-tier decisions.
+    # It is kept separate because its standalone LCB90 remains below 100%.
+    if (
+        favorite < 0.55 and field >= 10 and coverage >= 0.8
+        and average_past >= 5.0 and not all_two
+    ):
+        if _matches(
+            axis, pure, market, odds, rank, ratio=1.25, probability=0.08,
+            delta=0.02, odds_min=5.0, odds_max=30.0, rank_min=4,
+        ):
+            partners = [
+                number for number in sorted(common, key=lambda n: (-pure[n], n))
+                if number != axis
+            ][:2]
+            if len(partners) == 2 and sum(pure[number] for number in partners) >= 0.45:
+                return {
+                    "action": "SHADOW_BET", "rule": "B_QUALITY_SANFUKU",
+                    "confidence_tier": "B",
                     "bet_type": "三連複", "axis": axis, "partners": partners,
                     "tickets": [_trio(axis, *partners)], "stake_yen": 100,
                     "quality": quality, "version": VERSION,
@@ -217,9 +241,10 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
     names = snapshot.get("h", {})
     axis = str(decision["axis"])
     tickets = " / ".join(decision["tickets"])
+    tier = decision.get("confidence_tier", "A")
     return (
         base
         + f"🕳️ 軸 {axis} {names.get(axis, '')} / {decision['bet_type']}\n"
         + f"買い目 {tickets}（各100円・計{decision['stake_yen']}円）\n"
-        + f"固定ルール {decision['rule']} / shadow検証\nVersion {VERSION}"
+        + f"固定ルール {decision['rule']} / {tier}ランクshadow検証\nVersion {VERSION}"
     )
