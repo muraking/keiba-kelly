@@ -1,16 +1,16 @@
 """Regression tests for the JRA shadow decision rules.
 
-Version: v2026.07.25.1
+Version: v2026.07.25.2
 """
 
 from __future__ import annotations
 
 import unittest
 
-from jra_shadow_strategy import evaluate_snapshot
+from jra_shadow_strategy import evaluate_snapshot, format_discord
 
 
-VERSION = "v2026.07.25.1"
+VERSION = "v2026.07.25.2"
 
 
 def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict:
@@ -65,6 +65,13 @@ class StrategyTest(unittest.TestCase):
         self.assertEqual(result["bet_type"], "三連複")
         self.assertEqual(len(result["tickets"]), 3)
         self.assertEqual(result["stake_yen"], 300)
+        message = format_discord("東京1R", {
+            "p": pure, "o": odds,
+            "h": {str(i): f"馬{i}" for i in range(1, 13)},
+            "w": True, "t": "12:00",
+        }, result)
+        self.assertIn("参考・非推奨】単勝", message)
+        self.assertIn("参考・非推奨】ワイド", message)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.24.2
+Version: v2026.07.25.1
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from __future__ import annotations
 from itertools import combinations
 
 
-VERSION = "v2026.07.24.2"
+VERSION = "v2026.07.25.1"
 MARKET_BLEND_ALPHA = 0.10
 
 
@@ -123,7 +123,7 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         )
     axis = decision["axis"]
     name = decision.get("axis_name") or ""
-    return (
+    message = (
         f"🧪 JRA shadow {race_name} [{stamp}]\n"
         f"{decision['bet_type']}：{' / '.join(decision['tickets'])}"
         f"（各100円・計{decision['stake_yen']}円）\n"
@@ -133,5 +133,14 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         f"{decision['market_probability']:.1%} / 比率 "
         f"{decision['ratio']:.2f}\n"
         f"馬体重：{decision['weight_status']}\n"
-        f"⚠️ 自動購入なし・shadow検証専用\nVersion {VERSION}"
+        f"⚠️ 自動購入なし・shadow検証専用"
     )
+    message += (
+        "\n―― 人が判断する参考買い目 ――\n"
+        f"【参考・非推奨】単勝 {axis}"
+        "（ライブ計算可能条件の2025年ROI 69.2%）\n"
+        f"【参考・非推奨】ワイド "
+        f"{' / '.join(_tickets(axis, decision['partners'], 'ワイド'))}"
+        "（ライブ計算可能条件の2025年ROI 99.3%）"
+    )
+    return message + f"\nVersion {VERSION}"

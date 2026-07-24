@@ -1,13 +1,13 @@
 """Regression tests for the independent local-racing strategy.
 
-Version: v2026.07.25.3
+Version: v2026.07.25.4
 """
 
 from __future__ import annotations
 
 import unittest
 
-from local_shadow_strategy import evaluate_snapshot
+from local_shadow_strategy import evaluate_snapshot, format_discord
 
 
 class LocalStrategyTest(unittest.TestCase):
@@ -46,6 +46,15 @@ class LocalStrategyTest(unittest.TestCase):
     def test_stake_matches_ticket_count(self) -> None:
         result = evaluate_snapshot(self.base())
         self.assertEqual(result["stake_yen"], 100 * len(result["tickets"]))
+
+    def test_human_review_tickets_do_not_change_primary_bet(self) -> None:
+        snap = self.base()
+        result = evaluate_snapshot(snap)
+        original = list(result["tickets"])
+        message = format_discord("テスト1R", snap, result)
+        self.assertEqual(result["tickets"], original)
+        self.assertIn("人が判断する参考買い目", message)
+        self.assertIn("参考・非推奨】単勝", message)
 
     def test_small_field_routes_axis_to_third(self) -> None:
         snap = self.base()

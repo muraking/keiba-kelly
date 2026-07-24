@@ -4,12 +4,12 @@ The rules are frozen from the 2024-2026 OOS research. They are shadow
 recommendations, not automatic wagering rules, because the same period was
 used to discover the segments.
 
-Version: v2026.07.25.7
+Version: v2026.07.25.8
 """
 
 from __future__ import annotations
 
-VERSION = "v2026.07.25.7"
+VERSION = "v2026.07.25.8"
 
 
 def _market_probabilities(odds: dict[int, float]) -> dict[int, float]:
@@ -229,6 +229,61 @@ def evaluate_snapshot(snapshot: dict) -> dict:
     }
 
 
+def supplemental_tickets(snapshot: dict, decision: dict) -> list[dict]:
+    """Return human-review candidates without changing the primary decision."""
+    if decision.get("action") != "SHADOW_BET":
+        return []
+    pure = {int(float(k)): float(v) for k, v in snapshot.get("p", {}).items()}
+    odds = {int(float(k)): float(v) for k, v in snapshot.get("o", {}).items()}
+    common = set(pure) & set(odds)
+    market = _market_probabilities({n: odds[n] for n in common})
+    common &= set(market)
+    axis = int(decision["axis"])
+    if axis not in common:
+        return []
+    order = sorted(common, key=lambda n: (-market[n], n))
+    rank = {n: i + 1 for i, n in enumerate(order)}
+    partners = [int(n) for n in decision.get("partners", [])]
+    quality = decision.get("quality", {})
+    field = int(quality.get("field_size", len(common)))
+    favorite = float(quality.get("favorite_probability", market[order[0]]))
+    coverage = float(quality.get("coverage3", 0.0))
+    average_past = float(quality.get("average_past", 0.0))
+    ratio = pure[axis] / max(market[axis], 1e-9)
+    delta = pure[axis] - market[axis]
+    partner_sum = sum(pure.get(n, 0.0) for n in partners[:2])
+    result = []
+    if (
+        len(partners) >= 1 and field >= 12 and favorite < 0.55
+        and coverage >= 0.8 and average_past >= 5.0
+        and ratio >= 1.1 and pure[axis] >= 0.05 and delta >= 0.01
+        and 5.0 <= odds[axis] < 20.0 and rank[axis] >= 4
+        and partner_sum >= 0.55
+    ):
+        result.append({
+            "rank": "C", "bet_type": "馬連",
+            "tickets": [_pair(axis, partners[0])],
+            "evidence": "過去ROI 106.9% / LCB90 94.7%",
+        })
+    if (
+        len(partners) >= 2 and field >= 12 and favorite < 0.55
+        and coverage >= 0.8 and average_past >= 3.0
+        and ratio >= 1.25 and pure[axis] >= 0.08 and delta >= 0.02
+        and 5.0 <= odds[axis] < 30.0 and rank[axis] >= 4
+        and partner_sum >= 0.45
+    ):
+        result.append({
+            "rank": "C", "bet_type": "ワイド",
+            "tickets": [_pair(axis, n) for n in partners[:2]],
+            "evidence": "過去ROI 106.4% / LCB90 98.7%",
+        })
+    result.append({
+        "rank": "参考・非推奨", "bet_type": "単勝",
+        "tickets": [str(axis)], "evidence": "同系統の過去ROI 91.3%",
+    })
+    return result
+
+
 def format_discord(title: str, snapshot: dict, decision: dict) -> str:
     quality = decision.get("quality", {})
     base = (
@@ -242,9 +297,19 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
     axis = str(decision["axis"])
     tickets = " / ".join(decision["tickets"])
     tier = decision.get("confidence_tier", "A")
-    return (
+    message = (
         base
         + f"🕳️ 軸 {axis} {names.get(axis, '')} / {decision['bet_type']}\n"
         + f"買い目 {tickets}（各100円・計{decision['stake_yen']}円）\n"
-        + f"固定ルール {decision['rule']} / {tier}ランクshadow検証\nVersion {VERSION}"
+        + f"固定ルール {decision['rule']} / {tier}ランクshadow検証"
     )
+    extras = supplemental_tickets(snapshot, decision)
+    if extras:
+        lines = ["", "―― 人が判断する参考買い目 ――"]
+        for item in extras:
+            lines.append(
+                f"【{item['rank']}】{item['bet_type']} "
+                f"{' / '.join(item['tickets'])}（{item['evidence']}）"
+            )
+        message += "\n".join(lines)
+    return message + f"\nVersion {VERSION}"
