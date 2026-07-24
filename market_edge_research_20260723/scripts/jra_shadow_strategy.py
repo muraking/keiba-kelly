@@ -1,0 +1,139 @@
+"""Fixed JRA shadow betting rules for live probability snapshots.
+
+This module never purchases tickets. It converts a race snapshot into a
+recommendation or NO_BET and keeps the researched rules explicit.
+
+Version: v2026.07.24.1
+"""
+
+from __future__ import annotations
+
+from itertools import combinations
+
+
+VERSION = "v2026.07.24.1"
+
+
+def _market_probabilities(odds: dict[int, float]) -> dict[int, float]:
+    inverse = {num: 1.0 / value for num, value in odds.items() if value > 1.0}
+    total = sum(inverse.values())
+    return {num: value / total for num, value in inverse.items()} if total else {}
+
+
+def _tickets(axis: int, partners: list[int], bet_type: str) -> list[str]:
+    if bet_type == "単勝":
+        return [str(axis)]
+    if bet_type == "ワイド":
+        return [f"{axis}-{num}" for num in partners[:2]]
+    return [
+        f"{axis}-{left}-{right}"
+        for left, right in combinations(partners[:3], 2)
+    ]
+
+
+def evaluate_snapshot(snapshot: dict) -> dict:
+    pure = {int(k): float(v) for k, v in (snapshot.get("p") or {}).items()}
+    odds = {int(k): float(v) for k, v in (snapshot.get("o") or {}).items()}
+    names = {int(k): str(v) for k, v in (snapshot.get("h") or {}).items()}
+    market = _market_probabilities(odds)
+    common = set(pure) & set(odds) & set(market)
+    if len(common) < 6:
+        return {"action": "NO_BET", "reason": "オッズまたは指数が不足"}
+
+    market_order = sorted(common, key=lambda num: (-market[num], num))
+    rank = {num: index + 1 for index, num in enumerate(market_order)}
+    favorite_probability = market[market_order[0]]
+    candidates = []
+    for num in common:
+        ratio = pure[num] / max(market[num], 1e-9)
+        delta = pure[num] - market[num]
+        partners = sorted(
+            (other for other in pure if other != num),
+            key=lambda other: (-pure[other], other),
+        )
+        partner_sum = sum(pure[other] for other in partners[:2])
+        base = {
+            "axis": num,
+            "axis_name": names.get(num, ""),
+            "odds": odds[num],
+            "market_rank": rank[num],
+            "ai_probability": pure[num],
+            "market_probability": market[num],
+            "ratio": ratio,
+            "delta": delta,
+            "partner_sum": partner_sum,
+            "partners": partners,
+        }
+        if (
+            8 <= odds[num] < 15
+            and 3 <= rank[num] < 7
+            and favorite_probability < 0.35
+            and ratio >= 1.20
+            and partner_sum >= 0.45
+            and len(common) >= 12
+        ):
+            candidates.append({**base, "bet_type": "単勝", "priority": 3})
+        if (
+            10 <= odds[num] < 20
+            and 3 <= rank[num] < 7
+            and favorite_probability < 0.35
+            and ratio >= 1.20
+            and delta >= 0.01
+            and partner_sum >= 0.45
+        ):
+            candidates.append({**base, "bet_type": "ワイド", "priority": 2})
+        if (
+            5 <= odds[num] < 10
+            and 4 <= rank[num] < 11
+            and ratio >= 1.20
+            and partner_sum >= 0.45
+            and len(common) >= 12
+        ):
+            candidates.append({**base, "bet_type": "三連複", "priority": 1})
+
+    if not candidates:
+        return {
+            "action": "NO_BET",
+            "reason": "固定shadowルール非該当",
+            "favorite_market_probability": favorite_probability,
+        }
+    best = max(
+        candidates,
+        key=lambda row: (row["priority"], row["ratio"], row["delta"]),
+    )
+    tickets = _tickets(best["axis"], best["partners"], best["bet_type"])
+    return {
+        "action": "SHADOW_BET",
+        **best,
+        "tickets": tickets,
+        "stake_yen": 100 * len(tickets),
+        "weight_status": (
+            "取得済み（急変は別途警告対象）"
+            if snapshot.get("w") else
+            "未取得（買い確定不可）"
+        ),
+    }
+
+
+def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
+    stamp = snapshot.get("t") or "--:--"
+    if decision["action"] == "NO_BET":
+        return (
+            f"👀 JRA shadow {race_name} [{stamp}]\n"
+            f"見：{decision['reason']}\n"
+            f"Version {VERSION}"
+        )
+    axis = decision["axis"]
+    name = decision.get("axis_name") or ""
+    return (
+        f"🧪 JRA shadow {race_name} [{stamp}]\n"
+        f"{decision['bet_type']}：{' / '.join(decision['tickets'])}"
+        f"（各100円・計{decision['stake_yen']}円）\n"
+        f"軸 {axis} {name} {decision['odds']:.1f}倍 "
+        f"{decision['market_rank']}番人気\n"
+        f"AI {decision['ai_probability']:.1%} / 市場 "
+        f"{decision['market_probability']:.1%} / 比率 "
+        f"{decision['ratio']:.2f}\n"
+        f"馬体重：{decision['weight_status']}\n"
+        f"⚠️ 自動購入なし・shadow検証専用\nVersion {VERSION}"
+    )
