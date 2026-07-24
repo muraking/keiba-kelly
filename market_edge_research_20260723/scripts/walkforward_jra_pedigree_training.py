@@ -4,7 +4,7 @@ Training features use only pre-race workout fields. The scraped result field is
 never used. Pedigree rates are expanding statistics shifted by one row, so only
 results known before each race contribute.
 
-Version: v2026.07.24.3
+Version: v2026.07.24.4
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import pandas as pd
 import walkforward_market_edge as base
 
 
-VERSION = "v2026.07.24.3"
+VERSION = "v2026.07.24.4"
 
 
 def workout_features(training_path: Path) -> pd.DataFrame:
@@ -164,7 +164,14 @@ def augment(
 
 
 def feature_columns(df: pd.DataFrame) -> list[str]:
-    drop = base.ID_COLS | base.LABEL_COLS | base.EVAL_COLS
+    # The structural model must be computable before odds exist. Market odds
+    # are used only after prediction to measure the live market difference.
+    drop = (
+        base.ID_COLS
+        | base.LABEL_COLS
+        | base.EVAL_COLS
+        | base.MARKET_DERIVED_COLS
+    )
     return [
         col for col in df.columns
         if col not in drop

@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.24.1
+Version: v2026.07.24.2
 """
 
 from __future__ import annotations
@@ -11,7 +11,8 @@ from __future__ import annotations
 from itertools import combinations
 
 
-VERSION = "v2026.07.24.1"
+VERSION = "v2026.07.24.2"
+MARKET_BLEND_ALPHA = 0.10
 
 
 def _market_probabilities(odds: dict[int, float]) -> dict[int, float]:
@@ -40,71 +41,68 @@ def evaluate_snapshot(snapshot: dict) -> dict:
     if len(common) < 6:
         return {"action": "NO_BET", "reason": "オッズまたは指数が不足"}
 
+    raw_combo = {
+        num: (
+            market[num] ** (1.0 - MARKET_BLEND_ALPHA)
+            * pure[num] ** MARKET_BLEND_ALPHA
+        )
+        for num in common
+    }
+    combo_total = sum(raw_combo.values())
+    combo = {num: value / combo_total for num, value in raw_combo.items()}
     market_order = sorted(common, key=lambda num: (-market[num], num))
     rank = {num: index + 1 for index, num in enumerate(market_order)}
     favorite_probability = market[market_order[0]]
-    candidates = []
-    for num in common:
-        ratio = pure[num] / max(market[num], 1e-9)
-        delta = pure[num] - market[num]
-        partners = sorted(
-            (other for other in pure if other != num),
-            key=lambda other: (-pure[other], other),
-        )
-        partner_sum = sum(pure[other] for other in partners[:2])
-        base = {
-            "axis": num,
-            "axis_name": names.get(num, ""),
-            "odds": odds[num],
-            "market_rank": rank[num],
-            "ai_probability": pure[num],
-            "market_probability": market[num],
-            "ratio": ratio,
-            "delta": delta,
-            "partner_sum": partner_sum,
-            "partners": partners,
-        }
-        if (
-            8 <= odds[num] < 15
-            and 3 <= rank[num] < 7
-            and favorite_probability < 0.35
-            and ratio >= 1.20
-            and partner_sum >= 0.45
-            and len(common) >= 12
-        ):
-            candidates.append({**base, "bet_type": "単勝", "priority": 3})
-        if (
-            10 <= odds[num] < 20
-            and 3 <= rank[num] < 7
-            and favorite_probability < 0.35
-            and ratio >= 1.20
-            and delta >= 0.01
-            and partner_sum >= 0.45
-        ):
-            candidates.append({**base, "bet_type": "ワイド", "priority": 2})
-        if (
-            5 <= odds[num] < 10
-            and 4 <= rank[num] < 11
-            and ratio >= 1.20
-            and partner_sum >= 0.45
-            and len(common) >= 12
-        ):
-            candidates.append({**base, "bet_type": "三連複", "priority": 1})
-
-    if not candidates:
+    axes = [
+        num for num in common
+        if 4 <= odds[num] < 20 and 2 <= rank[num] <= 10
+    ]
+    if not axes:
+        return {"action": "NO_BET", "reason": "中穴軸候補なし"}
+    axis = max(
+        axes,
+        key=lambda num: (
+            pure[num] - market[num],
+            pure[num],
+            -odds[num],
+        ),
+    )
+    partners = sorted(
+        (other for other in common if other != axis),
+        key=lambda other: (-combo[other], other),
+    )
+    ratio = pure[axis] / max(market[axis], 1e-9)
+    delta = pure[axis] - market[axis]
+    partner_sum = sum(combo[other] for other in partners[:2])
+    eligible = (
+        10 <= odds[axis] < 20
+        and 3 <= rank[axis] < 7
+        and favorite_probability < 0.35
+        and ratio >= 1.00
+        and delta >= 0.02
+        and partner_sum >= 0.45
+        and len(common) >= 12
+    )
+    if not eligible:
         return {
             "action": "NO_BET",
-            "reason": "固定shadowルール非該当",
+            "reason": "独立指数の固定三連複ルール非該当",
             "favorite_market_probability": favorite_probability,
         }
-    best = max(
-        candidates,
-        key=lambda row: (row["priority"], row["ratio"], row["delta"]),
-    )
-    tickets = _tickets(best["axis"], best["partners"], best["bet_type"])
+    tickets = _tickets(axis, partners, "三連複")
     return {
         "action": "SHADOW_BET",
-        **best,
+        "axis": axis,
+        "axis_name": names.get(axis, ""),
+        "odds": odds[axis],
+        "market_rank": rank[axis],
+        "ai_probability": pure[axis],
+        "market_probability": market[axis],
+        "ratio": ratio,
+        "delta": delta,
+        "partner_sum": partner_sum,
+        "partners": partners,
+        "bet_type": "三連複",
         "tickets": tickets,
         "stake_yen": 100 * len(tickets),
         "weight_status": (
