@@ -4,7 +4,7 @@ The service is deliberately separate from keiba_ai.live_probs. It can launch
 the existing JRA monitor, watches its forward archive, and sends one shadow
 decision per newly archived JRA race. It never purchases tickets.
 
-Version: v2026.07.24.2
+Version: v2026.07.24.3
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from jra_shadow_strategy import VERSION as STRATEGY_VERSION
 from jra_shadow_strategy import evaluate_snapshot, format_discord
 
 
-VERSION = "v2026.07.24.2"
+VERSION = "v2026.07.24.3"
 JST = timezone(timedelta(hours=9))
 JRA_VENUES = {
     "札幌", "函館", "福島", "新潟", "東京",
@@ -69,6 +69,25 @@ def run_preday(python: str, workdir: Path, target: str, dry_run: bool) -> int:
     if dry_run:
         command.append("--dry")
     return subprocess.run(command, cwd=workdir, check=False).returncode
+
+
+def start_live_monitor(
+    python: str,
+    workdir: Path,
+    dry_run: bool,
+    live_once: bool,
+) -> subprocess.Popen:
+    """Start the existing index engine as a managed, JRA-only child process."""
+    command = [
+        python, "-X", "utf8", "-m", "keiba_ai.live_probs", "--jra",
+        "--no-webhook4", "--no-webhook6", "--no-webhook7",
+    ]
+    if dry_run:
+        command.append("--dry")
+    if live_once:
+        command.extend(("--once", "--limit", "1"))
+    print(f"starting managed JRA index engine: {' '.join(command)}", flush=True)
+    return subprocess.Popen(command, cwd=workdir)
 
 
 def watch(
@@ -122,7 +141,7 @@ def watch(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("preday", "watch"), required=True)
+    parser.add_argument("--mode", choices=("preday", "watch", "run"), required=True)
     parser.add_argument("--date")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--workdir", type=Path, default=Path.cwd())
@@ -132,6 +151,7 @@ def main() -> None:
     parser.add_argument("--stop-after", default="17:30")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--once", action="store_true")
+    parser.add_argument("--live-once", action="store_true")
     args = parser.parse_args()
     today = datetime.now(JST)
     target = args.date or (
@@ -148,16 +168,29 @@ def main() -> None:
         or os.getenv("DISCORD_WEBHOOK_PREDAY")
         or ""
     )
-    watch(
-        args.data_dir,
-        target,
-        webhook,
-        args.state,
-        max(5, args.interval),
-        args.dry_run,
-        args.stop_after,
-        args.once,
-    )
+    child = None
+    try:
+        if args.mode == "run":
+            child = start_live_monitor(
+                args.python, args.workdir, args.dry_run, args.live_once
+            )
+        watch(
+            args.data_dir,
+            target,
+            webhook,
+            args.state,
+            max(5, args.interval),
+            args.dry_run,
+            args.stop_after,
+            args.once,
+        )
+    finally:
+        if child is not None and child.poll() is None:
+            child.terminate()
+            try:
+                child.wait(timeout=20)
+            except subprocess.TimeoutExpired:
+                child.kill()
 
 
 if __name__ == "__main__":

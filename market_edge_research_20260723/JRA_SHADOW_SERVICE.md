@@ -1,8 +1,8 @@
 # JRA shadow通知サービス
 
-Version: v2026.07.24.1
+Version: v2026.07.24.2
 
-既存の本番指数と`keiba_ai.live_probs`を変更せず、前日指数と発走前の固定買いルールをDiscordへ通知する検証サービスです。自動購入は行いません。
+既存の本番指数と`keiba_ai.live_probs`を変更せず、前日指数と発走前の固定買いルールをDiscordへ通知する検証サービスです。自動購入は行いません。`run`モードでは必要な指数生成エンジンを子プロセスとして自動起動するため、利用者が`live_probs`を別に起動しておく必要はありません。
 
 ## 前日指数
 
@@ -18,13 +18,15 @@ python -X utf8 market_edge_research_20260723/scripts/jra_shadow_service.py `
 
 ## 発走前shadow買い目
 
-既存`live_probs`が発走前に保存する`ai_live_archive_YYYY_MM.json`を監視します。
+通常は次の`run`モードを使います。JRAだけの指数生成エンジンを自動起動し、通常のDiscord通知を抑止したうえで、shadowサービスの判定だけを送信します。
 
 ```powershell
 python -X utf8 market_edge_research_20260723/scripts/jra_shadow_service.py `
-  --mode watch --data-dir C:\keiba\data `
+  --mode run --workdir C:\keiba --data-dir C:\keiba\data `
   --state C:\keiba\data\jra_shadow_state.json
 ```
+
+すでに別のプロセスがライブアーカイブを生成している場合だけ、`--mode watch`を使用します。
 
 買い目専用Discordには`DISCORD_WEBHOOK_JRA_SHADOW`を設定します。未設定時は
 `DISCORD_WEBHOOK7`、`DISCORD_WEBHOOK_PREDAY`の順にフォールバックします。
@@ -42,3 +44,12 @@ python -X utf8 market_edge_research_20260723/scripts/jra_shadow_service.py `
 - 三連複3点：5〜10倍、4〜10番人気、12頭以上、市場比1.20以上
 
 条件外は`見`です。最終オッズではなく実取得時点のオッズでshadow成績を蓄積します。
+
+## VPS自動起動
+
+VPSには次のWindowsタスクを登録します。
+
+- `KeibaKelly-JRA-Shadow-Live`：毎日8:30に単独`run`モードを起動
+- `KeibaKelly-JRA-Shadow-Preday`：毎日18:30に翌日分の前日指数を通知
+
+JRA非開催日は対象レースなしで終了します。
