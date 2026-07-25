@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.25.3
+Version: v2026.07.25.4
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket
 
 
-VERSION = "v2026.07.25.3"
+VERSION = "v2026.07.25.4"
 MARKET_BLEND_ALPHA = 0.10
 
 
@@ -31,6 +31,29 @@ def _tickets(axis: int, partners: list[int], bet_type: str) -> list[str]:
         f"{axis}-{left}-{right}"
         for left, right in combinations(partners[:3], 2)
     ]
+
+
+def _latest_index_block(snapshot: dict) -> str:
+    """Format the seven-minute probability/odds/EV board for Discord."""
+    pure = {int(key): float(value) for key, value in (snapshot.get("p") or {}).items()}
+    odds = {int(key): float(value) for key, value in (snapshot.get("o") or {}).items()}
+    names = {int(key): str(value) for key, value in (snapshot.get("h") or {}).items()}
+    order = sorted(pure, key=lambda number: (-pure[number], number))
+    high_probability = set(order[:3])
+    lines = ["―― 7分前最新指数 ――"]
+    for number in order:
+        price = odds.get(number)
+        expected_value = pure[number] * price * 100 if price and price > 0 else None
+        checked = number in high_probability and expected_value is not None and expected_value >= 100
+        prefix = "✅" if checked else "　"
+        odds_text = f"{price:.1f}倍" if price is not None else "未取得"
+        ev_text = f"{expected_value:.1f}" if expected_value is not None else "―"
+        lines.append(
+            f"{prefix}{circled(number)} {names.get(number, '')} "
+            f"勝率{pure[number]:.1%} / {odds_text} / 期待値{ev_text}"
+        )
+    lines.append("✅＝期待値100以上かつAI勝率上位3頭")
+    return "\n".join(lines)
 
 
 def evaluate_snapshot(snapshot: dict) -> dict:
@@ -150,10 +173,12 @@ def evaluate_snapshot(snapshot: dict) -> dict:
 
 def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
     stamp = snapshot.get("t") or "--:--"
+    latest_index = _latest_index_block(snapshot)
     if decision["action"] == "NO_BET":
         return (
             f"👀 JRA shadow {race_name} [{stamp}]\n"
             f"見：{decision['reason']}\n"
+            f"{latest_index}\n"
             f"Version {VERSION}"
         )
     axis = decision["axis"]
@@ -176,6 +201,7 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         return (
             message
             + f"\n条件：{decision.get('rule', '構造指数候補')}"
+            + f"\n{latest_index}"
             + f"\nVersion {VERSION}"
         )
     message += (
@@ -186,4 +212,4 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         f"{' / '.join(circled_ticket(ticket) for ticket in _tickets(axis, decision['partners'], 'ワイド'))}"
         "（ライブ計算可能条件の2025年ROI 99.3%）"
     )
-    return message + f"\nVersion {VERSION}"
+    return message + f"\n{latest_index}\nVersion {VERSION}"

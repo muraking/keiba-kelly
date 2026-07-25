@@ -1,6 +1,6 @@
 """Regression tests for the JRA shadow decision rules.
 
-Version: v2026.07.25.3
+Version: v2026.07.25.4
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ import unittest
 from jra_shadow_strategy import evaluate_snapshot, format_discord
 
 
-VERSION = "v2026.07.25.3"
+VERSION = "v2026.07.25.4"
 
 
 def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict:
@@ -33,8 +33,12 @@ def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict
 
 class StrategyTest(unittest.TestCase):
     def test_missing_odds_is_no_bet(self) -> None:
-        result = evaluate_snapshot({"p": {"1": 1.0}, "o": {}})
+        snap = {"p": {"1": 1.0}, "o": {}, "h": {"1": "馬1"}}
+        result = evaluate_snapshot(snap)
         self.assertEqual(result["action"], "NO_BET")
+        message = format_discord("東京1R", snap, result)
+        self.assertIn("7分前最新指数", message)
+        self.assertIn("勝率100.0% / 未取得 / 期待値―", message)
 
     def test_private_context_returns_anonymous_c_rank_win(self) -> None:
         snap = snapshot(12.0, 0.18)
@@ -55,6 +59,8 @@ class StrategyTest(unittest.TestCase):
         message = format_discord("東京1R", snap, result)
         self.assertIn("【Cランク】", message)
         self.assertIn("単勝：②", message)
+        self.assertIn("勝率20.0% / 8.0倍 / 期待値160.0", message)
+        self.assertIn("✅②", message)
         self.assertNotIn("イルカ", message)
 
     def test_never_returns_unknown_action(self) -> None:
@@ -93,6 +99,8 @@ class StrategyTest(unittest.TestCase):
         }, result)
         self.assertIn("参考・非推奨】単勝", message)
         self.assertIn("参考・非推奨】ワイド", message)
+        self.assertIn("7分前最新指数", message)
+        self.assertIn("期待値", message)
 
 
 if __name__ == "__main__":
