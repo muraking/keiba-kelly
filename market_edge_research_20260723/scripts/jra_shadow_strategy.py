@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.25.5
+Version: v2026.07.25.6
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket
 
 
-VERSION = "v2026.07.25.5"
+VERSION = "v2026.07.25.6"
 MARKET_BLEND_ALPHA = 0.10
 
 
@@ -46,15 +46,15 @@ def _latest_index_block(snapshot: dict) -> str:
         price = odds.get(number)
         expected_value = pure[number] * price * 100 if price and price > 0 else None
         checked = number in high_probability and expected_value is not None and expected_value >= 100
-        prefix = "✅" if checked else "　"
+        suffix = " ✅" if checked else ""
         odds_text = f"{price:.1f}倍" if price is not None else "未取得"
         ev_text = f"{expected_value:.1f}" if expected_value is not None else "―"
         lines.append(
-            f"{prefix}{circled(number)} {names.get(number, '')} "
-            f"[{styles.get(number, '？')}] 勝率{pure[number]:.1%} / "
-            f"{odds_text} / 期待値{ev_text}"
+            f"{circled(number)} {names.get(number, '')} "
+            f"[{styles.get(number, '？')}] WP{pure[number]:.1%} / "
+            f"{odds_text} / EV{ev_text}{suffix}"
         )
-    lines.append("✅＝期待値100以上かつAI勝率上位3頭")
+    lines.append("✅＝EV100以上かつWP上位3頭")
     return "\n".join(lines)
 
 

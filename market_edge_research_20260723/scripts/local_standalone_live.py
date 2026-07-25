@@ -3,7 +3,7 @@
 This service does not import or launch keiba_ai.live_probs. It directly uses
 the low-level local card parser and structural feature builder.
 
-Version: v2026.07.25.11
+Version: v2026.07.25.12
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ from local_shadow_strategy import evaluate_snapshot, format_discord
 from standalone_display import circled, pace_lines, relative_styles
 
 
-VERSION = "v2026.07.25.11"
+VERSION = "v2026.07.25.12"
 MAX_TRAIN_ROWS = 350_000
 MAX_RUN_ROWS = 200_000
 MODEL_CACHE_VERSION = 1
