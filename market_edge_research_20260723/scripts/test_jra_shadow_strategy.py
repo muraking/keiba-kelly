@@ -1,6 +1,6 @@
 """Regression tests for the JRA shadow decision rules.
 
-Version: v2026.07.25.4
+Version: v2026.07.25.5
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ import unittest
 from jra_shadow_strategy import evaluate_snapshot, format_discord
 
 
-VERSION = "v2026.07.25.4"
+VERSION = "v2026.07.25.5"
 
 
 def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict:
@@ -26,6 +26,10 @@ def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict
         "p": probability,
         "o": odds,
         "h": {str(i): f"馬{i}" for i in range(1, field + 1)},
+        "s": {
+            str(i): ("逃" if i <= 2 else "先" if i <= 4 else "差" if i <= 8 else "追")
+            for i in range(1, field + 1)
+        },
         "w": True,
         "t": "12:00",
     }
@@ -61,6 +65,7 @@ class StrategyTest(unittest.TestCase):
         self.assertIn("単勝：②", message)
         self.assertIn("勝率20.0% / 8.0倍 / 期待値160.0", message)
         self.assertIn("✅②", message)
+        self.assertIn("[逃]", message)
         self.assertNotIn("イルカ", message)
 
     def test_never_returns_unknown_action(self) -> None:
@@ -95,12 +100,14 @@ class StrategyTest(unittest.TestCase):
         message = format_discord("東京1R", {
             "p": pure, "o": odds,
             "h": {str(i): f"馬{i}" for i in range(1, 13)},
+            "s": {str(i): "差" for i in range(1, 13)},
             "w": True, "t": "12:00",
         }, result)
         self.assertIn("参考・非推奨】単勝", message)
         self.assertIn("参考・非推奨】ワイド", message)
         self.assertIn("7分前最新指数", message)
         self.assertIn("期待値", message)
+        self.assertIn("[差]", message)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 This service does not import or launch keiba_ai.live_probs. It directly uses
 the low-level local card parser and structural feature builder.
 
-Version: v2026.07.25.10
+Version: v2026.07.25.11
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ from local_shadow_strategy import evaluate_snapshot, format_discord
 from standalone_display import circled, pace_lines, relative_styles
 
 
-VERSION = "v2026.07.25.10"
+VERSION = "v2026.07.25.11"
 MAX_TRAIN_ROWS = 350_000
 MAX_RUN_ROWS = 200_000
 MODEL_CACHE_VERSION = 1
@@ -56,6 +56,36 @@ def discord_send(webhook: str, message: str, dry_run: bool) -> None:
         raise RuntimeError("LOCAL_STANDALONE_WEBHOOK または DISCORD_WEBHOOK7 が未設定")
     response = requests.post(webhook, json={"content": message[:1990]}, timeout=15)
     response.raise_for_status()
+
+
+def discord_send_7(
+    webhook: str, webhook4: str, message: str, dry_run: bool
+) -> None:
+    """Send only the seven-minute notification to primary and WEBHOOK4."""
+    targets = list(dict.fromkeys(target for target in (webhook, webhook4) if target))
+    if dry_run:
+        discord_send(webhook, message, True)
+        return
+    if not targets:
+        discord_send("", message, False)
+        return
+    for target in targets:
+        discord_send(target, message, False)
+
+
+def read_env_value(path: Path, *names: str) -> str:
+    """Read selected values from a simple .env file without logging secrets."""
+    if not path.exists():
+        return ""
+    wanted = set(names)
+    for raw_line in path.read_text(encoding="utf-8-sig").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        if key.strip() in wanted:
+            return value.strip().strip("\"'")
+    return ""
 
 
 def fetch_card(session, race_id: str) -> tuple[dict, list[dict]]:
@@ -407,7 +437,7 @@ def preday(
 
 def live_run(
     session, schedule: dict, date_iso: str, bundle: dict,
-    webhook: str, state_path: Path, dry_run: bool, once: bool,
+    webhook: str, webhook4: str, state_path: Path, dry_run: bool, once: bool,
 ) -> None:
     state = load_state(state_path, date_iso)
     notified_30 = {
@@ -455,7 +485,10 @@ def live_run(
                     snapshot["t"] = datetime.now(JST).strftime("%H:%M")
                     decision = evaluate_snapshot(snapshot)
                     title = f"{meta['venue']}{meta['race_num']}R"
-                    discord_send(webhook, format_discord(title, snapshot, decision), dry_run)
+                    discord_send_7(
+                        webhook, webhook4,
+                        format_discord(title, snapshot, decision), dry_run,
+                    )
                     state["races"].setdefault(race_id, {})["t7"] = {
                         "snapshot": snapshot, "decision": decision,
                     }
@@ -464,8 +497,8 @@ def live_run(
                 elif not once and now >= post + timedelta(minutes=3):
                     reason = "index unavailable" if not snapshot else "odds unavailable"
                     decision = {"action": "NO_BET", "reason": reason}
-                    discord_send(
-                        webhook,
+                    discord_send_7(
+                        webhook, webhook4,
                         f"地方独立指数 {meta['venue']}{meta['race_num']}R\n"
                         f"👀 見: {reason}\nVersion {VERSION}",
                         dry_run,
@@ -505,6 +538,11 @@ def main() -> None:
     )
     if not webhook and args.webhook_file and args.webhook_file.exists():
         webhook = args.webhook_file.read_text(encoding="utf-8").strip()
+    webhook4 = (
+        os.getenv("WEBHOOK4")
+        or os.getenv("DISCORD_WEBHOOK4")
+        or read_env_value(args.data_dir.parent / ".env", "WEBHOOK4", "DISCORD_WEBHOOK4")
+    )
     session = make_session()
     schedule = build_schedule(session, date_iso)
     if args.limit > 0:
@@ -527,7 +565,7 @@ def main() -> None:
         preday(session, schedule, date_iso, bundle, webhook, args.state, args.dry_run)
     else:
         live_run(
-            session, schedule, date_iso, bundle, webhook,
+            session, schedule, date_iso, bundle, webhook, webhook4,
             args.state, args.dry_run, args.once,
         )
 

@@ -1,6 +1,6 @@
 # JRA shadow通知サービス
 
-Version: v2026.07.25.6
+Version: v2026.07.25.7
 
 既存の本番指数と`keiba_ai.live_probs`を変更せず、血統・調教込みの独立指数と固定買いルールをDiscordへ通知する検証サービスです。`live_probs`のimport・起動・アーカイブ監視は行わず、自動購入もしません。
 
@@ -33,7 +33,9 @@ python -X utf8 market_edge_research_20260723/scripts/jra_standalone_live.py `
 
 発走7分前の通知は、買い・見のどちらでも全頭の最新指数を表示します。
 各馬にAI勝率、その時点の単勝オッズ、`AI勝率×単勝オッズ×100`の期待値を併記し、
-期待値100以上かつAI勝率上位3頭には`✅`を付けます。
+脚質（逃・先・差・追）も表示します。期待値100以上かつAI勝率上位3頭には`✅`を付けます。
+7分前通知だけは専用Webhookに加えて`WEBHOOK4`（未設定時は`DISCORD_WEBHOOK4`）にも送り、
+同一URLの場合は重複送信しません。
 
 専用Discordには`JRA_STANDALONE_WEBHOOK`を設定します。未設定時は
 `DISCORD_WEBHOOK7`、`DISCORD_WEBHOOK_PREDAY`の順にフォールバックします。

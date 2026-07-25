@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.25.4
+Version: v2026.07.25.5
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket
 
 
-VERSION = "v2026.07.25.4"
+VERSION = "v2026.07.25.5"
 MARKET_BLEND_ALPHA = 0.10
 
 
@@ -38,6 +38,7 @@ def _latest_index_block(snapshot: dict) -> str:
     pure = {int(key): float(value) for key, value in (snapshot.get("p") or {}).items()}
     odds = {int(key): float(value) for key, value in (snapshot.get("o") or {}).items()}
     names = {int(key): str(value) for key, value in (snapshot.get("h") or {}).items()}
+    styles = {int(key): str(value) for key, value in (snapshot.get("s") or {}).items()}
     order = sorted(pure, key=lambda number: (-pure[number], number))
     high_probability = set(order[:3])
     lines = ["―― 7分前最新指数 ――"]
@@ -50,7 +51,8 @@ def _latest_index_block(snapshot: dict) -> str:
         ev_text = f"{expected_value:.1f}" if expected_value is not None else "―"
         lines.append(
             f"{prefix}{circled(number)} {names.get(number, '')} "
-            f"勝率{pure[number]:.1%} / {odds_text} / 期待値{ev_text}"
+            f"[{styles.get(number, '？')}] 勝率{pure[number]:.1%} / "
+            f"{odds_text} / 期待値{ev_text}"
         )
     lines.append("✅＝期待値100以上かつAI勝率上位3頭")
     return "\n".join(lines)
