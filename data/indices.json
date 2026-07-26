@@ -42033,6 +42033,63 @@
               "fuku_min": 11.0,
               "fuku_max": 16.2
             }
+          },
+          "4": {
+            "1": {
+              "tan": 6.3,
+              "fuku_min": 1.7,
+              "fuku_max": 2.5
+            },
+            "2": {
+              "tan": 68.7,
+              "fuku_min": 13.0,
+              "fuku_max": 21.2
+            },
+            "3": {
+              "tan": 90.6,
+              "fuku_min": 11.6,
+              "fuku_max": 18.9
+            },
+            "4": {
+              "tan": 6.1,
+              "fuku_min": 2.0,
+              "fuku_max": 3.0
+            },
+            "5": {
+              "tan": 7.0,
+              "fuku_min": 1.7,
+              "fuku_max": 2.5
+            },
+            "6": {
+              "tan": 7.8,
+              "fuku_min": 2.0,
+              "fuku_max": 3.0
+            },
+            "7": {
+              "tan": 49.7,
+              "fuku_min": 5.8,
+              "fuku_max": 9.5
+            },
+            "8": {
+              "tan": 28.6,
+              "fuku_min": 6.1,
+              "fuku_max": 9.9
+            },
+            "9": {
+              "tan": 2.7,
+              "fuku_min": 1.2,
+              "fuku_max": 1.4
+            },
+            "10": {
+              "tan": 5.9,
+              "fuku_min": 1.6,
+              "fuku_max": 2.3
+            },
+            "11": {
+              "tan": 23.7,
+              "fuku_min": 5.4,
+              "fuku_max": 8.8
+            }
           }
         },
         "中京(日)": {
@@ -42147,7 +42204,7 @@
           }
         }
       },
-      "jra_odds_updated": "2026-07-26T11:13:30.469751+09:00"
+      "jra_odds_updated": "2026-07-26T11:23:32.447441+09:00"
     }
   },
   "_settings": {
