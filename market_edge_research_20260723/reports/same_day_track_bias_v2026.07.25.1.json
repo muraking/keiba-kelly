@@ -1,0 +1,2860 @@
+{
+  "local": {
+    "version": "v2026.07.25.1",
+    "circuit": "local",
+    "rows": 346838,
+    "stable_rules": [
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1261,
+            "hits": 156,
+            "hit_rate": 12.371134020618557,
+            "roi": 84.54401268834259,
+            "max_payout_share": 0.028421348841572085,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1546,
+            "hits": 234,
+            "hit_rate": 15.135834411384216,
+            "roi": 103.55756791720569,
+            "max_payout_share": 0.023173016864459713,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 698,
+            "hits": 111,
+            "hit_rate": 15.902578796561603,
+            "roi": 103.35243553008596,
+            "max_payout_share": 0.040338231217077906,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      }
+    ],
+    "rules": [
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2248,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 2560,
+            "hits": 48,
+            "hit_rate": 1.875,
+            "roi": 27.484375,
+            "max_payout_share": 0.06225127913587265,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1228,
+            "hits": 8,
+            "hit_rate": 0.6514657980456027,
+            "roi": 8.412052117263844,
+            "max_payout_share": 0.21684414327202323,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2248,
+            "hits": 118,
+            "hit_rate": 5.249110320284697,
+            "roi": 76.21886120996442,
+            "max_payout_share": 0.03951208124197502,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 2560,
+            "hits": 163,
+            "hit_rate": 6.3671875,
+            "roi": 105.68359375,
+            "max_payout_share": 0.03186102384032526,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1228,
+            "hits": 67,
+            "hit_rate": 5.456026058631922,
+            "roi": 79.28338762214983,
+            "max_payout_share": 0.08114215283483978,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2248,
+            "hits": 311,
+            "hit_rate": 13.834519572953738,
+            "roi": 82.52669039145908,
+            "max_payout_share": 0.01633247089262613,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 2560,
+            "hits": 396,
+            "hit_rate": 15.46875,
+            "roi": 99.66796875,
+            "max_payout_share": 0.014540466392318244,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1228,
+            "hits": 188,
+            "hit_rate": 15.309446254071663,
+            "roi": 89.89413680781759,
+            "max_payout_share": 0.026361083431470242,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2248,
+            "hits": 106,
+            "hit_rate": 4.715302491103203,
+            "roi": 73.16281138790035,
+            "max_payout_share": 0.0292454550981942,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 2560,
+            "hits": 138,
+            "hit_rate": 5.390625,
+            "roi": 93.22265625,
+            "max_payout_share": 0.06783993295621203,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1228,
+            "hits": 64,
+            "hit_rate": 5.211726384364821,
+            "roi": 84.06351791530945,
+            "max_payout_share": 0.038554683715974036,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 4496,
+            "hits": 24,
+            "hit_rate": 1.0676156583629894,
+            "roi": 112.23532028469751,
+            "max_payout_share": 0.12151958938586235,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 5120,
+            "hits": 26,
+            "hit_rate": 1.015625,
+            "roi": 90.65234375,
+            "max_payout_share": 0.23391649071400872,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 2456,
+            "hits": 16,
+            "hit_rate": 1.3029315960912053,
+            "roi": 82.70765472312704,
+            "max_payout_share": 0.10121597006842908,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 4496,
+            "hits": 33,
+            "hit_rate": 1.4679715302491103,
+            "roi": 56.17437722419929,
+            "max_payout_share": 0.08144599303135888,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 5120,
+            "hits": 33,
+            "hit_rate": 1.2890625,
+            "roi": 65.212890625,
+            "max_payout_share": 0.19482464284644643,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 2456,
+            "hits": 15,
+            "hit_rate": 1.221498371335505,
+            "roi": 72.90309446254072,
+            "max_payout_share": 0.28606534487573304,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 4496,
+            "hits": 49,
+            "hit_rate": 2.179715302491103,
+            "roi": 63.25845195729537,
+            "max_payout_share": 0.06589079146302873,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 5120,
+            "hits": 79,
+            "hit_rate": 3.0859375,
+            "roi": 90.92578125,
+            "max_payout_share": 0.0628087812003265,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 2456,
+            "hits": 33,
+            "hit_rate": 2.687296416938111,
+            "roi": 87.05618892508143,
+            "max_payout_share": 0.0924185024086806,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2650,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 3042,
+            "hits": 54,
+            "hit_rate": 2.109375,
+            "roi": 27.79421433267587,
+            "max_payout_share": 0.06150206978119456,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1444,
+            "hits": 8,
+            "hit_rate": 0.6514657980456027,
+            "roi": 7.153739612188366,
+            "max_payout_share": 0.21684414327202323,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2649,
+            "hits": 146,
+            "hit_rate": 6.494661921708185,
+            "roi": 83.81275953189883,
+            "max_payout_share": 0.03274479776596703,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 3042,
+            "hits": 190,
+            "hit_rate": 7.421875,
+            "roi": 103.06706114398423,
+            "max_payout_share": 0.027493381813542564,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1444,
+            "hits": 79,
+            "hit_rate": 6.4332247557003255,
+            "roi": 80.78947368421052,
+            "max_payout_share": 0.06771815532316132,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2649,
+            "hits": 368,
+            "hit_rate": 16.370106761565836,
+            "roi": 87.31974329935824,
+            "max_payout_share": 0.014482728805499114,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 3042,
+            "hits": 456,
+            "hit_rate": 17.8125,
+            "roi": 97.53780407626562,
+            "max_payout_share": 0.012503791581005022,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1444,
+            "hits": 206,
+            "hit_rate": 16.775244299674267,
+            "roi": 84.5360110803324,
+            "max_payout_share": 0.02383878102727943,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 2648,
+            "hits": 129,
+            "hit_rate": 5.738434163701068,
+            "roi": 79.8262839879154,
+            "max_payout_share": 0.027911817579714258,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 3040,
+            "hits": 156,
+            "hit_rate": 6.09375,
+            "roi": 88.0592105263158,
+            "max_payout_share": 0.06047814717967875,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 1443,
+            "hits": 71,
+            "hit_rate": 5.781758957654723,
+            "roi": 79.97920997920997,
+            "max_payout_share": 0.03448574646911013,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 5300,
+            "hits": 34,
+            "hit_rate": 1.5124555160142348,
+            "roi": 122.3754716981132,
+            "max_payout_share": 0.09454354831249326,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 6084,
+            "hits": 32,
+            "hit_rate": 1.25,
+            "roi": 95.56870479947403,
+            "max_payout_share": 0.1867260594386351,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 2888,
+            "hits": 17,
+            "hit_rate": 1.3843648208469055,
+            "roi": 73.9404432132964,
+            "max_payout_share": 0.09628172707689425,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 5300,
+            "hits": 39,
+            "hit_rate": 1.7348754448398576,
+            "roi": 74.37169811320756,
+            "max_payout_share": 0.139381485146003,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 6084,
+            "hits": 38,
+            "hit_rate": 1.484375,
+            "roi": 61.60749506903353,
+            "max_payout_share": 0.1735499706525799,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 2888,
+            "hits": 19,
+            "hit_rate": 1.5472312703583062,
+            "roi": 75.2112188365651,
+            "max_payout_share": 0.23580866442613138,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 2248,
+            "bets": 5300,
+            "hits": 56,
+            "hit_rate": 2.491103202846975,
+            "roi": 66.22075471698113,
+            "max_payout_share": 0.055731259081972816,
+            "front_races": 2248,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 2560,
+            "bets": 6084,
+            "hits": 86,
+            "hit_rate": 3.359375,
+            "roi": 80.9171597633136,
+            "max_payout_share": 0.0593946780418444,
+            "front_races": 2560,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 1228,
+            "bets": 2888,
+            "hits": 35,
+            "hit_rate": 2.8501628664495113,
+            "roi": 77.5207756232687,
+            "max_payout_share": 0.08826156869751653,
+            "front_races": 1228,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1261,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1546,
+            "hits": 24,
+            "hit_rate": 1.5523932729624839,
+            "roi": 22.917205692108666,
+            "max_payout_share": 0.12362404741744284,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 698,
+            "hits": 5,
+            "hit_rate": 0.7163323782234957,
+            "roi": 7.951289398280801,
+            "max_payout_share": 0.3045045045045045,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1261,
+            "hits": 49,
+            "hit_rate": 3.8858049167327517,
+            "roi": 68.16019032513879,
+            "max_payout_share": 0.07876672484002327,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1546,
+            "hits": 90,
+            "hit_rate": 5.821474773609314,
+            "roi": 97.36739974126779,
+            "max_payout_share": 0.05726433269115791,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 698,
+            "hits": 37,
+            "hit_rate": 5.300859598853868,
+            "roi": 87.69340974212034,
+            "max_payout_share": 0.12906387845123346,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1261,
+            "hits": 156,
+            "hit_rate": 12.371134020618557,
+            "roi": 84.54401268834259,
+            "max_payout_share": 0.028421348841572085,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1546,
+            "hits": 234,
+            "hit_rate": 15.135834411384216,
+            "roi": 103.55756791720569,
+            "max_payout_share": 0.023173016864459713,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 698,
+            "hits": 111,
+            "hit_rate": 15.902578796561603,
+            "roi": 103.35243553008596,
+            "max_payout_share": 0.040338231217077906,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1261,
+            "hits": 57,
+            "hit_rate": 4.520222045995242,
+            "roi": 75.13084853291039,
+            "max_payout_share": 0.050770529871226516,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1546,
+            "hits": 78,
+            "hit_rate": 5.045278137128072,
+            "roi": 90.58861578266495,
+            "max_payout_share": 0.09153873616565512,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 698,
+            "hits": 32,
+            "hit_rate": 4.584527220630372,
+            "roi": 75.41547277936964,
+            "max_payout_share": 0.07560790273556231,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 2522,
+            "hits": 15,
+            "hit_rate": 1.189532117367169,
+            "roi": 109.73433782712134,
+            "max_payout_share": 0.15255645889792233,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 3092,
+            "hits": 15,
+            "hit_rate": 0.9702457956015523,
+            "roi": 70.95084087968952,
+            "max_payout_share": 0.16359741088522198,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 1396,
+            "hits": 7,
+            "hit_rate": 1.002865329512894,
+            "roi": 69.65616045845272,
+            "max_payout_share": 0.1904566022213081,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 2522,
+            "hits": 16,
+            "hit_rate": 1.26883425852498,
+            "roi": 59.159397303727204,
+            "max_payout_share": 0.1378686327077748,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 3092,
+            "hits": 17,
+            "hit_rate": 1.0996119016817594,
+            "roi": 65.03234152652006,
+            "max_payout_share": 0.32350308334991046,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 1396,
+            "hits": 10,
+            "hit_rate": 1.4326647564469914,
+            "roi": 103.33094555873924,
+            "max_payout_share": 0.3550779896013865,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 2522,
+            "hits": 26,
+            "hit_rate": 2.0618556701030926,
+            "roi": 70.44012688342586,
+            "max_payout_share": 0.1054883197298058,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 3092,
+            "hits": 46,
+            "hit_rate": 2.975420439844761,
+            "roi": 97.43208279430789,
+            "max_payout_share": 0.09705901878775808,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 1396,
+            "hits": 15,
+            "hit_rate": 2.148997134670487,
+            "roi": 60.458452722063036,
+            "max_payout_share": 0.14063981042654028,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1387,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1727,
+            "hits": 25,
+            "hit_rate": 1.6170763260025873,
+            "roi": 21.100173711638682,
+            "max_payout_share": 0.12019758507135017,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 765,
+            "hits": 5,
+            "hit_rate": 0.7163323782234957,
+            "roi": 7.254901960784315,
+            "max_payout_share": 0.3045045045045045,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1387,
+            "hits": 58,
+            "hit_rate": 4.599524187153054,
+            "roi": 76.7916366258111,
+            "max_payout_share": 0.06825650173692611,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1727,
+            "hits": 98,
+            "hit_rate": 6.338939197930142,
+            "roi": 92.75622466705269,
+            "max_payout_share": 0.05381109931955803,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 765,
+            "hits": 39,
+            "hit_rate": 5.587392550143266,
+            "roi": 82.71895424836602,
+            "max_payout_share": 0.12484197218710492,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1387,
+            "hits": 180,
+            "hit_rate": 14.274385408406026,
+            "roi": 91.16798846431146,
+            "max_payout_share": 0.023962040332147095,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1727,
+            "hits": 252,
+            "hit_rate": 16.30012936610608,
+            "roi": 99.6757382744644,
+            "max_payout_share": 0.021552224933193913,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 765,
+            "hits": 115,
+            "hit_rate": 16.475644699140403,
+            "roi": 98.60130718954248,
+            "max_payout_share": 0.03857881479517433,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 1387,
+            "hits": 65,
+            "hit_rate": 5.154639175257731,
+            "roi": 84.25378514780101,
+            "max_payout_share": 0.05048776313537566,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 1726,
+            "hits": 85,
+            "hit_rate": 5.498059508408796,
+            "roi": 86.21668597914253,
+            "max_payout_share": 0.08615012431960217,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 764,
+            "hits": 33,
+            "hit_rate": 4.7277936962750715,
+            "roi": 71.78010471204188,
+            "max_payout_share": 0.07257476294675419,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 2774,
+            "hits": 18,
+            "hit_rate": 1.4274385408406027,
+            "roi": 111.12472963229993,
+            "max_payout_share": 0.13696230454810873,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 3454,
+            "hits": 16,
+            "hit_rate": 1.034928848641656,
+            "roi": 67.03821656050955,
+            "max_payout_share": 0.1549989203195854,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 1530,
+            "hits": 7,
+            "hit_rate": 1.002865329512894,
+            "roi": 63.55555555555556,
+            "max_payout_share": 0.1904566022213081,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 2774,
+            "hits": 20,
+            "hit_rate": 1.5860428231562251,
+            "roi": 97.8731074260995,
+            "max_payout_share": 0.2023572744014733,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 3454,
+            "hits": 21,
+            "hit_rate": 1.3583441138421735,
+            "roi": 67.37984944991314,
+            "max_payout_share": 0.27950844326043056,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 1530,
+            "hits": 10,
+            "hit_rate": 1.4326647564469914,
+            "roi": 94.28104575163398,
+            "max_payout_share": 0.3550779896013865,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 1261,
+            "bets": 2774,
+            "hits": 27,
+            "hit_rate": 2.141157811260904,
+            "roi": 66.80245133381398,
+            "max_payout_share": 0.10112783983595057,
+            "front_races": 1261,
+            "closer_races": 0
+          },
+          "2025": {
+            "races": 1546,
+            "bets": 3454,
+            "hits": 48,
+            "hit_rate": 3.1047865459249677,
+            "roi": 89.31094383323682,
+            "max_payout_share": 0.09478734439834025,
+            "front_races": 1546,
+            "closer_races": 0
+          },
+          "2026": {
+            "races": 698,
+            "bets": 1530,
+            "hits": 16,
+            "hit_rate": 2.292263610315186,
+            "roi": 59.11764705882353,
+            "max_payout_share": 0.131232725262576,
+            "front_races": 698,
+            "closer_races": 0
+          }
+        }
+      }
+    ]
+  },
+  "jra": {
+    "version": "v2026.07.25.1",
+    "circuit": "jra",
+    "rows": 115870,
+    "stable_rules": [
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 1492,
+            "hits": 7,
+            "hit_rate": 1.2612612612612613,
+            "roi": 62.41286863270778,
+            "max_payout_share": 0.3236683848797251,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 1088,
+            "hits": 9,
+            "hit_rate": 2.112676056338028,
+            "roi": 162.64705882352942,
+            "max_payout_share": 0.33069620253164556,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 766,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 654,
+            "hits": 3,
+            "hit_rate": 1.185770750988142,
+            "roi": 137.26299694189603,
+            "max_payout_share": 0.6518881586276039,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 434,
+            "hits": 6,
+            "hit_rate": 3.4682080924855487,
+            "roi": 200.89861751152074,
+            "max_payout_share": 0.577130404862943,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 448,
+            "hits": 9,
+            "hit_rate": 2.4930747922437675,
+            "roi": 73.75,
+            "max_payout_share": 0.22427360774818403,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 284,
+            "hits": 8,
+            "hit_rate": 3.1620553359683794,
+            "roi": 160.07042253521126,
+            "max_payout_share": 0.37439507259128907,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 233,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 172,
+            "hits": 5,
+            "hit_rate": 3.289473684210526,
+            "roi": 157.5581395348837,
+            "max_payout_share": 0.6280442804428045,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 112,
+            "hits": 3,
+            "hit_rate": 2.9702970297029703,
+            "roi": 163.92857142857142,
+            "max_payout_share": 0.8442265795206971,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 896,
+            "hits": 4,
+            "hit_rate": 1.10803324099723,
+            "roi": 84.56473214285715,
+            "max_payout_share": 0.39778276362676523,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 568,
+            "hits": 5,
+            "hit_rate": 1.9762845849802373,
+            "roi": 261.83098591549293,
+            "max_payout_share": 0.39349112426035504,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 466,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 344,
+            "hits": 3,
+            "hit_rate": 1.9736842105263157,
+            "roi": 260.9593023255814,
+            "max_payout_share": 0.6518881586276039,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 224,
+            "hits": 2,
+            "hit_rate": 1.9801980198019802,
+            "roi": 263.16964285714283,
+            "max_payout_share": 0.8536047497879559,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      }
+    ],
+    "rules": [
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 555,
+            "hits": 22,
+            "hit_rate": 3.963963963963964,
+            "roi": 54.95495495495496,
+            "max_payout_share": 0.09081967213114754,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 426,
+            "hits": 21,
+            "hit_rate": 4.929577464788732,
+            "roi": 98.1924882629108,
+            "max_payout_share": 0.14295959837437247,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 286,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 253,
+            "hits": 16,
+            "hit_rate": 6.324110671936759,
+            "roi": 138.69565217391303,
+            "max_payout_share": 0.17041892277001994,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 173,
+            "hits": 5,
+            "hit_rate": 2.8901734104046244,
+            "roi": 38.95953757225434,
+            "max_payout_share": 0.4391691394658754,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 555,
+            "hits": 19,
+            "hit_rate": 3.423423423423423,
+            "roi": 72.55855855855856,
+            "max_payout_share": 0.14303451701018127,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 426,
+            "hits": 15,
+            "hit_rate": 3.5211267605633805,
+            "roi": 71.0093896713615,
+            "max_payout_share": 0.1828099173553719,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 286,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 253,
+            "hits": 12,
+            "hit_rate": 4.743083003952568,
+            "roi": 98.49802371541502,
+            "max_payout_share": 0.22191011235955055,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 173,
+            "hits": 3,
+            "hit_rate": 1.7341040462427744,
+            "roi": 30.809248554913292,
+            "max_payout_share": 0.42401500938086306,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 555,
+            "hits": 46,
+            "hit_rate": 8.288288288288289,
+            "roi": 69.22522522522523,
+            "max_payout_share": 0.05127537740760021,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 426,
+            "hits": 43,
+            "hit_rate": 10.093896713615024,
+            "roi": 88.70892018779342,
+            "max_payout_share": 0.09288171473934903,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 286,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 253,
+            "hits": 27,
+            "hit_rate": 10.67193675889328,
+            "roi": 93.43873517786562,
+            "max_payout_share": 0.10786802030456853,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 173,
+            "hits": 16,
+            "hit_rate": 9.248554913294797,
+            "roi": 81.79190751445087,
+            "max_payout_share": 0.2480565371024735,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 555,
+            "hits": 16,
+            "hit_rate": 2.8828828828828827,
+            "roi": 89.6036036036036,
+            "max_payout_share": 0.14900462497486427,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 426,
+            "hits": 11,
+            "hit_rate": 2.5821596244131455,
+            "roi": 80.25821596244131,
+            "max_payout_share": 0.4533489324363849,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 286,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 253,
+            "hits": 3,
+            "hit_rate": 1.185770750988142,
+            "roi": 29.09090909090909,
+            "max_payout_share": 0.7078804347826086,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 173,
+            "hits": 8,
+            "hit_rate": 4.624277456647398,
+            "roi": 155.08670520231215,
+            "max_payout_share": 0.5777115169586284,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 1110,
+            "hits": 5,
+            "hit_rate": 0.9009009009009009,
+            "roi": 110.13513513513513,
+            "max_payout_share": 0.32139059304703477,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 852,
+            "hits": 1,
+            "hit_rate": 0.2347417840375587,
+            "roi": 7.323943661971831,
+            "max_payout_share": 1.0,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 572,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 506,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 346,
+            "hits": 1,
+            "hit_rate": 0.5780346820809248,
+            "roi": 18.034682080924856,
+            "max_payout_share": 1.0,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 1110,
+            "hits": 4,
+            "hit_rate": 0.7207207207207207,
+            "roi": 42.95495495495496,
+            "max_payout_share": 0.34186241610738255,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 852,
+            "hits": 3,
+            "hit_rate": 0.7042253521126761,
+            "roi": 21.443661971830984,
+            "max_payout_share": 0.48111658456486045,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 572,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 506,
+            "hits": 2,
+            "hit_rate": 0.7905138339920948,
+            "roi": 25.158102766798418,
+            "max_payout_share": 0.6904948939512962,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 346,
+            "hits": 1,
+            "hit_rate": 0.5780346820809248,
+            "roi": 16.01156069364162,
+            "max_payout_share": 1.0,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 1,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 1110,
+            "hits": 7,
+            "hit_rate": 1.2612612612612613,
+            "roi": 83.89189189189189,
+            "max_payout_share": 0.3236683848797251,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 852,
+            "hits": 7,
+            "hit_rate": 1.643192488262911,
+            "roi": 130.02347417840377,
+            "max_payout_share": 0.4542336161762051,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 572,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 506,
+            "hits": 1,
+            "hit_rate": 0.3952569169960474,
+            "roi": 46.62055335968379,
+            "max_payout_share": 1.0,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 346,
+            "hits": 6,
+            "hit_rate": 3.4682080924855487,
+            "roi": 251.99421965317921,
+            "max_payout_share": 0.577130404862943,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 746,
+            "hits": 29,
+            "hit_rate": 5.225225225225225,
+            "roi": 52.06434316353887,
+            "max_payout_share": 0.07131822863027806,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 544,
+            "hits": 29,
+            "hit_rate": 6.807511737089202,
+            "roi": 95.66176470588236,
+            "max_payout_share": 0.11491160645657186,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 383,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 327,
+            "hits": 20,
+            "hit_rate": 7.905138339920949,
+            "roi": 122.14067278287462,
+            "max_payout_share": 0.14972458688032048,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 217,
+            "hits": 9,
+            "hit_rate": 5.202312138728324,
+            "roi": 55.76036866359447,
+            "max_payout_share": 0.24462809917355371,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 746,
+            "hits": 22,
+            "hit_rate": 3.963963963963964,
+            "roi": 71.16621983914209,
+            "max_payout_share": 0.11734789979280467,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 544,
+            "hits": 18,
+            "hit_rate": 4.225352112676056,
+            "roi": 77.55514705882352,
+            "max_payout_share": 0.17895235837876275,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 383,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 327,
+            "hits": 12,
+            "hit_rate": 4.743083003952568,
+            "roi": 76.20795107033639,
+            "max_payout_share": 0.22191011235955055,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 217,
+            "hits": 6,
+            "hit_rate": 3.4682080924855487,
+            "roi": 79.5852534562212,
+            "max_payout_share": 0.4371742906774754,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 746,
+            "hits": 51,
+            "hit_rate": 9.18918918918919,
+            "roi": 60.388739946380696,
+            "max_payout_share": 0.058379578246392894,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 544,
+            "hits": 55,
+            "hit_rate": 12.910798122065728,
+            "roi": 98.21691176470588,
+            "max_payout_share": 0.06775219913906046,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 383,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 327,
+            "hits": 33,
+            "hit_rate": 13.043478260869565,
+            "roi": 97.1559633027523,
+            "max_payout_share": 0.0821529745042493,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 217,
+            "hits": 22,
+            "hit_rate": 12.716763005780345,
+            "roi": 99.81566820276497,
+            "max_payout_share": 0.16712834718374883,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 746,
+            "hits": 16,
+            "hit_rate": 2.8828828828828827,
+            "roi": 66.66219839142092,
+            "max_payout_share": 0.14900462497486427,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 544,
+            "hits": 17,
+            "hit_rate": 3.9906103286384975,
+            "roi": 158.45588235294116,
+            "max_payout_share": 0.24466357308584688,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 383,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 327,
+            "hits": 5,
+            "hit_rate": 1.9762845849802373,
+            "roi": 82.87461773700305,
+            "max_payout_share": 0.6280442804428045,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 217,
+            "hits": 12,
+            "hit_rate": 6.9364161849710975,
+            "roi": 272.35023041474653,
+            "max_payout_share": 0.3568527918781726,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 1492,
+            "hits": 5,
+            "hit_rate": 0.9009009009009009,
+            "roi": 81.93699731903486,
+            "max_payout_share": 0.32139059304703477,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 1088,
+            "hits": 3,
+            "hit_rate": 0.7042253521126761,
+            "roi": 177.20588235294116,
+            "max_payout_share": 0.8582987551867219,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 766,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 654,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 434,
+            "hits": 3,
+            "hit_rate": 1.7341040462427744,
+            "roi": 444.2396313364055,
+            "max_payout_share": 0.8582987551867219,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 1492,
+            "hits": 4,
+            "hit_rate": 0.7207207207207207,
+            "roi": 31.957104557640754,
+            "max_payout_share": 0.34186241610738255,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 1088,
+            "hits": 5,
+            "hit_rate": 1.1737089201877933,
+            "roi": 54.66911764705882,
+            "max_payout_share": 0.5129455279085406,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 766,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 654,
+            "hits": 2,
+            "hit_rate": 0.7905138339920948,
+            "roi": 19.464831804281346,
+            "max_payout_share": 0.6904948939512962,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 434,
+            "hits": 3,
+            "hit_rate": 1.7341040462427744,
+            "roi": 107.7188940092166,
+            "max_payout_share": 0.6526203208556149,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.15,
+        "max_axes": 2,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 555,
+            "bets": 1492,
+            "hits": 7,
+            "hit_rate": 1.2612612612612613,
+            "roi": 62.41286863270778,
+            "max_payout_share": 0.3236683848797251,
+            "front_races": 554,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 426,
+            "bets": 1088,
+            "hits": 9,
+            "hit_rate": 2.112676056338028,
+            "roi": 162.64705882352942,
+            "max_payout_share": 0.33069620253164556,
+            "front_races": 424,
+            "closer_races": 2
+          },
+          "2026": {
+            "races": 286,
+            "bets": 766,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 286,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 253,
+            "bets": 654,
+            "hits": 3,
+            "hit_rate": 1.185770750988142,
+            "roi": 137.26299694189603,
+            "max_payout_share": 0.6518881586276039,
+            "front_races": 253,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 173,
+            "bets": 434,
+            "hits": 6,
+            "hit_rate": 3.4682080924855487,
+            "roi": 200.89861751152074,
+            "max_payout_share": 0.577130404862943,
+            "front_races": 171,
+            "closer_races": 2
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 361,
+            "hits": 15,
+            "hit_rate": 4.1551246537396125,
+            "roi": 58.86426592797784,
+            "max_payout_share": 0.1303529411764706,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 253,
+            "hits": 11,
+            "hit_rate": 4.3478260869565215,
+            "roi": 103.67588932806325,
+            "max_payout_share": 0.22798322531452536,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 190,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 152,
+            "hits": 8,
+            "hit_rate": 5.263157894736842,
+            "roi": 137.89473684210526,
+            "max_payout_share": 0.28530534351145037,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 101,
+            "hits": 3,
+            "hit_rate": 2.9702970297029703,
+            "roi": 52.178217821782184,
+            "max_payout_share": 0.5616698292220114,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 361,
+            "hits": 13,
+            "hit_rate": 3.6011080332409975,
+            "roi": 81.55124653739612,
+            "max_payout_share": 0.1956521739130435,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 253,
+            "hits": 11,
+            "hit_rate": 4.3478260869565215,
+            "roi": 90.11857707509881,
+            "max_payout_share": 0.2425438596491228,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 190,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 152,
+            "hits": 9,
+            "hit_rate": 5.921052631578947,
+            "roi": 127.89473684210526,
+            "max_payout_share": 0.2844650205761317,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 101,
+            "hits": 2,
+            "hit_rate": 1.9801980198019802,
+            "roi": 33.26732673267327,
+            "max_payout_share": 0.6726190476190477,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 361,
+            "hits": 31,
+            "hit_rate": 8.587257617728532,
+            "roi": 75.92797783933518,
+            "max_payout_share": 0.06931776723823423,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 253,
+            "hits": 28,
+            "hit_rate": 11.067193675889328,
+            "roi": 114.78260869565217,
+            "max_payout_share": 0.12086776859504132,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 190,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 152,
+            "hits": 20,
+            "hit_rate": 13.157894736842104,
+            "roi": 127.82894736842105,
+            "max_payout_share": 0.1312403499742666,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 101,
+            "hits": 8,
+            "hit_rate": 7.920792079207921,
+            "roi": 95.14851485148515,
+            "max_payout_share": 0.36524453694068676,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 361,
+            "hits": 9,
+            "hit_rate": 2.4930747922437675,
+            "roi": 91.5235457063712,
+            "max_payout_share": 0.22427360774818403,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 253,
+            "hits": 6,
+            "hit_rate": 2.371541501976284,
+            "roi": 101.66007905138339,
+            "max_payout_share": 0.6026438569206843,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 190,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 152,
+            "hits": 3,
+            "hit_rate": 1.9736842105263157,
+            "roi": 48.421052631578945,
+            "max_payout_share": 0.7078804347826086,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 101,
+            "hits": 3,
+            "hit_rate": 2.9702970297029703,
+            "roi": 181.78217821782178,
+            "max_payout_share": 0.8442265795206971,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 722,
+            "hits": 3,
+            "hit_rate": 0.8310249307479225,
+            "roi": 105.48476454293629,
+            "max_payout_share": 0.5158876050420168,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 506,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 380,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 304,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 202,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 722,
+            "hits": 2,
+            "hit_rate": 0.554016620498615,
+            "roi": 26.191135734072024,
+            "max_payout_share": 0.8619777895293496,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 506,
+            "hits": 3,
+            "hit_rate": 1.185770750988142,
+            "roi": 36.10671936758894,
+            "max_payout_share": 0.48111658456486045,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 380,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 304,
+            "hits": 2,
+            "hit_rate": 1.3157894736842104,
+            "roi": 41.875,
+            "max_payout_share": 0.6904948939512962,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 202,
+            "hits": 1,
+            "hit_rate": 0.9900990099009901,
+            "roi": 27.425742574257427,
+            "max_payout_share": 1.0,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 1,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 722,
+            "hits": 4,
+            "hit_rate": 1.10803324099723,
+            "roi": 104.94459833795014,
+            "max_payout_share": 0.39778276362676523,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 506,
+            "hits": 3,
+            "hit_rate": 1.185770750988142,
+            "roi": 163.12252964426875,
+            "max_payout_share": 0.6096438090622729,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 380,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 304,
+            "hits": 1,
+            "hit_rate": 0.6578947368421052,
+            "roi": 77.59868421052632,
+            "max_payout_share": 1.0,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 202,
+            "hits": 2,
+            "hit_rate": 1.9801980198019802,
+            "roi": 291.83168316831683,
+            "max_payout_share": 0.8536047497879559,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "tan",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 448,
+            "hits": 18,
+            "hit_rate": 4.986149584487535,
+            "roi": 55.714285714285715,
+            "max_payout_share": 0.1109775641025641,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 284,
+            "hits": 12,
+            "hit_rate": 4.743083003952568,
+            "roi": 96.16197183098592,
+            "max_payout_share": 0.21896741120468693,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 233,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 172,
+            "hits": 9,
+            "hit_rate": 5.921052631578947,
+            "roi": 128.13953488372093,
+            "max_payout_share": 0.2713248638838475,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 112,
+            "hits": 3,
+            "hit_rate": 2.9702970297029703,
+            "roi": 47.05357142857143,
+            "max_payout_share": 0.5616698292220114,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "umaren",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 448,
+            "hits": 13,
+            "hit_rate": 3.6011080332409975,
+            "roi": 65.71428571428571,
+            "max_payout_share": 0.1956521739130435,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 284,
+            "hits": 11,
+            "hit_rate": 4.3478260869565215,
+            "roi": 80.28169014084507,
+            "max_payout_share": 0.2425438596491228,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 233,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 172,
+            "hits": 9,
+            "hit_rate": 5.921052631578947,
+            "roi": 113.0232558139535,
+            "max_payout_share": 0.2844650205761317,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 112,
+            "hits": 2,
+            "hit_rate": 1.9801980198019802,
+            "roi": 30.0,
+            "max_payout_share": 0.6726190476190477,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "wide",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 448,
+            "hits": 32,
+            "hit_rate": 8.86426592797784,
+            "roi": 62.63392857142858,
+            "max_payout_share": 0.06771204561653599,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 284,
+            "hits": 33,
+            "hit_rate": 13.043478260869565,
+            "roi": 121.69014084507042,
+            "max_payout_share": 0.1015625,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 233,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 172,
+            "hits": 25,
+            "hit_rate": 16.447368421052634,
+            "roi": 145.0581395348837,
+            "max_payout_share": 0.10220440881763528,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 112,
+            "hits": 8,
+            "hit_rate": 7.920792079207921,
+            "roi": 85.80357142857142,
+            "max_payout_share": 0.36524453694068676,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "sanfuku",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 448,
+            "hits": 9,
+            "hit_rate": 2.4930747922437675,
+            "roi": 73.75,
+            "max_payout_share": 0.22427360774818403,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 284,
+            "hits": 8,
+            "hit_rate": 3.1620553359683794,
+            "roi": 160.07042253521126,
+            "max_payout_share": 0.37439507259128907,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 233,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 172,
+            "hits": 5,
+            "hit_rate": 3.289473684210526,
+            "roi": 157.5581395348837,
+            "max_payout_share": 0.6280442804428045,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 112,
+            "hits": 3,
+            "hit_rate": 2.9702970297029703,
+            "roi": 163.92857142857142,
+            "max_payout_share": 0.8442265795206971,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "santan1",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 896,
+            "hits": 3,
+            "hit_rate": 0.8310249307479225,
+            "roi": 85.0,
+            "max_payout_share": 0.5158876050420168,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 568,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 466,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 344,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 224,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "santan2",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 896,
+            "hits": 2,
+            "hit_rate": 0.554016620498615,
+            "roi": 21.104910714285715,
+            "max_payout_share": 0.8619777895293496,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 568,
+            "hits": 3,
+            "hit_rate": 1.185770750988142,
+            "roi": 32.16549295774648,
+            "max_payout_share": 0.48111658456486045,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 466,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 344,
+            "hits": 2,
+            "hit_rate": 1.3157894736842104,
+            "roi": 37.00581395348837,
+            "max_payout_share": 0.6904948939512962,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 224,
+            "hits": 1,
+            "hit_rate": 0.9900990099009901,
+            "roi": 24.732142857142858,
+            "max_payout_share": 1.0,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      },
+      {
+        "edge_min": 1.25,
+        "max_axes": 2,
+        "bet_type": "santan3",
+        "periods": {
+          "2024": {
+            "races": 361,
+            "bets": 896,
+            "hits": 4,
+            "hit_rate": 1.10803324099723,
+            "roi": 84.56473214285715,
+            "max_payout_share": 0.39778276362676523,
+            "front_races": 360,
+            "closer_races": 1
+          },
+          "2025": {
+            "races": 253,
+            "bets": 568,
+            "hits": 5,
+            "hit_rate": 1.9762845849802373,
+            "roi": 261.83098591549293,
+            "max_payout_share": 0.39349112426035504,
+            "front_races": 252,
+            "closer_races": 1
+          },
+          "2026": {
+            "races": 190,
+            "bets": 466,
+            "hits": 0,
+            "hit_rate": 0.0,
+            "roi": 0.0,
+            "max_payout_share": null,
+            "front_races": 190,
+            "closer_races": 0
+          },
+          "2025_H1": {
+            "races": 152,
+            "bets": 344,
+            "hits": 3,
+            "hit_rate": 1.9736842105263157,
+            "roi": 260.9593023255814,
+            "max_payout_share": 0.6518881586276039,
+            "front_races": 152,
+            "closer_races": 0
+          },
+          "2025_H2": {
+            "races": 101,
+            "bets": 224,
+            "hits": 2,
+            "hit_rate": 1.9801980198019802,
+            "roi": 263.16964285714283,
+            "max_payout_share": 0.8536047497879559,
+            "front_races": 100,
+            "closer_races": 1
+          }
+        }
+      }
+    ]
+  }
+}
