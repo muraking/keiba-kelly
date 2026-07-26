@@ -1,6 +1,6 @@
 """Regression tests for the independent local-racing strategy.
 
-Version: v2026.07.26.1
+Version: v2026.07.26.2
 """
 
 from __future__ import annotations
@@ -65,10 +65,32 @@ class LocalStrategyTest(unittest.TestCase):
         self.assertEqual(result["tickets"], original)
         self.assertIn("人が判断する参考買い目", message)
         self.assertIn("参考・非推奨】単勝", message)
-        self.assertIn("〇 ❷ 馬2 逃 WP27.0% / 4.0倍", message)
+        self.assertIn("〇 ② 馬2 逃 WP27.0% / 4.0倍", message)
         self.assertIn("◎ ① 馬1 逃 WP28.0% / 2.8倍", message)
         self.assertNotIn("/ EV", message)
-        self.assertIn("❶＝内部期待値100超", message)
+        self.assertIn("❶＝△以下の内部期待値100超・WP上位3頭", message)
+
+    def test_only_three_value_horses_below_top_three_are_filled(self) -> None:
+        snap = {
+            "p": {
+                "1": .30, "2": .20, "3": .15, "4": .10,
+                "5": .09, "6": .08, "7": .08,
+            },
+            "o": {str(number): 20.0 for number in range(1, 8)},
+            "h": {str(number): f"馬{number}" for number in range(1, 8)},
+            "s": {str(number): "差" for number in range(1, 8)},
+        }
+        message = format_discord(
+            "テスト1R", snap,
+            {"action": "NO_BET", "reason": "test", "quality": {}},
+        )
+        self.assertIn("◎ ① 馬1", message)
+        self.assertIn("〇 ② 馬2", message)
+        self.assertIn("▲ ③ 馬3", message)
+        self.assertIn("△ ❹ 馬4", message)
+        self.assertIn("☆ ❺ 馬5", message)
+        self.assertIn("注 ❻ 馬6", message)
+        self.assertIn("　 ⑦ 馬7", message)
 
     def test_small_field_routes_axis_to_third(self) -> None:
         snap = self.base()

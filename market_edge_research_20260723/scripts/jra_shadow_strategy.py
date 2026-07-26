@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.26.1
+Version: v2026.07.26.2
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
 
-VERSION = "v2026.07.26.1"
+VERSION = "v2026.07.26.2"
 MARKET_BLEND_ALPHA = 0.10
 MARKS = ("◎", "〇", "▲", "△", "☆", "注")
 
@@ -41,15 +41,17 @@ def _latest_index_block(snapshot: dict) -> str:
     names = {int(key): str(value) for key, value in (snapshot.get("h") or {}).items()}
     styles = {int(key): str(value) for key, value in (snapshot.get("s") or {}).items()}
     order = sorted(pure, key=lambda number: (-pure[number], number))
+    value_candidates = [
+        number for number in order[3:]
+        if odds.get(number) and pure[number] * odds[number] * 100 > 100
+    ]
+    highlighted = set(value_candidates[:3])
     lines = ["―― 7分前最新指数 ――"]
     lines.extend(pace_lines(snapshot))
     for index, number in enumerate(order):
         price = odds.get(number)
-        expected_value = pure[number] * price * 100 if price and price > 0 else None
         number_text = (
-            ev_circled(number)
-            if expected_value is not None and expected_value > 100
-            else circled(number)
+            ev_circled(number) if number in highlighted else circled(number)
         )
         mark = MARKS[index] if index < len(MARKS) else "　"
         odds_text = f"{price:.1f}倍" if price is not None else "未取得"
@@ -57,7 +59,7 @@ def _latest_index_block(snapshot: dict) -> str:
             f"{mark} {number_text} {names.get(number, '')} "
             f"{styles.get(number, '？')} WP{pure[number]:.1%} / {odds_text}"
         )
-    lines.append("❶＝内部期待値100超")
+    lines.append("❶＝△以下の内部期待値100超・WP上位3頭")
     return "\n".join(lines)
 
 
