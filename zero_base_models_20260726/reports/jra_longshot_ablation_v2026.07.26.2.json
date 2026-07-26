@@ -1,0 +1,593 @@
+{
+  "version": "v2026.07.26.2",
+  "market": "jra",
+  "variant_features": {
+    "core": [
+      "umaban",
+      "distance",
+      "is_dirt",
+      "draw",
+      "field_size",
+      "age",
+      "is_female",
+      "weight_carried",
+      "horse_weight",
+      "horse_weight_diff",
+      "venue_code",
+      "going_code",
+      "cls_level",
+      "month",
+      "h_n_past",
+      "h_days_since",
+      "h_last_pos",
+      "h_avg_pos3",
+      "h_avg_pos5",
+      "h_winrate",
+      "h_placerate",
+      "h_avg_rel3",
+      "h_avg_rel5",
+      "h_best_rel5",
+      "h_avg_relz3",
+      "h_avg_last3f3",
+      "h_avg_early3",
+      "h_weight_change",
+      "h_dist_change",
+      "h_same_jockey",
+      "j_n",
+      "j_winrate",
+      "t_n",
+      "t_winrate",
+      "o_n",
+      "o_winrate"
+    ],
+    "core_ana": [
+      "umaban",
+      "distance",
+      "is_dirt",
+      "draw",
+      "field_size",
+      "age",
+      "is_female",
+      "weight_carried",
+      "horse_weight",
+      "horse_weight_diff",
+      "venue_code",
+      "going_code",
+      "cls_level",
+      "month",
+      "h_n_past",
+      "h_days_since",
+      "h_last_pos",
+      "h_avg_pos3",
+      "h_avg_pos5",
+      "h_winrate",
+      "h_placerate",
+      "h_avg_rel3",
+      "h_avg_rel5",
+      "h_best_rel5",
+      "h_avg_relz3",
+      "h_avg_last3f3",
+      "h_avg_early3",
+      "h_weight_change",
+      "h_dist_change",
+      "h_same_jockey",
+      "j_n",
+      "j_winrate",
+      "t_n",
+      "t_winrate",
+      "o_n",
+      "o_winrate",
+      "ana_layoff",
+      "ana_rest_lean",
+      "ana_tataki2",
+      "ana_draw_change",
+      "ana_draw_change_abs",
+      "ana_style_shift",
+      "ana_style_shift_abs",
+      "ana_dist_change_abs",
+      "ana_surf_change",
+      "ana_venue_change",
+      "ana_last_pos_gain",
+      "ana_bounce",
+      "ana_class_change",
+      "ana_going_change",
+      "ana_wtcarried_change",
+      "ana_short_rest",
+      "ana_last3f_sharp",
+      "ana_weight_swing_abs"
+    ],
+    "core_advanced": [
+      "umaban",
+      "distance",
+      "is_dirt",
+      "draw",
+      "field_size",
+      "age",
+      "is_female",
+      "weight_carried",
+      "horse_weight",
+      "horse_weight_diff",
+      "venue_code",
+      "going_code",
+      "cls_level",
+      "month",
+      "h_n_past",
+      "h_days_since",
+      "h_last_pos",
+      "h_avg_pos3",
+      "h_avg_pos5",
+      "h_winrate",
+      "h_placerate",
+      "h_avg_rel3",
+      "h_avg_rel5",
+      "h_best_rel5",
+      "h_avg_relz3",
+      "h_avg_last3f3",
+      "h_avg_early3",
+      "h_weight_change",
+      "h_dist_change",
+      "h_same_jockey",
+      "j_n",
+      "j_winrate",
+      "t_n",
+      "t_winrate",
+      "o_n",
+      "o_winrate",
+      "h_rank_std",
+      "dir_x_umaban",
+      "h_venue_n",
+      "h_venue_winrate",
+      "h_venue_avg_rel",
+      "h_avg_spd3",
+      "h_best_spd5",
+      "h_avg_rtop3"
+    ],
+    "full_ability": [
+      "umaban",
+      "distance",
+      "is_dirt",
+      "draw",
+      "field_size",
+      "age",
+      "is_female",
+      "weight_carried",
+      "horse_weight",
+      "horse_weight_diff",
+      "venue_code",
+      "going_code",
+      "cls_level",
+      "month",
+      "h_n_past",
+      "h_days_since",
+      "h_last_pos",
+      "h_avg_pos3",
+      "h_avg_pos5",
+      "h_winrate",
+      "h_placerate",
+      "h_avg_rel3",
+      "h_avg_rel5",
+      "h_best_rel5",
+      "h_avg_relz3",
+      "h_avg_last3f3",
+      "h_avg_early3",
+      "h_weight_change",
+      "h_dist_change",
+      "h_same_jockey",
+      "j_n",
+      "j_winrate",
+      "t_n",
+      "t_winrate",
+      "o_n",
+      "o_winrate",
+      "ana_layoff",
+      "ana_rest_lean",
+      "ana_tataki2",
+      "ana_draw_change",
+      "ana_draw_change_abs",
+      "ana_style_shift",
+      "ana_style_shift_abs",
+      "ana_dist_change_abs",
+      "ana_surf_change",
+      "ana_venue_change",
+      "ana_last_pos_gain",
+      "ana_bounce",
+      "ana_class_change",
+      "ana_going_change",
+      "ana_wtcarried_change",
+      "ana_short_rest",
+      "ana_last3f_sharp",
+      "ana_weight_swing_abs",
+      "h_rank_std",
+      "dir_x_umaban",
+      "h_venue_n",
+      "h_venue_winrate",
+      "h_venue_avg_rel",
+      "h_avg_spd3",
+      "h_best_spd5",
+      "h_avg_rtop3"
+    ],
+    "full_market": [
+      "umaban",
+      "distance",
+      "is_dirt",
+      "draw",
+      "field_size",
+      "age",
+      "is_female",
+      "weight_carried",
+      "horse_weight",
+      "horse_weight_diff",
+      "venue_code",
+      "going_code",
+      "cls_level",
+      "month",
+      "h_n_past",
+      "h_days_since",
+      "h_last_pos",
+      "h_avg_pos3",
+      "h_avg_pos5",
+      "h_winrate",
+      "h_placerate",
+      "h_avg_rel3",
+      "h_avg_rel5",
+      "h_best_rel5",
+      "h_avg_relz3",
+      "h_avg_last3f3",
+      "h_avg_early3",
+      "h_weight_change",
+      "h_dist_change",
+      "h_same_jockey",
+      "j_n",
+      "j_winrate",
+      "t_n",
+      "t_winrate",
+      "o_n",
+      "o_winrate",
+      "ana_layoff",
+      "ana_rest_lean",
+      "ana_tataki2",
+      "ana_draw_change",
+      "ana_draw_change_abs",
+      "ana_style_shift",
+      "ana_style_shift_abs",
+      "ana_dist_change_abs",
+      "ana_surf_change",
+      "ana_venue_change",
+      "ana_last_pos_gain",
+      "ana_bounce",
+      "ana_class_change",
+      "ana_going_change",
+      "ana_wtcarried_change",
+      "ana_short_rest",
+      "ana_last3f_sharp",
+      "ana_weight_swing_abs",
+      "h_rank_std",
+      "dir_x_umaban",
+      "h_venue_n",
+      "h_venue_winrate",
+      "h_venue_avg_rel",
+      "h_avg_spd3",
+      "h_best_spd5",
+      "h_avg_rtop3",
+      "win_odds",
+      "popularity"
+    ]
+  },
+  "folds": [
+    {
+      "year": 2024,
+      "variants": {
+        "core": {
+          "1": {
+            "capture": 26.28205128205128,
+            "bets": 3332,
+            "precision": 19.687875150060023,
+            "roi": 77.52701080432173
+          },
+          "2": {
+            "capture": 46.71474358974359,
+            "bets": 6658,
+            "precision": 18.42895764493842,
+            "roi": 76.20606788825474
+          },
+          "3": {
+            "capture": 61.29807692307692,
+            "bets": 9953,
+            "precision": 17.0400884155531,
+            "roi": 73.97166683412037
+          }
+        },
+        "core_ana": {
+          "1": {
+            "capture": 25.440705128205128,
+            "bets": 3332,
+            "precision": 19.05762304921969,
+            "roi": 74.85894357743098
+          },
+          "2": {
+            "capture": 45.63301282051282,
+            "bets": 6658,
+            "precision": 18.038449984980474,
+            "roi": 73.83148092520277
+          },
+          "3": {
+            "capture": 61.57852564102564,
+            "bets": 9953,
+            "precision": 17.060182859439365,
+            "roi": 74.97136541746207
+          }
+        },
+        "core_advanced": {
+          "1": {
+            "capture": 26.28205128205128,
+            "bets": 3332,
+            "precision": 19.687875150060023,
+            "roi": 76.35654261704681
+          },
+          "2": {
+            "capture": 46.63461538461539,
+            "bets": 6658,
+            "precision": 18.36887954340643,
+            "roi": 74.9654550916191
+          },
+          "3": {
+            "capture": 61.458333333333336,
+            "bets": 9953,
+            "precision": 17.170702300813826,
+            "roi": 74.17663016176027
+          }
+        },
+        "full_ability": {
+          "1": {
+            "capture": 26.001602564102566,
+            "bets": 3332,
+            "precision": 19.47779111644658,
+            "roi": 76.28451380552221
+          },
+          "2": {
+            "capture": 46.15384615384615,
+            "bets": 6658,
+            "precision": 18.263742865725444,
+            "roi": 75.7224391709222
+          },
+          "3": {
+            "capture": 61.69871794871795,
+            "bets": 9953,
+            "precision": 17.12046619109816,
+            "roi": 74.53330654074148
+          }
+        },
+        "full_market": {
+          "1": {
+            "capture": 33.45352564102564,
+            "bets": 3332,
+            "precision": 25.060024009603843,
+            "roi": 77.67707082833134
+          },
+          "2": {
+            "capture": 56.04967948717949,
+            "bets": 6658,
+            "precision": 22.514268549113847,
+            "roi": 76.26464403724842
+          },
+          "3": {
+            "capture": 70.87339743589743,
+            "bets": 9953,
+            "precision": 20.21501054958304,
+            "roi": 75.4194715161258
+          }
+        }
+      }
+    },
+    {
+      "year": 2025,
+      "variants": {
+        "core": {
+          "1": {
+            "capture": 26.90951821386604,
+            "bets": 3352,
+            "precision": 20.49522673031026,
+            "roi": 75.84427207637232
+          },
+          "2": {
+            "capture": 46.14179396788092,
+            "bets": 6697,
+            "precision": 18.724802150216515,
+            "roi": 72.84157085262058
+          },
+          "3": {
+            "capture": 61.18292205248727,
+            "bets": 10011,
+            "precision": 17.540705224253323,
+            "roi": 72.46029367695535
+          }
+        },
+        "core_ana": {
+          "1": {
+            "capture": 27.536231884057973,
+            "bets": 3352,
+            "precision": 20.97255369928401,
+            "roi": 77.6700477326969
+          },
+          "2": {
+            "capture": 47.2385428907168,
+            "bets": 6697,
+            "precision": 19.12796774675228,
+            "roi": 74.22278632223383
+          },
+          "3": {
+            "capture": 61.33960047003525,
+            "bets": 10011,
+            "precision": 17.58066127260014,
+            "roi": 72.49026071321546
+          }
+        },
+        "core_advanced": {
+          "1": {
+            "capture": 26.400313356835095,
+            "bets": 3352,
+            "precision": 20.107398568019093,
+            "roi": 75.62947494033413
+          },
+          "2": {
+            "capture": 46.88601645123384,
+            "bets": 6697,
+            "precision": 18.978647155442737,
+            "roi": 75.06644766313275
+          },
+          "3": {
+            "capture": 60.712886799843325,
+            "bets": 10011,
+            "precision": 17.440815103386274,
+            "roi": 71.89991009889123
+          }
+        },
+        "full_ability": {
+          "1": {
+            "capture": 27.144535840188013,
+            "bets": 3352,
+            "precision": 20.67422434367542,
+            "roi": 75.11933174224343
+          },
+          "2": {
+            "capture": 47.04269486878182,
+            "bets": 6697,
+            "precision": 19.06823951022846,
+            "roi": 73.40152307003136
+          },
+          "3": {
+            "capture": 62.39717978848414,
+            "bets": 10011,
+            "precision": 18.090100889022075,
+            "roi": 74.48107082209569
+          }
+        },
+        "full_market": {
+          "1": {
+            "capture": 32.19741480611046,
+            "bets": 3352,
+            "precision": 24.522673031026255,
+            "roi": 74.97016706443914
+          },
+          "2": {
+            "capture": 54.36741088915002,
+            "bets": 6697,
+            "precision": 22.66686576078841,
+            "roi": 76.08929371360311
+          },
+          "3": {
+            "capture": 70.0744222483353,
+            "bets": 10011,
+            "precision": 20.83707921286585,
+            "roi": 77.85436020377584
+          }
+        }
+      }
+    },
+    {
+      "year": 2026,
+      "variants": {
+        "core": {
+          "1": {
+            "capture": 28.922345483359745,
+            "bets": 1718,
+            "precision": 21.24563445867288,
+            "roi": 76.46682188591386
+          },
+          "2": {
+            "capture": 50.71315372424723,
+            "bets": 3435,
+            "precision": 20.116448326055313,
+            "roi": 78.71324599708879
+          },
+          "3": {
+            "capture": 66.08557844690966,
+            "bets": 5139,
+            "precision": 18.447168709865732,
+            "roi": 78.10468962833237
+          }
+        },
+        "core_ana": {
+          "1": {
+            "capture": 29.31854199683043,
+            "bets": 1718,
+            "precision": 21.536670547147846,
+            "roi": 80.49476135040744
+          },
+          "2": {
+            "capture": 51.26782884310618,
+            "bets": 3435,
+            "precision": 20.232896652110625,
+            "roi": 80.6783114992722
+          },
+          "3": {
+            "capture": 65.13470681458003,
+            "bets": 5139,
+            "precision": 18.349873516248298,
+            "roi": 78.00934033858728
+          }
+        },
+        "core_advanced": {
+          "1": {
+            "capture": 28.44690966719493,
+            "bets": 1718,
+            "precision": 20.89639115250291,
+            "roi": 75.29685681024446
+          },
+          "2": {
+            "capture": 49.603803486529316,
+            "bets": 3435,
+            "precision": 19.70887918486172,
+            "roi": 77.02183406113537
+          },
+          "3": {
+            "capture": 64.89698890649763,
+            "bets": 5139,
+            "precision": 18.291496400077836,
+            "roi": 76.16656937147305
+          }
+        },
+        "full_ability": {
+          "1": {
+            "capture": 29.239302694136292,
+            "bets": 1718,
+            "precision": 21.47846332945285,
+            "roi": 79.61583236321304
+          },
+          "2": {
+            "capture": 50.79239302694136,
+            "bets": 3435,
+            "precision": 20.29112081513828,
+            "roi": 79.73216885007278
+          },
+          "3": {
+            "capture": 65.45166402535658,
+            "bets": 5139,
+            "precision": 18.349873516248298,
+            "roi": 75.85911655964195
+          }
+        },
+        "full_market": {
+          "1": {
+            "capture": 35.182250396196515,
+            "bets": 1718,
+            "precision": 25.84400465657741,
+            "roi": 77.90454016298021
+          },
+          "2": {
+            "capture": 58.0824088748019,
+            "bets": 3435,
+            "precision": 23.260553129548764,
+            "roi": 78.43377001455605
+          },
+          "3": {
+            "capture": 71.71156893819334,
+            "bets": 5139,
+            "precision": 20.548744892002336,
+            "roi": 76.26191866121813
+          }
+        }
+      }
+    }
+  ]
+}
