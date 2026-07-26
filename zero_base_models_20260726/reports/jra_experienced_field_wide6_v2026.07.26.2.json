@@ -1,0 +1,58 @@
+{
+  "version": "v2026.07.26.2",
+  "market": "jra",
+  "definition": {
+    "two_year_old": "exclude a race when any runner age=2",
+    "debut": "exclude race_name containing 新馬",
+    "venue_experience": "every runner must have at least 3 prior starts at today's venue",
+    "local_transfer": "proxied by venue experience because transfer history is not stored",
+    "tickets": "p_win absolute top2 x p_place top3 among win_odds>=10; same-horse pairs skipped"
+  },
+  "database_audit": {
+    "all_races": 15076,
+    "two_year_old_races": 2599,
+    "debut_races": 1284,
+    "inexperienced_field_races": 15068,
+    "eligible_races": 8
+  },
+  "ticket_rows_before_filter": 33994,
+  "ticket_rows_after_filter": 17,
+  "eligible_oos_races": 3,
+  "yearly": {
+    "2024": {
+      "races": 1,
+      "bets": 6,
+      "hits": 1,
+      "hit_rate": 16.666666666666664,
+      "roi": 131.66666666666666,
+      "roi_without_max": 0.0,
+      "lcb90": -0.3707733333333334,
+      "max_share": 1.0,
+      "return_10x_share": 0.0,
+      "hits_10x": 0
+    },
+    "2025": {
+      "races": 2,
+      "bets": 11,
+      "hits": 2,
+      "hit_rate": 18.181818181818183,
+      "roi": 167.27272727272725,
+      "roi_without_max": 70.0,
+      "lcb90": 0.21146915838315405,
+      "max_share": 0.5815217391304348,
+      "return_10x_share": 0.5815217391304348,
+      "hits_10x": 1
+    }
+  },
+  "overall": {
+    "bets": 17,
+    "hits": 3,
+    "hit_rate": 17.647058823529413,
+    "roi": 154.7058823529412,
+    "roi_without_max": 91.76470588235294,
+    "lcb90": 0.460523021788368,
+    "max_share": 0.4068441064638783,
+    "return_10x_share": 0.4068441064638783,
+    "hits_10x": 1
+  }
+}
