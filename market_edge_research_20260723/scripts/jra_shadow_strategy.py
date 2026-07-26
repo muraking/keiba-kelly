@@ -3,17 +3,18 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.25.6
+Version: v2026.07.26.1
 """
 
 from __future__ import annotations
 
 from itertools import combinations
-from standalone_display import circled, circled_ticket
+from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
 
-VERSION = "v2026.07.25.6"
+VERSION = "v2026.07.26.1"
 MARKET_BLEND_ALPHA = 0.10
+MARKS = ("◎", "〇", "▲", "△", "☆", "注")
 
 
 def _market_probabilities(odds: dict[int, float]) -> dict[int, float]:
@@ -34,27 +35,29 @@ def _tickets(axis: int, partners: list[int], bet_type: str) -> list[str]:
 
 
 def _latest_index_block(snapshot: dict) -> str:
-    """Format the seven-minute probability/odds/EV board for Discord."""
+    """Format the seven-minute board without displaying EV values."""
     pure = {int(key): float(value) for key, value in (snapshot.get("p") or {}).items()}
     odds = {int(key): float(value) for key, value in (snapshot.get("o") or {}).items()}
     names = {int(key): str(value) for key, value in (snapshot.get("h") or {}).items()}
     styles = {int(key): str(value) for key, value in (snapshot.get("s") or {}).items()}
     order = sorted(pure, key=lambda number: (-pure[number], number))
-    high_probability = set(order[:3])
     lines = ["―― 7分前最新指数 ――"]
-    for number in order:
+    lines.extend(pace_lines(snapshot))
+    for index, number in enumerate(order):
         price = odds.get(number)
         expected_value = pure[number] * price * 100 if price and price > 0 else None
-        checked = number in high_probability and expected_value is not None and expected_value >= 100
-        suffix = " ✅" if checked else ""
-        odds_text = f"{price:.1f}倍" if price is not None else "未取得"
-        ev_text = f"{expected_value:.1f}" if expected_value is not None else "―"
-        lines.append(
-            f"{circled(number)} {names.get(number, '')} "
-            f"[{styles.get(number, '？')}] WP{pure[number]:.1%} / "
-            f"{odds_text} / EV{ev_text}{suffix}"
+        number_text = (
+            ev_circled(number)
+            if expected_value is not None and expected_value > 100
+            else circled(number)
         )
-    lines.append("✅＝EV100以上かつWP上位3頭")
+        mark = MARKS[index] if index < len(MARKS) else "　"
+        odds_text = f"{price:.1f}倍" if price is not None else "未取得"
+        lines.append(
+            f"{mark} {number_text} {names.get(number, '')} "
+            f"{styles.get(number, '？')} WP{pure[number]:.1%} / {odds_text}"
+        )
+    lines.append("❶＝内部期待値100超")
     return "\n".join(lines)
 
 

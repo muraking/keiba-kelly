@@ -4,7 +4,7 @@ This process does not import or launch keiba_ai.live_probs.  It directly uses
 the low-level scraper, feature builder and odds client, then applies the
 leakage-safe research model and fixed shadow strategy.
 
-Version: v2026.07.25.11
+Version: v2026.07.26.1
 """
 
 from __future__ import annotations
@@ -45,7 +45,7 @@ from jra_shadow_strategy import evaluate_snapshot, format_discord
 from standalone_display import circled, pace_lines, relative_styles
 
 
-VERSION = "v2026.07.25.11"
+VERSION = "v2026.07.26.1"
 MARKS = ("◎", "○", "▲", "△", "☆", "注")
 CHECK_SECONDS = 30
 

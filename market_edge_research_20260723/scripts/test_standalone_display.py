@@ -1,13 +1,15 @@
 """Regression tests for independent-index display helpers.
 
-Version: v2026.07.25.1
+Version: v2026.07.26.1
 """
 
 from __future__ import annotations
 
 import unittest
 
-from standalone_display import circled, circled_ticket, pace_lines, relative_styles
+from standalone_display import (
+    circled, circled_ticket, ev_circled, pace_lines, relative_styles,
+)
 
 
 class StandaloneDisplayTest(unittest.TestCase):
@@ -15,6 +17,8 @@ class StandaloneDisplayTest(unittest.TestCase):
         self.assertEqual(circled(1), "①")
         self.assertEqual(circled(18), "⑱")
         self.assertEqual(circled_ticket("3>12>7"), "③>⑫>⑦")
+        self.assertEqual(ev_circled(1), "❶")
+        self.assertEqual(ev_circled(12), "⓬")
 
     def test_relative_styles_cover_field(self) -> None:
         styles = relative_styles({

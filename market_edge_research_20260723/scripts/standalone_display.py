@@ -1,6 +1,6 @@
 """Shared display helpers for the independent local/JRA services.
 
-Version: v2026.07.25.1
+Version: v2026.07.26.1
 """
 
 from __future__ import annotations
@@ -8,10 +8,14 @@ from __future__ import annotations
 import re
 
 
-VERSION = "v2026.07.25.1"
+VERSION = "v2026.07.26.1"
 _CIRCLED = {
     **{number: chr(0x2460 + number - 1) for number in range(1, 21)},
     0: "⓪",
+}
+_EV_CIRCLED = {
+    **{number: chr(0x2776 + number - 1) for number in range(1, 11)},
+    **{number: chr(0x24EB + number - 11) for number in range(11, 21)},
 }
 
 
@@ -22,6 +26,15 @@ def circled(number: int | str) -> str:
     except (TypeError, ValueError):
         return str(number)
     return _CIRCLED.get(value, f"㊀{value}")
+
+
+def ev_circled(number: int | str) -> str:
+    """Return a filled circle number used only for internal EV above 100."""
+    try:
+        value = int(number)
+    except (TypeError, ValueError):
+        return str(number)
+    return _EV_CIRCLED.get(value, f"●{value}")
 
 
 def circled_ticket(ticket: str) -> str:

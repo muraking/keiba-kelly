@@ -1,6 +1,6 @@
 """Regression tests for the independent local-racing strategy.
 
-Version: v2026.07.25.6
+Version: v2026.07.26.1
 """
 
 from __future__ import annotations
@@ -49,8 +49,9 @@ class LocalStrategyTest(unittest.TestCase):
         self.assertEqual(result["action"], "NO_BET")
         message = format_discord("テスト1R", snap, result)
         self.assertIn("7分前最新指数", message)
-        self.assertIn("[逃]", message)
-        self.assertIn("WP50.0% / 2.0倍 / EV100.0 ✅", message)
+        self.assertIn("展開", message)
+        self.assertIn("◎ ① 馬1 逃 WP50.0% / 2.0倍", message)
+        self.assertNotIn("/ EV", message)
 
     def test_stake_matches_ticket_count(self) -> None:
         result = evaluate_snapshot(self.base())
@@ -64,9 +65,10 @@ class LocalStrategyTest(unittest.TestCase):
         self.assertEqual(result["tickets"], original)
         self.assertIn("人が判断する参考買い目", message)
         self.assertIn("参考・非推奨】単勝", message)
-        self.assertIn("② 馬2 [逃] WP27.0% / 4.0倍 / EV108.0 ✅", message)
-        self.assertNotIn("① 馬1 [逃] WP28.0% / 2.8倍 / EV78.4 ✅", message)
-        self.assertIn("[逃]", message)
+        self.assertIn("〇 ❷ 馬2 逃 WP27.0% / 4.0倍", message)
+        self.assertIn("◎ ① 馬1 逃 WP28.0% / 2.8倍", message)
+        self.assertNotIn("/ EV", message)
+        self.assertIn("❶＝内部期待値100超", message)
 
     def test_small_field_routes_axis_to_third(self) -> None:
         snap = self.base()
