@@ -41835,6 +41835,83 @@
               "fuku_min": 3.4,
               "fuku_max": 5.1
             }
+          },
+          "5": {
+            "1": {
+              "tan": 16.4,
+              "fuku_min": 4.3,
+              "fuku_max": 6.4
+            },
+            "2": {
+              "tan": 35.5,
+              "fuku_min": 7.1,
+              "fuku_max": 10.6
+            },
+            "3": {
+              "tan": 15.6,
+              "fuku_min": 2.8,
+              "fuku_max": 4.1
+            },
+            "4": {
+              "tan": 146.8,
+              "fuku_min": 15.6,
+              "fuku_max": 23.7
+            },
+            "5": {
+              "tan": 80.2,
+              "fuku_min": 9.4,
+              "fuku_max": 14.2
+            },
+            "6": {
+              "tan": 6.5,
+              "fuku_min": 2.2,
+              "fuku_max": 3.0
+            },
+            "7": {
+              "tan": 28.6,
+              "fuku_min": 4.1,
+              "fuku_max": 6.0
+            },
+            "8": {
+              "tan": 6.6,
+              "fuku_min": 2.0,
+              "fuku_max": 2.9
+            },
+            "9": {
+              "tan": 126.2,
+              "fuku_min": 23.2,
+              "fuku_max": 35.1
+            },
+            "10": {
+              "tan": 3.0,
+              "fuku_min": 1.4,
+              "fuku_max": 1.8
+            },
+            "11": {
+              "tan": 5.1,
+              "fuku_min": 1.6,
+              "fuku_max": 2.2
+            },
+            "12": {
+              "tan": 159.2,
+              "fuku_min": 17.0,
+              "fuku_max": 25.7
+            },
+            "13": {
+              "tan": 37.9,
+              "fuku_min": 6.0,
+              "fuku_max": 9.0
+            },
+            "14": {
+              "tan": 6.5,
+              "fuku_min": 1.8,
+              "fuku_max": 2.5
+            },
+            "15": {
+              "tan": 43.1,
+              "fuku_min": 6.2,
+              "fuku_max": 9.3
+            }
           }
         },
         "札幌(日)": {
@@ -42286,7 +42363,7 @@
           }
         }
       },
-      "jra_odds_updated": "2026-07-26T11:33:22.924843+09:00"
+      "jra_odds_updated": "2026-07-26T11:43:22.863004+09:00"
     }
   },
   "_settings": {
