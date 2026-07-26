@@ -1,0 +1,224 @@
+{
+  "version": "v2026.07.27.1",
+  "market": "local",
+  "rule": "win_odds >= 10; top 3 by walk-forward p_place",
+  "overall": {
+    "candidate_races": 33993,
+    "races_with_actual_10x_place": 24965,
+    "races_caught_by_selected_three": 18785,
+    "all_candidate_race_hit_rate": 55.26137734239402,
+    "capture_when_10x_horse_places": 75.24534348087322,
+    "selections": 100964,
+    "places": 21556,
+    "selection_place_rate": 21.35018422407987,
+    "mean_selected_per_race": 2.9701409113641044,
+    "by_hole_rank": {
+      "1.0": {
+        "selections": 33993,
+        "places": 8893,
+        "place_rate": 26.161268496455154,
+        "mean_odds": 24.789997950251937
+      },
+      "2.0": {
+        "selections": 33818,
+        "places": 7079,
+        "place_rate": 20.932639422792594,
+        "mean_odds": 36.21910225981985
+      },
+      "3.0": {
+        "selections": 33153,
+        "places": 5584,
+        "place_rate": 16.843121286158116,
+        "mean_odds": 51.657026515669926
+      }
+    },
+    "by_win_odds": {
+      "10-19.9": {
+        "selections": 41005,
+        "places": 12537,
+        "place_rate": 30.574320204853066
+      },
+      "20-29.9": {
+        "selections": 20035,
+        "places": 4313,
+        "place_rate": 21.52732717743948
+      },
+      "30-49.9": {
+        "selections": 19174,
+        "places": 3064,
+        "place_rate": 15.979972879941586
+      },
+      "50+": {
+        "selections": 20750,
+        "places": 1642,
+        "place_rate": 7.913253012048192
+      }
+    }
+  },
+  "yearly": {
+    "2024": {
+      "candidate_races": 13613,
+      "races_with_actual_10x_place": 9903,
+      "races_caught_by_selected_three": 7523,
+      "all_candidate_race_hit_rate": 55.26335120840373,
+      "capture_when_10x_horse_places": 75.9668787236191,
+      "selections": 40356,
+      "places": 8638,
+      "selection_place_rate": 21.404499950441075,
+      "mean_selected_per_race": 2.9645192095790787,
+      "by_hole_rank": {
+        "1.0": {
+          "selections": 13613,
+          "places": 3612,
+          "place_rate": 26.533460662601925,
+          "mean_odds": 25.141004940050614
+        },
+        "2.0": {
+          "selections": 13522,
+          "places": 2761,
+          "place_rate": 20.418577133560124,
+          "mean_odds": 36.54682740825218
+        },
+        "3.0": {
+          "selections": 13221,
+          "places": 2265,
+          "place_rate": 17.13183571590651,
+          "mean_odds": 51.43446031484884
+        }
+      },
+      "by_win_odds": {
+        "10-19.9": {
+          "selections": 16482,
+          "places": 5127,
+          "place_rate": 31.106661812886788
+        },
+        "20-29.9": {
+          "selections": 7908,
+          "places": 1656,
+          "place_rate": 20.94081942336874
+        },
+        "30-49.9": {
+          "selections": 7677,
+          "places": 1200,
+          "place_rate": 15.631105900742478
+        },
+        "50+": {
+          "selections": 8289,
+          "places": 655,
+          "place_rate": 7.902038846664254
+        }
+      }
+    },
+    "2025": {
+      "candidate_races": 13401,
+      "races_with_actual_10x_place": 9829,
+      "races_caught_by_selected_three": 7320,
+      "all_candidate_race_hit_rate": 54.6227893440788,
+      "capture_when_10x_horse_places": 74.47349679519789,
+      "selections": 39842,
+      "places": 8404,
+      "selection_place_rate": 21.09331860850359,
+      "mean_selected_per_race": 2.9730617118125515,
+      "by_hole_rank": {
+        "1.0": {
+          "selections": 13401,
+          "places": 3457,
+          "place_rate": 25.79658234460115,
+          "mean_odds": 24.68665771464449
+        },
+        "2.0": {
+          "selections": 13349,
+          "places": 2776,
+          "place_rate": 20.79556521087722,
+          "mean_odds": 36.48584913416242
+        },
+        "3.0": {
+          "selections": 13092,
+          "places": 2171,
+          "place_rate": 16.582645890620228,
+          "mean_odds": 52.21280936775243
+        }
+      },
+      "by_win_odds": {
+        "10-19.9": {
+          "selections": 15986,
+          "places": 4802,
+          "place_rate": 30.038783935943954
+        },
+        "20-29.9": {
+          "selections": 7916,
+          "places": 1716,
+          "place_rate": 21.677614957049016
+        },
+        "30-49.9": {
+          "selections": 7591,
+          "places": 1240,
+          "place_rate": 16.33513371097352
+        },
+        "50+": {
+          "selections": 8349,
+          "places": 646,
+          "place_rate": 7.737453587255959
+        }
+      }
+    },
+    "2026": {
+      "candidate_races": 6979,
+      "races_with_actual_10x_place": 5233,
+      "races_caught_by_selected_three": 3942,
+      "all_candidate_race_hit_rate": 56.483736925060896,
+      "capture_when_10x_horse_places": 75.32963883049875,
+      "selections": 20766,
+      "places": 4514,
+      "selection_place_rate": 21.737455456033903,
+      "mean_selected_per_race": 2.975497922338444,
+      "by_hole_rank": {
+        "1.0": {
+          "selections": 6979,
+          "places": 1824,
+          "place_rate": 26.13554950565984,
+          "mean_odds": 24.30376845394101
+        },
+        "2.0": {
+          "selections": 6947,
+          "places": 1542,
+          "place_rate": 22.196631639556642,
+          "mean_odds": 35.06863393065602
+        },
+        "3.0": {
+          "selections": 6840,
+          "places": 1148,
+          "place_rate": 16.783625730994153,
+          "mean_odds": 51.02343567379734
+        }
+      },
+      "by_win_odds": {
+        "10-19.9": {
+          "selections": 8537,
+          "places": 2608,
+          "place_rate": 30.549373316153215
+        },
+        "20-29.9": {
+          "selections": 4211,
+          "places": 941,
+          "place_rate": 22.346236048444553
+        },
+        "30-49.9": {
+          "selections": 3906,
+          "places": 624,
+          "place_rate": 15.97542242703533
+        },
+        "50+": {
+          "selections": 4112,
+          "places": 341,
+          "place_rate": 8.292801556420233
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Predictions are walk-forward out-of-sample.",
+    "Final win odds proxy the live seven-minute odds threshold.",
+    "A race with no runner at 10.0 or higher is not a candidate race."
+  ]
+}
