@@ -1,0 +1,6637 @@
+{
+  "version": "v2026.07.26.1",
+  "rules_audited": 9,
+  "strict_all_years_without_max": [
+    "R1",
+    "R2",
+    "R3"
+  ],
+  "audits": [
+    {
+      "rule_id": "R1",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "3.0",
+        "odds_bin": "30-50",
+        "field_bin": "12+",
+        "race_segment": "late"
+      },
+      "annual": {
+        "2024": {
+          "races": 346,
+          "bets": 346,
+          "hits": 12,
+          "roi": 126.70520231213874,
+          "lcb90": 0.7993854592453442,
+          "max_share": 0.10812043795620438,
+          "roi_without_max": 113.0057803468208
+        },
+        "2025": {
+          "races": 376,
+          "bets": 376,
+          "hits": 13,
+          "roi": 135.47872340425533,
+          "lcb90": 0.8767915891422605,
+          "max_share": 0.09383588535531999,
+          "roi_without_max": 122.76595744680851
+        },
+        "2026": {
+          "races": 179,
+          "bets": 179,
+          "hits": 10,
+          "roi": 211.95530726256982,
+          "lcb90": 1.2734419247924111,
+          "max_share": 0.12730627306273062,
+          "roi_without_max": 184.97206703910615
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 20,
+          "bets": 20,
+          "hits": 1,
+          "roi": 154.0,
+          "lcb90": -0.4336639999999998,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-02": {
+          "races": 17,
+          "bets": 17,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 132.17391304347825,
+          "lcb90": -0.37220173913043486,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 27,
+          "bets": 27,
+          "hits": 1,
+          "roi": 112.22222222222223,
+          "lcb90": -0.3160177777777775,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-05": {
+          "races": 39,
+          "bets": 39,
+          "hits": 2,
+          "roi": 173.0769230769231,
+          "lcb90": 0.18176844572415618,
+          "max_share": 0.52,
+          "roi_without_max": 83.07692307692308
+        },
+        "2024-06": {
+          "races": 34,
+          "bets": 34,
+          "hits": 2,
+          "roi": 229.1176470588235,
+          "lcb90": 0.2456029570599223,
+          "max_share": 0.5147625160462131,
+          "roi_without_max": 111.1764705882353
+        },
+        "2024-07": {
+          "races": 30,
+          "bets": 30,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-08": {
+          "races": 16,
+          "bets": 16,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 26,
+          "bets": 26,
+          "hits": 1,
+          "roi": 124.23076923076923,
+          "lcb90": -0.34983384615384683,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-10": {
+          "races": 35,
+          "bets": 35,
+          "hits": 1,
+          "roi": 92.0,
+          "lcb90": -0.2590720000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-11": {
+          "races": 36,
+          "bets": 36,
+          "hits": 2,
+          "roi": 256.6666666666667,
+          "lcb90": 0.2733318296350449,
+          "max_share": 0.512987012987013,
+          "roi_without_max": 125.0
+        },
+        "2024-12": {
+          "races": 43,
+          "bets": 43,
+          "hits": 1,
+          "roi": 103.72093023255815,
+          "lcb90": -0.29207813953488393,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-01": {
+          "races": 25,
+          "bets": 25,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 17,
+          "bets": 17,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 31,
+          "bets": 31,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 33,
+          "bets": 33,
+          "hits": 2,
+          "roi": 217.57575757575756,
+          "lcb90": 0.2118460671857596,
+          "max_share": 0.575208913649025,
+          "roi_without_max": 92.42424242424242
+        },
+        "2025-05": {
+          "races": 39,
+          "bets": 39,
+          "hits": 3,
+          "roi": 288.97435897435895,
+          "lcb90": 0.7869630954101372,
+          "max_share": 0.3930789707187223,
+          "roi_without_max": 175.3846153846154
+        },
+        "2025-06": {
+          "races": 34,
+          "bets": 34,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-07": {
+          "races": 31,
+          "bets": 31,
+          "hits": 1,
+          "roi": 107.0967741935484,
+          "lcb90": -0.30158451612903225,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-08": {
+          "races": 32,
+          "bets": 32,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-09": {
+          "races": 35,
+          "bets": 35,
+          "hits": 3,
+          "roi": 332.2857142857143,
+          "lcb90": 0.9300430858983342,
+          "max_share": 0.352536543422184,
+          "roi_without_max": 215.1428571428571
+        },
+        "2025-10": {
+          "races": 37,
+          "bets": 37,
+          "hits": 1,
+          "roi": 129.1891891891892,
+          "lcb90": -0.36379675675675616,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-11": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 183.91304347826087,
+          "lcb90": -0.5178991304347829,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-12": {
+          "races": 39,
+          "bets": 39,
+          "hits": 2,
+          "roi": 218.7179487179487,
+          "lcb90": 0.23031753025144353,
+          "max_share": 0.5158264947245017,
+          "roi_without_max": 105.8974358974359
+        },
+        "2026-01": {
+          "races": 25,
+          "bets": 25,
+          "hits": 1,
+          "roi": 172.8,
+          "lcb90": -0.4866048000000003,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-02": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 183.68421052631578,
+          "lcb90": -0.5172547368421052,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-03": {
+          "races": 29,
+          "bets": 29,
+          "hits": 1,
+          "roi": 139.6551724137931,
+          "lcb90": -0.39326896551724144,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-04": {
+          "races": 36,
+          "bets": 36,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-05": {
+          "races": 35,
+          "bets": 35,
+          "hits": 4,
+          "roi": 460.5714285714286,
+          "lcb90": 1.751934619480973,
+          "max_share": 0.29962779156327546,
+          "roi_without_max": 322.57142857142856
+        },
+        "2026-06": {
+          "races": 24,
+          "bets": 24,
+          "hits": 3,
+          "roi": 415.00000000000006,
+          "lcb90": 1.2069469206222614,
+          "max_share": 0.3614457831325301,
+          "roi_without_max": 265.0
+        },
+        "2026-07": {
+          "races": 11,
+          "bets": 11,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 21,
+            "bets": 21,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 20,
+            "bets": 20,
+            "hits": 1,
+            "roi": 211.50000000000003,
+            "lcb90": -0.5955840000000001,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 392.72727272727275,
+            "lcb90": -1.1059200000000002,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 54,
+            "bets": 54,
+            "hits": 3,
+            "roi": 194.8148148148148,
+            "lcb90": 0.5310440789741153,
+            "max_share": 0.3593155893536122,
+            "roi_without_max": 124.81481481481482
+          },
+          "2025": {
+            "races": 64,
+            "bets": 64,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 18,
+            "bets": 18,
+            "hits": 2,
+            "roi": 423.8888888888889,
+            "lcb90": 0.4811692423072169,
+            "max_share": 0.5609436435124509,
+            "roi_without_max": 186.11111111111111
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 47,
+            "bets": 47,
+            "hits": 1,
+            "roi": 100.85106382978724,
+            "lcb90": -0.28399659574468084,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 48,
+            "bets": 48,
+            "hits": 2,
+            "roi": 158.125,
+            "lcb90": 0.14304398824919007,
+            "max_share": 0.5836627140974967,
+            "roi_without_max": 65.83333333333333
+          },
+          "2026": {
+            "races": 19,
+            "bets": 19,
+            "hits": 1,
+            "roi": 201.57894736842104,
+            "lcb90": -0.567646315789474,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 62,
+            "bets": 62,
+            "hits": 3,
+            "roi": 186.29032258064515,
+            "lcb90": 0.4896934706068319,
+            "max_share": 0.38961038961038963,
+            "roi_without_max": 113.70967741935485
+          },
+          "2025": {
+            "races": 46,
+            "bets": 46,
+            "hits": 3,
+            "roi": 251.7391304347826,
+            "lcb90": 0.6744528708750017,
+            "max_share": 0.3799654576856649,
+            "roi_without_max": 156.08695652173913
+          },
+          "2026": {
+            "races": 24,
+            "bets": 24,
+            "hits": 1,
+            "roi": 125.41666666666667,
+            "lcb90": -0.3531733333333338,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 37,
+            "bets": 37,
+            "hits": 1,
+            "roi": 83.24324324324324,
+            "lcb90": -0.2344129729729728,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 37,
+            "bets": 37,
+            "hits": 1,
+            "roi": 89.72972972972974,
+            "lcb90": -0.252678918918919,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 22,
+            "bets": 22,
+            "hits": 1,
+            "roi": 158.63636363636365,
+            "lcb90": -0.4467199999999998,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 18,
+            "bets": 18,
+            "hits": 1,
+            "roi": 192.22222222222223,
+            "lcb90": -0.5412977777777781,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 32,
+            "bets": 32,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 34,
+            "bets": 34,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 23,
+            "bets": 23,
+            "hits": 2,
+            "roi": 332.60869565217394,
+            "lcb90": 0.37561979330210304,
+            "max_share": 0.5294117647058824,
+            "roi_without_max": 156.52173913043478
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 1,
+            "roi": 966.0,
+            "lcb90": -2.720255999999999,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 3,
+            "bets": 3,
+            "hits": 1,
+            "roi": 1073.3333333333333,
+            "lcb90": -3.0225066666666685,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 343.07692307692304,
+            "lcb90": -0.9661046153846158,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 30,
+            "bets": 30,
+            "hits": 1,
+            "roi": 122.66666666666666,
+            "lcb90": -0.3454293333333336,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 244.61538461538464,
+            "lcb90": -0.688836923076924,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 2,
+            "bets": 2,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 17,
+            "bets": 17,
+            "hits": 1,
+            "roi": 178.23529411764707,
+            "lcb90": -0.5019105882352946,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 28,
+            "bets": 28,
+            "hits": 4,
+            "roi": 610.0,
+            "lcb90": 2.404411342370475,
+            "max_share": 0.27985948477751754,
+            "roi_without_max": 439.28571428571433
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 22,
+            "bets": 22,
+            "hits": 1,
+            "roi": 147.27272727272725,
+            "lcb90": -0.41471999999999976,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 25,
+            "bets": 25,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R2",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "3.0",
+        "odds_bin": "30-50",
+        "p_bin": ".16-.20",
+        "race_segment": "late"
+      },
+      "annual": {
+        "2024": {
+          "races": 295,
+          "bets": 295,
+          "hits": 11,
+          "roi": 136.47457627118644,
+          "lcb90": 0.8370556262361392,
+          "max_share": 0.12295081967213115,
+          "roi_without_max": 119.69491525423727
+        },
+        "2025": {
+          "races": 307,
+          "bets": 307,
+          "hits": 10,
+          "roi": 126.9055374592834,
+          "lcb90": 0.7574529783532488,
+          "max_share": 0.12268993839835729,
+          "roi_without_max": 111.33550488599349
+        },
+        "2026": {
+          "races": 144,
+          "bets": 144,
+          "hits": 6,
+          "roi": 157.5,
+          "lcb90": 0.7607802505860815,
+          "max_share": 0.2019400352733686,
+          "roi_without_max": 125.69444444444444
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 22,
+          "bets": 22,
+          "hits": 2,
+          "roi": 365.0,
+          "lcb90": 0.3270951609171826,
+          "max_share": 0.6164383561643836,
+          "roi_without_max": 140.0
+        },
+        "2024-02": {
+          "races": 10,
+          "bets": 10,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 18,
+          "bets": 18,
+          "hits": 1,
+          "roi": 168.88888888888889,
+          "lcb90": -0.4755911111111113,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 131.7391304347826,
+          "lcb90": -0.3709773913043477,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-05": {
+          "races": 33,
+          "bets": 33,
+          "hits": 4,
+          "roi": 444.24242424242425,
+          "lcb90": 1.6902148023807602,
+          "max_share": 0.32060027285129605,
+          "roi_without_max": 301.8181818181818
+        },
+        "2024-06": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 164.34782608695653,
+          "lcb90": -0.4628034782608701,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-07": {
+          "races": 27,
+          "bets": 27,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-08": {
+          "races": 23,
+          "bets": 23,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 23,
+          "bets": 23,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-10": {
+          "races": 21,
+          "bets": 21,
+          "hits": 1,
+          "roi": 153.33333333333334,
+          "lcb90": -0.43178666666666676,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-11": {
+          "races": 35,
+          "bets": 35,
+          "hits": 1,
+          "roi": 128.57142857142858,
+          "lcb90": -0.3620571428571431,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-12": {
+          "races": 37,
+          "bets": 37,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-01": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 181.57894736842107,
+          "lcb90": -0.5113263157894736,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 14,
+          "bets": 14,
+          "hits": 1,
+          "roi": 231.42857142857144,
+          "lcb90": -0.6517028571428574,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 30,
+          "bets": 30,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 28,
+          "bets": 28,
+          "hits": 1,
+          "roi": 108.92857142857142,
+          "lcb90": -0.30674285714285743,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-05": {
+          "races": 29,
+          "bets": 29,
+          "hits": 1,
+          "roi": 142.75862068965517,
+          "lcb90": -0.40200827586206933,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-06": {
+          "races": 27,
+          "bets": 27,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-07": {
+          "races": 26,
+          "bets": 26,
+          "hits": 1,
+          "roi": 170.76923076923077,
+          "lcb90": -0.48088615384615463,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-08": {
+          "races": 29,
+          "bets": 29,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-09": {
+          "races": 31,
+          "bets": 31,
+          "hits": 3,
+          "roi": 375.1612903225806,
+          "lcb90": 1.0612251329407494,
+          "max_share": 0.352536543422184,
+          "roi_without_max": 242.90322580645162
+        },
+        "2025-10": {
+          "races": 25,
+          "bets": 25,
+          "hits": 1,
+          "roi": 191.2,
+          "lcb90": -0.5384191999999999,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-11": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 183.91304347826087,
+          "lcb90": -0.5178991304347829,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-12": {
+          "races": 26,
+          "bets": 26,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-01": {
+          "races": 25,
+          "bets": 25,
+          "hits": 1,
+          "roi": 150.4,
+          "lcb90": -0.4235264000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-02": {
+          "races": 16,
+          "bets": 16,
+          "hits": 1,
+          "roi": 218.125,
+          "lcb90": -0.6142400000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-03": {
+          "races": 30,
+          "bets": 30,
+          "hits": 1,
+          "roi": 152.66666666666666,
+          "lcb90": -0.4299093333333335,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-04": {
+          "races": 23,
+          "bets": 23,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-05": {
+          "races": 25,
+          "bets": 25,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-06": {
+          "races": 15,
+          "bets": 15,
+          "hits": 3,
+          "roi": 723.3333333333334,
+          "lcb90": 2.2662261903777887,
+          "max_share": 0.35944700460829493,
+          "roi_without_max": 463.33333333333337
+        },
+        "2026-07": {
+          "races": 10,
+          "bets": 10,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 24,
+            "bets": 24,
+            "hits": 1,
+            "roi": 133.75,
+            "lcb90": -0.37664000000000053,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 19,
+            "bets": 19,
+            "hits": 1,
+            "roi": 222.63157894736844,
+            "lcb90": -0.6269305263157889,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 2,
+            "roi": 834.0,
+            "lcb90": 1.171380331856347,
+            "max_share": 0.5491606714628298,
+            "roi_without_max": 376.0
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 34,
+            "bets": 34,
+            "hits": 3,
+            "roi": 352.6470588235294,
+            "lcb90": 0.9749979626827341,
+            "max_share": 0.3919933277731443,
+            "roi_without_max": 214.41176470588235
+          },
+          "2025": {
+            "races": 40,
+            "bets": 40,
+            "hits": 1,
+            "roi": 103.49999999999999,
+            "lcb90": -0.29145600000000016,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 20,
+            "bets": 20,
+            "hits": 1,
+            "roi": 167.5,
+            "lcb90": -0.4716800000000003,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 42,
+            "bets": 42,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 41,
+            "bets": 41,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 37,
+            "bets": 37,
+            "hits": 2,
+            "roi": 203.7837837837838,
+            "lcb90": 0.1811851080225768,
+            "max_share": 0.596816976127321,
+            "roi_without_max": 82.16216216216216
+          },
+          "2025": {
+            "races": 30,
+            "bets": 30,
+            "hits": 1,
+            "roi": 101.66666666666666,
+            "lcb90": -0.2862933333333333,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 22,
+            "bets": 22,
+            "hits": 1,
+            "roi": 140.0,
+            "lcb90": -0.39424000000000015,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 23,
+            "bets": 23,
+            "hits": 1,
+            "roi": 193.04347826086956,
+            "lcb90": -0.5436104347826087,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 14,
+            "bets": 14,
+            "hits": 1,
+            "roi": 249.28571428571428,
+            "lcb90": -0.7019885714285716,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 24,
+            "bets": 24,
+            "hits": 1,
+            "roi": 144.16666666666666,
+            "lcb90": -0.4059733333333335,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 8,
+            "bets": 8,
+            "hits": 1,
+            "roi": 450.0,
+            "lcb90": -1.2672000000000008,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 19,
+            "bets": 19,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 18,
+            "bets": 18,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 19,
+            "bets": 19,
+            "hits": 2,
+            "roi": 430.0,
+            "lcb90": 0.4192806273388734,
+            "max_share": 0.605875152998776,
+            "roi_without_max": 169.4736842105263
+          },
+          "2025": {
+            "races": 20,
+            "bets": 20,
+            "hits": 2,
+            "roi": 334.5,
+            "lcb90": 0.3929025964670303,
+            "max_share": 0.515695067264574,
+            "roi_without_max": 162.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 1,
+            "roi": 390.0,
+            "lcb90": -1.098240000000001,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 25,
+            "bets": 25,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 8,
+            "bets": 8,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 20,
+            "bets": 20,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 8,
+            "bets": 8,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 19,
+            "bets": 19,
+            "hits": 1,
+            "roi": 159.47368421052633,
+            "lcb90": -0.4490778947368417,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 21,
+            "bets": 21,
+            "hits": 3,
+            "roi": 616.6666666666667,
+            "lcb90": 1.8233639531271182,
+            "max_share": 0.3691119691119691,
+            "roi_without_max": 389.04761904761904
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 249.23076923076923,
+            "lcb90": -0.7018338461538463,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R3",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "1.0",
+        "odds_bin": "15-20",
+        "p_bin": ".20-.25",
+        "fav_bin": ".25-.35"
+      },
+      "annual": {
+        "2024": {
+          "races": 253,
+          "bets": 253,
+          "hits": 17,
+          "roi": 115.09881422924902,
+          "lcb90": 0.8032546697512556,
+          "max_share": 0.06833791208791208,
+          "roi_without_max": 107.23320158102767
+        },
+        "2025": {
+          "races": 248,
+          "bets": 248,
+          "hits": 16,
+          "roi": 111.93548387096774,
+          "lcb90": 0.7703144378311095,
+          "max_share": 0.07132564841498559,
+          "roi_without_max": 103.95161290322581
+        },
+        "2026": {
+          "races": 126,
+          "bets": 126,
+          "hits": 9,
+          "roi": 118.88888888888889,
+          "lcb90": 0.6963655383564932,
+          "max_share": 0.12082777036048065,
+          "roi_without_max": 104.52380952380953
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 13,
+          "bets": 13,
+          "hits": 2,
+          "roi": 299.2307692307692,
+          "lcb90": 0.39578654896059406,
+          "max_share": 0.506426735218509,
+          "roi_without_max": 147.6923076923077
+        },
+        "2024-02": {
+          "races": 17,
+          "bets": 17,
+          "hits": 4,
+          "roi": 402.94117647058823,
+          "lcb90": 1.6793581016766836,
+          "max_share": 0.2905109489051095,
+          "roi_without_max": 285.88235294117646
+        },
+        "2024-03": {
+          "races": 12,
+          "bets": 12,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 21,
+          "bets": 21,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-05": {
+          "races": 30,
+          "bets": 30,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-06": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 67.82608695652173,
+          "lcb90": -0.1909982608695654,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-07": {
+          "races": 29,
+          "bets": 29,
+          "hits": 4,
+          "roi": 236.20689655172416,
+          "lcb90": 0.9299109074967178,
+          "max_share": 0.2671532846715328,
+          "roi_without_max": 173.10344827586206
+        },
+        "2024-08": {
+          "races": 22,
+          "bets": 22,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 23,
+          "bets": 23,
+          "hits": 3,
+          "roi": 218.26086956521738,
+          "lcb90": 0.6392811172077666,
+          "max_share": 0.3545816733067729,
+          "roi_without_max": 140.8695652173913
+        },
+        "2024-10": {
+          "races": 20,
+          "bets": 20,
+          "hits": 2,
+          "roi": 171.0,
+          "lcb90": 0.20156685775387295,
+          "max_share": 0.5058479532163743,
+          "roi_without_max": 84.5
+        },
+        "2024-11": {
+          "races": 20,
+          "bets": 20,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-12": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 66.52173913043478,
+          "lcb90": -0.1873252173913046,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-01": {
+          "races": 17,
+          "bets": 17,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 16,
+          "bets": 16,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 22,
+          "bets": 22,
+          "hits": 1,
+          "roi": 90.0,
+          "lcb90": -0.2534400000000002,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 20,
+          "bets": 20,
+          "hits": 3,
+          "roi": 240.0,
+          "lcb90": 0.7183489411126802,
+          "max_share": 0.35208333333333336,
+          "roi_without_max": 155.5
+        },
+        "2025-05": {
+          "races": 25,
+          "bets": 25,
+          "hits": 2,
+          "roi": 154.0,
+          "lcb90": 0.17366773320103412,
+          "max_share": 0.5064935064935064,
+          "roi_without_max": 76.0
+        },
+        "2025-06": {
+          "races": 23,
+          "bets": 23,
+          "hits": 2,
+          "roi": 141.30434782608697,
+          "lcb90": 0.161627676814315,
+          "max_share": 0.5107692307692308,
+          "roi_without_max": 69.1304347826087
+        },
+        "2025-07": {
+          "races": 22,
+          "bets": 22,
+          "hits": 2,
+          "roi": 145.45454545454547,
+          "lcb90": 0.16639531708168298,
+          "max_share": 0.525,
+          "roi_without_max": 69.0909090909091
+        },
+        "2025-08": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 87.36842105263159,
+          "lcb90": -0.24602947368421058,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-09": {
+          "races": 24,
+          "bets": 24,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-10": {
+          "races": 27,
+          "bets": 27,
+          "hits": 1,
+          "roi": 67.77777777777779,
+          "lcb90": -0.19086222222222227,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-11": {
+          "races": 14,
+          "bets": 14,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-12": {
+          "races": 19,
+          "bets": 19,
+          "hits": 4,
+          "roi": 378.42105263157896,
+          "lcb90": 1.562959419921055,
+          "max_share": 0.2712100139082058,
+          "roi_without_max": 275.7894736842105
+        },
+        "2026-01": {
+          "races": 18,
+          "bets": 18,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-02": {
+          "races": 9,
+          "bets": 9,
+          "hits": 2,
+          "roi": 402.22222222222223,
+          "lcb90": 0.6125895926270624,
+          "max_share": 0.5,
+          "roi_without_max": 201.11111111111111
+        },
+        "2026-03": {
+          "races": 22,
+          "bets": 22,
+          "hits": 1,
+          "roi": 71.81818181818181,
+          "lcb90": -0.20223999999999975,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-04": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 92.10526315789474,
+          "lcb90": -0.25936842105263125,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-05": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 68.69565217391305,
+          "lcb90": -0.19344695652173938,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-06": {
+          "races": 21,
+          "bets": 21,
+          "hits": 3,
+          "roi": 232.85714285714286,
+          "lcb90": 0.6903958647663269,
+          "max_share": 0.3619631901840491,
+          "roi_without_max": 148.57142857142858
+        },
+        "2026-07": {
+          "races": 14,
+          "bets": 14,
+          "hits": 1,
+          "roi": 111.42857142857143,
+          "lcb90": -0.31378285714285714,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 31,
+            "bets": 31,
+            "hits": 3,
+            "roi": 162.90322580645162,
+            "lcb90": 0.4579924710594079,
+            "max_share": 0.3801980198019802,
+            "roi_without_max": 100.96774193548387
+          },
+          "2025": {
+            "races": 22,
+            "bets": 22,
+            "hits": 2,
+            "roi": 144.54545454545456,
+            "lcb90": 0.1671118607667943,
+            "max_share": 0.5,
+            "roi_without_max": 72.27272727272728
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 1,
+            "roi": 263.3333333333333,
+            "lcb90": -0.7415466666666668,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 24,
+            "bets": 24,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 32,
+            "bets": 32,
+            "hits": 2,
+            "roi": 106.87500000000001,
+            "lcb90": 0.10971535433600177,
+            "max_share": 0.5555555555555556,
+            "roi_without_max": 47.5
+          },
+          "2026": {
+            "races": 17,
+            "bets": 17,
+            "hits": 1,
+            "roi": 106.47058823529412,
+            "lcb90": -0.2998211764705887,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 24,
+            "bets": 24,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 24,
+            "bets": 24,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 8,
+            "bets": 8,
+            "hits": 1,
+            "roi": 221.25,
+            "lcb90": -0.6230399999999996,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 35,
+            "bets": 35,
+            "hits": 3,
+            "roi": 153.42857142857142,
+            "lcb90": 0.42916145849036824,
+            "max_share": 0.37057728119180633,
+            "roi_without_max": 96.57142857142857
+          },
+          "2025": {
+            "races": 28,
+            "bets": 28,
+            "hits": 2,
+            "roi": 124.28571428571429,
+            "lcb90": 0.1371082356693767,
+            "max_share": 0.514367816091954,
+            "roi_without_max": 60.357142857142854
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 5,
+            "bets": 5,
+            "hits": 1,
+            "roi": 302.0,
+            "lcb90": -0.8504319999999996,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 1,
+            "roi": 452.50000000000006,
+            "lcb90": -1.2742400000000007,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 18,
+            "bets": 18,
+            "hits": 1,
+            "roi": 96.11111111111111,
+            "lcb90": -0.27064888888888905,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 17,
+            "bets": 17,
+            "hits": 1,
+            "roi": 102.94117647058823,
+            "lcb90": -0.2898823529411765,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 2,
+            "roi": 237.69230769230768,
+            "lcb90": 0.3144773168255224,
+            "max_share": 0.5048543689320388,
+            "roi_without_max": 117.6923076923077
+          },
+          "2025": {
+            "races": 15,
+            "bets": 15,
+            "hits": 2,
+            "roi": 229.99999999999997,
+            "lcb90": 0.28441004496591926,
+            "max_share": 0.5391304347826087,
+            "roi_without_max": 106.0
+          },
+          "2026": {
+            "races": 8,
+            "bets": 8,
+            "hits": 1,
+            "roi": 197.5,
+            "lcb90": -0.5561600000000002,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 12,
+            "bets": 12,
+            "hits": 1,
+            "roi": 125.83333333333333,
+            "lcb90": -0.35434666666666703,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 1,
+            "roi": 156.0,
+            "lcb90": -0.4392959999999999,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 15,
+            "bets": 15,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 21,
+            "bets": 21,
+            "hits": 1,
+            "roi": 92.85714285714286,
+            "lcb90": -0.2614857142857143,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 2,
+            "roi": 223.12500000000003,
+            "lcb90": 0.27673230892120104,
+            "max_share": 0.5154061624649859,
+            "roi_without_max": 108.125
+          },
+          "2025": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 18,
+            "bets": 18,
+            "hits": 3,
+            "roi": 310.0,
+            "lcb90": 0.9429448089528325,
+            "max_share": 0.35304659498207885,
+            "roi_without_max": 200.55555555555554
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 1,
+            "roi": 120.0,
+            "lcb90": -0.33792,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 106.87500000000001,
+            "lcb90": -0.3009600000000001,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 13,
+            "bets": 13,
+            "hits": 2,
+            "roi": 266.9230769230769,
+            "lcb90": 0.33235945279583756,
+            "max_share": 0.5619596541786743,
+            "roi_without_max": 116.92307692307693
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 15,
+            "bets": 15,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 17,
+            "bets": 17,
+            "hits": 1,
+            "roi": 107.6470588235294,
+            "lcb90": -0.303134117647059,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 1,
+            "roi": 171.11111111111111,
+            "lcb90": -0.481848888888889,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 21,
+            "bets": 21,
+            "hits": 3,
+            "roi": 252.38095238095238,
+            "lcb90": 0.7446743634581896,
+            "max_share": 0.37358490566037733,
+            "roi_without_max": 158.0952380952381
+          },
+          "2026": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 143.63636363636363,
+            "lcb90": -0.40447999999999995,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R4",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "2.0",
+        "odds_bin": "15-20",
+        "p_bin": ".12-.16"
+      },
+      "annual": {
+        "2024": {
+          "races": 301,
+          "bets": 301,
+          "hits": 18,
+          "roi": 105.28239202657808,
+          "lcb90": 0.7426069112351097,
+          "max_share": 0.062164720732092144,
+          "roi_without_max": 98.7375415282392
+        },
+        "2025": {
+          "races": 300,
+          "bets": 300,
+          "hits": 19,
+          "roi": 107.73333333333332,
+          "lcb90": 0.7690748080157963,
+          "max_share": 0.06126237623762376,
+          "roi_without_max": 101.13333333333334
+        },
+        "2026": {
+          "races": 150,
+          "bets": 150,
+          "hits": 10,
+          "roi": 117.86666666666667,
+          "lcb90": 0.7136896286447085,
+          "max_share": 0.11199095022624435,
+          "roi_without_max": 104.66666666666666
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 18,
+          "bets": 18,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-02": {
+          "races": 23,
+          "bets": 23,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 103.68421052631578,
+          "lcb90": -0.2919747368421053,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 26,
+          "bets": 26,
+          "hits": 4,
+          "roi": 273.0769230769231,
+          "lcb90": 1.0875390486245926,
+          "max_share": 0.2591549295774648,
+          "roi_without_max": 202.3076923076923
+        },
+        "2024-05": {
+          "races": 28,
+          "bets": 28,
+          "hits": 1,
+          "roi": 57.14285714285714,
+          "lcb90": -0.1609142857142859,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-06": {
+          "races": 25,
+          "bets": 25,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-07": {
+          "races": 31,
+          "bets": 31,
+          "hits": 3,
+          "roi": 168.06451612903226,
+          "lcb90": 0.47254448551722517,
+          "max_share": 0.3781190019193858,
+          "roi_without_max": 104.51612903225806
+        },
+        "2024-08": {
+          "races": 24,
+          "bets": 24,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 19,
+          "bets": 19,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-10": {
+          "races": 33,
+          "bets": 33,
+          "hits": 3,
+          "roi": 155.15151515151516,
+          "lcb90": 0.43665148054920344,
+          "max_share": 0.353515625,
+          "roi_without_max": 100.3030303030303
+        },
+        "2024-11": {
+          "races": 25,
+          "bets": 25,
+          "hits": 2,
+          "roi": 155.20000000000002,
+          "lcb90": 0.17506766404363927,
+          "max_share": 0.5051546391752577,
+          "roi_without_max": 76.8
+        },
+        "2024-12": {
+          "races": 30,
+          "bets": 30,
+          "hits": 4,
+          "roi": 227.0,
+          "lcb90": 0.8837219840249486,
+          "max_share": 0.2834067547723935,
+          "roi_without_max": 162.66666666666666
+        },
+        "2025-01": {
+          "races": 18,
+          "bets": 18,
+          "hits": 1,
+          "roi": 92.77777777777779,
+          "lcb90": -0.2612622222222224,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 24,
+          "bets": 24,
+          "hits": 1,
+          "roi": 80.0,
+          "lcb90": -0.22528000000000004,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 18,
+          "bets": 18,
+          "hits": 1,
+          "roi": 100.0,
+          "lcb90": -0.2816000000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 20,
+          "bets": 20,
+          "hits": 1,
+          "roi": 80.0,
+          "lcb90": -0.2252799999999997,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-05": {
+          "races": 24,
+          "bets": 24,
+          "hits": 2,
+          "roi": 135.0,
+          "lcb90": 0.15258857387750946,
+          "max_share": 0.5185185185185185,
+          "roi_without_max": 65.0
+        },
+        "2025-06": {
+          "races": 28,
+          "bets": 28,
+          "hits": 2,
+          "roi": 120.0,
+          "lcb90": 0.12941957446305885,
+          "max_share": 0.5386904761904762,
+          "roi_without_max": 55.35714285714286
+        },
+        "2025-07": {
+          "races": 19,
+          "bets": 19,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-08": {
+          "races": 24,
+          "bets": 24,
+          "hits": 4,
+          "roi": 282.5,
+          "lcb90": 1.1286156203624547,
+          "max_share": 0.2890855457227139,
+          "roi_without_max": 200.83333333333334
+        },
+        "2025-09": {
+          "races": 27,
+          "bets": 27,
+          "hits": 1,
+          "roi": 56.2962962962963,
+          "lcb90": -0.15853037037037043,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-10": {
+          "races": 32,
+          "bets": 32,
+          "hits": 1,
+          "roi": 59.375,
+          "lcb90": -0.16720000000000002,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-11": {
+          "races": 27,
+          "bets": 27,
+          "hits": 3,
+          "roi": 196.2962962962963,
+          "lcb90": 0.5609559019860719,
+          "max_share": 0.37358490566037733,
+          "roi_without_max": 122.96296296296296
+        },
+        "2025-12": {
+          "races": 39,
+          "bets": 39,
+          "hits": 2,
+          "roi": 82.82051282051283,
+          "lcb90": 0.08751028693821705,
+          "max_share": 0.5077399380804953,
+          "roi_without_max": 40.76923076923077
+        },
+        "2026-01": {
+          "races": 23,
+          "bets": 23,
+          "hits": 2,
+          "roi": 150.43478260869566,
+          "lcb90": 0.16693744167313374,
+          "max_share": 0.5433526011560693,
+          "roi_without_max": 68.69565217391305
+        },
+        "2026-02": {
+          "races": 17,
+          "bets": 17,
+          "hits": 1,
+          "roi": 116.47058823529413,
+          "lcb90": -0.32798117647058844,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-03": {
+          "races": 23,
+          "bets": 23,
+          "hits": 2,
+          "roi": 163.47826086956522,
+          "lcb90": 0.18554305484734956,
+          "max_share": 0.523936170212766,
+          "roi_without_max": 77.82608695652173
+        },
+        "2026-04": {
+          "races": 24,
+          "bets": 24,
+          "hits": 2,
+          "roi": 147.08333333333334,
+          "lcb90": 0.16625720624970386,
+          "max_share": 0.5184135977337111,
+          "roi_without_max": 70.83333333333334
+        },
+        "2026-05": {
+          "races": 26,
+          "bets": 26,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-06": {
+          "races": 30,
+          "bets": 30,
+          "hits": 2,
+          "roi": 103.33333333333334,
+          "lcb90": 0.1131026937696834,
+          "max_share": 0.5064516129032258,
+          "roi_without_max": 51.0
+        },
+        "2026-07": {
+          "races": 7,
+          "bets": 7,
+          "hits": 1,
+          "roi": 264.2857142857143,
+          "lcb90": -0.7442285714285717,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 28,
+            "bets": 28,
+            "hits": 2,
+            "roi": 130.71428571428572,
+            "lcb90": 0.1446980823545434,
+            "max_share": 0.5027322404371585,
+            "roi_without_max": 65.0
+          },
+          "2025": {
+            "races": 26,
+            "bets": 26,
+            "hits": 2,
+            "roi": 138.07692307692307,
+            "lcb90": 0.14916010988024242,
+            "max_share": 0.5459610027855153,
+            "roi_without_max": 62.69230769230769
+          },
+          "2026": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 123.75,
+            "lcb90": -0.3484800000000001,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 43,
+            "bets": 43,
+            "hits": 2,
+            "roi": 71.16279069767441,
+            "lcb90": 0.0744543339970205,
+            "max_share": 0.5,
+            "roi_without_max": 35.581395348837205
+          },
+          "2025": {
+            "races": 35,
+            "bets": 35,
+            "hits": 2,
+            "roi": 92.28571428571428,
+            "lcb90": 0.09822123835006935,
+            "max_share": 0.5201238390092879,
+            "roi_without_max": 44.285714285714285
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 121.53846153846153,
+            "lcb90": -0.34225230769230786,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 38,
+            "bets": 38,
+            "hits": 2,
+            "roi": 97.63157894736842,
+            "lcb90": 0.1030238480846194,
+            "max_share": 0.5175202156334232,
+            "roi_without_max": 47.10526315789474
+          },
+          "2025": {
+            "races": 36,
+            "bets": 36,
+            "hits": 3,
+            "roi": 142.22222222222223,
+            "lcb90": 0.3989261575706333,
+            "max_share": 0.3515625,
+            "roi_without_max": 92.22222222222223
+          },
+          "2026": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 36,
+            "bets": 36,
+            "hits": 4,
+            "roi": 195.83333333333331,
+            "lcb90": 0.7559084283731226,
+            "max_share": 0.27375886524822696,
+            "roi_without_max": 142.22222222222223
+          },
+          "2025": {
+            "races": 30,
+            "bets": 30,
+            "hits": 1,
+            "roi": 60.333333333333336,
+            "lcb90": -0.16989866666666675,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 21,
+            "bets": 21,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 8,
+            "bets": 8,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 17,
+            "bets": 17,
+            "hits": 2,
+            "roi": 231.17647058823528,
+            "lcb90": 0.28329576891515584,
+            "max_share": 0.5012722646310432,
+            "roi_without_max": 115.29411764705881
+          },
+          "2025": {
+            "races": 23,
+            "bets": 23,
+            "hits": 1,
+            "roi": 66.08695652173913,
+            "lcb90": -0.18610086956521743,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 12,
+            "bets": 12,
+            "hits": 1,
+            "roi": 149.16666666666666,
+            "lcb90": -0.4200533333333334,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 95.0,
+            "lcb90": -0.2675200000000002,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 15,
+            "bets": 15,
+            "hits": 1,
+            "roi": 106.66666666666667,
+            "lcb90": -0.3003733333333334,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 1,
+            "roi": 281.42857142857144,
+            "lcb90": -0.7925028571428583,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 23,
+            "bets": 23,
+            "hits": 1,
+            "roi": 69.56521739130434,
+            "lcb90": -0.19589565217391336,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 17,
+            "bets": 17,
+            "hits": 2,
+            "roi": 200.0,
+            "lcb90": 0.2392912620063874,
+            "max_share": 0.538235294117647,
+            "roi_without_max": 92.3529411764706
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 20,
+            "bets": 20,
+            "hits": 2,
+            "roi": 158.0,
+            "lcb90": 0.18622491731994706,
+            "max_share": 0.5063291139240507,
+            "roi_without_max": 78.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 15,
+            "bets": 15,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 1,
+            "roi": 137.14285714285714,
+            "lcb90": -0.38619428571428616,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 1,
+            "roi": 242.85714285714283,
+            "lcb90": -0.6838857142857138,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 140.76923076923077,
+            "lcb90": -0.3964061538461541,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 20,
+            "bets": 20,
+            "hits": 2,
+            "roi": 168.0,
+            "lcb90": 0.19322189249200572,
+            "max_share": 0.5386904761904762,
+            "roi_without_max": 77.5
+          },
+          "2025": {
+            "races": 23,
+            "bets": 23,
+            "hits": 2,
+            "roi": 151.7391304347826,
+            "lcb90": 0.1681122432369324,
+            "max_share": 0.5444126074498568,
+            "roi_without_max": 69.1304347826087
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 1,
+            "roi": 462.5,
+            "lcb90": -1.3024000000000004,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 25,
+            "bets": 25,
+            "hits": 1,
+            "roi": 78.8,
+            "lcb90": -0.22190080000000012,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 30,
+            "bets": 30,
+            "hits": 4,
+            "roi": 229.33333333333334,
+            "lcb90": 0.8955302871223558,
+            "max_share": 0.2877906976744186,
+            "roi_without_max": 163.33333333333334
+          },
+          "2026": {
+            "races": 14,
+            "bets": 14,
+            "hits": 2,
+            "roi": 243.57142857142856,
+            "lcb90": 0.3020042523194637,
+            "max_share": 0.5513196480938416,
+            "roi_without_max": 109.28571428571428
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R5",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "2.0",
+        "odds_bin": "15-20",
+        "p_bin": ".12-.16",
+        "fav_bin": "<.25"
+      },
+      "annual": {
+        "2024": {
+          "races": 229,
+          "bets": 229,
+          "hits": 14,
+          "roi": 106.63755458515286,
+          "lcb90": 0.7102356288126438,
+          "max_share": 0.08067158067158067,
+          "roi_without_max": 98.0349344978166
+        },
+        "2025": {
+          "races": 228,
+          "bets": 228,
+          "hits": 17,
+          "roi": 127.06140350877193,
+          "lcb90": 0.8883187876183123,
+          "max_share": 0.06834656541249569,
+          "roi_without_max": 118.37719298245615
+        },
+        "2026": {
+          "races": 115,
+          "bets": 115,
+          "hits": 9,
+          "roi": 138.17391304347825,
+          "lcb90": 0.8098625321965389,
+          "max_share": 0.12460667086217747,
+          "roi_without_max": 120.95652173913042
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-02": {
+          "races": 13,
+          "bets": 13,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 15,
+          "bets": 15,
+          "hits": 1,
+          "roi": 131.33333333333331,
+          "lcb90": -0.36983466666666676,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 20,
+          "bets": 20,
+          "hits": 3,
+          "roi": 264.0,
+          "lcb90": 0.7899812591506283,
+          "max_share": 0.3484848484848485,
+          "roi_without_max": 172.0
+        },
+        "2024-05": {
+          "races": 24,
+          "bets": 24,
+          "hits": 1,
+          "roi": 66.66666666666666,
+          "lcb90": -0.18773333333333364,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-06": {
+          "races": 20,
+          "bets": 20,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-07": {
+          "races": 26,
+          "bets": 26,
+          "hits": 1,
+          "roi": 65.0,
+          "lcb90": -0.1830400000000003,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-08": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-10": {
+          "races": 28,
+          "bets": 28,
+          "hits": 3,
+          "roi": 182.85714285714286,
+          "lcb90": 0.5226907141515096,
+          "max_share": 0.353515625,
+          "roi_without_max": 118.21428571428572
+        },
+        "2024-11": {
+          "races": 18,
+          "bets": 18,
+          "hits": 2,
+          "roi": 215.55555555555554,
+          "lcb90": 0.260341738308975,
+          "max_share": 0.5051546391752577,
+          "roi_without_max": 106.66666666666667
+        },
+        "2024-12": {
+          "races": 20,
+          "bets": 20,
+          "hits": 3,
+          "roi": 244.0,
+          "lcb90": 0.7243935325534525,
+          "max_share": 0.375,
+          "roi_without_max": 152.5
+        },
+        "2025-01": {
+          "races": 14,
+          "bets": 14,
+          "hits": 1,
+          "roi": 119.28571428571428,
+          "lcb90": -0.3359085714285719,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 18,
+          "bets": 18,
+          "hits": 1,
+          "roi": 106.66666666666667,
+          "lcb90": -0.3003733333333334,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 14,
+          "bets": 14,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 14,
+          "bets": 14,
+          "hits": 1,
+          "roi": 114.28571428571428,
+          "lcb90": -0.3218285714285716,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-05": {
+          "races": 18,
+          "bets": 18,
+          "hits": 2,
+          "roi": 180.0,
+          "lcb90": 0.21627277642822773,
+          "max_share": 0.5185185185185185,
+          "roi_without_max": 86.66666666666667
+        },
+        "2025-06": {
+          "races": 20,
+          "bets": 20,
+          "hits": 1,
+          "roi": 90.5,
+          "lcb90": -0.2548480000000002,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-07": {
+          "races": 14,
+          "bets": 14,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-08": {
+          "races": 22,
+          "bets": 22,
+          "hits": 4,
+          "roi": 308.1818181818182,
+          "lcb90": 1.2443169452787812,
+          "max_share": 0.2890855457227139,
+          "roi_without_max": 219.0909090909091
+        },
+        "2025-09": {
+          "races": 17,
+          "bets": 17,
+          "hits": 1,
+          "roi": 89.41176470588236,
+          "lcb90": -0.25178352941176474,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-10": {
+          "races": 25,
+          "bets": 25,
+          "hits": 1,
+          "roi": 76.0,
+          "lcb90": -0.2140160000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-11": {
+          "races": 22,
+          "bets": 22,
+          "hits": 3,
+          "roi": 240.9090909090909,
+          "lcb90": 0.7053698809134457,
+          "max_share": 0.37358490566037733,
+          "roi_without_max": 150.9090909090909
+        },
+        "2025-12": {
+          "races": 30,
+          "bets": 30,
+          "hits": 2,
+          "roi": 107.66666666666667,
+          "lcb90": 0.11780815216201412,
+          "max_share": 0.5077399380804953,
+          "roi_without_max": 53.0
+        },
+        "2026-01": {
+          "races": 14,
+          "bets": 14,
+          "hits": 2,
+          "roi": 247.14285714285717,
+          "lcb90": 0.31019973742536866,
+          "max_share": 0.5433526011560693,
+          "roi_without_max": 112.85714285714286
+        },
+        "2026-02": {
+          "races": 11,
+          "bets": 11,
+          "hits": 1,
+          "roi": 180.0,
+          "lcb90": -0.50688,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-03": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 103.68421052631578,
+          "lcb90": -0.2919747368421053,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-04": {
+          "races": 18,
+          "bets": 18,
+          "hits": 2,
+          "roi": 196.11111111111111,
+          "lcb90": 0.2356455456476909,
+          "max_share": 0.5184135977337111,
+          "roi_without_max": 94.44444444444444
+        },
+        "2026-05": {
+          "races": 19,
+          "bets": 19,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-06": {
+          "races": 27,
+          "bets": 27,
+          "hits": 2,
+          "roi": 114.81481481481481,
+          "lcb90": 0.12777786182880457,
+          "max_share": 0.5064516129032258,
+          "roi_without_max": 56.666666666666664
+        },
+        "2026-07": {
+          "races": 7,
+          "bets": 7,
+          "hits": 1,
+          "roi": 264.2857142857143,
+          "lcb90": -0.7442285714285717,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 21,
+            "bets": 21,
+            "hits": 1,
+            "roi": 87.61904761904762,
+            "lcb90": -0.24673523809523823,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 22,
+            "bets": 22,
+            "hits": 2,
+            "roi": 163.1818181818182,
+            "lcb90": 0.18196642747674519,
+            "max_share": 0.5459610027855153,
+            "roi_without_max": 74.0909090909091
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 152.3076923076923,
+            "lcb90": -0.4288984615384619,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 36,
+            "bets": 36,
+            "hits": 2,
+            "roi": 85.0,
+            "lcb90": 0.09079009935704485,
+            "max_share": 0.5,
+            "roi_without_max": 42.5
+          },
+          "2025": {
+            "races": 27,
+            "bets": 27,
+            "hits": 1,
+            "roi": 62.22222222222222,
+            "lcb90": -0.1752177777777777,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 1,
+            "roi": 175.55555555555554,
+            "lcb90": -0.4943644444444444,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 31,
+            "bets": 31,
+            "hits": 2,
+            "roi": 119.6774193548387,
+            "lcb90": 0.12975333491493157,
+            "max_share": 0.5175202156334232,
+            "roi_without_max": 57.74193548387097
+          },
+          "2025": {
+            "races": 27,
+            "bets": 27,
+            "hits": 2,
+            "roi": 122.96296296296296,
+            "lcb90": 0.1358954809101094,
+            "max_share": 0.5210843373493976,
+            "roi_without_max": 58.88888888888889
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 27,
+            "bets": 27,
+            "hits": 3,
+            "roi": 189.62962962962965,
+            "lcb90": 0.547442875367196,
+            "max_share": 0.34765625,
+            "roi_without_max": 123.7037037037037
+          },
+          "2025": {
+            "races": 18,
+            "bets": 18,
+            "hits": 1,
+            "roi": 100.55555555555556,
+            "lcb90": -0.28316444444444455,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 122.50000000000001,
+            "lcb90": -0.34496000000000016,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 21,
+            "bets": 21,
+            "hits": 1,
+            "roi": 72.38095238095238,
+            "lcb90": -0.20382476190476206,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 138.1818181818182,
+            "lcb90": -0.38912000000000013,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 145.45454545454547,
+            "lcb90": -0.40959999999999974,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 1,
+            "roi": 281.42857142857144,
+            "lcb90": -0.7925028571428583,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 17,
+            "bets": 17,
+            "hits": 1,
+            "roi": 94.11764705882352,
+            "lcb90": -0.26503529411764726,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 14,
+            "bets": 14,
+            "hits": 2,
+            "roi": 242.85714285714283,
+            "lcb90": 0.3068724925289539,
+            "max_share": 0.538235294117647,
+            "roi_without_max": 112.14285714285714
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 15,
+            "bets": 15,
+            "hits": 2,
+            "roi": 210.66666666666666,
+            "lcb90": 0.26682213805981414,
+            "max_share": 0.5063291139240507,
+            "roi_without_max": 104.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 174.54545454545453,
+            "lcb90": -0.4915200000000002,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 1,
+            "roi": 283.33333333333337,
+            "lcb90": -0.7978666666666667,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 166.36363636363635,
+            "lcb90": -0.46848000000000023,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 12,
+            "bets": 12,
+            "hits": 1,
+            "roi": 150.83333333333334,
+            "lcb90": -0.42474666666666705,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 2,
+            "roi": 249.28571428571428,
+            "lcb90": 0.31242028122039667,
+            "max_share": 0.5444126074498568,
+            "roi_without_max": 113.57142857142857
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 1,
+            "roi": 462.5,
+            "lcb90": -1.3024000000000004,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 19,
+            "bets": 19,
+            "hits": 1,
+            "roi": 103.68421052631578,
+            "lcb90": -0.2919747368421053,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 22,
+            "bets": 22,
+            "hits": 4,
+            "roi": 312.72727272727275,
+            "lcb90": 1.2630423201175436,
+            "max_share": 0.2877906976744186,
+            "roi_without_max": 222.72727272727272
+          },
+          "2026": {
+            "races": 11,
+            "bets": 11,
+            "hits": 2,
+            "roi": 310.0,
+            "lcb90": 0.4177542377884498,
+            "max_share": 0.5513196480938416,
+            "roi_without_max": 139.0909090909091
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R6",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "1.0",
+        "odds_bin": "20-30",
+        "p_bin": ".16-.20",
+        "top3_bin": "<.50"
+      },
+      "annual": {
+        "2024": {
+          "races": 340,
+          "bets": 340,
+          "hits": 16,
+          "roi": 114.73529411764707,
+          "lcb90": 0.7859411225695397,
+          "max_share": 0.07510894642399385,
+          "roi_without_max": 106.11764705882354
+        },
+        "2025": {
+          "races": 342,
+          "bets": 342,
+          "hits": 14,
+          "roi": 102.01754385964912,
+          "lcb90": 0.6754788406178698,
+          "max_share": 0.08541129263399255,
+          "roi_without_max": 93.30409356725147
+        },
+        "2026": {
+          "races": 180,
+          "bets": 180,
+          "hits": 12,
+          "roi": 150.44444444444446,
+          "lcb90": 0.9639812186723503,
+          "max_share": 0.09231905465288036,
+          "roi_without_max": 136.55555555555557
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 23,
+          "bets": 23,
+          "hits": 3,
+          "roi": 336.0869565217391,
+          "lcb90": 0.9798068580737946,
+          "max_share": 0.36739974126778785,
+          "roi_without_max": 212.6086956521739
+        },
+        "2024-02": {
+          "races": 12,
+          "bets": 12,
+          "hits": 1,
+          "roi": 196.66666666666666,
+          "lcb90": -0.5538133333333337,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 35,
+          "bets": 35,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 24,
+          "bets": 24,
+          "hits": 1,
+          "roi": 88.33333333333333,
+          "lcb90": -0.2487466666666669,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-05": {
+          "races": 37,
+          "bets": 37,
+          "hits": 1,
+          "roi": 79.1891891891892,
+          "lcb90": -0.2229967567567569,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-06": {
+          "races": 30,
+          "bets": 30,
+          "hits": 2,
+          "roi": 156.66666666666666,
+          "lcb90": 0.1631701104211225,
+          "max_share": 0.5531914893617021,
+          "roi_without_max": 70.0
+        },
+        "2024-07": {
+          "races": 35,
+          "bets": 35,
+          "hits": 2,
+          "roi": 136.57142857142856,
+          "lcb90": 0.13755949050046046,
+          "max_share": 0.5585774058577406,
+          "roi_without_max": 60.285714285714285
+        },
+        "2024-08": {
+          "races": 22,
+          "bets": 22,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 37,
+          "bets": 37,
+          "hits": 1,
+          "roi": 59.45945945945946,
+          "lcb90": -0.16743783783783794,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-10": {
+          "races": 26,
+          "bets": 26,
+          "hits": 1,
+          "roi": 94.23076923076923,
+          "lcb90": -0.2653538461538465,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-11": {
+          "races": 22,
+          "bets": 22,
+          "hits": 1,
+          "roi": 107.27272727272728,
+          "lcb90": -0.3020799999999999,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-12": {
+          "races": 37,
+          "bets": 37,
+          "hits": 3,
+          "roi": 199.45945945945945,
+          "lcb90": 0.5558054920004185,
+          "max_share": 0.36720867208672087,
+          "roi_without_max": 126.21621621621621
+        },
+        "2025-01": {
+          "races": 18,
+          "bets": 18,
+          "hits": 2,
+          "roi": 313.88888888888886,
+          "lcb90": 0.37460178170959857,
+          "max_share": 0.5274336283185841,
+          "roi_without_max": 148.33333333333334
+        },
+        "2025-02": {
+          "races": 18,
+          "bets": 18,
+          "hits": 1,
+          "roi": 146.11111111111111,
+          "lcb90": -0.411448888888889,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 33,
+          "bets": 33,
+          "hits": 3,
+          "roi": 227.87878787878788,
+          "lcb90": 0.6339346277726983,
+          "max_share": 0.37367021276595747,
+          "roi_without_max": 142.72727272727272
+        },
+        "2025-04": {
+          "races": 26,
+          "bets": 26,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-05": {
+          "races": 29,
+          "bets": 29,
+          "hits": 2,
+          "roi": 169.3103448275862,
+          "lcb90": 0.179632287184869,
+          "max_share": 0.5458248472505092,
+          "roi_without_max": 76.89655172413794
+        },
+        "2025-06": {
+          "races": 35,
+          "bets": 35,
+          "hits": 1,
+          "roi": 64.57142857142857,
+          "lcb90": -0.18183314285714303,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-07": {
+          "races": 29,
+          "bets": 29,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-08": {
+          "races": 23,
+          "bets": 23,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-09": {
+          "races": 32,
+          "bets": 32,
+          "hits": 1,
+          "roi": 64.375,
+          "lcb90": -0.1812800000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-10": {
+          "races": 45,
+          "bets": 45,
+          "hits": 3,
+          "roi": 168.66666666666669,
+          "lcb90": 0.4664780582330066,
+          "max_share": 0.35046113306982873,
+          "roi_without_max": 109.55555555555556
+        },
+        "2025-11": {
+          "races": 26,
+          "bets": 26,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-12": {
+          "races": 28,
+          "bets": 28,
+          "hits": 1,
+          "roi": 81.07142857142857,
+          "lcb90": -0.22829714285714253,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-01": {
+          "races": 28,
+          "bets": 28,
+          "hits": 3,
+          "roi": 250.0,
+          "lcb90": 0.7177271196907824,
+          "max_share": 0.3557142857142857,
+          "roi_without_max": 161.07142857142858
+        },
+        "2026-02": {
+          "races": 23,
+          "bets": 23,
+          "hits": 2,
+          "roi": 185.2173913043478,
+          "lcb90": 0.21130351184924834,
+          "max_share": 0.5164319248826291,
+          "roi_without_max": 89.56521739130436
+        },
+        "2026-03": {
+          "races": 38,
+          "bets": 38,
+          "hits": 2,
+          "roi": 127.63157894736842,
+          "lcb90": 0.13484403862936634,
+          "max_share": 0.5154639175257731,
+          "roi_without_max": 61.8421052631579
+        },
+        "2026-04": {
+          "races": 28,
+          "bets": 28,
+          "hits": 2,
+          "roi": 162.85714285714286,
+          "lcb90": 0.17693145539541777,
+          "max_share": 0.5328947368421053,
+          "roi_without_max": 76.07142857142857
+        },
+        "2026-05": {
+          "races": 20,
+          "bets": 20,
+          "hits": 2,
+          "roi": 212.5,
+          "lcb90": 0.24965352528687434,
+          "max_share": 0.5152941176470588,
+          "roi_without_max": 103.0
+        },
+        "2026-06": {
+          "races": 31,
+          "bets": 31,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-07": {
+          "races": 12,
+          "bets": 12,
+          "hits": 1,
+          "roi": 180.0,
+          "lcb90": -0.50688,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 28,
+            "bets": 28,
+            "hits": 1,
+            "roi": 104.64285714285715,
+            "lcb90": -0.2946742857142859,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 25,
+            "bets": 25,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 36,
+            "bets": 36,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 49,
+            "bets": 49,
+            "hits": 1,
+            "roi": 45.51020408163266,
+            "lcb90": -0.12815673469387756,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 26,
+            "bets": 26,
+            "hits": 1,
+            "roi": 84.61538461538461,
+            "lcb90": -0.23827692307692339,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 43,
+            "bets": 43,
+            "hits": 3,
+            "roi": 157.2093023255814,
+            "lcb90": 0.43668203416094076,
+            "max_share": 0.34023668639053256,
+            "roi_without_max": 103.72093023255815
+          },
+          "2025": {
+            "races": 56,
+            "bets": 56,
+            "hits": 5,
+            "roi": 223.57142857142858,
+            "lcb90": 0.9993205586626275,
+            "max_share": 0.213258785942492,
+            "roi_without_max": 175.89285714285714
+          },
+          "2026": {
+            "races": 15,
+            "bets": 15,
+            "hits": 2,
+            "roi": 318.0,
+            "lcb90": 0.3993006648632953,
+            "max_share": 0.5241090146750524,
+            "roi_without_max": 151.33333333333334
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 31,
+            "bets": 31,
+            "hits": 2,
+            "roi": 155.80645161290323,
+            "lcb90": 0.15880723008055453,
+            "max_share": 0.5610766045548654,
+            "roi_without_max": 68.38709677419355
+          },
+          "2025": {
+            "races": 39,
+            "bets": 39,
+            "hits": 1,
+            "roi": 72.05128205128204,
+            "lcb90": -0.2028964102564106,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 14,
+            "bets": 14,
+            "hits": 1,
+            "roi": 147.14285714285717,
+            "lcb90": -0.4143542857142861,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 9,
+            "bets": 9,
+            "hits": 2,
+            "roi": 603.3333333333334,
+            "lcb90": 0.9119197584694554,
+            "max_share": 0.5230202578268877,
+            "roi_without_max": 287.77777777777777
+          },
+          "2025": {
+            "races": 7,
+            "bets": 7,
+            "hits": 1,
+            "roi": 375.7142857142857,
+            "lcb90": -1.0580114285714286,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 1,
+            "roi": 391.66666666666663,
+            "lcb90": -1.102933333333334,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 22,
+            "bets": 22,
+            "hits": 1,
+            "roi": 95.45454545454545,
+            "lcb90": -0.26880000000000015,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 18,
+            "bets": 18,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 43,
+            "bets": 43,
+            "hits": 1,
+            "roi": 56.04651162790698,
+            "lcb90": -0.15782697674418622,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 21,
+            "bets": 21,
+            "hits": 2,
+            "roi": 208.57142857142858,
+            "lcb90": 0.2420826572981507,
+            "max_share": 0.5182648401826484,
+            "roi_without_max": 100.47619047619048
+          },
+          "2026": {
+            "races": 20,
+            "bets": 20,
+            "hits": 1,
+            "roi": 106.5,
+            "lcb90": -0.2999040000000004,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 31,
+            "bets": 31,
+            "hits": 1,
+            "roi": 83.87096774193549,
+            "lcb90": -0.23618064516129011,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 15,
+            "bets": 15,
+            "hits": 1,
+            "roi": 198.66666666666666,
+            "lcb90": -0.5594453333333331,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 17,
+            "bets": 17,
+            "hits": 1,
+            "roi": 142.94117647058823,
+            "lcb90": -0.40252235294117655,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 21,
+            "bets": 21,
+            "hits": 3,
+            "roi": 340.0,
+            "lcb90": 1.0004709639240814,
+            "max_share": 0.3739495798319328,
+            "roi_without_max": 212.85714285714286
+          },
+          "2025": {
+            "races": 23,
+            "bets": 23,
+            "hits": 1,
+            "roi": 116.52173913043478,
+            "lcb90": -0.32812521739130496,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 1,
+            "roi": 412.0,
+            "lcb90": -1.1601920000000003,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 14,
+            "bets": 14,
+            "hits": 1,
+            "roi": 168.57142857142858,
+            "lcb90": -0.4746971428571427,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 19,
+            "bets": 19,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 1,
+            "roi": 243.33333333333331,
+            "lcb90": -0.6852266666666669,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 1,
+            "roi": 185.71428571428572,
+            "lcb90": -0.5229714285714291,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 1,
+            "roi": 224.00000000000003,
+            "lcb90": -0.6307840000000007,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 153.125,
+            "lcb90": -0.4312,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 8,
+            "bets": 8,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 19,
+            "bets": 19,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 26,
+            "bets": 26,
+            "hits": 1,
+            "roi": 79.23076923076923,
+            "lcb90": -0.22311384615384644,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 2,
+            "roi": 357.69230769230774,
+            "lcb90": 0.4641928787668652,
+            "max_share": 0.535483870967742,
+            "roi_without_max": 166.15384615384616
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R7",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "3.0",
+        "odds_bin": "30-50",
+        "fav_bin": ".25-.35",
+        "race_segment": "late"
+      },
+      "annual": {
+        "2024": {
+          "races": 229,
+          "bets": 229,
+          "hits": 7,
+          "roi": 107.59825327510917,
+          "lcb90": 0.5581473562847682,
+          "max_share": 0.1663961038961039,
+          "roi_without_max": 89.6943231441048
+        },
+        "2025": {
+          "races": 217,
+          "bets": 217,
+          "hits": 6,
+          "roi": 109.35483870967741,
+          "lcb90": 0.5237926286249374,
+          "max_share": 0.18710493046776233,
+          "roi_without_max": 88.89400921658986
+        },
+        "2026": {
+          "races": 116,
+          "bets": 116,
+          "hits": 8,
+          "roi": 256.12068965517244,
+          "lcb90": 1.4288403551052185,
+          "max_share": 0.1454055873443285,
+          "roi_without_max": 218.87931034482756
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 11,
+          "bets": 11,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-02": {
+          "races": 13,
+          "bets": 13,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 18,
+          "bets": 18,
+          "hits": 1,
+          "roi": 168.88888888888889,
+          "lcb90": -0.4755911111111113,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-05": {
+          "races": 27,
+          "bets": 27,
+          "hits": 2,
+          "roi": 264.0740740740741,
+          "lcb90": 0.2835921309693905,
+          "max_share": 0.5455820476858345,
+          "roi_without_max": 120.0
+        },
+        "2024-06": {
+          "races": 23,
+          "bets": 23,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-07": {
+          "races": 22,
+          "bets": 22,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-08": {
+          "races": 18,
+          "bets": 18,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 18,
+          "bets": 18,
+          "hits": 2,
+          "roi": 405.55555555555554,
+          "lcb90": 0.459675659635455,
+          "max_share": 0.5616438356164384,
+          "roi_without_max": 177.77777777777777
+        },
+        "2024-10": {
+          "races": 21,
+          "bets": 21,
+          "hits": 2,
+          "roi": 341.4285714285714,
+          "lcb90": 0.38128237074004945,
+          "max_share": 0.5509065550906556,
+          "roi_without_max": 153.33333333333334
+        },
+        "2024-11": {
+          "races": 21,
+          "bets": 21,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-12": {
+          "races": 22,
+          "bets": 22,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-01": {
+          "races": 15,
+          "bets": 15,
+          "hits": 1,
+          "roi": 229.99999999999997,
+          "lcb90": -0.6476800000000003,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 19,
+          "bets": 19,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-05": {
+          "races": 18,
+          "bets": 18,
+          "hits": 2,
+          "roi": 450.55555555555554,
+          "lcb90": 0.525394638773125,
+          "max_share": 0.5462392108508015,
+          "roi_without_max": 204.44444444444443
+        },
+        "2025-06": {
+          "races": 22,
+          "bets": 22,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-07": {
+          "races": 26,
+          "bets": 26,
+          "hits": 2,
+          "roi": 298.84615384615387,
+          "lcb90": 0.3057785134526454,
+          "max_share": 0.5714285714285714,
+          "roi_without_max": 128.07692307692307
+        },
+        "2025-08": {
+          "races": 20,
+          "bets": 20,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-09": {
+          "races": 16,
+          "bets": 16,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-10": {
+          "races": 17,
+          "bets": 17,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-11": {
+          "races": 13,
+          "bets": 13,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-12": {
+          "races": 21,
+          "bets": 21,
+          "hits": 1,
+          "roi": 209.52380952380955,
+          "lcb90": -0.5900190476190477,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-01": {
+          "races": 11,
+          "bets": 11,
+          "hits": 2,
+          "roi": 734.5454545454546,
+          "lcb90": 1.0118849093353077,
+          "max_share": 0.5346534653465347,
+          "roi_without_max": 341.8181818181818
+        },
+        "2026-02": {
+          "races": 7,
+          "bets": 7,
+          "hits": 1,
+          "roi": 498.57142857142856,
+          "lcb90": -1.4039771428571433,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-03": {
+          "races": 26,
+          "bets": 26,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-04": {
+          "races": 19,
+          "bets": 19,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-05": {
+          "races": 23,
+          "bets": 23,
+          "hits": 1,
+          "roi": 186.08695652173913,
+          "lcb90": -0.5240208695652178,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-06": {
+          "races": 23,
+          "bets": 23,
+          "hits": 4,
+          "roi": 602.608695652174,
+          "lcb90": 2.4182090843105013,
+          "max_share": 0.2813852813852814,
+          "roi_without_max": 433.04347826086956
+        },
+        "2026-07": {
+          "races": 7,
+          "bets": 7,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 2,
+            "roi": 897.7777777777778,
+            "lcb90": 1.3438626604084485,
+            "max_share": 0.5346534653465347,
+            "roi_without_max": 417.7777777777778
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 20,
+            "bets": 20,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 21,
+            "bets": 21,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 15,
+            "bets": 15,
+            "hits": 2,
+            "roi": 508.6666666666667,
+            "lcb90": 0.6067569763605904,
+            "max_share": 0.5609436435124509,
+            "roi_without_max": 223.33333333333334
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 40,
+            "bets": 40,
+            "hits": 2,
+            "roi": 178.75,
+            "lcb90": 0.1792868407931265,
+            "max_share": 0.5524475524475524,
+            "roi_without_max": 80.0
+          },
+          "2025": {
+            "races": 32,
+            "bets": 32,
+            "hits": 1,
+            "roi": 138.4375,
+            "lcb90": -0.38983999999999996,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 33,
+            "bets": 33,
+            "hits": 1,
+            "roi": 92.12121212121212,
+            "lcb90": -0.2594133333333333,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 22,
+            "bets": 22,
+            "hits": 2,
+            "roi": 351.3636363636364,
+            "lcb90": 0.3736422532418988,
+            "max_share": 0.5692108667529108,
+            "roi_without_max": 151.36363636363637
+          },
+          "2026": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 188.125,
+            "lcb90": -0.52976,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 17,
+            "bets": 17,
+            "hits": 1,
+            "roi": 261.1764705882353,
+            "lcb90": -0.7354729411764707,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 12,
+            "bets": 12,
+            "hits": 1,
+            "roi": 290.8333333333333,
+            "lcb90": -0.8189866666666674,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 1,
+            "roi": 514.2857142857143,
+            "lcb90": -1.4482285714285705,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 10,
+            "bets": 10,
+            "hits": 1,
+            "roi": 389.0,
+            "lcb90": -1.0954240000000004,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 15,
+            "bets": 15,
+            "hits": 1,
+            "roi": 214.66666666666666,
+            "lcb90": -0.6045013333333338,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 265.38461538461536,
+            "lcb90": -0.747323076923077,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 1,
+            "roi": 433.3333333333333,
+            "lcb90": -1.2202666666666673,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 21,
+            "bets": 21,
+            "hits": 1,
+            "roi": 175.23809523809524,
+            "lcb90": -0.49347047619047646,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 0,
+            "bets": 0,
+            "hits": 0,
+            "roi": 0,
+            "lcb90": -999,
+            "max_share": null
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 256.25,
+            "lcb90": -0.7216,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 13,
+            "bets": 13,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 18,
+            "bets": 18,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 8,
+            "bets": 8,
+            "hits": 1,
+            "roi": 405.0,
+            "lcb90": -1.1404799999999993,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R8",
+      "bet_type": "tan",
+      "condition": {
+        "hole_rank": "3.0",
+        "odds_bin": "30-50",
+        "p_bin": ".16-.20",
+        "gap_bin": ".15+"
+      },
+      "annual": {
+        "2024": {
+          "races": 229,
+          "bets": 229,
+          "hits": 7,
+          "roi": 110.00000000000001,
+          "lcb90": 0.5690989509443465,
+          "max_share": 0.17864231838030964,
+          "roi_without_max": 90.34934497816593
+        },
+        "2025": {
+          "races": 207,
+          "bets": 207,
+          "hits": 6,
+          "roi": 105.99033816425121,
+          "lcb90": 0.5087744456942476,
+          "max_share": 0.18732907930720147,
+          "roi_without_max": 86.13526570048309
+        },
+        "2026": {
+          "races": 144,
+          "bets": 144,
+          "hits": 6,
+          "roi": 149.79166666666666,
+          "lcb90": 0.7197564629985999,
+          "max_share": 0.21743161798794622,
+          "roi_without_max": 117.22222222222223
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 16,
+          "bets": 16,
+          "hits": 1,
+          "roi": 192.5,
+          "lcb90": -0.5420800000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-02": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 16,
+          "bets": 16,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-04": {
+          "races": 24,
+          "bets": 24,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-05": {
+          "races": 16,
+          "bets": 16,
+          "hits": 2,
+          "roi": 430.0,
+          "lcb90": 0.5003207579586406,
+          "max_share": 0.563953488372093,
+          "roi_without_max": 187.5
+        },
+        "2024-06": {
+          "races": 22,
+          "bets": 22,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-07": {
+          "races": 24,
+          "bets": 24,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-08": {
+          "races": 19,
+          "bets": 19,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 10,
+          "bets": 10,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-10": {
+          "races": 17,
+          "bets": 17,
+          "hits": 2,
+          "roi": 414.1176470588236,
+          "lcb90": 0.4925689059028273,
+          "max_share": 0.5426136363636364,
+          "roi_without_max": 189.41176470588235
+        },
+        "2024-11": {
+          "races": 30,
+          "bets": 30,
+          "hits": 2,
+          "roi": 273.0,
+          "lcb90": 0.28632161503721054,
+          "max_share": 0.5494505494505495,
+          "roi_without_max": 123.0
+        },
+        "2024-12": {
+          "races": 20,
+          "bets": 20,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-01": {
+          "races": 12,
+          "bets": 12,
+          "hits": 1,
+          "roi": 342.5,
+          "lcb90": -0.9644799999999996,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 10,
+          "bets": 10,
+          "hits": 1,
+          "roi": 324.0,
+          "lcb90": -0.9123840000000007,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 13,
+          "bets": 13,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 160.5263157894737,
+          "lcb90": -0.452042105263158,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-05": {
+          "races": 25,
+          "bets": 25,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-06": {
+          "races": 19,
+          "bets": 19,
+          "hits": 1,
+          "roi": 197.89473684210526,
+          "lcb90": -0.5572715789473686,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-07": {
+          "races": 13,
+          "bets": 13,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-08": {
+          "races": 25,
+          "bets": 25,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-09": {
+          "races": 20,
+          "bets": 20,
+          "hits": 1,
+          "roi": 204.99999999999997,
+          "lcb90": -0.5772800000000005,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-10": {
+          "races": 27,
+          "bets": 27,
+          "hits": 1,
+          "roi": 136.2962962962963,
+          "lcb90": -0.38381037037037036,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-11": {
+          "races": 15,
+          "bets": 15,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-12": {
+          "races": 9,
+          "bets": 9,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-01": {
+          "races": 20,
+          "bets": 20,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-02": {
+          "races": 20,
+          "bets": 20,
+          "hits": 1,
+          "roi": 174.5,
+          "lcb90": -0.49139200000000005,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-03": {
+          "races": 28,
+          "bets": 28,
+          "hits": 1,
+          "roi": 109.28571428571428,
+          "lcb90": -0.3077485714285719,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-04": {
+          "races": 25,
+          "bets": 25,
+          "hits": 1,
+          "roi": 135.20000000000002,
+          "lcb90": -0.38072320000000004,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-05": {
+          "races": 22,
+          "bets": 22,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-06": {
+          "races": 21,
+          "bets": 21,
+          "hits": 2,
+          "roi": 330.9523809523809,
+          "lcb90": 0.38419195192863675,
+          "max_share": 0.5179856115107914,
+          "roi_without_max": 159.52380952380955
+        },
+        "2026-07": {
+          "races": 8,
+          "bets": 8,
+          "hits": 1,
+          "roi": 586.25,
+          "lcb90": -1.6508800000000008,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 29,
+            "bets": 29,
+            "hits": 2,
+            "roi": 235.17241379310346,
+            "lcb90": 0.24274383097982888,
+            "max_share": 0.5601173020527859,
+            "roi_without_max": 103.44827586206897
+          },
+          "2025": {
+            "races": 23,
+            "bets": 23,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 16,
+            "bets": 16,
+            "hits": 1,
+            "roi": 293.125,
+            "lcb90": -0.8254400000000004,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 20,
+            "bets": 20,
+            "hits": 1,
+            "roi": 167.5,
+            "lcb90": -0.4716800000000003,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 19,
+            "bets": 19,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 27,
+            "bets": 27,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 22,
+            "bets": 22,
+            "hits": 1,
+            "roi": 204.54545454545453,
+            "lcb90": -0.5760000000000005,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 19,
+            "bets": 19,
+            "hits": 2,
+            "roi": 354.2105263157895,
+            "lcb90": 0.40735069686252157,
+            "max_share": 0.5468053491827637,
+            "roi_without_max": 160.5263157894737
+          },
+          "2026": {
+            "races": 18,
+            "bets": 18,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 1,
+            "bets": 1,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": -1280.3184,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 1,
+            "bets": 1,
+            "hits": 1,
+            "roi": 4110.0,
+            "lcb90": -1239.2184000000002,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 21,
+            "bets": 21,
+            "hits": 1,
+            "roi": 146.66666666666666,
+            "lcb90": -0.4130133333333337,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 8,
+            "bets": 8,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 8,
+            "bets": 8,
+            "hits": 1,
+            "roi": 436.25,
+            "lcb90": -1.2284799999999994,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 278.1818181818182,
+            "lcb90": -0.7833600000000001,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 20,
+            "bets": 20,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 24,
+            "bets": 24,
+            "hits": 1,
+            "roi": 134.16666666666666,
+            "lcb90": -0.37781333333333356,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 19,
+            "bets": 19,
+            "hits": 1,
+            "roi": 170.52631578947367,
+            "lcb90": -0.480202105263158,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 1,
+            "roi": 482.85714285714283,
+            "lcb90": -1.3597257142857133,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 20,
+            "bets": 20,
+            "hits": 2,
+            "roi": 378.5,
+            "lcb90": 0.445243698697825,
+            "max_share": 0.512549537648613,
+            "roi_without_max": 184.5
+          },
+          "2025": {
+            "races": 8,
+            "bets": 8,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 1,
+            "roi": 514.2857142857143,
+            "lcb90": -1.4482285714285705,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 19,
+            "bets": 19,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 10,
+            "bets": 10,
+            "hits": 1,
+            "roi": 376.0,
+            "lcb90": -1.0588160000000006,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 12,
+            "bets": 12,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 19,
+            "bets": 19,
+            "hits": 1,
+            "roi": 215.78947368421052,
+            "lcb90": -0.6076631578947365,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 17,
+            "bets": 17,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 16,
+            "bets": 16,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 13,
+            "bets": 13,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        }
+      }
+    },
+    {
+      "rule_id": "R9",
+      "bet_type": "wide",
+      "condition": {
+        "hole_rank": "1.0",
+        "odds_bin": "30-50",
+        "p_bin": ".16-.20",
+        "race_segment": "late"
+      },
+      "annual": {
+        "2024": {
+          "races": 142,
+          "bets": 142,
+          "hits": 18,
+          "roi": 111.69014084507043,
+          "lcb90": 0.7240004127372814,
+          "max_share": 0.16960907944514503,
+          "roi_without_max": 92.74647887323944
+        },
+        "2025": {
+          "races": 141,
+          "bets": 141,
+          "hits": 13,
+          "roi": 108.79432624113474,
+          "lcb90": 0.613635158840827,
+          "max_share": 0.211864406779661,
+          "roi_without_max": 85.74468085106382
+        },
+        "2026": {
+          "races": 74,
+          "bets": 74,
+          "hits": 10,
+          "roi": 134.1891891891892,
+          "lcb90": 0.7827059155485364,
+          "max_share": 0.2104733131923464,
+          "roi_without_max": 105.94594594594595
+        }
+      },
+      "monthly": {
+        "2024-01": {
+          "races": 11,
+          "bets": 11,
+          "hits": 1,
+          "roi": 76.36363636363637,
+          "lcb90": -0.21504000000000012,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2024-02": {
+          "races": 4,
+          "bets": 4,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-03": {
+          "races": 15,
+          "bets": 15,
+          "hits": 4,
+          "roi": 178.0,
+          "lcb90": 0.4828587105237916,
+          "max_share": 0.5468164794007491,
+          "roi_without_max": 80.66666666666666
+        },
+        "2024-04": {
+          "races": 12,
+          "bets": 12,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-05": {
+          "races": 11,
+          "bets": 11,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-06": {
+          "races": 9,
+          "bets": 9,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-07": {
+          "races": 15,
+          "bets": 15,
+          "hits": 3,
+          "roi": 159.33333333333331,
+          "lcb90": 0.34823141633720733,
+          "max_share": 0.5523012552301255,
+          "roi_without_max": 71.33333333333334
+        },
+        "2024-08": {
+          "races": 9,
+          "bets": 9,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-09": {
+          "races": 10,
+          "bets": 10,
+          "hits": 3,
+          "roi": 327.0,
+          "lcb90": 0.8186722002506479,
+          "max_share": 0.5535168195718655,
+          "roi_without_max": 146.0
+        },
+        "2024-10": {
+          "races": 14,
+          "bets": 14,
+          "hits": 4,
+          "roi": 206.42857142857144,
+          "lcb90": 0.7157345901435412,
+          "max_share": 0.4359861591695502,
+          "roi_without_max": 116.42857142857143
+        },
+        "2024-11": {
+          "races": 12,
+          "bets": 12,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2024-12": {
+          "races": 20,
+          "bets": 20,
+          "hits": 3,
+          "roi": 190.0,
+          "lcb90": 0.13605629236973038,
+          "max_share": 0.7078947368421052,
+          "roi_without_max": 55.50000000000001
+        },
+        "2025-01": {
+          "races": 14,
+          "bets": 14,
+          "hits": 1,
+          "roi": 61.42857142857143,
+          "lcb90": -0.17298285714285744,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-02": {
+          "races": 11,
+          "bets": 11,
+          "hits": 1,
+          "roi": 77.27272727272727,
+          "lcb90": -0.21760000000000002,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-03": {
+          "races": 11,
+          "bets": 11,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-04": {
+          "races": 12,
+          "bets": 12,
+          "hits": 2,
+          "roi": 70.83333333333334,
+          "lcb90": -0.03285195141486841,
+          "max_share": 0.8117647058823529,
+          "roi_without_max": 13.333333333333334
+        },
+        "2025-05": {
+          "races": 14,
+          "bets": 14,
+          "hits": 1,
+          "roi": 44.285714285714285,
+          "lcb90": -0.12470857142857145,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-06": {
+          "races": 7,
+          "bets": 7,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2025-07": {
+          "races": 8,
+          "bets": 8,
+          "hits": 1,
+          "roi": 388.75,
+          "lcb90": -1.0947200000000006,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-08": {
+          "races": 11,
+          "bets": 11,
+          "hits": 1,
+          "roi": 295.45454545454544,
+          "lcb90": -0.8319999999999999,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-09": {
+          "races": 8,
+          "bets": 8,
+          "hits": 1,
+          "roi": 162.5,
+          "lcb90": -0.4575999999999998,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-10": {
+          "races": 21,
+          "bets": 21,
+          "hits": 3,
+          "roi": 105.23809523809524,
+          "lcb90": 0.26693588814627767,
+          "max_share": 0.4253393665158371,
+          "roi_without_max": 60.476190476190474
+        },
+        "2025-11": {
+          "races": 11,
+          "bets": 11,
+          "hits": 1,
+          "roi": 101.81818181818181,
+          "lcb90": -0.2867200000000003,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2025-12": {
+          "races": 13,
+          "bets": 13,
+          "hits": 1,
+          "roi": 90.0,
+          "lcb90": -0.2534400000000001,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-01": {
+          "races": 10,
+          "bets": 10,
+          "hits": 3,
+          "roi": 304.0,
+          "lcb90": 0.9871095243009189,
+          "max_share": 0.4375,
+          "roi_without_max": 171.0
+        },
+        "2026-02": {
+          "races": 12,
+          "bets": 12,
+          "hits": 1,
+          "roi": 81.66666666666667,
+          "lcb90": -0.22997333333333325,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-03": {
+          "races": 14,
+          "bets": 14,
+          "hits": 2,
+          "roi": 223.57142857142858,
+          "lcb90": 0.1652868325638055,
+          "max_share": 0.6677316293929713,
+          "roi_without_max": 74.28571428571429
+        },
+        "2026-04": {
+          "races": 10,
+          "bets": 10,
+          "hits": 1,
+          "roi": 69.0,
+          "lcb90": -0.19430399999999992,
+          "max_share": 1.0,
+          "roi_without_max": 0.0
+        },
+        "2026-05": {
+          "races": 14,
+          "bets": 14,
+          "hits": 3,
+          "roi": 149.28571428571428,
+          "lcb90": 0.45877188811640623,
+          "max_share": 0.3923444976076555,
+          "roi_without_max": 90.71428571428571
+        },
+        "2026-06": {
+          "races": 10,
+          "bets": 10,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        },
+        "2026-07": {
+          "races": 4,
+          "bets": 4,
+          "hits": 0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_share": null,
+          "roi_without_max": 0.0
+        }
+      },
+      "venue": {
+        "佐賀": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 11,
+            "bets": 11,
+            "hits": 1,
+            "roi": 56.36363636363636,
+            "lcb90": -0.1587200000000002,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 2,
+            "roi": 275.7142857142857,
+            "lcb90": 0.46661934681886574,
+            "max_share": 0.538860103626943,
+            "roi_without_max": 127.14285714285714
+          }
+        },
+        "名古屋": {
+          "2024": {
+            "races": 21,
+            "bets": 21,
+            "hits": 3,
+            "roi": 149.04761904761904,
+            "lcb90": 0.3966235290640754,
+            "max_share": 0.46645367412140576,
+            "roi_without_max": 79.52380952380952
+          },
+          "2025": {
+            "races": 18,
+            "bets": 18,
+            "hits": 2,
+            "roi": 93.88888888888889,
+            "lcb90": -0.011691893481428739,
+            "max_share": 0.7692307692307693,
+            "roi_without_max": 21.666666666666668
+          },
+          "2026": {
+            "races": 10,
+            "bets": 10,
+            "hits": 2,
+            "roi": 164.0,
+            "lcb90": 0.23878399999999989,
+            "max_share": 0.5,
+            "roi_without_max": 82.0
+          }
+        },
+        "園田": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 2,
+            "roi": 83.07692307692308,
+            "lcb90": 0.06890934715987918,
+            "max_share": 0.6574074074074074,
+            "roi_without_max": 28.46153846153846
+          },
+          "2025": {
+            "races": 16,
+            "bets": 16,
+            "hits": 2,
+            "roi": 53.125,
+            "lcb90": -0.02771945800285014,
+            "max_share": 0.8117647058823529,
+            "roi_without_max": 10.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 2,
+            "roi": 473.3333333333333,
+            "lcb90": 1.696605338401946,
+            "max_share": 0.5140845070422535,
+            "roi_without_max": 229.99999999999997
+          }
+        },
+        "大井": {
+          "2024": {
+            "races": 12,
+            "bets": 12,
+            "hits": 2,
+            "roi": 149.16666666666666,
+            "lcb90": 0.03883332729149935,
+            "max_share": 0.7374301675977654,
+            "roi_without_max": 39.166666666666664
+          },
+          "2025": {
+            "races": 17,
+            "bets": 17,
+            "hits": 2,
+            "roi": 233.52941176470588,
+            "lcb90": -0.0578964765382195,
+            "max_share": 0.783375314861461,
+            "roi_without_max": 50.588235294117645
+          },
+          "2026": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "姫路": {
+          "2024": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 7,
+            "bets": 7,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 2,
+            "bets": 2,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "川崎": {
+          "2024": {
+            "races": 15,
+            "bets": 15,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 14,
+            "bets": 14,
+            "hits": 3,
+            "roi": 375.0,
+            "lcb90": 0.6537843837923116,
+            "max_share": 0.6190476190476191,
+            "roi_without_max": 142.85714285714286
+          },
+          "2026": {
+            "races": 11,
+            "bets": 11,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "水沢": {
+          "2024": {
+            "races": 13,
+            "bets": 13,
+            "hits": 1,
+            "roi": 27.692307692307693,
+            "lcb90": -0.07798153846153844,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 6,
+            "bets": 6,
+            "hits": 1,
+            "roi": 156.66666666666666,
+            "lcb90": -0.4411733333333341,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "浦和": {
+          "2024": {
+            "races": 4,
+            "bets": 4,
+            "hits": 1,
+            "roi": 452.50000000000006,
+            "lcb90": -1.2742400000000007,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 9,
+            "bets": 9,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "盛岡": {
+          "2024": {
+            "races": 7,
+            "bets": 7,
+            "hits": 2,
+            "roi": 131.42857142857142,
+            "lcb90": 0.06500238541761671,
+            "max_share": 0.7391304347826086,
+            "roi_without_max": 34.285714285714285
+          },
+          "2025": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        },
+        "笠松": {
+          "2024": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 5,
+            "bets": 5,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 1,
+            "roi": 443.33333333333337,
+            "lcb90": -1.248426666666668,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "船橋": {
+          "2024": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 13,
+            "bets": 13,
+            "hits": 2,
+            "roi": 155.3846153846154,
+            "lcb90": 0.18580921706670406,
+            "max_share": 0.5792079207920792,
+            "roi_without_max": 65.38461538461539
+          },
+          "2026": {
+            "races": 5,
+            "bets": 5,
+            "hits": 1,
+            "roi": 196.0,
+            "lcb90": -0.5519359999999998,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "金沢": {
+          "2024": {
+            "races": 11,
+            "bets": 11,
+            "hits": 3,
+            "roi": 183.63636363636365,
+            "lcb90": 0.33705866918883176,
+            "max_share": 0.6237623762376238,
+            "roi_without_max": 69.0909090909091
+          },
+          "2025": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 4,
+            "bets": 4,
+            "hits": 1,
+            "roi": 522.5,
+            "lcb90": -1.4713600000000007,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "門別": {
+          "2024": {
+            "races": 10,
+            "bets": 10,
+            "hits": 1,
+            "roi": 63.0,
+            "lcb90": -0.177408,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          },
+          "2025": {
+            "races": 10,
+            "bets": 10,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 9,
+            "bets": 9,
+            "hits": 1,
+            "roi": 60.0,
+            "lcb90": -0.1689600000000001,
+            "max_share": 1.0,
+            "roi_without_max": 0.0
+          }
+        },
+        "高知": {
+          "2024": {
+            "races": 10,
+            "bets": 10,
+            "hits": 3,
+            "roi": 412.0,
+            "lcb90": 0.6593213815460985,
+            "max_share": 0.6529126213592233,
+            "roi_without_max": 143.0
+          },
+          "2025": {
+            "races": 6,
+            "bets": 6,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          },
+          "2026": {
+            "races": 3,
+            "bets": 3,
+            "hits": 0,
+            "roi": 0.0,
+            "lcb90": 0.0,
+            "max_share": null,
+            "roi_without_max": 0.0
+          }
+        }
+      }
+    }
+  ],
+  "pairwise_jaccard": {
+    "R1:R2": 0.27773467804499613,
+    "R1:R3": 0.0,
+    "R1:R4": 0.0,
+    "R1:R5": 0.0,
+    "R1:R6": 0.0,
+    "R1:R7": 0.19136807817589577,
+    "R1:R8": 0.06317300789662599,
+    "R1:R9": 0.0,
+    "R2:R3": 0.0,
+    "R2:R4": 0.0,
+    "R2:R5": 0.0,
+    "R2:R6": 0.0,
+    "R2:R7": 0.20220588235294118,
+    "R2:R8": 0.18604651162790697,
+    "R2:R9": 0.0,
+    "R3:R4": 0.0,
+    "R3:R5": 0.0,
+    "R3:R6": 0.0,
+    "R3:R7": 0.0,
+    "R3:R8": 0.0,
+    "R3:R9": 0.0,
+    "R4:R5": 0.7616511318242344,
+    "R4:R6": 0.0,
+    "R4:R7": 0.0,
+    "R4:R8": 0.0,
+    "R4:R9": 0.0,
+    "R5:R6": 0.0,
+    "R5:R7": 0.0,
+    "R5:R8": 0.0,
+    "R5:R9": 0.0,
+    "R6:R7": 0.0,
+    "R6:R8": 0.0,
+    "R6:R9": 0.0,
+    "R7:R8": 0.034420289855072464,
+    "R7:R9": 0.0,
+    "R8:R9": 0.0
+  },
+  "combined_strict": {
+    "tan": {
+      "rule_ids": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "annual": {
+        "2024": {
+          "races": 753,
+          "bets": 753,
+          "hits": 32,
+          "roi": 113.97078353253652,
+          "lcb90": 0.864081005482736,
+          "max_share": 0.057678862735958986,
+          "roi_without_max": 107.39707835325365
+        },
+        "2025": {
+          "races": 785,
+          "bets": 785,
+          "hits": 33,
+          "roi": 119.70700636942675,
+          "lcb90": 0.9143081874236123,
+          "max_share": 0.05086729807385336,
+          "roi_without_max": 113.61783439490445
+        },
+        "2026": {
+          "races": 378,
+          "bets": 378,
+          "hits": 22,
+          "roi": 172.38095238095238,
+          "lcb90": 1.230603406042603,
+          "max_share": 0.07412523020257827,
+          "roi_without_max": 159.6031746031746
+        }
+      }
+    }
+  }
+}
