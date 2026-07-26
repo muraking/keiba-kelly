@@ -1,0 +1,46 @@
+{
+  "version": "v2026.07.26.2",
+  "market": "local",
+  "rows": 194919,
+  "baseline": {
+    "2024": {
+      "bets": 77906,
+      "hits": 8568,
+      "hit_rate": 10.997869227017175,
+      "roi": 74.48989808230432,
+      "roi_without_max": 74.28670449002645,
+      "lcb90": 0.730664382154395,
+      "max_share": 0.00272780064826191,
+      "return_10x_share": 0.42760816858256034,
+      "hits_10x": 1418
+    },
+    "2025": {
+      "bets": 76959,
+      "hits": 8216,
+      "hit_rate": 10.675814394677685,
+      "roi": 72.59150976493977,
+      "roi_without_max": 72.40517678244261,
+      "lcb90": 0.7119207879162849,
+      "max_share": 0.002566870190474656,
+      "return_10x_share": 0.43848730079458414,
+      "hits_10x": 1430
+    },
+    "2026": {
+      "bets": 40054,
+      "hits": 4521,
+      "hit_rate": 11.287262196035353,
+      "roi": 77.06246567134369,
+      "roi_without_max": 76.85948968891995,
+      "lcb90": 0.7513697450369003,
+      "max_share": 0.0026339149760582635,
+      "return_10x_share": 0.43333570914839986,
+      "hits_10x": 791
+    }
+  },
+  "candidates_2024": 820,
+  "validated_2025": 0,
+  "confirmed_2026": 0,
+  "confirmed": [],
+  "best_validated": [],
+  "note": "10x payout is diagnostic only; no result payout threshold selects a bet"
+}

@@ -1,0 +1,356 @@
+{
+  "version": "v2026.07.26.2",
+  "market": "jra",
+  "rows": 33994,
+  "baseline": {
+    "2024": {
+      "bets": 14483,
+      "hits": 1150,
+      "hit_rate": 7.940343851412,
+      "roi": 88.56728578333218,
+      "roi_without_max": 87.7035144652351,
+      "lcb90": 0.8404096831781901,
+      "max_share": 0.009752712984907073,
+      "return_10x_share": 0.6754396906573531,
+      "hits_10x": 444
+    },
+    "2025": {
+      "bets": 19511,
+      "hits": 1582,
+      "hit_rate": 8.108246630106095,
+      "roi": 84.58971862026549,
+      "roi_without_max": 83.73584132028087,
+      "lcb90": 0.8088116900987342,
+      "max_share": 0.010094339051035186,
+      "return_10x_share": 0.6406512242264137,
+      "hits_10x": 567
+    },
+    "2026": {
+      "bets": 0,
+      "hits": 0,
+      "roi": 0,
+      "roi_without_max": 0,
+      "lcb90": -999,
+      "max_share": null,
+      "return_10x_share": null
+    }
+  },
+  "candidates_2024": 274,
+  "validated_2025": 8,
+  "confirmed_2026": 0,
+  "confirmed": [],
+  "best_validated": [
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "1",
+        "hole_odds_bin": "30-50",
+        "product_bin": "100-200"
+      },
+      "2024": {
+        "bets": 166,
+        "hits": 16,
+        "hit_rate": 9.63855421686747,
+        "roi": 155.9036144578313,
+        "roi_without_max": 138.73493975903614,
+        "lcb90": 1.058176474675106,
+        "max_share": 0.11012364760432766,
+        "return_10x_share": 1.0,
+        "hits_10x": 16
+      },
+      "2025": {
+        "bets": 194,
+        "hits": 23,
+        "hit_rate": 11.855670103092782,
+        "roi": 190.7216494845361,
+        "roi_without_max": 176.49484536082474,
+        "lcb90": 1.3953853682639716,
+        "max_share": 0.0745945945945946,
+        "return_10x_share": 0.89,
+        "hits_10x": 18
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    },
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "1",
+        "hole_odds_bin": "30-50"
+      },
+      "2024": {
+        "bets": 404,
+        "hits": 35,
+        "hit_rate": 8.663366336633663,
+        "roi": 116.65841584158416,
+        "roi_without_max": 106.53465346534654,
+        "lcb90": 0.8844129449220173,
+        "max_share": 0.08678124336940378,
+        "return_10x_share": 0.8678124336940378,
+        "hits_10x": 24
+      },
+      "2025": {
+        "bets": 464,
+        "hits": 39,
+        "hit_rate": 8.405172413793103,
+        "roi": 114.20258620689656,
+        "roi_without_max": 108.25431034482757,
+        "lcb90": 0.8929620529968156,
+        "max_share": 0.0520852991130402,
+        "return_10x_share": 0.7890167956218155,
+        "hits_10x": 24
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    },
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "1",
+        "product_bin": "100-200",
+        "partner_p_bin": ".15-.25"
+      },
+      "2024": {
+        "bets": 211,
+        "hits": 16,
+        "hit_rate": 7.5829383886255926,
+        "roi": 143.88625592417063,
+        "roi_without_max": 130.3791469194313,
+        "lcb90": 0.970999261031612,
+        "max_share": 0.09387351778656126,
+        "return_10x_share": 1.0,
+        "hits_10x": 16
+      },
+      "2025": {
+        "bets": 263,
+        "hits": 17,
+        "hit_rate": 6.4638783269961975,
+        "roi": 115.74144486692015,
+        "roi_without_max": 105.24714828897339,
+        "lcb90": 0.7975014734465731,
+        "max_share": 0.09067017082785808,
+        "return_10x_share": 1.0,
+        "hits_10x": 17
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    },
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "1",
+        "hole_odds_bin": "30-50",
+        "field_bin": "12+"
+      },
+      "2024": {
+        "bets": 304,
+        "hits": 25,
+        "hit_rate": 8.223684210526317,
+        "roi": 121.9407894736842,
+        "roi_without_max": 108.48684210526316,
+        "lcb90": 0.8751254127976473,
+        "max_share": 0.11033180469382249,
+        "return_10x_share": 0.9093606690045859,
+        "hits_10x": 19
+      },
+      "2025": {
+        "bets": 372,
+        "hits": 29,
+        "hit_rate": 7.795698924731183,
+        "roi": 111.55913978494623,
+        "roi_without_max": 104.13978494623657,
+        "lcb90": 0.834492719263364,
+        "max_share": 0.06650602409638554,
+        "return_10x_share": 0.848433734939759,
+        "hits_10x": 20
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    },
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "1",
+        "product_bin": "30-60",
+        "hole_p_bin": ".25+"
+      },
+      "2024": {
+        "bets": 235,
+        "hits": 39,
+        "hit_rate": 16.595744680851062,
+        "roi": 106.21276595744679,
+        "roi_without_max": 101.40425531914894,
+        "lcb90": 0.8477520715398905,
+        "max_share": 0.045272435897435896,
+        "return_10x_share": 0.12900641025641027,
+        "hits_10x": 3
+      },
+      "2025": {
+        "bets": 168,
+        "hits": 32,
+        "hit_rate": 19.047619047619047,
+        "roi": 122.50000000000001,
+        "roi_without_max": 114.88095238095238,
+        "lcb90": 0.9535329478914686,
+        "max_share": 0.062196307094266275,
+        "return_10x_share": 0.12050534499514091,
+        "hits_10x": 2
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    },
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "1",
+        "hole_odds_bin": "10-15",
+        "hole_p_bin": ".25+"
+      },
+      "2024": {
+        "bets": 237,
+        "hits": 52,
+        "hit_rate": 21.940928270042196,
+        "roi": 108.77637130801688,
+        "roi_without_max": 100.84388185654008,
+        "lcb90": 0.872508811187491,
+        "max_share": 0.07292474786656322,
+        "return_10x_share": 0.20946470131885184,
+        "hits_10x": 4
+      },
+      "2025": {
+        "bets": 195,
+        "hits": 48,
+        "hit_rate": 24.615384615384617,
+        "roi": 116.15384615384616,
+        "roi_without_max": 109.58974358974358,
+        "lcb90": 0.9332200100167027,
+        "max_share": 0.0565121412803532,
+        "return_10x_share": 0.1562913907284768,
+        "hits_10x": 3
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    },
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "1",
+        "hole_odds_bin": "30-50",
+        "hole_p_bin": ".16-.20"
+      },
+      "2024": {
+        "bets": 105,
+        "hits": 9,
+        "hit_rate": 8.571428571428571,
+        "roi": 122.66666666666666,
+        "roi_without_max": 100.76190476190476,
+        "lcb90": 0.6896595709939808,
+        "max_share": 0.17857142857142858,
+        "return_10x_share": 0.8944099378881988,
+        "hits_10x": 7
+      },
+      "2025": {
+        "bets": 145,
+        "hits": 13,
+        "hit_rate": 8.96551724137931,
+        "roi": 125.24137931034483,
+        "roi_without_max": 106.9655172413793,
+        "lcb90": 0.7853228286237468,
+        "max_share": 0.1459251101321586,
+        "return_10x_share": 0.8188325991189427,
+        "hits_10x": 9
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    },
+    {
+      "condition": {
+        "hole_rank": "1",
+        "partner_rank": "2",
+        "product_bin": "60-100",
+        "hole_p_bin": ".20-.25"
+      },
+      "2024": {
+        "bets": 153,
+        "hits": 18,
+        "hit_rate": 11.76470588235294,
+        "roi": 109.01960784313725,
+        "roi_without_max": 100.06535947712419,
+        "lcb90": 0.7689688353094772,
+        "max_share": 0.08213429256594725,
+        "return_10x_share": 0.552158273381295,
+        "hits_10x": 8
+      },
+      "2025": {
+        "bets": 175,
+        "hits": 23,
+        "hit_rate": 13.142857142857142,
+        "roi": 121.88571428571429,
+        "roi_without_max": 113.14285714285714,
+        "lcb90": 0.8950190346003912,
+        "max_share": 0.07172995780590717,
+        "return_10x_share": 0.530239099859353,
+        "hits_10x": 9
+      },
+      "2026": {
+        "bets": 0,
+        "hits": 0,
+        "roi": 0,
+        "roi_without_max": 0,
+        "lcb90": -999,
+        "max_share": null,
+        "return_10x_share": null
+      }
+    }
+  ],
+  "note": "10x payout is diagnostic only; no result payout threshold selects a bet"
+}
