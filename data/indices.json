@@ -45122,6 +45122,63 @@
               "fuku_min": 2.6,
               "fuku_max": 6.6
             }
+          },
+          "8": {
+            "1": {
+              "tan": 49.7,
+              "fuku_min": 3.3,
+              "fuku_max": 5.7
+            },
+            "2": {
+              "tan": 23.4,
+              "fuku_min": 3.3,
+              "fuku_max": 5.6
+            },
+            "3": {
+              "tan": 141.1,
+              "fuku_min": 12.4,
+              "fuku_max": 22.2
+            },
+            "4": {
+              "tan": 14.6,
+              "fuku_min": 1.7,
+              "fuku_max": 2.7
+            },
+            "5": {
+              "tan": 1.5,
+              "fuku_min": 1.1,
+              "fuku_max": 1.2
+            },
+            "6": {
+              "tan": 18,
+              "fuku_min": 2.4,
+              "fuku_max": 4.1
+            },
+            "7": {
+              "tan": 90.9,
+              "fuku_min": 12.1,
+              "fuku_max": 21.7
+            },
+            "8": {
+              "tan": 10.8,
+              "fuku_min": 1.7,
+              "fuku_max": 2.8
+            },
+            "9": {
+              "tan": 37.6,
+              "fuku_min": 4.9,
+              "fuku_max": 8.6
+            },
+            "10": {
+              "tan": 4.4,
+              "fuku_min": 1.8,
+              "fuku_max": 3
+            },
+            "11": {
+              "tan": 13.3,
+              "fuku_min": 2.2,
+              "fuku_max": 3.7
+            }
           }
         },
         "12": {
@@ -45275,7 +45332,7 @@
           }
         }
       },
-      "odds_updated": "2026-07-26T18:58:12.293712+09:00"
+      "odds_updated": "2026-07-26T19:03:08.292870+09:00"
     }
   },
   "_settings": {
@@ -45298,8 +45355,8 @@
     "skip_local_maiden": false,
     "skip_local_2yo": true,
     "skip_local_3yo": false,
-    "skip_jra_maiden": false,
-    "skip_jra_2yo": true,
+    "skip_jra_maiden": true,
+    "skip_jra_2yo": false,
     "skip_jra_3yo": true,
     "skip_jra_hurdle": false,
     "buy_place_bet": false,
@@ -45318,7 +45375,7 @@
   },
   "_settings_jra": {
     "sm_winrate_filter": 7,
-    "ev_min": 135,
+    "ev_min": 130,
     "odds_min": 8,
     "odds_max": 15,
     "max_bets": 3,
@@ -45349,10 +45406,10 @@
     "exacta_method": "formation",
     "exacta_box_n": 2,
     "wide_amount": 200,
-    "wide_top1": false,
+    "wide_top1": true,
     "wide_top2": true,
     "wide_rec1": false,
-    "wide_rec2": false,
+    "wide_rec2": true,
     "wide_rec3": true,
     "wide_method": "formation",
     "wide_box_n": 2,
@@ -45361,21 +45418,18 @@
     "wide_winrate_filter": 10,
     "entropy_skip_labels": [
       "固",
-      "中間",
       "激荒"
     ],
     "exacta_tan_n": 3,
     "wide_tan_n": 5,
     "place_amount_mode": "kelly",
     "place_kelly_mult": 2,
-    "place_bet_odds_min": 20,
-    "place_bet_ev_min": 130,
+    "place_bet_odds_min": 15,
     "place_amount": 200,
     "place_bet_independent": true,
     "place_bet_winrate_filter": 5,
     "place_bet_max_n": 1,
-    "ev_max": 165,
-    "place_bet_odds_max": 40
+    "ev_max": 165
   },
   "_settings_local": {
     "sm_winrate_filter": 4,
@@ -45440,17 +45494,17 @@
     "place_bet_odds_max": 30
   },
   "_perf_jra": {
-    "updated_at": "2026-07-25",
-    "is_roi": 155.7,
-    "oos_roi": 188.1,
-    "oos_bets": 32,
-    "train_days": 9,
+    "updated_at": "2026-07-26",
+    "is_roi": 159.2,
+    "oos_roi": 137.4,
+    "oos_bets": 27,
+    "train_days": 10,
     "oos_days": 4,
-    "bets": 87,
-    "profit_days": 5,
-    "total_days": 9,
-    "max_drawdown": 24.9,
-    "sharpe": 7.85,
+    "bets": 104,
+    "profit_days": 6,
+    "total_days": 10,
+    "max_drawdown": 25.5,
+    "sharpe": 6.9,
     "max_consecutive_loss": 17
   },
   "_perf_local": {
