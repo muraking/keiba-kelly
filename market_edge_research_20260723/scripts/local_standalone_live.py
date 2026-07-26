@@ -3,7 +3,7 @@
 This service does not import or launch keiba_ai.live_probs. It directly uses
 the low-level local card parser and structural feature builder.
 
-Version: v2026.07.27.1
+Version: v2026.07.27.2
 """
 
 from __future__ import annotations
@@ -540,7 +540,12 @@ def live_run(
                     )
                     snapshot["t"] = datetime.now(JST).strftime("%H:%M")
                     decision = evaluate_snapshot(snapshot)
-                    title = f"{meta['venue']}{meta['race_num']}R"
+                    race_name = str(meta.get("race_name") or "").strip()
+                    title = (
+                        f"{meta['venue']}{meta['race_num']}R"
+                        f"{f' {race_name}' if race_name else ''}"
+                        f"　発走{post.strftime('%H:%M')}"
+                    )
                     discord_send_7(
                         webhook, webhook4,
                         format_discord(title, snapshot, decision), dry_run,

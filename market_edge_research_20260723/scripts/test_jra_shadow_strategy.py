@@ -1,6 +1,6 @@
 """Regression tests for JRA compact seven-minute notifications.
 
-Version: v2026.07.27.1
+Version: v2026.07.27.2
 """
 
 import unittest
@@ -22,19 +22,18 @@ class StrategyTest(unittest.TestCase):
     def test_compact_display_has_two_winners_and_three_holes(self) -> None:
         snap = self.snapshot()
         message = format_discord("東京1R", snap, evaluate_snapshot(snap))
-        self.assertIn("勝1 ① 馬1", message)
-        self.assertIn("勝2 ② 馬2", message)
-        self.assertIn("穴1 ④ 馬4", message)
-        self.assertIn("穴2 ③ 馬3", message)
-        self.assertIn("穴3 ⑤ 馬5", message)
-        self.assertNotIn("WP", message)
+        self.assertIn("勝① ① 馬1　WP30%　PP70%　2.0倍", message)
+        self.assertIn("勝② ② 馬2　WP22%　PP60%　5.0倍", message)
+        self.assertIn("穴① ④ 馬4　WP12%　PP55%　20.0倍", message)
+        self.assertIn("穴② ③ 馬3　WP15%　PP48%　12.0倍", message)
+        self.assertIn("穴③ ⑤ 馬5　WP11%　PP42%　30.0倍", message)
         self.assertNotIn("展開", message)
 
     def test_missing_odds_still_formats_all_race_notice(self) -> None:
         snap = self.snapshot()
         snap["o"] = {}
         message = format_discord("東京1R", snap, evaluate_snapshot(snap))
-        self.assertIn("勝1 ① 馬1", message)
+        self.assertIn("勝① ① 馬1", message)
         self.assertIn("穴馬 未確定（オッズ未取得）", message)
 
     def test_validated_early_wide_candidate_is_added(self) -> None:

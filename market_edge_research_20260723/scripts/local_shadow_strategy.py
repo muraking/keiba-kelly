@@ -4,12 +4,12 @@ The rules are frozen from the 2024-2026 OOS research. They are shadow
 recommendations, not automatic wagering rules, because the same period was
 used to discover the segments.
 
-Version: v2026.07.27.1
+Version: v2026.07.27.2
 """
 
 from __future__ import annotations
 
-VERSION = "v2026.07.27.1"
+VERSION = "v2026.07.27.2"
 
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
@@ -383,13 +383,23 @@ def _additional_tickets(snapshot: dict, winners: list[int], holes: list[int]) ->
 # full-board formatter above while the old evaluator remains available.
 def format_discord(title: str, snapshot: dict, decision: dict) -> str:
     del decision
-    stamp = snapshot.get("t") or "--:--"
     names = {int(k): str(v) for k, v in (snapshot.get("h") or {}).items()}
+    win = {int(k): float(v) for k, v in (snapshot.get("p") or {}).items()}
+    place = {int(k): float(v) for k, v in (snapshot.get("q") or {}).items()}
+    odds = {int(k): float(v) for k, v in (snapshot.get("o") or {}).items()}
     winners, holes = _compact_selection(snapshot)
-    lines = [f"🏇 地方 7分前 {title} [{stamp}]"]
+    tickets = _additional_tickets(snapshot, winners, holes)
+    ticket_text = "\n".join(tickets)
+    lines = [title, "", "【軸候補】"]
     for rank, number in enumerate(winners, 1):
-        lines.append(f"勝{rank} {circled(number)} {names.get(number, '')}")
-    lines.append("")
+        lines.append(
+            f"勝{circled(rank)} {circled(number)} {names.get(number, '')}　"
+            f"WP{win[number]:.0%}　PP{place.get(number, 0):.0%}　"
+            f"{odds[number]:.1f}倍" if number in odds else
+            f"勝{circled(rank)} {circled(number)} {names.get(number, '')}　"
+            f"WP{win[number]:.0%}　PP{place.get(number, 0):.0%}　オッズ未取得"
+        )
+    lines.extend(["", "【穴馬】"])
     if not snapshot.get("o"):
         lines.append("穴馬 未確定（オッズ未取得）")
     elif not snapshot.get("q"):
@@ -398,8 +408,15 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
         lines.append("穴馬 該当なし（単勝10倍以上なし）")
     else:
         for rank, number in enumerate(holes, 1):
-            lines.append(f"穴{rank} {circled(number)} {names.get(number, '')}")
-    lines.extend(["", "【追加買い目】"])
-    lines.extend(_additional_tickets(snapshot, winners, holes) or ["追加候補なし"])
+            buy = "　●買い" if circled(number) in ticket_text else ""
+            lines.append(
+                f"穴{circled(rank)} {circled(number)} {names.get(number, '')}　"
+                f"WP{win.get(number, 0):.0%}　PP{place[number]:.0%}　"
+                f"{odds[number]:.1f}倍{buy}"
+            )
+    lines.extend(["", "【今回の買い目】"])
+    lines.extend(tickets or ["見送り"])
+    if tickets:
+        lines.extend(["", "理由：検証済み購入条件に該当"])
     lines.append(f"Version {VERSION}")
     return "\n".join(lines)
