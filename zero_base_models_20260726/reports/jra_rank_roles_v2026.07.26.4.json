@@ -1,0 +1,1379 @@
+{
+  "version": "v2026.07.26.4",
+  "market": "jra",
+  "rows": 207435,
+  "features": [
+    "umaban",
+    "distance",
+    "is_dirt",
+    "draw",
+    "field_size",
+    "age",
+    "is_female",
+    "weight_carried",
+    "horse_weight",
+    "horse_weight_diff",
+    "venue_code",
+    "going_code",
+    "cls_level",
+    "month",
+    "h_n_past",
+    "h_days_since",
+    "h_last_pos",
+    "h_avg_pos3",
+    "h_avg_pos5",
+    "h_winrate",
+    "h_placerate",
+    "h_avg_rel3",
+    "h_avg_rel5",
+    "h_best_rel5",
+    "h_avg_relz3",
+    "h_avg_last3f3",
+    "h_avg_early3",
+    "h_weight_change",
+    "h_dist_change",
+    "h_same_jockey",
+    "j_n",
+    "j_winrate",
+    "t_n",
+    "t_winrate",
+    "o_n",
+    "o_winrate",
+    "ana_layoff",
+    "ana_rest_lean",
+    "ana_tataki2",
+    "ana_draw_change",
+    "ana_draw_change_abs",
+    "ana_style_shift",
+    "ana_style_shift_abs",
+    "ana_dist_change_abs",
+    "ana_surf_change",
+    "ana_venue_change",
+    "ana_last_pos_gain",
+    "ana_bounce",
+    "ana_class_change",
+    "ana_going_change",
+    "ana_wtcarried_change",
+    "ana_short_rest",
+    "ana_last3f_sharp",
+    "ana_weight_swing_abs",
+    "h_rank_std",
+    "dir_x_umaban",
+    "h_venue_n",
+    "h_venue_winrate",
+    "h_venue_avg_rel",
+    "h_avg_spd3",
+    "h_best_spd5",
+    "h_avg_rtop3"
+  ],
+  "folds": [
+    {
+      "year": 2024,
+      "rows": 45446,
+      "mean_absolute_rank_error": 3.2779562557760857,
+      "win_auc": 0.7792778731889917,
+      "place_auc": 0.7683951822232278,
+      "win_logloss": 0.2259004246392073,
+      "place_logloss": 0.4445133801757877,
+      "rank_temperature": 0.7868199022392909,
+      "rank_probability_logloss": 0.21865492013715374,
+      "model_top1_win_rate": 28.9015606242497,
+      "market_top1_win_rate": 34.603841536614645
+    },
+    {
+      "year": 2025,
+      "rows": 46344,
+      "mean_absolute_rank_error": 3.272095632660107,
+      "win_auc": 0.780800873779417,
+      "place_auc": 0.7720456640618142,
+      "win_logloss": 0.22333704479578473,
+      "place_logloss": 0.4382551196063357,
+      "rank_temperature": 0.77062464740395,
+      "rank_probability_logloss": 0.21693643991116704,
+      "model_top1_win_rate": 29.20644391408115,
+      "market_top1_win_rate": 33.1145584725537
+    },
+    {
+      "year": 2026,
+      "rows": 24096,
+      "mean_absolute_rank_error": 3.259835657370518,
+      "win_auc": 0.7836575840891229,
+      "place_auc": 0.7825936098109582,
+      "win_logloss": 0.22087505516253308,
+      "place_logloss": 0.4289405614760275,
+      "rank_temperature": 0.8393039350234008,
+      "rank_probability_logloss": 0.21589324713655975,
+      "model_top1_win_rate": 27.0081490104773,
+      "market_top1_win_rate": 32.36321303841677
+    }
+  ],
+  "rules_tested": 180,
+  "confirmed_rules": [],
+  "top_2024_discovery": [
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 5,
+      "odds_low": 10,
+      "odds_high": 30,
+      "periods": {
+        "2024": {
+          "bets": 109,
+          "hits": 10,
+          "hit_rate": 9.174311926605505,
+          "roi": 137.1559633027523,
+          "lcb90": 0.8271711795879809,
+          "max_payout_share": 0.12642140468227425,
+          "avg_popularity": 7.256880733944954,
+          "avg_odds": 16.957798152888586
+        },
+        "2025": {
+          "bets": 78,
+          "hits": 3,
+          "hit_rate": 3.8461538461538463,
+          "roi": 53.717948717948715,
+          "lcb90": 0.14127445653804016,
+          "max_payout_share": 0.39618138424821003,
+          "avg_popularity": 7.256410256410256,
+          "avg_odds": 16.410256459162785
+        },
+        "2026": {
+          "bets": 30,
+          "hits": 0,
+          "hit_rate": 0.0,
+          "roi": 0.0,
+          "lcb90": 0.0,
+          "max_payout_share": null,
+          "avg_popularity": 7.333333333333333,
+          "avg_odds": 16.626666641235353
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 5,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 138,
+          "hits": 12,
+          "hit_rate": 8.695652173913043,
+          "roi": 121.73913043478262,
+          "lcb90": 0.7707768498952066,
+          "max_payout_share": 0.1125,
+          "avg_popularity": 7.333333333333333,
+          "avg_odds": 18.40579708762791
+        },
+        "2025": {
+          "bets": 104,
+          "hits": 3,
+          "hit_rate": 2.8846153846153846,
+          "roi": 40.28846153846154,
+          "lcb90": 0.10498503056114461,
+          "max_payout_share": 0.39618138424821003,
+          "avg_popularity": 7.3173076923076925,
+          "avg_odds": 17.43269236271198
+        },
+        "2026": {
+          "bets": 43,
+          "hits": 1,
+          "hit_rate": 2.3255813953488373,
+          "roi": 17.209302325581397,
+          "lcb90": -0.048461395348837255,
+          "max_payout_share": 1.0,
+          "avg_popularity": 7.348837209302325,
+          "avg_odds": 18.016279076420982
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 714,
+          "hits": 89,
+          "hit_rate": 12.46498599439776,
+          "roi": 86.98879551820728,
+          "lcb90": 0.7453903067282691,
+          "max_payout_share": 0.03042988246659153,
+          "avg_popularity": 4.3767507002801125,
+          "avg_odds": 9.018907575046315
+        },
+        "2025": {
+          "bets": 612,
+          "hits": 61,
+          "hit_rate": 9.967320261437909,
+          "roi": 62.40196078431373,
+          "lcb90": 0.5196359452761574,
+          "max_payout_share": 0.04346687614558785,
+          "avg_popularity": 4.276143790849673,
+          "avg_odds": 8.56225490803812
+        },
+        "2026": {
+          "bets": 303,
+          "hits": 32,
+          "hit_rate": 10.561056105610561,
+          "roi": 70.23102310231023,
+          "lcb90": 0.5432342256244509,
+          "max_payout_share": 0.06907894736842106,
+          "avg_popularity": 4.151815181518152,
+          "avg_odds": 8.31914191828309
+        }
+      }
+    },
+    {
+      "role": "rank",
+      "rank_column": "rank_model",
+      "uplift_column": "uplift_model",
+      "bet_type": "win",
+      "rank_max": 2,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 991,
+          "hits": 129,
+          "hit_rate": 13.017154389505551,
+          "roi": 83.087790110999,
+          "lcb90": 0.7404979362973285,
+          "max_payout_share": 0.012144765606023804,
+          "avg_popularity": 3.9838546922300706,
+          "avg_odds": 6.895660951327604
+        },
+        "2025": {
+          "bets": 883,
+          "hits": 109,
+          "hit_rate": 12.344280860702153,
+          "roi": 80.91732729331824,
+          "lcb90": 0.7126386875507171,
+          "max_payout_share": 0.013995801259622114,
+          "avg_popularity": 3.943374858437146,
+          "avg_odds": 6.845526611008434
+        },
+        "2026": {
+          "bets": 452,
+          "hits": 58,
+          "hit_rate": 12.831858407079647,
+          "roi": 84.7566371681416,
+          "lcb90": 0.7107667879882126,
+          "max_payout_share": 0.026102845210127904,
+          "avg_popularity": 3.911504424778761,
+          "avg_odds": 6.785398244857788
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 3,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 1136,
+          "hits": 427,
+          "hit_rate": 37.58802816901409,
+          "roi": 77.8169014084507,
+          "lcb90": 0.7373849785771872,
+          "max_payout_share": 0.006447963800904977,
+          "avg_popularity": 4.169014084507042,
+          "avg_odds": 7.141373238513167
+        },
+        "2025": {
+          "bets": 1116,
+          "hits": 413,
+          "hit_rate": 37.007168458781365,
+          "roi": 76.96236559139786,
+          "lcb90": 0.7291366340414814,
+          "max_payout_share": 0.004307835603679124,
+          "avg_popularity": 4.185483870967742,
+          "avg_odds": 7.153763435220205
+        },
+        "2026": {
+          "bets": 576,
+          "hits": 208,
+          "hit_rate": 36.11111111111111,
+          "roi": 76.26736111111111,
+          "lcb90": 0.7047687257845276,
+          "max_payout_share": 0.013430457546096062,
+          "avg_popularity": 4.133680555555555,
+          "avg_odds": 7.112673627833526
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 2,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 958,
+          "hits": 369,
+          "hit_rate": 38.51774530271398,
+          "roi": 77.99582463465553,
+          "lcb90": 0.7359993234032361,
+          "max_payout_share": 0.007628479657387581,
+          "avg_popularity": 3.988517745302714,
+          "avg_odds": 6.892901878018469
+        },
+        "2025": {
+          "bets": 921,
+          "hits": 348,
+          "hit_rate": 37.785016286644954,
+          "roi": 76.02605863192183,
+          "lcb90": 0.7169448942939517,
+          "max_payout_share": 0.005284204512996287,
+          "avg_popularity": 3.984799131378936,
+          "avg_odds": 6.884581968139748
+        },
+        "2026": {
+          "bets": 482,
+          "hits": 184,
+          "hit_rate": 38.17427385892116,
+          "roi": 79.35684647302904,
+          "lcb90": 0.7301449457131052,
+          "max_payout_share": 0.015424836601307189,
+          "avg_popularity": 3.929460580912863,
+          "avg_odds": 6.832572633300085
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 2,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 1536,
+          "hits": 488,
+          "hit_rate": 31.770833333333332,
+          "roi": 77.10286458333333,
+          "lcb90": 0.7269033681046956,
+          "max_payout_share": 0.010976948408342482,
+          "avg_popularity": 4.921875,
+          "avg_odds": 11.334244794833163
+        },
+        "2025": {
+          "bets": 1456,
+          "hits": 467,
+          "hit_rate": 32.074175824175825,
+          "roi": 75.7967032967033,
+          "lcb90": 0.7155575915678873,
+          "max_payout_share": 0.008970641536788691,
+          "avg_popularity": 4.8708791208791204,
+          "avg_odds": 10.888461537086046
+        },
+        "2026": {
+          "bets": 708,
+          "hits": 237,
+          "hit_rate": 33.47457627118644,
+          "roi": 80.2683615819209,
+          "lcb90": 0.7391080732265106,
+          "max_payout_share": 0.024810839345416152,
+          "avg_popularity": 4.673728813559322,
+          "avg_odds": 10.245621479837235
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 1,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 517,
+          "hits": 210,
+          "hit_rate": 40.61895551257253,
+          "roi": 78.39458413926499,
+          "lcb90": 0.7263377473148172,
+          "max_payout_share": 0.014063656550703183,
+          "avg_popularity": 3.6634429400386845,
+          "avg_odds": 6.31141199779695
+        },
+        "2025": {
+          "bets": 473,
+          "hits": 181,
+          "hit_rate": 38.266384778012686,
+          "roi": 73.99577167019028,
+          "lcb90": 0.6819523664708171,
+          "max_payout_share": 0.010571428571428572,
+          "avg_popularity": 3.619450317124736,
+          "avg_odds": 6.233192379328464
+        },
+        "2026": {
+          "bets": 263,
+          "hits": 108,
+          "hit_rate": 41.06463878326996,
+          "roi": 79.46768060836501,
+          "lcb90": 0.7134702083097356,
+          "max_payout_share": 0.02631578947368421,
+          "avg_popularity": 3.517110266159696,
+          "avg_odds": 6.161216746718258
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 3,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 2477,
+          "hits": 695,
+          "hit_rate": 28.0581348405329,
+          "roi": 76.16875252321357,
+          "lcb90": 0.7239065945157911,
+          "max_payout_share": 0.008003392166216145,
+          "avg_popularity": 5.470730722648365,
+          "avg_odds": 14.09087605817115
+        },
+        "2025": {
+          "bets": 2416,
+          "hits": 685,
+          "hit_rate": 28.352649006622517,
+          "roi": 77.21854304635761,
+          "lcb90": 0.7345288054251684,
+          "max_payout_share": 0.0075578902229845625,
+          "avg_popularity": 5.468956953642384,
+          "avg_odds": 13.687458614245156
+        },
+        "2026": {
+          "bets": 1197,
+          "hits": 358,
+          "hit_rate": 29.908103592314117,
+          "roi": 81.19465329991645,
+          "lcb90": 0.7575680227669732,
+          "max_payout_share": 0.01584525156909147,
+          "avg_popularity": 5.375104427736007,
+          "avg_odds": 13.5489557201701
+        }
+      }
+    },
+    {
+      "role": "rank",
+      "rank_column": "rank_model",
+      "uplift_column": "uplift_model",
+      "bet_type": "win",
+      "rank_max": 3,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 1172,
+          "hits": 143,
+          "hit_rate": 12.20136518771331,
+          "roi": 80.7764505119454,
+          "lcb90": 0.7237639165292488,
+          "max_payout_share": 0.010563008344776593,
+          "avg_popularity": 4.162969283276451,
+          "avg_odds": 7.138822525841384
+        },
+        "2025": {
+          "bets": 1090,
+          "hits": 129,
+          "hit_rate": 11.834862385321102,
+          "roi": 80.55045871559633,
+          "lcb90": 0.7171398349173813,
+          "max_payout_share": 0.011389521640091117,
+          "avg_popularity": 4.175229357798165,
+          "avg_odds": 7.159908252243602
+        },
+        "2026": {
+          "bets": 554,
+          "hits": 73,
+          "hit_rate": 13.176895306859207,
+          "roi": 91.15523465703971,
+          "lcb90": 0.7793431784747376,
+          "max_payout_share": 0.019801980198019802,
+          "avg_popularity": 4.157039711191335,
+          "avg_odds": 7.108303264590377
+        }
+      }
+    },
+    {
+      "role": "rank",
+      "rank_column": "rank_model",
+      "uplift_column": "uplift_model",
+      "bet_type": "win",
+      "rank_max": 2,
+      "uplift_min": 4,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 119,
+          "hits": 15,
+          "hit_rate": 12.605042016806722,
+          "roi": 105.37815126050421,
+          "lcb90": 0.7227178838338226,
+          "max_payout_share": 0.07974481658692185,
+          "avg_popularity": 5.38655462184874,
+          "avg_odds": 8.387394961188821
+        },
+        "2025": {
+          "bets": 81,
+          "hits": 6,
+          "hit_rate": 7.4074074074074066,
+          "roi": 62.96296296296296,
+          "lcb90": 0.3054979779131637,
+          "max_payout_share": 0.19607843137254902,
+          "avg_popularity": 5.432098765432099,
+          "avg_odds": 8.316049375651795
+        },
+        "2026": {
+          "bets": 36,
+          "hits": 6,
+          "hit_rate": 16.666666666666664,
+          "roi": 123.88888888888889,
+          "lcb90": 0.6264376205674236,
+          "max_payout_share": 0.2242152466367713,
+          "avg_popularity": 5.527777777777778,
+          "avg_odds": 8.430555502573648
+        }
+      }
+    },
+    {
+      "role": "rank",
+      "rank_column": "rank_model",
+      "uplift_column": "uplift_model",
+      "bet_type": "win",
+      "rank_max": 3,
+      "uplift_min": 4,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 119,
+          "hits": 15,
+          "hit_rate": 12.605042016806722,
+          "roi": 105.37815126050421,
+          "lcb90": 0.7227178838338226,
+          "max_payout_share": 0.07974481658692185,
+          "avg_popularity": 5.38655462184874,
+          "avg_odds": 8.387394961188821
+        },
+        "2025": {
+          "bets": 82,
+          "hits": 6,
+          "hit_rate": 7.317073170731707,
+          "roi": 62.19512195121951,
+          "lcb90": 0.3016455925886185,
+          "max_payout_share": 0.19607843137254902,
+          "avg_popularity": 5.451219512195122,
+          "avg_odds": 8.328048775835734
+        },
+        "2026": {
+          "bets": 42,
+          "hits": 7,
+          "hit_rate": 16.666666666666664,
+          "roi": 128.09523809523807,
+          "lcb90": 0.6960052661639982,
+          "max_payout_share": 0.18587360594795538,
+          "avg_popularity": 5.738095238095238,
+          "avg_odds": 8.533333278837658
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 551,
+          "hits": 78,
+          "hit_rate": 14.156079854809436,
+          "roi": 83.21234119782214,
+          "lcb90": 0.7165199391711261,
+          "max_payout_share": 0.021810250817884406,
+          "avg_popularity": 3.6624319419237747,
+          "avg_odds": 6.394555363594512
+        },
+        "2025": {
+          "bets": 486,
+          "hits": 57,
+          "hit_rate": 11.728395061728394,
+          "roi": 67.75720164609054,
+          "lcb90": 0.5660248125034942,
+          "max_payout_share": 0.02915274825387185,
+          "avg_popularity": 3.6358024691358026,
+          "avg_odds": 6.315637858316241
+        },
+        "2026": {
+          "bets": 251,
+          "hits": 30,
+          "hit_rate": 11.952191235059761,
+          "roi": 74.5418326693227,
+          "lcb90": 0.5770749096451671,
+          "max_payout_share": 0.05344735435595938,
+          "avg_popularity": 3.6215139442231075,
+          "avg_odds": 6.315537853544927
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 3,
+      "odds_low": 10,
+      "odds_high": 30,
+      "periods": {
+        "2024": {
+          "bets": 153,
+          "hits": 12,
+          "hit_rate": 7.8431372549019605,
+          "roi": 112.81045751633987,
+          "lcb90": 0.7161973241674301,
+          "max_payout_share": 0.10950173812282735,
+          "avg_popularity": 6.555555555555555,
+          "avg_odds": 15.65424838097267
+        },
+        "2025": {
+          "bets": 119,
+          "hits": 4,
+          "hit_rate": 3.361344537815126,
+          "roi": 44.20168067226891,
+          "lcb90": 0.15856346282558248,
+          "max_payout_share": 0.3155893536121673,
+          "avg_popularity": 6.453781512605042,
+          "avg_odds": 15.20252104366527
+        },
+        "2026": {
+          "bets": 49,
+          "hits": 3,
+          "hit_rate": 6.122448979591836,
+          "roi": 72.85714285714285,
+          "lcb90": 0.19277845496756985,
+          "max_payout_share": 0.4117647058823529,
+          "avg_popularity": 6.36734693877551,
+          "avg_odds": 15.224489776455627
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 3,
+      "uplift_min": 2,
+      "odds_low": 6,
+      "odds_high": 15,
+      "periods": {
+        "2024": {
+          "bets": 1455,
+          "hits": 128,
+          "hit_rate": 8.79725085910653,
+          "roi": 80.65292096219932,
+          "lcb90": 0.7159166088005805,
+          "max_payout_share": 0.012441414571793779,
+          "avg_popularity": 4.91340206185567,
+          "avg_odds": 9.668934705085361
+        },
+        "2025": {
+          "bets": 1419,
+          "hits": 123,
+          "hit_rate": 8.668076109936575,
+          "roi": 80.81042988019732,
+          "lcb90": 0.7153238869777739,
+          "max_payout_share": 0.012993808319525596,
+          "avg_popularity": 4.945031712473573,
+          "avg_odds": 9.876532765657991
+        },
+        "2026": {
+          "bets": 703,
+          "hits": 74,
+          "hit_rate": 10.526315789473683,
+          "roi": 95.70412517780939,
+          "lcb90": 0.8168476816124265,
+          "max_payout_share": 0.022294887039239,
+          "avg_popularity": 4.9544807965860596,
+          "avg_odds": 9.780227604834826
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 3,
+      "uplift_min": 2,
+      "odds_low": 6,
+      "odds_high": 15,
+      "periods": {
+        "2024": {
+          "bets": 1464,
+          "hits": 442,
+          "hit_rate": 30.191256830601095,
+          "roi": 74.86338797814209,
+          "lcb90": 0.7077907415252671,
+          "max_payout_share": 0.0056569343065693434,
+          "avg_popularity": 4.941256830601093,
+          "avg_odds": 9.728483603300292
+        },
+        "2025": {
+          "bets": 1436,
+          "hits": 441,
+          "hit_rate": 30.71030640668524,
+          "roi": 77.70194986072423,
+          "lcb90": 0.7342894298192596,
+          "max_payout_share": 0.008065961641871303,
+          "avg_popularity": 4.956128133704736,
+          "avg_odds": 9.780222840295862
+        },
+        "2026": {
+          "bets": 685,
+          "hits": 215,
+          "hit_rate": 31.386861313868614,
+          "roi": 80.86131386861314,
+          "lcb90": 0.7462226009440085,
+          "max_payout_share": 0.010651742191731359,
+          "avg_popularity": 4.959124087591241,
+          "avg_odds": 9.698978114302141
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 3,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 1172,
+          "hits": 140,
+          "hit_rate": 11.945392491467576,
+          "roi": 79.03583617747441,
+          "lcb90": 0.7074050683827322,
+          "max_payout_share": 0.010795638562020943,
+          "avg_popularity": 4.17320819112628,
+          "avg_odds": 7.167235497321692
+        },
+        "2025": {
+          "bets": 1085,
+          "hits": 127,
+          "hit_rate": 11.705069124423963,
+          "roi": 79.47465437788019,
+          "lcb90": 0.7070824075583586,
+          "max_payout_share": 0.011596892032935173,
+          "avg_popularity": 4.150230414746543,
+          "avg_odds": 7.151152069337907
+        },
+        "2026": {
+          "bets": 558,
+          "hits": 71,
+          "hit_rate": 12.724014336917563,
+          "roi": 89.08602150537635,
+          "lcb90": 0.7609594910295456,
+          "max_payout_share": 0.020116676725005028,
+          "avg_popularity": 4.161290322580645,
+          "avg_odds": 7.163799296143234
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 2,
+      "odds_low": 10,
+      "odds_high": 30,
+      "periods": {
+        "2024": {
+          "bets": 155,
+          "hits": 12,
+          "hit_rate": 7.741935483870968,
+          "roi": 111.35483870967742,
+          "lcb90": 0.7067607771251508,
+          "max_payout_share": 0.10950173812282735,
+          "avg_popularity": 6.509677419354839,
+          "avg_odds": 15.596774212006599
+        },
+        "2025": {
+          "bets": 120,
+          "hits": 4,
+          "hit_rate": 3.3333333333333335,
+          "roi": 43.833333333333336,
+          "lcb90": 0.15721238620962447,
+          "max_payout_share": 0.3155893536121673,
+          "avg_popularity": 6.425,
+          "avg_odds": 15.16666669845581
+        },
+        "2026": {
+          "bets": 50,
+          "hits": 3,
+          "hit_rate": 6.0,
+          "roi": 71.39999999999999,
+          "lcb90": 0.18870018831003288,
+          "max_payout_share": 0.4117647058823529,
+          "avg_popularity": 6.3,
+          "avg_odds": 15.145999984741211
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 2,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 994,
+          "hits": 123,
+          "hit_rate": 12.374245472837023,
+          "roi": 79.20523138832998,
+          "lcb90": 0.7036008381466322,
+          "max_payout_share": 0.012701638511367967,
+          "avg_popularity": 4.001006036217304,
+          "avg_odds": 6.952213285434654
+        },
+        "2025": {
+          "bets": 915,
+          "hits": 109,
+          "hit_rate": 11.912568306010929,
+          "roi": 78.41530054644808,
+          "lcb90": 0.6907655131202352,
+          "max_payout_share": 0.013797909407665506,
+          "avg_popularity": 3.966120218579235,
+          "avg_odds": 6.8846994530307795
+        },
+        "2026": {
+          "bets": 477,
+          "hits": 62,
+          "hit_rate": 12.997903563941298,
+          "roi": 88.61635220125787,
+          "lcb90": 0.7479538085198976,
+          "max_payout_share": 0.02365744026496333,
+          "avg_popularity": 3.9853249475890986,
+          "avg_odds": 6.951991625052078
+        }
+      }
+    },
+    {
+      "role": "rank",
+      "rank_column": "rank_model",
+      "uplift_column": "uplift_model",
+      "bet_type": "win",
+      "rank_max": 2,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 1551,
+          "hits": 154,
+          "hit_rate": 9.929078014184398,
+          "roi": 79.86460348162477,
+          "lcb90": 0.7017514479897888,
+          "max_payout_share": 0.0449664971340922,
+          "avg_popularity": 4.888459058671825,
+          "avg_odds": 11.181237919571936
+        },
+        "2025": {
+          "bets": 1374,
+          "hits": 137,
+          "hit_rate": 9.970887918486172,
+          "roi": 79.86171761280931,
+          "lcb90": 0.706686821061603,
+          "max_payout_share": 0.023512257358972024,
+          "avg_popularity": 4.764192139737991,
+          "avg_odds": 10.391630271983805
+        },
+        "2026": {
+          "bets": 662,
+          "hits": 72,
+          "hit_rate": 10.876132930513595,
+          "roi": 86.61631419939577,
+          "lcb90": 0.7312894898665414,
+          "max_payout_share": 0.03383327520055807,
+          "avg_popularity": 4.640483383685801,
+          "avg_odds": 10.338821764078745
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 3,
+      "uplift_min": 5,
+      "odds_low": 15,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 361,
+          "hits": 52,
+          "hit_rate": 14.40443213296399,
+          "roi": 85.3185595567867,
+          "lcb90": 0.6980942916658779,
+          "max_payout_share": 0.04902597402597403,
+          "avg_popularity": 8.894736842105264,
+          "avg_odds": 32.109972325058195
+        },
+        "2025": {
+          "bets": 354,
+          "hits": 51,
+          "hit_rate": 14.40677966101695,
+          "roi": 79.49152542372882,
+          "lcb90": 0.6504265154210819,
+          "max_payout_share": 0.050106609808102345,
+          "avg_popularity": 8.813559322033898,
+          "avg_odds": 29.769209032004834
+        },
+        "2026": {
+          "bets": 159,
+          "hits": 26,
+          "hit_rate": 16.352201257861633,
+          "roi": 87.42138364779875,
+          "lcb90": 0.6535007457146205,
+          "max_payout_share": 0.10143884892086331,
+          "avg_popularity": 8.666666666666666,
+          "avg_odds": 29.528930790019484
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 4,
+      "odds_low": 10,
+      "odds_high": 30,
+      "periods": {
+        "2024": {
+          "bets": 144,
+          "hits": 11,
+          "hit_rate": 7.638888888888889,
+          "roi": 112.36111111111111,
+          "lcb90": 0.6954245628923182,
+          "max_payout_share": 0.11681087762669963,
+          "avg_popularity": 6.715277777777778,
+          "avg_odds": 15.945833338631523
+        },
+        "2025": {
+          "bets": 113,
+          "hits": 4,
+          "hit_rate": 3.5398230088495577,
+          "roi": 46.54867256637168,
+          "lcb90": 0.1671840042378504,
+          "max_payout_share": 0.3155893536121673,
+          "avg_popularity": 6.584070796460177,
+          "avg_odds": 15.381415957898165
+        },
+        "2026": {
+          "bets": 45,
+          "hits": 2,
+          "hit_rate": 4.444444444444445,
+          "roi": 54.888888888888886,
+          "lcb90": 0.047925622652912114,
+          "max_payout_share": 0.5951417004048583,
+          "avg_popularity": 6.555555555555555,
+          "avg_odds": 15.488888867696126
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 2,
+      "uplift_min": 2,
+      "odds_low": 6,
+      "odds_high": 15,
+      "periods": {
+        "2024": {
+          "bets": 989,
+          "hits": 308,
+          "hit_rate": 31.14256825075834,
+          "roi": 74.30738119312437,
+          "lcb90": 0.694760673340307,
+          "max_payout_share": 0.007756157300312968,
+          "avg_popularity": 4.674418604651163,
+          "avg_odds": 9.129322542821193
+        },
+        "2025": {
+          "bets": 939,
+          "hits": 302,
+          "hit_rate": 32.16187433439829,
+          "roi": 76.90095846645367,
+          "lcb90": 0.71821192827828,
+          "max_payout_share": 0.012463647694225177,
+          "avg_popularity": 4.677316293929713,
+          "avg_odds": 9.17401490145471
+        },
+        "2026": {
+          "bets": 450,
+          "hits": 149,
+          "hit_rate": 33.111111111111114,
+          "roi": 83.28888888888889,
+          "lcb90": 0.7560133348109054,
+          "max_payout_share": 0.01574172892209178,
+          "avg_popularity": 4.688888888888889,
+          "avg_odds": 9.04111113442315
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 3,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 416,
+          "hits": 40,
+          "hit_rate": 9.615384615384617,
+          "roi": 88.0048076923077,
+          "lcb90": 0.6933179917777339,
+          "max_payout_share": 0.05162523900573614,
+          "avg_popularity": 5.355769230769231,
+          "avg_odds": 11.521153856928532
+        },
+        "2025": {
+          "bets": 337,
+          "hits": 21,
+          "hit_rate": 6.231454005934718,
+          "roi": 51.1572700296736,
+          "lcb90": 0.3642097802001685,
+          "max_payout_share": 0.0962877030162413,
+          "avg_popularity": 5.299703264094956,
+          "avg_odds": 11.036795260998192
+        },
+        "2026": {
+          "bets": 164,
+          "hits": 17,
+          "hit_rate": 10.365853658536585,
+          "roi": 81.21951219512195,
+          "lcb90": 0.5621662051799822,
+          "max_payout_share": 0.11036036036036036,
+          "avg_popularity": 5.121951219512195,
+          "avg_odds": 10.717073181780373
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 2,
+      "uplift_min": 5,
+      "odds_low": 10,
+      "odds_high": 30,
+      "periods": {
+        "2024": {
+          "bets": 278,
+          "hits": 17,
+          "hit_rate": 6.115107913669065,
+          "roi": 99.85611510791367,
+          "lcb90": 0.6912756946427596,
+          "max_payout_share": 0.07889048991354466,
+          "avg_popularity": 7.561151079136691,
+          "avg_odds": 18.35575539431126
+        },
+        "2025": {
+          "bets": 217,
+          "hits": 12,
+          "hit_rate": 5.529953917050691,
+          "roi": 97.23502304147466,
+          "lcb90": 0.6054107436749193,
+          "max_payout_share": 0.14075829383886257,
+          "avg_popularity": 7.576036866359447,
+          "avg_odds": 17.985714275166735
+        },
+        "2026": {
+          "bets": 95,
+          "hits": 5,
+          "hit_rate": 5.263157894736842,
+          "roi": 85.26315789473684,
+          "lcb90": 0.36564910244844345,
+          "max_payout_share": 0.27037037037037037,
+          "avg_popularity": 7.6,
+          "avg_odds": 17.669473698264675
+        }
+      }
+    },
+    {
+      "role": "rank",
+      "rank_column": "rank_model",
+      "uplift_column": "uplift_model",
+      "bet_type": "win",
+      "rank_max": 1,
+      "uplift_min": 2,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 540,
+          "hits": 75,
+          "hit_rate": 13.88888888888889,
+          "roi": 80.31481481481481,
+          "lcb90": 0.6890803459718547,
+          "max_payout_share": 0.023057412958266084,
+          "avg_popularity": 3.6555555555555554,
+          "avg_odds": 6.3125925991270275
+        },
+        "2025": {
+          "bets": 435,
+          "hits": 57,
+          "hit_rate": 13.10344827586207,
+          "roi": 71.77011494252874,
+          "lcb90": 0.600281399149785,
+          "max_payout_share": 0.03074951953875721,
+          "avg_popularity": 3.55632183908046,
+          "avg_odds": 6.175172407873745
+        },
+        "2026": {
+          "bets": 238,
+          "hits": 30,
+          "hit_rate": 12.605042016806722,
+          "roi": 73.57142857142858,
+          "lcb90": 0.5712041414314839,
+          "max_payout_share": 0.04454597372929754,
+          "avg_popularity": 3.466386554621849,
+          "avg_odds": 6.053361355757513
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 3,
+      "uplift_min": 3,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 1439,
+          "hits": 319,
+          "hit_rate": 22.1681723419041,
+          "roi": 74.40583738707436,
+          "lcb90": 0.6887842960684031,
+          "max_payout_share": 0.014102923321191743,
+          "avg_popularity": 6.441278665740097,
+          "avg_odds": 17.724044472082692
+        },
+        "2025": {
+          "bets": 1389,
+          "hits": 327,
+          "hit_rate": 23.542116630669547,
+          "roi": 77.63858891288697,
+          "lcb90": 0.7207006918334471,
+          "max_payout_share": 0.01307492581602374,
+          "avg_popularity": 6.447084233261339,
+          "avg_odds": 17.18336934233158
+        },
+        "2026": {
+          "bets": 674,
+          "hits": 177,
+          "hit_rate": 26.26112759643917,
+          "roi": 85.8160237388724,
+          "lcb90": 0.7750967058657406,
+          "max_payout_share": 0.026625172890733056,
+          "avg_popularity": 6.382789317507418,
+          "avg_odds": 17.160089021620482
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 2,
+      "uplift_min": 3,
+      "odds_low": 4,
+      "odds_high": 80,
+      "periods": {
+        "2024": {
+          "bets": 893,
+          "hits": 222,
+          "hit_rate": 24.86002239641657,
+          "roi": 74.52407614781636,
+          "lcb90": 0.6802434451200479,
+          "max_payout_share": 0.019534184823441023,
+          "avg_popularity": 5.888017917133259,
+          "avg_odds": 14.445688697819213
+        },
+        "2025": {
+          "bets": 826,
+          "hits": 217,
+          "hit_rate": 26.27118644067797,
+          "roi": 74.68523002421308,
+          "lcb90": 0.6839381835284564,
+          "max_payout_share": 0.016047981844707408,
+          "avg_popularity": 5.837772397094431,
+          "avg_odds": 13.883535114385314
+        },
+        "2026": {
+          "bets": 378,
+          "hits": 109,
+          "hit_rate": 28.835978835978835,
+          "roi": 82.98941798941799,
+          "lcb90": 0.7302697627011747,
+          "max_payout_share": 0.04494740197641058,
+          "avg_popularity": 5.671957671957672,
+          "avg_odds": 13.179894184940077
+        }
+      }
+    },
+    {
+      "role": "win",
+      "rank_column": "rank_win",
+      "uplift_column": "uplift_win",
+      "bet_type": "win",
+      "rank_max": 3,
+      "uplift_min": 3,
+      "odds_low": 4,
+      "odds_high": 10,
+      "periods": {
+        "2024": {
+          "bets": 439,
+          "hits": 48,
+          "hit_rate": 10.933940774487471,
+          "roi": 82.75626423690206,
+          "lcb90": 0.6799294280840485,
+          "max_payout_share": 0.027525461051472612,
+          "avg_popularity": 4.783599088838269,
+          "avg_odds": 7.880637811908418
+        },
+        "2025": {
+          "bets": 361,
+          "hits": 35,
+          "hit_rate": 9.695290858725762,
+          "roi": 74.54293628808864,
+          "lcb90": 0.5891149754632632,
+          "max_payout_share": 0.03716090672612412,
+          "avg_popularity": 4.808864265927978,
+          "avg_odds": 7.84072022953192
+        },
+        "2026": {
+          "bets": 195,
+          "hits": 24,
+          "hit_rate": 12.307692307692308,
+          "roi": 93.64102564102565,
+          "lcb90": 0.7026950404541158,
+          "max_payout_share": 0.054764512595837894,
+          "avg_popularity": 4.815384615384615,
+          "avg_odds": 7.9005128371409885
+        }
+      }
+    },
+    {
+      "role": "place",
+      "rank_column": "rank_place",
+      "uplift_column": "uplift_place",
+      "bet_type": "place",
+      "rank_max": 3,
+      "uplift_min": 3,
+      "odds_low": 6,
+      "odds_high": 15,
+      "periods": {
+        "2024": {
+          "bets": 778,
+          "hits": 214,
+          "hit_rate": 27.506426735218508,
+          "roi": 73.7789203084833,
+          "lcb90": 0.679853400930475,
+          "max_payout_share": 0.009930313588850175,
+          "avg_popularity": 5.4652956298200515,
+          "avg_odds": 10.311311048836206
+        },
+        "2025": {
+          "bets": 734,
+          "hits": 213,
+          "hit_rate": 29.01907356948229,
+          "roi": 79.04632152588556,
+          "lcb90": 0.7280876585533792,
+          "max_payout_share": 0.015511892450879007,
+          "avg_popularity": 5.494550408719346,
+          "avg_odds": 10.467166215262555
+        },
+        "2026": {
+          "bets": 358,
+          "hits": 110,
+          "hit_rate": 30.726256983240223,
+          "roi": 85.97765363128491,
+          "lcb90": 0.7680871366148809,
+          "max_payout_share": 0.01397011046133853,
+          "avg_popularity": 5.5139664804469275,
+          "avg_odds": 10.376536326701414
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "place payout represents show/place return, not wide tickets",
+    "2024 ranks rules; 2025 and 2026 are frozen checks",
+    "2026 is partial"
+  ]
+}

@@ -1,0 +1,3525 @@
+{
+  "version": "v2026.07.26.2",
+  "market": "local",
+  "rules": 75,
+  "confirmed": [],
+  "top_capture": [
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7523,
+          "capture_rate": 75.9668787236191,
+          "bets": 40356,
+          "hits": 8638,
+          "precision": 21.404499950441075,
+          "roi": 69.17608286252354,
+          "avg_odds": 37.57670979001664
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7320,
+          "capture_rate": 74.47349679519789,
+          "bets": 39842,
+          "hits": 8404,
+          "precision": 21.09331860850359,
+          "roi": 68.25837056372671,
+          "avg_odds": 37.68499574239495
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3942,
+          "capture_rate": 75.32963883049875,
+          "bets": 20766,
+          "hits": 4514,
+          "precision": 21.737455456033903,
+          "roi": 69.89261292497352,
+          "avg_odds": 36.706062793272444
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7474,
+          "capture_rate": 75.47207916792891,
+          "bets": 39641,
+          "hits": 8582,
+          "precision": 21.64930248984637,
+          "roi": 69.58830503771348,
+          "avg_odds": 36.45477663075622
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7272,
+          "capture_rate": 73.98514599654085,
+          "bets": 39190,
+          "hits": 8348,
+          "precision": 21.30135238581271,
+          "roi": 68.42919112018372,
+          "avg_odds": 36.5164429774361
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3922,
+          "capture_rate": 74.9474488820944,
+          "bets": 20521,
+          "hits": 4489,
+          "precision": 21.875152283027145,
+          "roi": 69.83285414940792,
+          "avg_odds": 35.83646995880341
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7356,
+          "capture_rate": 74.28052105422599,
+          "bets": 36453,
+          "hits": 8414,
+          "precision": 23.081776534167282,
+          "roi": 70.78594354374125,
+          "avg_odds": 27.37475379717496
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7176,
+          "capture_rate": 73.00844439922678,
+          "bets": 35963,
+          "hits": 8217,
+          "precision": 22.848483163251117,
+          "roi": 70.78942246197481,
+          "avg_odds": 27.6455634957515
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3867,
+          "capture_rate": 73.89642652398241,
+          "bets": 18840,
+          "hits": 4410,
+          "precision": 23.40764331210191,
+          "roi": 71.68259023354565,
+          "avg_odds": 27.19319002537211
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7318,
+          "capture_rate": 73.89679894981319,
+          "bets": 36080,
+          "hits": 8370,
+          "precision": 23.198447893569845,
+          "roi": 70.98170731707317,
+          "avg_odds": 27.211732266298153
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7137,
+          "capture_rate": 72.61165937531794,
+          "bets": 35640,
+          "hits": 8172,
+          "precision": 22.92929292929293,
+          "roi": 70.79629629629629,
+          "avg_odds": 27.507337261985583
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3851,
+          "capture_rate": 73.59067456525894,
+          "bets": 18735,
+          "hits": 4389,
+          "precision": 23.42674139311449,
+          "roi": 71.53722978382706,
+          "avg_odds": 27.110931416693006
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7308,
+          "capture_rate": 73.79581944865193,
+          "bets": 37978,
+          "hits": 8373,
+          "precision": 22.04697456422139,
+          "roi": 69.39306967191531,
+          "avg_odds": 34.925556908023445
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7133,
+          "capture_rate": 72.57096347542985,
+          "bets": 37721,
+          "hits": 8173,
+          "precision": 21.666975955038307,
+          "roi": 68.6967471700114,
+          "avg_odds": 35.34985552630247
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3841,
+          "capture_rate": 73.39957959105675,
+          "bets": 19805,
+          "hits": 4396,
+          "precision": 22.19641504670538,
+          "roi": 69.96919969704621,
+          "avg_odds": 34.65613229414996
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7175,
+          "capture_rate": 72.45279208320711,
+          "bets": 34944,
+          "hits": 8195,
+          "precision": 23.45180860805861,
+          "roi": 71.03279532967034,
+          "avg_odds": 26.884412207610005
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7014,
+          "capture_rate": 71.36026045375928,
+          "bets": 34599,
+          "hits": 8017,
+          "precision": 23.17118991878378,
+          "roi": 70.92603832480708,
+          "avg_odds": 27.218228850131357
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3779,
+          "capture_rate": 72.21479075100325,
+          "bets": 18242,
+          "hits": 4308,
+          "precision": 23.615831597412566,
+          "roi": 71.51134743997369,
+          "avg_odds": 26.881509709000103
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7023,
+          "capture_rate": 70.9179036655559,
+          "bets": 32104,
+          "hits": 7989,
+          "precision": 24.884749563917268,
+          "roi": 72.58690505855968,
+          "avg_odds": 22.62658236500868
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6830,
+          "capture_rate": 69.48824905890731,
+          "bets": 31515,
+          "hits": 7759,
+          "precision": 24.62002221164525,
+          "roi": 71.95335554497858,
+          "avg_odds": 22.713050925563333
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3686,
+          "capture_rate": 70.43760749092299,
+          "bets": 16672,
+          "hits": 4175,
+          "precision": 25.041986564299425,
+          "roi": 73.00083973128599,
+          "avg_odds": 22.587667949426198
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6989,
+          "capture_rate": 70.57457336160759,
+          "bets": 31876,
+          "hits": 7950,
+          "precision": 24.940394026854058,
+          "roi": 72.58658551888568,
+          "avg_odds": 22.577917562522558
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6798,
+          "capture_rate": 69.16268185980263,
+          "bets": 31314,
+          "hits": 7722,
+          "precision": 24.659896531902664,
+          "roi": 71.82570096442485,
+          "avg_odds": 22.66882544330705
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3673,
+          "capture_rate": 70.18918402446016,
+          "bets": 16601,
+          "hits": 4158,
+          "precision": 25.046683934702727,
+          "roi": 72.87030901752907,
+          "avg_odds": 22.55252695902235
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6957,
+          "capture_rate": 70.25143895789155,
+          "bets": 35050,
+          "hits": 7947,
+          "precision": 22.673323823109843,
+          "roi": 69.95634807417974,
+          "avg_odds": 33.309166913352236
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6794,
+          "capture_rate": 69.12198595991454,
+          "bets": 34978,
+          "hits": 7755,
+          "precision": 22.17107896392018,
+          "roi": 68.58596832294585,
+          "avg_odds": 33.76318829870325
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3660,
+          "capture_rate": 69.94076055799732,
+          "bets": 18354,
+          "hits": 4180,
+          "precision": 22.77432712215321,
+          "roi": 70.12531328320802,
+          "avg_odds": 32.803056561974145
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6866,
+          "capture_rate": 69.33252549732404,
+          "bets": 31056,
+          "hits": 7802,
+          "precision": 25.12235960844925,
+          "roi": 72.58404173106646,
+          "avg_odds": 22.459840295795065
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6691,
+          "capture_rate": 68.07406653779631,
+          "bets": 30556,
+          "hits": 7591,
+          "precision": 24.842911375834532,
+          "roi": 71.93840816860846,
+          "avg_odds": 22.550994892803253
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3612,
+          "capture_rate": 69.02350468182686,
+          "bets": 16222,
+          "hits": 4090,
+          "precision": 25.212674146221183,
+          "roi": 72.94353347306128,
+          "avg_odds": 22.450838371234997
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6837,
+          "capture_rate": 69.03968494395637,
+          "bets": 32601,
+          "hits": 7790,
+          "precision": 23.89497254685439,
+          "roi": 71.06469126713904,
+          "avg_odds": 26.3681635573899
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6694,
+          "capture_rate": 68.10458846271239,
+          "bets": 32464,
+          "hits": 7626,
+          "precision": 23.49063578117299,
+          "roi": 70.63146870379498,
+          "avg_odds": 26.779691350818442
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3608,
+          "capture_rate": 68.947066692146,
+          "bets": 17120,
+          "hits": 4109,
+          "precision": 24.001168224299064,
+          "roi": 71.40478971962617,
+          "avg_odds": 26.372079444934275
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6560,
+          "capture_rate": 66.24255276178936,
+          "bets": 29212,
+          "hits": 7437,
+          "precision": 25.458715596330272,
+          "roi": 72.45755169108585,
+          "avg_odds": 22.219303717078468
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6396,
+          "capture_rate": 65.07274392104995,
+          "bets": 28869,
+          "hits": 7239,
+          "precision": 25.07534033045828,
+          "roi": 71.5237798330389,
+          "avg_odds": 22.34292147151235
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3459,
+          "capture_rate": 66.09975157653354,
+          "bets": 15349,
+          "hits": 3911,
+          "precision": 25.480487328164703,
+          "roi": 72.52850348556909,
+          "avg_odds": 22.22728516816456
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6329,
+          "capture_rate": 63.90992628496415,
+          "bets": 30745,
+          "hits": 7193,
+          "precision": 23.39567409334851,
+          "roi": 70.26410798503822,
+          "avg_odds": 31.58484632486172
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6222,
+          "capture_rate": 63.3024722759182,
+          "bets": 30822,
+          "hits": 7046,
+          "precision": 22.860294594769968,
+          "roi": 68.5555771851275,
+          "avg_odds": 32.071737724030925
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3337,
+          "capture_rate": 63.76839289126696,
+          "bets": 16166,
+          "hits": 3788,
+          "precision": 23.43189409872572,
+          "roi": 69.22306074477298,
+          "avg_odds": 30.940616111892233
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6230,
+          "capture_rate": 62.91022922346764,
+          "bets": 28901,
+          "hits": 7063,
+          "precision": 24.438600740458806,
+          "roi": 71.09961593024462,
+          "avg_odds": 25.753866654548474
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6147,
+          "capture_rate": 62.53942415301658,
+          "bets": 28914,
+          "hits": 6953,
+          "precision": 24.04717437919347,
+          "roi": 70.53711005049458,
+          "avg_odds": 26.06556339564722
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3302,
+          "capture_rate": 63.09956048155934,
+          "bets": 15270,
+          "hits": 3741,
+          "precision": 24.49901768172888,
+          "roi": 70.7229862475442,
+          "avg_odds": 25.67932547823463
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6086,
+          "capture_rate": 61.45612440674543,
+          "bets": 24460,
+          "hits": 6792,
+          "precision": 27.76778413736713,
+          "roi": 74.2624693376942,
+          "avg_odds": 17.610425191108845
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5866,
+          "capture_rate": 59.68053718587852,
+          "bets": 23963,
+          "hits": 6529,
+          "precision": 27.246171180570045,
+          "roi": 72.4475232650336,
+          "avg_odds": 17.71527771754162
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3195,
+          "capture_rate": 61.054844257596024,
+          "bets": 12783,
+          "hits": 3551,
+          "precision": 27.779081592740358,
+          "roi": 74.22905421262614,
+          "avg_odds": 17.70398967523283
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6064,
+          "capture_rate": 61.23396950419065,
+          "bets": 24338,
+          "hits": 6765,
+          "precision": 27.796039115786016,
+          "roi": 74.21850603993755,
+          "avg_odds": 17.596150060679236
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5852,
+          "capture_rate": 59.53810153627022,
+          "bets": 23860,
+          "hits": 6514,
+          "precision": 27.30092204526404,
+          "roi": 72.54484492875105,
+          "avg_odds": 17.70726739055253
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3187,
+          "capture_rate": 60.901968278234285,
+          "bets": 12749,
+          "hits": 3541,
+          "precision": 27.77472742960232,
+          "roi": 74.12346066358145,
+          "avg_odds": 17.69344262428233
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5998,
+          "capture_rate": 60.56750479652631,
+          "bets": 26111,
+          "hits": 6767,
+          "precision": 25.916280494810618,
+          "roi": 72.35839301443836,
+          "avg_odds": 21.877748851039073
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5892,
+          "capture_rate": 59.945060535151086,
+          "bets": 25969,
+          "hits": 6623,
+          "precision": 25.50348492433286,
+          "roi": 71.14367130039663,
+          "avg_odds": 21.970549500109286
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3180,
+          "capture_rate": 60.76820179629276,
+          "bets": 13829,
+          "hits": 3582,
+          "precision": 25.902089811266183,
+          "roi": 72.09125750235013,
+          "avg_odds": 21.902928629789738
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5973,
+          "capture_rate": 60.315056043623144,
+          "bets": 23836,
+          "hits": 6655,
+          "precision": 27.919953012250375,
+          "roi": 74.17645578117134,
+          "avg_odds": 17.561058909366107
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5775,
+          "capture_rate": 58.75470546342456,
+          "bets": 23404,
+          "hits": 6424,
+          "precision": 27.448299435993846,
+          "roi": 72.77602119295847,
+          "avg_odds": 17.676085282260384
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3137,
+          "capture_rate": 59.94649340722339,
+          "bets": 12513,
+          "hits": 3486,
+          "precision": 27.859026612323184,
+          "roi": 74.11172380724047,
+          "avg_odds": 17.660505075835022
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5911,
+          "capture_rate": 59.6889831364233,
+          "bets": 27135,
+          "hits": 6373,
+          "precision": 23.486272341993736,
+          "roi": 69.41772618389534,
+          "avg_odds": 30.824790877585958
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5785,
+          "capture_rate": 58.856445213144774,
+          "bets": 26750,
+          "hits": 6233,
+          "precision": 23.300934579439254,
+          "roi": 69.73644859813083,
+          "avg_odds": 30.574785051434954
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3133,
+          "capture_rate": 59.87005541754252,
+          "bets": 13926,
+          "hits": 3366,
+          "precision": 24.170616113744074,
+          "roi": 71.22863708171765,
+          "avg_odds": 29.673833114772492
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.08,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5895,
+          "capture_rate": 59.52741593456528,
+          "bets": 26926,
+          "hits": 6356,
+          "precision": 23.6054371239694,
+          "roi": 69.60335734977345,
+          "avg_odds": 30.445606493962288
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5764,
+          "capture_rate": 58.64279173873232,
+          "bets": 26580,
+          "hits": 6209,
+          "precision": 23.35966892400301,
+          "roi": 69.55003762227238,
+          "avg_odds": 30.24806621776119
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3129,
+          "capture_rate": 59.79361742786165,
+          "bets": 13874,
+          "hits": 3362,
+          "precision": 24.232377108260057,
+          "roi": 71.197203402047,
+          "avg_odds": 29.468826581477362
+        }
+      }
+    }
+  ],
+  "all_rules": [
+    {
+      "top_k": 1,
+      "pmin": 0,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 2584,
+          "capture_rate": 26.093103100070685,
+          "bets": 7889,
+          "hits": 2584,
+          "precision": 32.7544682469261,
+          "roi": 76.82469260996324,
+          "avg_odds": 14.052706307913962
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 2432,
+          "capture_rate": 24.743107131956457,
+          "bets": 7732,
+          "hits": 2432,
+          "precision": 31.453698913605795,
+          "roi": 72.99793067770305,
+          "avg_odds": 14.028078116966046
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1289,
+          "capture_rate": 24.632142174660807,
+          "bets": 4098,
+          "hits": 1289,
+          "precision": 31.454367984382625,
+          "roi": 75.2489019033675,
+          "avg_odds": 14.038726214608547
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3194,
+          "capture_rate": 32.25285267090781,
+          "bets": 10629,
+          "hits": 3194,
+          "precision": 30.049863580769593,
+          "roi": 74.8894533822561,
+          "avg_odds": 16.70724434179223
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3045,
+          "capture_rate": 30.979753789805677,
+          "bets": 10427,
+          "hits": 3045,
+          "precision": 29.203030593651096,
+          "roi": 71.91617915028291,
+          "avg_odds": 16.69657619520586
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1618,
+          "capture_rate": 30.919166825912477,
+          "bets": 5532,
+          "hits": 1618,
+          "precision": 29.248011569052785,
+          "roi": 73.08026030368764,
+          "avg_odds": 16.698752718047654
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3510,
+          "capture_rate": 35.443804907603756,
+          "bets": 12469,
+          "hits": 3510,
+          "precision": 28.14981153260085,
+          "roi": 73.43171064239314,
+          "avg_odds": 19.85937125482635
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3355,
+          "capture_rate": 34.13368603113236,
+          "bets": 12317,
+          "hits": 3355,
+          "precision": 27.238775675895106,
+          "roi": 70.88252009417877,
+          "avg_odds": 19.935625556344345
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1774,
+          "capture_rate": 33.900248423466465,
+          "bets": 6436,
+          "hits": 1774,
+          "precision": 27.56370416407707,
+          "roi": 72.22809198259789,
+          "avg_odds": 19.70076134784241
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3584,
+          "capture_rate": 36.19105321619711,
+          "bets": 13219,
+          "hits": 3584,
+          "precision": 27.112489598305466,
+          "roi": 72.09395566986913,
+          "avg_odds": 22.20671761812371
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3442,
+          "capture_rate": 35.01882185369824,
+          "bets": 13056,
+          "hits": 3442,
+          "precision": 26.36335784313725,
+          "roi": 70.21982230392157,
+          "avg_odds": 22.283471200542124
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1817,
+          "capture_rate": 34.72195681253583,
+          "bets": 6808,
+          "hits": 1817,
+          "precision": 26.68918918918919,
+          "roi": 71.36457109283197,
+          "avg_odds": 22.005743254505788
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3612,
+          "capture_rate": 36.473795819448654,
+          "bets": 13613,
+          "hits": 3612,
+          "precision": 26.533460662601925,
+          "roi": 71.97017556747227,
+          "avg_odds": 25.141004940050614
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3457,
+          "capture_rate": 35.17143147827856,
+          "bets": 13401,
+          "hits": 3457,
+          "precision": 25.79658234460115,
+          "roi": 69.15603313185584,
+          "avg_odds": 24.68665771464449
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1824,
+          "capture_rate": 34.85572329447736,
+          "bets": 6979,
+          "hits": 1824,
+          "precision": 26.13554950565984,
+          "roi": 70.74079381000143,
+          "avg_odds": 24.30376845394101
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.08,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 2584,
+          "capture_rate": 26.093103100070685,
+          "bets": 7880,
+          "hits": 2584,
+          "precision": 32.79187817258883,
+          "roi": 76.91243654822335,
+          "avg_odds": 14.052220820291394
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 2430,
+          "capture_rate": 24.722759182012414,
+          "bets": 7725,
+          "hits": 2430,
+          "precision": 31.456310679611647,
+          "roi": 72.98899676375405,
+          "avg_odds": 14.027857605276756
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1289,
+          "capture_rate": 24.632142174660807,
+          "bets": 4096,
+          "hits": 1289,
+          "precision": 31.4697265625,
+          "roi": 75.28564453125,
+          "avg_odds": 14.037963873706758
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.08,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3194,
+          "capture_rate": 32.25285267090781,
+          "bets": 10617,
+          "hits": 3194,
+          "precision": 30.08382782330225,
+          "roi": 74.97409814448525,
+          "avg_odds": 16.707017058424327
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3042,
+          "capture_rate": 30.94923186488961,
+          "bets": 10418,
+          "hits": 3042,
+          "precision": 29.199462468803993,
+          "roi": 71.88327894029564,
+          "avg_odds": 16.69645805216083
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1618,
+          "capture_rate": 30.919166825912477,
+          "bets": 5528,
+          "hits": 1618,
+          "precision": 29.26917510853835,
+          "roi": 73.13314037626628,
+          "avg_odds": 16.696617227904877
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.08,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3508,
+          "capture_rate": 35.4236090073715,
+          "bets": 12446,
+          "hits": 3508,
+          "precision": 28.185762493973964,
+          "roi": 73.44689056725052,
+          "avg_odds": 19.845669304962502
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3352,
+          "capture_rate": 34.1031641062163,
+          "bets": 12305,
+          "hits": 3352,
+          "precision": 27.24095895977245,
+          "roi": 70.87119057293783,
+          "avg_odds": 19.93308411032046
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1774,
+          "capture_rate": 33.900248423466465,
+          "bets": 6432,
+          "hits": 1774,
+          "precision": 27.58084577114428,
+          "roi": 72.27300995024876,
+          "avg_odds": 19.70079291578549
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.08,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3581,
+          "capture_rate": 36.16075936584873,
+          "bets": 13190,
+          "hits": 3581,
+          "precision": 27.149355572403337,
+          "roi": 72.10614101592115,
+          "avg_odds": 22.179560287293384
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3438,
+          "capture_rate": 34.97812595381016,
+          "bets": 13040,
+          "hits": 3438,
+          "precision": 26.365030674846622,
+          "roi": 70.1978527607362,
+          "avg_odds": 22.269202453665937
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1817,
+          "capture_rate": 34.72195681253583,
+          "bets": 6801,
+          "hits": 1817,
+          "precision": 26.716659314806645,
+          "roi": 71.43802382002647,
+          "avg_odds": 21.987987071832233
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.08,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3608,
+          "capture_rate": 36.43340401898415,
+          "bets": 13580,
+          "hits": 3608,
+          "precision": 26.568483063328426,
+          "roi": 71.95213549337261,
+          "avg_odds": 25.092916071011146
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3453,
+          "capture_rate": 35.13073557839048,
+          "bets": 13381,
+          "hits": 3453,
+          "precision": 25.805246244675285,
+          "roi": 69.15402436290262,
+          "avg_odds": 24.637769974201895
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1824,
+          "capture_rate": 34.85572329447736,
+          "bets": 6969,
+          "hits": 1824,
+          "precision": 26.173052087817478,
+          "roi": 70.84230162146649,
+          "avg_odds": 24.24525757481847
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.12,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 2572,
+          "capture_rate": 25.971927698677167,
+          "bets": 7851,
+          "hits": 2572,
+          "precision": 32.76015794166348,
+          "roi": 76.72780537511144,
+          "avg_odds": 14.0488090771442
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 2422,
+          "capture_rate": 24.64136738223624,
+          "bets": 7690,
+          "hits": 2422,
+          "precision": 31.495448634590378,
+          "roi": 73.03901170351105,
+          "avg_odds": 14.030416125283905
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1283,
+          "capture_rate": 24.5174851901395,
+          "bets": 4076,
+          "hits": 1283,
+          "precision": 31.476938174681056,
+          "roi": 75.29440628066732,
+          "avg_odds": 14.045240438721482
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.12,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3175,
+          "capture_rate": 32.0609916187014,
+          "bets": 10552,
+          "hits": 3175,
+          "precision": 30.089082638362395,
+          "roi": 74.82373009855951,
+          "avg_odds": 16.68663761424151
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3032,
+          "capture_rate": 30.8474921151694,
+          "bets": 10359,
+          "hits": 3032,
+          "precision": 29.269234482092866,
+          "roi": 72.01563857515204,
+          "avg_odds": 16.687788395753227
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1611,
+          "capture_rate": 30.785400343970952,
+          "bets": 5499,
+          "hits": 1611,
+          "precision": 29.296235679214405,
+          "roi": 73.1860338243317,
+          "avg_odds": 16.696381167425503
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.12,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3485,
+          "capture_rate": 35.19135615470059,
+          "bets": 12350,
+          "hits": 3485,
+          "precision": 28.218623481781375,
+          "roi": 73.35546558704453,
+          "avg_odds": 19.799975721768522
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3340,
+          "capture_rate": 33.98107640655204,
+          "bets": 12222,
+          "hits": 3340,
+          "precision": 27.32776959581083,
+          "roi": 71.02601865488464,
+          "avg_odds": 19.905089181566996
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1767,
+          "capture_rate": 33.76648194152494,
+          "bets": 6396,
+          "hits": 1767,
+          "precision": 27.626641651031896,
+          "roi": 72.39368355222014,
+          "avg_odds": 19.691979367707653
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.12,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3556,
+          "capture_rate": 35.90831061294557,
+          "bets": 13078,
+          "hits": 3556,
+          "precision": 27.190701942192995,
+          "roi": 72.07829943416425,
+          "avg_odds": 22.1082275723587
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3424,
+          "capture_rate": 34.835690304201854,
+          "bets": 12942,
+          "hits": 3424,
+          "precision": 26.456498222840363,
+          "roi": 70.33843300880854,
+          "avg_odds": 22.209967546753344
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1809,
+          "capture_rate": 34.569080833174084,
+          "bets": 6757,
+          "hits": 1809,
+          "precision": 26.772236199496817,
+          "roi": 71.56282373834541,
+          "avg_odds": 21.94062454813028
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.12,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3582,
+          "capture_rate": 36.17085731596486,
+          "bets": 13447,
+          "hits": 3582,
+          "precision": 26.637911801888897,
+          "roi": 71.91938722391612,
+          "avg_odds": 24.859009463024503
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3438,
+          "capture_rate": 34.97812595381016,
+          "bets": 13268,
+          "hits": 3438,
+          "precision": 25.9119686463672,
+          "roi": 69.36162194754296,
+          "avg_odds": 24.494249324033806
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1816,
+          "capture_rate": 34.70284731511561,
+          "bets": 6918,
+          "hits": 1816,
+          "precision": 26.250361376120267,
+          "roi": 71.03209019947961,
+          "avg_odds": 24.114064763894348
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.16,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 2527,
+          "capture_rate": 25.51751994345148,
+          "bets": 7699,
+          "hits": 2527,
+          "precision": 32.822444473308224,
+          "roi": 76.65930640342901,
+          "avg_odds": 14.046213802075538
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 2379,
+          "capture_rate": 24.203886458439314,
+          "bets": 7543,
+          "hits": 2379,
+          "precision": 31.53917539440541,
+          "roi": 72.93119448495294,
+          "avg_odds": 14.014967520389003
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1266,
+          "capture_rate": 24.192623733995795,
+          "bets": 4023,
+          "hits": 1266,
+          "precision": 31.469052945563014,
+          "roi": 74.88938603032562,
+          "avg_odds": 14.04203331568275
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.16,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3112,
+          "capture_rate": 31.42482076138544,
+          "bets": 10325,
+          "hits": 3112,
+          "precision": 30.140435835351088,
+          "roi": 74.79903147699758,
+          "avg_odds": 16.66456175298437
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 2977,
+          "capture_rate": 30.28792349170821,
+          "bets": 10149,
+          "hits": 2977,
+          "precision": 29.332939205833085,
+          "roi": 71.88097349492561,
+          "avg_odds": 16.666765198071893
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1590,
+          "capture_rate": 30.38410089814638,
+          "bets": 5412,
+          "hits": 1590,
+          "precision": 29.379157427937912,
+          "roi": 73.12453806356245,
+          "avg_odds": 16.669623066915552
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.16,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3410,
+          "capture_rate": 34.43400989599111,
+          "bets": 12052,
+          "hits": 3410,
+          "precision": 28.294059077331564,
+          "roi": 73.2699966810488,
+          "avg_odds": 19.724950228266014
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3271,
+          "capture_rate": 33.27907213348255,
+          "bets": 11950,
+          "hits": 3271,
+          "precision": 27.372384937238493,
+          "roi": 70.68702928870293,
+          "avg_odds": 19.846820082325316
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1741,
+          "capture_rate": 33.26963500859927,
+          "bets": 6277,
+          "hits": 1741,
+          "precision": 27.736179703680104,
+          "roi": 72.37215230205513,
+          "avg_odds": 19.61068982562955
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.16,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3478,
+          "capture_rate": 35.12067050388771,
+          "bets": 12742,
+          "hits": 3478,
+          "precision": 27.295557997174697,
+          "roi": 71.98006592371684,
+          "avg_odds": 21.96853713618027
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3354,
+          "capture_rate": 34.123512056160344,
+          "bets": 12631,
+          "hits": 3354,
+          "precision": 26.55371704536458,
+          "roi": 70.14884015517377,
+          "avg_odds": 22.09010371198451
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1782,
+          "capture_rate": 34.0531244028282,
+          "bets": 6620,
+          "hits": 1782,
+          "precision": 26.91842900302115,
+          "roi": 71.68429003021149,
+          "avg_odds": 21.789259830198258
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.16,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3502,
+          "capture_rate": 35.363021306674746,
+          "bets": 13074,
+          "hits": 3502,
+          "precision": 26.785987456019583,
+          "roi": 71.83111519045434,
+          "avg_odds": 24.499288682381785
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3366,
+          "capture_rate": 34.2455997558246,
+          "bets": 12929,
+          "hits": 3366,
+          "precision": 26.03449609405213,
+          "roi": 69.21107587593781,
+          "avg_odds": 24.214811665929382
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1788,
+          "capture_rate": 34.167781387349514,
+          "bets": 6765,
+          "hits": 1788,
+          "precision": 26.430155210643015,
+          "roi": 71.1840354767184,
+          "avg_odds": 23.760162609238495
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.2,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 2424,
+          "capture_rate": 24.477431081490458,
+          "bets": 7368,
+          "hits": 2424,
+          "precision": 32.89902280130293,
+          "roi": 76.48751357220412,
+          "avg_odds": 14.019258965369026
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 2299,
+          "capture_rate": 23.389968460677586,
+          "bets": 7270,
+          "hits": 2299,
+          "precision": 31.623108665749655,
+          "roi": 72.76478679504814,
+          "avg_odds": 13.995997250096506
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1223,
+          "capture_rate": 23.370915344926427,
+          "bets": 3891,
+          "hits": 1223,
+          "precision": 31.431508609611924,
+          "roi": 74.03238242097147,
+          "avg_odds": 14.034592654949533
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.2,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 2981,
+          "capture_rate": 30.101989296172878,
+          "bets": 9852,
+          "hits": 2981,
+          "precision": 30.257815671944783,
+          "roi": 74.55034510759236,
+          "avg_odds": 16.61673772659333
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 2866,
+          "capture_rate": 29.158612269813815,
+          "bets": 9745,
+          "hits": 2866,
+          "precision": 29.40995382247306,
+          "roi": 71.53617239610057,
+          "avg_odds": 16.627644945793485
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1535,
+          "capture_rate": 29.333078540034396,
+          "bets": 5214,
+          "hits": 1535,
+          "precision": 29.43996931338703,
+          "roi": 72.52972765630993,
+          "avg_odds": 16.625642505970593
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.2,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3261,
+          "capture_rate": 32.92941532868828,
+          "bets": 11463,
+          "hits": 3261,
+          "precision": 28.448050248626018,
+          "roi": 72.94861729041263,
+          "avg_odds": 19.626145001201536
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3142,
+          "capture_rate": 31.96662936209177,
+          "bets": 11412,
+          "hits": 3142,
+          "precision": 27.53242201191728,
+          "roi": 70.47844374342797,
+          "avg_odds": 19.708438485954836
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1679,
+          "capture_rate": 32.084846168545766,
+          "bets": 6023,
+          "hits": 1679,
+          "precision": 27.876473518180312,
+          "roi": 72.21816370579445,
+          "avg_odds": 19.498954012448184
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.2,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3321,
+          "capture_rate": 33.53529233565586,
+          "bets": 12084,
+          "hits": 3321,
+          "precision": 27.482621648460775,
+          "roi": 71.76431645150612,
+          "avg_odds": 21.755801072699942
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3218,
+          "capture_rate": 32.73985145996541,
+          "bets": 12028,
+          "hits": 3218,
+          "precision": 26.754240106418358,
+          "roi": 70.06318589956767,
+          "avg_odds": 21.844995011591934
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1718,
+          "capture_rate": 32.83011656793426,
+          "bets": 6330,
+          "hits": 1718,
+          "precision": 27.140600315955766,
+          "roi": 71.62875197472354,
+          "avg_odds": 21.532022126817026
+        }
+      }
+    },
+    {
+      "top_k": 1,
+      "pmin": 0.2,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3341,
+          "capture_rate": 33.73725133797839,
+          "bets": 12366,
+          "hits": 3341,
+          "precision": 27.017628982694486,
+          "roi": 71.61895519974122,
+          "avg_odds": 23.997598272956306
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3227,
+          "capture_rate": 32.831417234713605,
+          "bets": 12292,
+          "hits": 3227,
+          "precision": 26.25284738041002,
+          "roi": 69.13114220631304,
+          "avg_odds": 23.82726163527417
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1722,
+          "capture_rate": 32.90655455761514,
+          "bets": 6451,
+          "hits": 1722,
+          "precision": 26.69353588590916,
+          "roi": 70.89443497132227,
+          "avg_odds": 23.24988374560771
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3927,
+          "capture_rate": 39.65465010602848,
+          "bets": 13136,
+          "hits": 4142,
+          "precision": 31.53166869671133,
+          "roi": 76.37256394640683,
+          "avg_odds": 14.20551157484101
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3724,
+          "capture_rate": 37.88788279580832,
+          "bets": 12857,
+          "hits": 3927,
+          "precision": 30.543672707474528,
+          "roi": 73.6711519016878,
+          "avg_odds": 14.252453915946932
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2029,
+          "capture_rate": 38.773170265622014,
+          "bets": 6835,
+          "hits": 2126,
+          "precision": 31.104608632040964,
+          "roi": 75.90343818580834,
+          "avg_odds": 14.249524512217702
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4987,
+          "capture_rate": 50.358477229122485,
+          "bets": 18664,
+          "hits": 5318,
+          "precision": 28.493356193741963,
+          "roi": 73.87108872696099,
+          "avg_odds": 17.239616380195685
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4832,
+          "capture_rate": 49.160647064808224,
+          "bets": 18329,
+          "hits": 5147,
+          "precision": 28.08118282503137,
+          "roi": 72.68208849364395,
+          "avg_odds": 17.31093895039248
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2652,
+          "capture_rate": 50.678387158417735,
+          "bets": 9772,
+          "hits": 2808,
+          "precision": 28.735161686451082,
+          "roi": 74.69811706917724,
+          "avg_odds": 17.328970531923478
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5629,
+          "capture_rate": 56.84136120367565,
+          "bets": 23311,
+          "hits": 6050,
+          "precision": 25.953412552014072,
+          "roi": 71.57736690832654,
+          "avg_odds": 21.47657759142251
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5504,
+          "capture_rate": 55.99755824600671,
+          "bets": 22971,
+          "hits": 5910,
+          "precision": 25.72809194201384,
+          "roi": 71.94549649558138,
+          "avg_odds": 21.54538331088469
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2981,
+          "capture_rate": 56.965411809669405,
+          "bets": 12099,
+          "hits": 3190,
+          "precision": 26.365815356641043,
+          "roi": 73.28043639970245,
+          "avg_odds": 21.38873460886153
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5832,
+          "capture_rate": 58.891245077249316,
+          "bets": 25588,
+          "hits": 6281,
+          "precision": 24.54666249804596,
+          "roi": 70.19110520556511,
+          "avg_odds": 25.083836182069085
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5717,
+          "capture_rate": 58.16461491504731,
+          "bets": 25300,
+          "hits": 6159,
+          "precision": 24.34387351778656,
+          "roi": 71.15098814229249,
+          "avg_odds": 25.288086958723106
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3096,
+          "capture_rate": 59.163004012994456,
+          "bets": 13210,
+          "hits": 3322,
+          "precision": 25.147615442846327,
+          "roi": 72.13020439061317,
+          "avg_odds": 24.799576087434755
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5911,
+          "capture_rate": 59.6889831364233,
+          "bets": 27135,
+          "hits": 6373,
+          "precision": 23.486272341993736,
+          "roi": 69.41772618389534,
+          "avg_odds": 30.824790877585958
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5785,
+          "capture_rate": 58.856445213144774,
+          "bets": 26750,
+          "hits": 6233,
+          "precision": 23.300934579439254,
+          "roi": 69.73644859813083,
+          "avg_odds": 30.574785051434954
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3133,
+          "capture_rate": 59.87005541754252,
+          "bets": 13926,
+          "hits": 3366,
+          "precision": 24.170616113744074,
+          "roi": 71.22863708171765,
+          "avg_odds": 29.673833114772492
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.08,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3922,
+          "capture_rate": 39.604160355447846,
+          "bets": 13110,
+          "hits": 4137,
+          "precision": 31.556064073226548,
+          "roi": 76.41647597254004,
+          "avg_odds": 14.2044775018612
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3718,
+          "capture_rate": 37.82683894597619,
+          "bets": 12837,
+          "hits": 3921,
+          "precision": 30.544519747604582,
+          "roi": 73.63480563994703,
+          "avg_odds": 14.250977642469115
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2027,
+          "capture_rate": 38.73495127078158,
+          "bets": 6830,
+          "hits": 2124,
+          "precision": 31.09809663250366,
+          "roi": 75.8770131771596,
+          "avg_odds": 14.248506594192929
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.08,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4979,
+          "capture_rate": 50.277693628193475,
+          "bets": 18616,
+          "hits": 5310,
+          "precision": 28.523850451224753,
+          "roi": 73.90846583584013,
+          "avg_odds": 17.23413193584462
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4824,
+          "capture_rate": 49.079255265032046,
+          "bets": 18292,
+          "hits": 5139,
+          "precision": 28.094248851957136,
+          "roi": 72.67767329980319,
+          "avg_odds": 17.305980757709772
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2650,
+          "capture_rate": 50.6401681635773,
+          "bets": 9762,
+          "hits": 2806,
+          "precision": 28.744109813562797,
+          "roi": 74.71727105101414,
+          "avg_odds": 17.326009018356206
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.08,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5617,
+          "capture_rate": 56.72018580228214,
+          "bets": 23227,
+          "hits": 6038,
+          "precision": 25.99560855900461,
+          "roi": 71.62956903603565,
+          "avg_odds": 21.456076988582847
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5488,
+          "capture_rate": 55.83477464645437,
+          "bets": 22903,
+          "hits": 5892,
+          "precision": 25.725887438326854,
+          "roi": 71.74911583635331,
+          "avg_odds": 21.525084051831666
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2979,
+          "capture_rate": 56.92719281482897,
+          "bets": 12078,
+          "hits": 3188,
+          "precision": 26.39509852624607,
+          "roi": 73.36148368935254,
+          "avg_odds": 21.37309985366912
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.08,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5818,
+          "capture_rate": 58.74987377562355,
+          "bets": 25453,
+          "hits": 6266,
+          "precision": 24.617923231053314,
+          "roi": 70.3221624170039,
+          "avg_odds": 25.000542184175295
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5698,
+          "capture_rate": 57.9713093905789,
+          "bets": 25190,
+          "hits": 6137,
+          "precision": 24.362842397776895,
+          "roi": 70.98967844382692,
+          "avg_odds": 25.21709805742622
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3094,
+          "capture_rate": 59.12478501815402,
+          "bets": 13180,
+          "hits": 3320,
+          "precision": 25.1896813353566,
+          "roi": 72.25189681335357,
+          "avg_odds": 24.762556913590032
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.08,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5895,
+          "capture_rate": 59.52741593456528,
+          "bets": 26926,
+          "hits": 6356,
+          "precision": 23.6054371239694,
+          "roi": 69.60335734977345,
+          "avg_odds": 30.445606493962288
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5764,
+          "capture_rate": 58.64279173873232,
+          "bets": 26580,
+          "hits": 6209,
+          "precision": 23.35966892400301,
+          "roi": 69.55003762227238,
+          "avg_odds": 30.24806621776119
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3129,
+          "capture_rate": 59.79361742786165,
+          "bets": 13874,
+          "hits": 3362,
+          "precision": 24.232377108260057,
+          "roi": 71.197203402047,
+          "avg_odds": 29.468826581477362
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.12,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3891,
+          "capture_rate": 39.291123901847925,
+          "bets": 12983,
+          "hits": 4100,
+          "precision": 31.57975814526689,
+          "roi": 76.27820996687977,
+          "avg_odds": 14.198690599316507
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3689,
+          "capture_rate": 37.53179367178757,
+          "bets": 12713,
+          "hits": 3890,
+          "precision": 30.59859985841265,
+          "roi": 73.65610005506174,
+          "avg_odds": 14.248981357680385
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2014,
+          "capture_rate": 38.48652780431875,
+          "bets": 6766,
+          "hits": 2110,
+          "precision": 31.185338456990834,
+          "roi": 76.02867277564292,
+          "avg_odds": 14.248773282919627
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.12,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4929,
+          "capture_rate": 49.772796122387156,
+          "bets": 18382,
+          "hits": 5253,
+          "precision": 28.576868675878575,
+          "roi": 73.7955608747688,
+          "avg_odds": 17.20714286315066
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4784,
+          "capture_rate": 48.672296266151186,
+          "bets": 18076,
+          "hits": 5095,
+          "precision": 28.186545695950432,
+          "roi": 72.76222615622926,
+          "avg_odds": 17.285931623675808
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2620,
+          "capture_rate": 50.06688324097076,
+          "bets": 9651,
+          "hits": 2774,
+          "precision": 28.743135426380682,
+          "roi": 74.50419645632577,
+          "avg_odds": 17.309905712474333
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.12,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5554,
+          "capture_rate": 56.08401494496617,
+          "bets": 22866,
+          "hits": 5967,
+          "precision": 26.095512988716873,
+          "roi": 71.62249628269046,
+          "avg_odds": 21.381846418366557
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5432,
+          "capture_rate": 55.26503204802116,
+          "bets": 22566,
+          "hits": 5831,
+          "precision": 25.83975892936276,
+          "roi": 71.74554639723478,
+          "avg_odds": 21.45210936969026
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2947,
+          "capture_rate": 56.315688897381996,
+          "bets": 11920,
+          "hits": 3153,
+          "precision": 26.451342281879192,
+          "roi": 73.33892617449665,
+          "avg_odds": 21.328338928750696
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.12,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5748,
+          "capture_rate": 58.0430172674947,
+          "bets": 25000,
+          "hits": 6187,
+          "precision": 24.748,
+          "roi": 70.3676,
+          "avg_odds": 24.842680009040834
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5633,
+          "capture_rate": 57.3100010173975,
+          "bets": 24759,
+          "hits": 6067,
+          "precision": 24.504220687426795,
+          "roi": 70.99478977341573,
+          "avg_odds": 25.054113657728063
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3057,
+          "capture_rate": 58.41773361360596,
+          "bets": 12987,
+          "hits": 3279,
+          "precision": 25.248325248325248,
+          "roi": 72.12597212597213,
+          "avg_odds": 24.653953962663106
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.12,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5817,
+          "capture_rate": 58.73977582550742,
+          "bets": 26328,
+          "hits": 6267,
+          "precision": 23.80355515041021,
+          "roi": 69.43975995138256,
+          "avg_odds": 29.793467047184805
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5694,
+          "capture_rate": 57.93061349069081,
+          "bets": 26053,
+          "hits": 6134,
+          "precision": 23.54431351475838,
+          "roi": 69.63881318850036,
+          "avg_odds": 29.79984646991444
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3090,
+          "capture_rate": 59.04834702847315,
+          "bets": 13632,
+          "hits": 3318,
+          "precision": 24.339788732394364,
+          "roi": 71.09008215962442,
+          "avg_odds": 29.069967724138024
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.16,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3792,
+          "capture_rate": 38.291426840351406,
+          "bets": 12596,
+          "hits": 3992,
+          "precision": 31.69260082565894,
+          "roi": 76.25357256271832,
+          "avg_odds": 14.193220073739928
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3588,
+          "capture_rate": 36.50422219961339,
+          "bets": 12341,
+          "hits": 3785,
+          "precision": 30.67012397698728,
+          "roi": 73.47621748642736,
+          "avg_odds": 14.236058665832664
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1973,
+          "capture_rate": 37.70303841008982,
+          "bets": 6596,
+          "hits": 2066,
+          "precision": 31.32201334141904,
+          "roi": 75.75197089144936,
+          "avg_odds": 14.238083692374845
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.16,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4793,
+          "capture_rate": 48.39947490659396,
+          "bets": 17742,
+          "hits": 5106,
+          "precision": 28.779168075752455,
+          "roi": 74.0435125690452,
+          "avg_odds": 17.15896742729038
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4643,
+          "capture_rate": 47.237765795096145,
+          "bets": 17467,
+          "hits": 4947,
+          "precision": 28.32197858819488,
+          "roi": 72.61521726684606,
+          "avg_odds": 17.240138548284662
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2557,
+          "capture_rate": 48.862984903497036,
+          "bets": 9353,
+          "hits": 2706,
+          "precision": 28.931893510103713,
+          "roi": 74.38789693146585,
+          "avg_odds": 17.256174493241307
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.16,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5377,
+          "capture_rate": 54.2966777744118,
+          "bets": 21936,
+          "hits": 5776,
+          "precision": 26.33114514952589,
+          "roi": 71.77060539752006,
+          "avg_odds": 21.22592542721006
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5251,
+          "capture_rate": 53.42354257808526,
+          "bets": 21698,
+          "hits": 5640,
+          "precision": 25.993179094847452,
+          "roi": 71.43561618582358,
+          "avg_odds": 21.320988111753532
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2864,
+          "capture_rate": 54.72960061150392,
+          "bets": 11494,
+          "hits": 3061,
+          "precision": 26.63128588828954,
+          "roi": 72.92413433095528,
+          "avg_odds": 21.18540978211827
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.16,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5559,
+          "capture_rate": 56.1345046955468,
+          "bets": 23878,
+          "hits": 5983,
+          "precision": 25.05653739844208,
+          "roi": 70.60809112991038,
+          "avg_odds": 24.527460432400087
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5445,
+          "capture_rate": 55.397293722657444,
+          "bets": 23721,
+          "hits": 5867,
+          "precision": 24.733358627376585,
+          "roi": 70.86337000969606,
+          "avg_odds": 24.796522070789543
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2966,
+          "capture_rate": 56.67876934836614,
+          "bets": 12475,
+          "hits": 3179,
+          "precision": 25.482965931863728,
+          "roi": 71.79559118236473,
+          "avg_odds": 24.372785579322095
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.16,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5623,
+          "capture_rate": 56.780773502978896,
+          "bets": 25031,
+          "hits": 6055,
+          "precision": 24.19000439455076,
+          "roi": 69.84099716351724,
+          "avg_odds": 29.007175117822772
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5497,
+          "capture_rate": 55.92634042120256,
+          "bets": 24843,
+          "hits": 5923,
+          "precision": 23.84172603952824,
+          "roi": 69.62645413194863,
+          "avg_odds": 29.066026651767633
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2997,
+          "capture_rate": 57.27116376839289,
+          "bets": 13020,
+          "hits": 3214,
+          "precision": 24.68509984639017,
+          "roi": 70.98463901689708,
+          "avg_odds": 28.231835638286515
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.2,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 3588,
+          "capture_rate": 36.23144501666162,
+          "bets": 11811,
+          "hits": 3773,
+          "precision": 31.94479722292778,
+          "roi": 76.48547963762594,
+          "avg_odds": 14.163533998256352
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3414,
+          "capture_rate": 34.73395055448164,
+          "bets": 11644,
+          "hits": 3599,
+          "precision": 30.90862246650635,
+          "roi": 73.49278598419787,
+          "avg_odds": 14.214745791906019
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 1869,
+          "capture_rate": 35.715650678387156,
+          "bets": 6229,
+          "hits": 1961,
+          "precision": 31.48177877668968,
+          "roi": 75.40536201637502,
+          "avg_odds": 14.208460432699622
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.2,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4519,
+          "capture_rate": 45.63263657477532,
+          "bets": 16502,
+          "hits": 4805,
+          "precision": 29.11768270512665,
+          "roi": 74.43279602472428,
+          "avg_odds": 17.074784880131755
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4384,
+          "capture_rate": 44.602706277342556,
+          "bets": 16358,
+          "hits": 4671,
+          "precision": 28.55483555446876,
+          "roi": 72.33341484289033,
+          "avg_odds": 17.167086442272737
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2408,
+          "capture_rate": 46.015669787884576,
+          "bets": 8751,
+          "hits": 2553,
+          "precision": 29.173808707576278,
+          "roi": 73.92640841046737,
+          "avg_odds": 17.15307965146216
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.2,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5049,
+          "capture_rate": 50.984550136322326,
+          "bets": 20242,
+          "hits": 5413,
+          "precision": 26.741428712577807,
+          "roi": 72.02647959687778,
+          "avg_odds": 21.010250972860497
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4931,
+          "capture_rate": 50.16787058703836,
+          "bets": 20136,
+          "hits": 5295,
+          "precision": 26.296185935637663,
+          "roi": 71.08512117600318,
+          "avg_odds": 21.09478049639155
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2688,
+          "capture_rate": 51.36632906554558,
+          "bets": 10668,
+          "hits": 2876,
+          "precision": 26.959130108736407,
+          "roi": 72.75403074615673,
+          "avg_odds": 20.960789276858954
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.2,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5211,
+          "capture_rate": 52.620418055134806,
+          "bets": 21925,
+          "hits": 5597,
+          "precision": 25.527936145952108,
+          "roi": 71.02805017103763,
+          "avg_odds": 24.13821209628063
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5108,
+          "capture_rate": 51.968664157086174,
+          "bets": 21889,
+          "hits": 5499,
+          "precision": 25.122207501484766,
+          "roi": 70.68207775595047,
+          "avg_odds": 24.36253369633857
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2780,
+          "capture_rate": 53.12440282820562,
+          "bets": 11519,
+          "hits": 2979,
+          "precision": 25.86161993228579,
+          "roi": 71.6511849986978,
+          "avg_odds": 23.947998963624347
+        }
+      }
+    },
+    {
+      "top_k": 2,
+      "pmin": 0.2,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5266,
+          "capture_rate": 53.17580531152176,
+          "bets": 22862,
+          "hits": 5660,
+          "precision": 24.757239086694078,
+          "roi": 70.35561193246436,
+          "avg_odds": 28.120448796270026
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5147,
+          "capture_rate": 52.365449180995014,
+          "bets": 22807,
+          "hits": 5540,
+          "precision": 24.290787915990705,
+          "roi": 69.45104573157364,
+          "avg_odds": 28.151133427820856
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2803,
+          "capture_rate": 53.56392126887063,
+          "bets": 11945,
+          "hits": 3005,
+          "precision": 25.156969443281707,
+          "roi": 70.78610297195479,
+          "avg_odds": 27.21298451230036
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4712,
+          "capture_rate": 47.58154094718772,
+          "bets": 16585,
+          "hits": 5151,
+          "precision": 31.05818510702442,
+          "roi": 76.75007536930961,
+          "avg_odds": 14.321839015973344
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4433,
+          "capture_rate": 45.10123105097161,
+          "bets": 16098,
+          "hits": 4843,
+          "precision": 30.084482544415454,
+          "roi": 73.98558827183501,
+          "avg_odds": 14.354963347399098
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2422,
+          "capture_rate": 46.283202751767625,
+          "bets": 8591,
+          "hits": 2625,
+          "precision": 30.55523221976487,
+          "roi": 76.1494587358864,
+          "avg_odds": 14.355243864804315
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6086,
+          "capture_rate": 61.45612440674543,
+          "bets": 24460,
+          "hits": 6792,
+          "precision": 27.76778413736713,
+          "roi": 74.2624693376942,
+          "avg_odds": 17.610425191108845
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5866,
+          "capture_rate": 59.68053718587852,
+          "bets": 23963,
+          "hits": 6529,
+          "precision": 27.246171180570045,
+          "roi": 72.4475232650336,
+          "avg_odds": 17.71527771754162
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3195,
+          "capture_rate": 61.054844257596024,
+          "bets": 12783,
+          "hits": 3551,
+          "precision": 27.779081592740358,
+          "roi": 74.22905421262614,
+          "avg_odds": 17.70398967523283
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7023,
+          "capture_rate": 70.9179036655559,
+          "bets": 32104,
+          "hits": 7989,
+          "precision": 24.884749563917268,
+          "roi": 72.58690505855968,
+          "avg_odds": 22.62658236500868
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6830,
+          "capture_rate": 69.48824905890731,
+          "bets": 31515,
+          "hits": 7759,
+          "precision": 24.62002221164525,
+          "roi": 71.95335554497858,
+          "avg_odds": 22.713050925563333
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3686,
+          "capture_rate": 70.43760749092299,
+          "bets": 16672,
+          "hits": 4175,
+          "precision": 25.041986564299425,
+          "roi": 73.00083973128599,
+          "avg_odds": 22.587667949426198
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7356,
+          "capture_rate": 74.28052105422599,
+          "bets": 36453,
+          "hits": 8414,
+          "precision": 23.081776534167282,
+          "roi": 70.78594354374125,
+          "avg_odds": 27.37475379717496
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7176,
+          "capture_rate": 73.00844439922678,
+          "bets": 35963,
+          "hits": 8217,
+          "precision": 22.848483163251117,
+          "roi": 70.78942246197481,
+          "avg_odds": 27.6455634957515
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3867,
+          "capture_rate": 73.89642652398241,
+          "bets": 18840,
+          "hits": 4410,
+          "precision": 23.40764331210191,
+          "roi": 71.68259023354565,
+          "avg_odds": 27.19319002537211
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7523,
+          "capture_rate": 75.9668787236191,
+          "bets": 40356,
+          "hits": 8638,
+          "precision": 21.404499950441075,
+          "roi": 69.17608286252354,
+          "avg_odds": 37.57670979001664
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7320,
+          "capture_rate": 74.47349679519789,
+          "bets": 39842,
+          "hits": 8404,
+          "precision": 21.09331860850359,
+          "roi": 68.25837056372671,
+          "avg_odds": 37.68499574239495
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3942,
+          "capture_rate": 75.32963883049875,
+          "bets": 20766,
+          "hits": 4514,
+          "precision": 21.737455456033903,
+          "roi": 69.89261292497352,
+          "avg_odds": 36.706062793272444
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4700,
+          "capture_rate": 47.460365545794204,
+          "bets": 16527,
+          "hits": 5137,
+          "precision": 31.082471107884068,
+          "roi": 76.7677134386156,
+          "avg_odds": 14.317383680310737
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4423,
+          "capture_rate": 44.999491301251396,
+          "bets": 16043,
+          "hits": 4832,
+          "precision": 30.119055039581127,
+          "roi": 74.01047185688462,
+          "avg_odds": 14.352477713831417
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2418,
+          "capture_rate": 46.206764762086756,
+          "bets": 8578,
+          "hits": 2621,
+          "precision": 30.554907903940315,
+          "roi": 76.11098158078806,
+          "avg_odds": 14.352238288762882
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6064,
+          "capture_rate": 61.23396950419065,
+          "bets": 24338,
+          "hits": 6765,
+          "precision": 27.796039115786016,
+          "roi": 74.21850603993755,
+          "avg_odds": 17.596150060679236
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5852,
+          "capture_rate": 59.53810153627022,
+          "bets": 23860,
+          "hits": 6514,
+          "precision": 27.30092204526404,
+          "roi": 72.54484492875105,
+          "avg_odds": 17.70726739055253
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3187,
+          "capture_rate": 60.901968278234285,
+          "bets": 12749,
+          "hits": 3541,
+          "precision": 27.77472742960232,
+          "roi": 74.12346066358145,
+          "avg_odds": 17.69344262428233
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6989,
+          "capture_rate": 70.57457336160759,
+          "bets": 31876,
+          "hits": 7950,
+          "precision": 24.940394026854058,
+          "roi": 72.58658551888568,
+          "avg_odds": 22.577917562522558
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6798,
+          "capture_rate": 69.16268185980263,
+          "bets": 31314,
+          "hits": 7722,
+          "precision": 24.659896531902664,
+          "roi": 71.82570096442485,
+          "avg_odds": 22.66882544330705
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3673,
+          "capture_rate": 70.18918402446016,
+          "bets": 16601,
+          "hits": 4158,
+          "precision": 25.046683934702727,
+          "roi": 72.87030901752907,
+          "avg_odds": 22.55252695902235
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7318,
+          "capture_rate": 73.89679894981319,
+          "bets": 36080,
+          "hits": 8370,
+          "precision": 23.198447893569845,
+          "roi": 70.98170731707317,
+          "avg_odds": 27.211732266298153
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7137,
+          "capture_rate": 72.61165937531794,
+          "bets": 35640,
+          "hits": 8172,
+          "precision": 22.92929292929293,
+          "roi": 70.79629629629629,
+          "avg_odds": 27.507337261985583
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3851,
+          "capture_rate": 73.59067456525894,
+          "bets": 18735,
+          "hits": 4389,
+          "precision": 23.42674139311449,
+          "roi": 71.53722978382706,
+          "avg_odds": 27.110931416693006
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.08,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7474,
+          "capture_rate": 75.47207916792891,
+          "bets": 39641,
+          "hits": 8582,
+          "precision": 21.64930248984637,
+          "roi": 69.58830503771348,
+          "avg_odds": 36.45477663075622
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7272,
+          "capture_rate": 73.98514599654085,
+          "bets": 39190,
+          "hits": 8348,
+          "precision": 21.30135238581271,
+          "roi": 68.42919112018372,
+          "avg_odds": 36.5164429774361
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3922,
+          "capture_rate": 74.9474488820944,
+          "bets": 20521,
+          "hits": 4489,
+          "precision": 21.875152283027145,
+          "roi": 69.83285414940792,
+          "avg_odds": 35.83646995880341
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4641,
+          "capture_rate": 46.86458648894274,
+          "bets": 16247,
+          "hits": 5065,
+          "precision": 31.17498615128947,
+          "roi": 76.70646888656367,
+          "avg_odds": 14.307435223951614
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4371,
+          "capture_rate": 44.47044460270628,
+          "bets": 15791,
+          "hits": 4773,
+          "precision": 30.22607814577924,
+          "roi": 74.13969982901652,
+          "avg_odds": 14.348002024429473
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2391,
+          "capture_rate": 45.690808331740875,
+          "bets": 8453,
+          "hits": 2591,
+          "precision": 30.651839583579793,
+          "roi": 76.18951851413699,
+          "avg_odds": 14.347415122931686
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5973,
+          "capture_rate": 60.315056043623144,
+          "bets": 23836,
+          "hits": 6655,
+          "precision": 27.919953012250375,
+          "roi": 74.17645578117134,
+          "avg_odds": 17.561058909366107
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5775,
+          "capture_rate": 58.75470546342456,
+          "bets": 23404,
+          "hits": 6424,
+          "precision": 27.448299435993846,
+          "roi": 72.77602119295847,
+          "avg_odds": 17.676085282260384
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3137,
+          "capture_rate": 59.94649340722339,
+          "bets": 12513,
+          "hits": 3486,
+          "precision": 27.859026612323184,
+          "roi": 74.11172380724047,
+          "avg_odds": 17.660505075835022
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6866,
+          "capture_rate": 69.33252549732404,
+          "bets": 31056,
+          "hits": 7802,
+          "precision": 25.12235960844925,
+          "roi": 72.58404173106646,
+          "avg_odds": 22.459840295795065
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6691,
+          "capture_rate": 68.07406653779631,
+          "bets": 30556,
+          "hits": 7591,
+          "precision": 24.842911375834532,
+          "roi": 71.93840816860846,
+          "avg_odds": 22.550994892803253
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3612,
+          "capture_rate": 69.02350468182686,
+          "bets": 16222,
+          "hits": 4090,
+          "precision": 25.212674146221183,
+          "roi": 72.94353347306128,
+          "avg_odds": 22.450838371234997
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7175,
+          "capture_rate": 72.45279208320711,
+          "bets": 34944,
+          "hits": 8195,
+          "precision": 23.45180860805861,
+          "roi": 71.03279532967034,
+          "avg_odds": 26.884412207610005
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7014,
+          "capture_rate": 71.36026045375928,
+          "bets": 34599,
+          "hits": 8017,
+          "precision": 23.17118991878378,
+          "roi": 70.92603832480708,
+          "avg_odds": 27.218228850131357
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3779,
+          "capture_rate": 72.21479075100325,
+          "bets": 18242,
+          "hits": 4308,
+          "precision": 23.615831597412566,
+          "roi": 71.51134743997369,
+          "avg_odds": 26.881509709000103
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.12,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 7308,
+          "capture_rate": 73.79581944865193,
+          "bets": 37978,
+          "hits": 8373,
+          "precision": 22.04697456422139,
+          "roi": 69.39306967191531,
+          "avg_odds": 34.925556908023445
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 7133,
+          "capture_rate": 72.57096347542985,
+          "bets": 37721,
+          "hits": 8173,
+          "precision": 21.666975955038307,
+          "roi": 68.6967471700114,
+          "avg_odds": 35.34985552630247
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3841,
+          "capture_rate": 73.39957959105675,
+          "bets": 19805,
+          "hits": 4396,
+          "precision": 22.19641504670538,
+          "roi": 69.96919969704621,
+          "avg_odds": 34.65613229414996
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4476,
+          "capture_rate": 45.19842471978188,
+          "bets": 15565,
+          "hits": 4877,
+          "precision": 31.333119177642143,
+          "roi": 76.60648891744299,
+          "avg_odds": 14.297333766852702
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 4216,
+          "capture_rate": 42.89347848204294,
+          "bets": 15149,
+          "hits": 4594,
+          "precision": 30.32543402204766,
+          "roi": 73.86560168988052,
+          "avg_odds": 14.325737669834785
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2315,
+          "capture_rate": 44.23848652780432,
+          "bets": 8141,
+          "hits": 2507,
+          "precision": 30.794742660606804,
+          "roi": 75.91573516766982,
+          "avg_odds": 14.333018061482427
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5745,
+          "capture_rate": 58.01272341714632,
+          "bets": 22667,
+          "hits": 6390,
+          "precision": 28.190761900560286,
+          "roi": 74.3728768694578,
+          "avg_odds": 17.495588306104384
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5547,
+          "capture_rate": 56.435039169803645,
+          "bets": 22293,
+          "hits": 6161,
+          "precision": 27.636477818149196,
+          "roi": 72.5981249719643,
+          "avg_odds": 17.60661642382338
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3021,
+          "capture_rate": 57.72979170647812,
+          "bets": 11947,
+          "hits": 3353,
+          "precision": 28.0656231689964,
+          "roi": 73.82439106051729,
+          "avg_odds": 17.585444047020562
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6560,
+          "capture_rate": 66.24255276178936,
+          "bets": 29212,
+          "hits": 7437,
+          "precision": 25.458715596330272,
+          "roi": 72.45755169108585,
+          "avg_odds": 22.219303717078468
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6396,
+          "capture_rate": 65.07274392104995,
+          "bets": 28869,
+          "hits": 7239,
+          "precision": 25.07534033045828,
+          "roi": 71.5237798330389,
+          "avg_odds": 22.34292147151235
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3459,
+          "capture_rate": 66.09975157653354,
+          "bets": 15349,
+          "hits": 3911,
+          "precision": 25.480487328164703,
+          "roi": 72.52850348556909,
+          "avg_odds": 22.22728516816456
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6837,
+          "capture_rate": 69.03968494395637,
+          "bets": 32601,
+          "hits": 7790,
+          "precision": 23.89497254685439,
+          "roi": 71.06469126713904,
+          "avg_odds": 26.3681635573899
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6694,
+          "capture_rate": 68.10458846271239,
+          "bets": 32464,
+          "hits": 7626,
+          "precision": 23.49063578117299,
+          "roi": 70.63146870379498,
+          "avg_odds": 26.779691350818442
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3608,
+          "capture_rate": 68.947066692146,
+          "bets": 17120,
+          "hits": 4109,
+          "precision": 24.001168224299064,
+          "roi": 71.40478971962617,
+          "avg_odds": 26.372079444934275
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.16,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6957,
+          "capture_rate": 70.25143895789155,
+          "bets": 35050,
+          "hits": 7947,
+          "precision": 22.673323823109843,
+          "roi": 69.95634807417974,
+          "avg_odds": 33.309166913352236
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6794,
+          "capture_rate": 69.12198595991454,
+          "bets": 34978,
+          "hits": 7755,
+          "precision": 22.17107896392018,
+          "roi": 68.58596832294585,
+          "avg_odds": 33.76318829870325
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3660,
+          "capture_rate": 69.94076055799732,
+          "bets": 18354,
+          "hits": 4180,
+          "precision": 22.77432712215321,
+          "roi": 70.12531328320802,
+          "avg_odds": 32.803056561974145
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 20,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 4146,
+          "capture_rate": 41.86610118146017,
+          "bets": 14280,
+          "hits": 4507,
+          "precision": 31.561624649859944,
+          "roi": 76.4187675070028,
+          "avg_odds": 14.256722695353318
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 3948,
+          "capture_rate": 40.16685318954115,
+          "bets": 14006,
+          "hits": 4282,
+          "precision": 30.572611737826644,
+          "roi": 73.65272026274454,
+          "avg_odds": 14.287769525438891
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2161,
+          "capture_rate": 41.29562392509077,
+          "bets": 7530,
+          "hits": 2342,
+          "precision": 31.102257636122175,
+          "roi": 75.77689243027888,
+          "avg_odds": 14.290544493929799
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 30,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5290,
+          "capture_rate": 53.41815611430879,
+          "bets": 20549,
+          "hits": 5856,
+          "precision": 28.49773711616137,
+          "roi": 74.09995620224828,
+          "avg_odds": 17.374456185007613
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5155,
+          "capture_rate": 52.446840980771185,
+          "bets": 20376,
+          "hits": 5694,
+          "precision": 27.944640753828033,
+          "roi": 72.21289752650176,
+          "avg_odds": 17.492608948225687
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 2805,
+          "capture_rate": 53.602140263711064,
+          "bets": 10907,
+          "hits": 3107,
+          "precision": 28.486293206197853,
+          "roi": 73.53076006234528,
+          "avg_odds": 17.452663429325305
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 50,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 5998,
+          "capture_rate": 60.56750479652631,
+          "bets": 26111,
+          "hits": 6767,
+          "precision": 25.916280494810618,
+          "roi": 72.35839301443836,
+          "avg_odds": 21.877748851039073
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 5892,
+          "capture_rate": 59.945060535151086,
+          "bets": 25969,
+          "hits": 6623,
+          "precision": 25.50348492433286,
+          "roi": 71.14367130039663,
+          "avg_odds": 21.970549500109286
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3180,
+          "capture_rate": 60.76820179629276,
+          "bets": 13829,
+          "hits": 3582,
+          "precision": 25.902089811266183,
+          "roi": 72.09125750235013,
+          "avg_odds": 21.902928629789738
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 80,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6230,
+          "capture_rate": 62.91022922346764,
+          "bets": 28901,
+          "hits": 7063,
+          "precision": 24.438600740458806,
+          "roi": 71.09961593024462,
+          "avg_odds": 25.753866654548474
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6147,
+          "capture_rate": 62.53942415301658,
+          "bets": 28914,
+          "hits": 6953,
+          "precision": 24.04717437919347,
+          "roi": 70.53711005049458,
+          "avg_odds": 26.06556339564722
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3302,
+          "capture_rate": 63.09956048155934,
+          "bets": 15270,
+          "hits": 3741,
+          "precision": 24.49901768172888,
+          "roi": 70.7229862475442,
+          "avg_odds": 25.67932547823463
+        }
+      }
+    },
+    {
+      "top_k": 3,
+      "pmin": 0.2,
+      "odds_max": 999,
+      "periods": {
+        "2024": {
+          "eligible_hit_races": 9903,
+          "caught_races": 6329,
+          "capture_rate": 63.90992628496415,
+          "bets": 30745,
+          "hits": 7193,
+          "precision": 23.39567409334851,
+          "roi": 70.26410798503822,
+          "avg_odds": 31.58484632486172
+        },
+        "2025": {
+          "eligible_hit_races": 9829,
+          "caught_races": 6222,
+          "capture_rate": 63.3024722759182,
+          "bets": 30822,
+          "hits": 7046,
+          "precision": 22.860294594769968,
+          "roi": 68.5555771851275,
+          "avg_odds": 32.071737724030925
+        },
+        "2026": {
+          "eligible_hit_races": 5233,
+          "caught_races": 3337,
+          "capture_rate": 63.76839289126696,
+          "bets": 16166,
+          "hits": 3788,
+          "precision": 23.43189409872572,
+          "roi": 69.22306074477298,
+          "avg_odds": 30.940616111892233
+        }
+      }
+    }
+  ]
+}

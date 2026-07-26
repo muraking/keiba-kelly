@@ -1,0 +1,254 @@
+{
+  "version": "v2026.07.26.1",
+  "market": "jra",
+  "rows": 146349,
+  "features": [
+    "umaban",
+    "distance",
+    "is_dirt",
+    "draw",
+    "field_size",
+    "age",
+    "is_female",
+    "weight_carried",
+    "horse_weight",
+    "horse_weight_diff",
+    "venue_code",
+    "going_code",
+    "cls_level",
+    "month",
+    "h_n_past",
+    "h_days_since",
+    "h_last_pos",
+    "h_avg_pos3",
+    "h_avg_pos5",
+    "h_winrate",
+    "h_placerate",
+    "h_avg_rel3",
+    "h_avg_rel5",
+    "h_best_rel5",
+    "h_avg_relz3",
+    "h_avg_last3f3",
+    "h_avg_early3",
+    "h_weight_change",
+    "h_dist_change",
+    "h_same_jockey",
+    "j_n",
+    "j_winrate",
+    "t_n",
+    "t_winrate",
+    "o_n",
+    "o_winrate",
+    "ana_layoff",
+    "ana_rest_lean",
+    "ana_tataki2",
+    "ana_draw_change",
+    "ana_draw_change_abs",
+    "ana_style_shift",
+    "ana_style_shift_abs",
+    "ana_dist_change_abs",
+    "ana_surf_change",
+    "ana_venue_change",
+    "ana_last_pos_gain",
+    "ana_bounce",
+    "ana_class_change",
+    "ana_going_change",
+    "ana_wtcarried_change",
+    "ana_short_rest",
+    "ana_last3f_sharp",
+    "ana_weight_swing_abs",
+    "h_rank_std",
+    "dir_x_umaban",
+    "h_venue_n",
+    "h_venue_winrate",
+    "h_venue_avg_rel",
+    "h_avg_spd3",
+    "h_best_spd5",
+    "h_avg_rtop3"
+  ],
+  "folds": [
+    {
+      "year": 2024,
+      "ability": {
+        "1": {
+          "hit_races": 2496,
+          "caught": 647,
+          "capture": 25.921474358974358,
+          "bets": 3332,
+          "hits": 647,
+          "precision": 19.41776710684274,
+          "roi": 74.3547418967587
+        },
+        "2": {
+          "hit_races": 2496,
+          "caught": 1161,
+          "capture": 46.51442307692308,
+          "bets": 6658,
+          "hits": 1226,
+          "precision": 18.41393811955542,
+          "roi": 75.55572243917092
+        },
+        "3": {
+          "hit_races": 2496,
+          "caught": 1540,
+          "capture": 61.69871794871795,
+          "bets": 9953,
+          "hits": 1706,
+          "precision": 17.14056063498443,
+          "roi": 74.56847181754245
+        }
+      },
+      "market_residual": {
+        "1": {
+          "hit_races": 2496,
+          "caught": 840,
+          "capture": 33.65384615384615,
+          "bets": 3332,
+          "hits": 840,
+          "precision": 25.210084033613445,
+          "roi": 77.56902761104442
+        },
+        "2": {
+          "hit_races": 2496,
+          "caught": 1387,
+          "capture": 55.568910256410255,
+          "bets": 6658,
+          "hits": 1494,
+          "precision": 22.43917092219886,
+          "roi": 75.55722439170923
+        },
+        "3": {
+          "hit_races": 2496,
+          "caught": 1762,
+          "capture": 70.59294871794872,
+          "bets": 9953,
+          "hits": 2002,
+          "precision": 20.114538330151714,
+          "roi": 74.91811514116347
+        }
+      }
+    },
+    {
+      "year": 2025,
+      "ability": {
+        "1": {
+          "hit_races": 2553,
+          "caught": 702,
+          "capture": 27.497062279670974,
+          "bets": 3352,
+          "hits": 702,
+          "precision": 20.94272076372315,
+          "roi": 76.51252983293556
+        },
+        "2": {
+          "hit_races": 2553,
+          "caught": 1211,
+          "capture": 47.434390912651786,
+          "bets": 6697,
+          "hits": 1286,
+          "precision": 19.202628042407046,
+          "roi": 73.94654322831119
+        },
+        "3": {
+          "hit_races": 2553,
+          "caught": 1599,
+          "capture": 62.63219741480611,
+          "bets": 10011,
+          "hits": 1801,
+          "precision": 17.99021076815503,
+          "roi": 74.68684447108181
+        }
+      },
+      "market_residual": {
+        "1": {
+          "hit_races": 2553,
+          "caught": 817,
+          "capture": 32.00156678417548,
+          "bets": 3352,
+          "hits": 817,
+          "precision": 24.373508353221958,
+          "roi": 74.54057279236277
+        },
+        "2": {
+          "hit_races": 2553,
+          "caught": 1409,
+          "capture": 55.189972581276926,
+          "bets": 6697,
+          "hits": 1533,
+          "precision": 22.890846647752724,
+          "roi": 76.6731372256234
+        },
+        "3": {
+          "hit_races": 2553,
+          "caught": 1813,
+          "capture": 71.01449275362319,
+          "bets": 10011,
+          "hits": 2114,
+          "precision": 21.116771551293578,
+          "roi": 78.75636799520528
+        }
+      }
+    },
+    {
+      "year": 2026,
+      "ability": {
+        "1": {
+          "hit_races": 1262,
+          "caught": 373,
+          "capture": 29.556259904912835,
+          "bets": 1718,
+          "hits": 373,
+          "precision": 21.71129220023283,
+          "roi": 77.55529685681024
+        },
+        "2": {
+          "hit_races": 1262,
+          "caught": 647,
+          "capture": 51.26782884310618,
+          "bets": 3435,
+          "hits": 700,
+          "precision": 20.378457059679768,
+          "roi": 78.95778748180494
+        },
+        "3": {
+          "hit_races": 1262,
+          "caught": 836,
+          "capture": 66.24405705229793,
+          "bets": 5139,
+          "hits": 954,
+          "precision": 18.563922942206652,
+          "roi": 77.9626386456509
+        }
+      },
+      "market_residual": {
+        "1": {
+          "hit_races": 1262,
+          "caught": 445,
+          "capture": 35.26148969889065,
+          "bets": 1718,
+          "hits": 445,
+          "precision": 25.902211874272407,
+          "roi": 78.83585564610011
+        },
+        "2": {
+          "hit_races": 1262,
+          "caught": 727,
+          "capture": 57.60697305863708,
+          "bets": 3435,
+          "hits": 790,
+          "precision": 22.99854439592431,
+          "roi": 77.04512372634643
+        },
+        "3": {
+          "hit_races": 1262,
+          "caught": 904,
+          "capture": 71.6323296354992,
+          "bets": 5139,
+          "hits": 1064,
+          "precision": 20.704417201790232,
+          "roi": 77.30297723292469
+        }
+      }
+    }
+  ]
+}
