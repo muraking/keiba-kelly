@@ -1,0 +1,173 @@
+[
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\data\\ai_index_local.sqlite",
+    "table": "ai_index",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 137793
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\data\\features_local.sqlite",
+    "table": "features",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "h_placerate",
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\data\\keiba_local.sqlite",
+    "table": "runs",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\data\\keiba_local.sqlite",
+    "table": "payouts",
+    "date_col": null,
+    "race_col": "race_id",
+    "payout_cols": [
+      "payout"
+    ]
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\local_validation_20260726\\backups\\features_before_ana\\features_local.sqlite",
+    "table": "features",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "h_placerate",
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\local_validation_20260726\\data\\features_local.sqlite",
+    "table": "features",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "h_placerate",
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\local_validation_20260726\\data\\features_local_with_ana.sqlite",
+    "table": "features",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "h_placerate",
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\local_validation_20260726\\data\\keiba_local.sqlite",
+    "table": "runs",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\local_validation_20260726\\data\\keiba_local.sqlite",
+    "table": "payouts",
+    "date_col": null,
+    "race_col": "race_id",
+    "payout_cols": [
+      "payout"
+    ]
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\market_edge_research_20260723\\reports\\features_local_current.sqlite",
+    "table": "features",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "h_placerate",
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\zero_base_models_20260726\\data_raw\\server_snapshot_20260726\\ai_index_local.sqlite",
+    "table": "ai_index",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 137793
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\zero_base_models_20260726\\data_raw\\server_snapshot_20260726\\features_local.sqlite",
+    "table": "features",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "h_placerate",
+      "is_place",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\zero_base_models_20260726\\data_raw\\server_snapshot_20260726\\keiba_local.sqlite",
+    "table": "runs",
+    "date_col": "date",
+    "race_col": "race_id",
+    "payout_cols": [
+      "distance",
+      "tan_payout",
+      "place_payout"
+    ],
+    "rows_2024": 140713
+  },
+  {
+    "db": "C:\\Users\\shige\\GitHub\\keiba-kelly\\keiba-kelly\\zero_base_models_20260726\\data_raw\\server_snapshot_20260726\\keiba_local.sqlite",
+    "table": "payouts",
+    "date_col": null,
+    "race_col": "race_id",
+    "payout_cols": [
+      "payout"
+    ]
+  }
+]
