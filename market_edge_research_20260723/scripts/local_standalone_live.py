@@ -3,7 +3,7 @@
 This service does not import or launch keiba_ai.live_probs. It directly uses
 the low-level local card parser and structural feature builder.
 
-Version: v2026.07.26.3
+Version: v2026.07.26.4
 """
 
 from __future__ import annotations
@@ -37,10 +37,12 @@ from keiba_ai.scrape_local import (
 
 import walkforward_market_edge as research
 from local_shadow_strategy import evaluate_snapshot, format_discord
-from standalone_display import circled, pace_lines, relative_styles
+from standalone_display import (
+    circled, notification_due, pace_lines, relative_styles,
+)
 
 
-VERSION = "v2026.07.26.3"
+VERSION = "v2026.07.26.4"
 MAX_TRAIN_ROWS = 350_000
 MAX_RUN_ROWS = 200_000
 MODEL_CACHE_VERSION = 1
@@ -453,7 +455,10 @@ def live_run(
             race_id: meta for race_id, meta in schedule.items()
             if race_id not in notified_30
             and meta["post"]
-            and (once or now >= meta["post"] - timedelta(minutes=30))
+            and (
+                (once and now < meta["post"])
+                or notification_due(now, meta["post"], 30)
+            )
         }
         due_30_snapshots = {
             race_id: recalculate_cached_index(
@@ -465,7 +470,18 @@ def live_run(
             post = meta["post"]
             if not post:
                 continue
-            if race_id not in notified_30 and (once or now >= post - timedelta(minutes=30)):
+            if now >= post:
+                race_state = state["races"].setdefault(race_id, {})
+                if race_id not in notified_30:
+                    race_state["t30"] = {"skipped": "post_started"}
+                    notified_30.add(race_id)
+                if race_id not in notified_7:
+                    race_state["t7"] = {"skipped": "post_started"}
+                    notified_7.add(race_id)
+                continue
+            if race_id not in notified_30 and (
+                once or notification_due(now, post, 30)
+            ):
                 snapshot = (
                     due_30_snapshots.get(race_id)
                 )
@@ -474,7 +490,9 @@ def live_run(
                     discord_send(webhook, format_index(meta, snapshot, "発走30分前"), dry_run)
                     notified_30.add(race_id)
                     save_state(state_path, state)
-            if race_id not in notified_7 and (once or now >= post - timedelta(minutes=7)):
+            if race_id not in notified_7 and (
+                once or notification_due(now, post, 7)
+            ):
                 snapshot = state["races"].get(race_id, {}).get("t30")
                 if not snapshot:
                     snapshot = calculate_index(session, race_id, meta, date_iso, bundle)
@@ -488,20 +506,6 @@ def live_run(
                     discord_send_7(
                         webhook, webhook4,
                         format_discord(title, snapshot, decision), dry_run,
-                    )
-                    state["races"].setdefault(race_id, {})["t7"] = {
-                        "snapshot": snapshot, "decision": decision,
-                    }
-                    notified_7.add(race_id)
-                    save_state(state_path, state)
-                elif not once and now >= post + timedelta(minutes=3):
-                    reason = "index unavailable" if not snapshot else "odds unavailable"
-                    decision = {"action": "NO_BET", "reason": reason}
-                    discord_send_7(
-                        webhook, webhook4,
-                        f"地方独立指数 {meta['venue']}{meta['race_num']}R\n"
-                        f"👀 見: {reason}\nVersion {VERSION}",
-                        dry_run,
                     )
                     state["races"].setdefault(race_id, {})["t7"] = {
                         "snapshot": snapshot, "decision": decision,

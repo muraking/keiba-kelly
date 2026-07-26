@@ -1,14 +1,16 @@
 """Regression tests for independent-index display helpers.
 
-Version: v2026.07.26.1
+Version: v2026.07.26.2
 """
 
 from __future__ import annotations
 
 import unittest
+from datetime import datetime, timedelta, timezone
 
 from standalone_display import (
-    circled, circled_ticket, ev_circled, pace_lines, relative_styles,
+    circled, circled_ticket, ev_circled, notification_due, pace_lines,
+    relative_styles,
 )
 
 
@@ -27,6 +29,13 @@ class StandaloneDisplayTest(unittest.TestCase):
         self.assertEqual(styles["1"], "逃")
         self.assertEqual(styles["6"], "？")
         self.assertIn("展開 ", pace_lines({"s": styles})[0])
+
+    def test_notifications_are_never_due_after_post(self) -> None:
+        post = datetime(2026, 7, 26, 12, 0, tzinfo=timezone.utc)
+        self.assertTrue(notification_due(post - timedelta(minutes=7), post, 7))
+        self.assertTrue(notification_due(post - timedelta(seconds=1), post, 7))
+        self.assertFalse(notification_due(post, post, 7))
+        self.assertFalse(notification_due(post + timedelta(minutes=1), post, 30))
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ This process does not import or launch keiba_ai.live_probs.  It directly uses
 the low-level scraper, feature builder and odds client, then applies the
 leakage-safe research model and fixed shadow strategy.
 
-Version: v2026.07.26.3
+Version: v2026.07.26.4
 """
 
 from __future__ import annotations
@@ -42,10 +42,12 @@ from keiba_ai.scrape_local import (
 import walkforward_jra_pedigree_training as enhanced
 import walkforward_market_edge as research
 from jra_shadow_strategy import evaluate_snapshot, format_discord
-from standalone_display import circled, pace_lines, relative_styles
+from standalone_display import (
+    circled, notification_due, pace_lines, relative_styles,
+)
 
 
-VERSION = "v2026.07.26.3"
+VERSION = "v2026.07.26.4"
 MARKS = ("◎", "○", "▲", "△", "☆", "注")
 CHECK_SECONDS = 30
 
@@ -476,7 +478,18 @@ def live_run(
             post = meta["post"]
             if not post:
                 continue
-            if race_id not in notified_30 and (once or now >= post - timedelta(minutes=30)):
+            if now >= post:
+                race_state = state["races"].setdefault(race_id, {})
+                if race_id not in notified_30:
+                    race_state["t30"] = {"skipped": "post_started"}
+                    notified_30.add(race_id)
+                if race_id not in notified_7:
+                    race_state["t7"] = {"skipped": "post_started"}
+                    notified_7.add(race_id)
+                continue
+            if race_id not in notified_30 and (
+                once or notification_due(now, post, 30)
+            ):
                 snapshot = (
                     once_snapshots.get(race_id)
                     if once else
@@ -487,7 +500,9 @@ def live_run(
                     discord_send(webhook, format_index(meta, snapshot, "発走30分前"), dry_run)
                     notified_30.add(race_id)
                     save_state(state_path, state)
-            if race_id not in notified_7 and (once or now >= post - timedelta(minutes=7)):
+            if race_id not in notified_7 and (
+                once or notification_due(now, post, 7)
+            ):
                 snapshot = state["races"].get(race_id, {}).get("t30")
                 if not snapshot:
                     snapshot = calculate_index(session, race_id, meta, date_iso, bundle)
@@ -504,20 +519,6 @@ def live_run(
                     discord_send_7(
                         webhook, webhook4,
                         format_discord(title, snapshot, decision), dry_run,
-                    )
-                    state["races"].setdefault(race_id, {})["t7"] = {
-                        "snapshot": snapshot, "decision": decision
-                    }
-                    notified_7.add(race_id)
-                    save_state(state_path, state)
-                elif not once and now >= post + timedelta(minutes=3):
-                    title = f"{meta['venue']}{meta['race_num']}R"
-                    reason = "index unavailable" if not snapshot else "odds unavailable"
-                    decision = {"action": "NO_BET", "reason": reason}
-                    discord_send_7(
-                        webhook, webhook4,
-                        f"JRA standalone {title}\nNO_BET: {reason}\nVersion {VERSION}",
-                        dry_run,
                     )
                     state["races"].setdefault(race_id, {})["t7"] = {
                         "snapshot": snapshot, "decision": decision

@@ -1,14 +1,15 @@
 """Shared display helpers for the independent local/JRA services.
 
-Version: v2026.07.26.1
+Version: v2026.07.26.2
 """
 
 from __future__ import annotations
 
 import re
+from datetime import timedelta
 
 
-VERSION = "v2026.07.26.1"
+VERSION = "v2026.07.26.2"
 _CIRCLED = {
     **{number: chr(0x2460 + number - 1) for number in range(1, 21)},
     0: "⓪",
@@ -40,6 +41,11 @@ def ev_circled(number: int | str) -> str:
 def circled_ticket(ticket: str) -> str:
     """Convert every horse number in a ticket while retaining separators."""
     return re.sub(r"\d+", lambda match: circled(match.group()), str(ticket))
+
+
+def notification_due(now, post, lead_minutes: int) -> bool:
+    """Return true only inside the pre-post notification window."""
+    return post - timedelta(minutes=lead_minutes) <= now < post
 
 
 def relative_styles(early: dict[str, float | None]) -> dict[str, str]:
