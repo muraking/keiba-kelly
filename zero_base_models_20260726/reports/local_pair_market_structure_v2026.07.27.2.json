@@ -1,0 +1,96 @@
+{
+  "version": "v2026.07.27.2",
+  "ticket_rows": 389838,
+  "feature_count": 15,
+  "spec_count": 64,
+  "discovery_candidates": 451,
+  "validated_2025": 1,
+  "confirmed_2026": 0,
+  "positive_three_year_before_max_exclusion": 1,
+  "exploratory_confirmed_min100_100_50": 0,
+  "best_confirmed": [],
+  "best_positive_three_year": [
+    {
+      "condition": {
+        "bet_type": "umaren",
+        "hole_rank": "1",
+        "partner_rank": "2",
+        "product_bin": "60-100",
+        "distance_bin": "1601-2000"
+      },
+      "2024": {
+        "bets": 209,
+        "races": 209,
+        "hits": 10,
+        "hit_rate": 4.784688995215311,
+        "roi": 114.68899521531101,
+        "roi_without_max": 96.84210526315789,
+        "lcb90": 0.6627506959060587,
+        "max_share": 0.15561118064246976
+      },
+      "2025": {
+        "bets": 209,
+        "races": 209,
+        "hits": 7,
+        "hit_rate": 3.349282296650718,
+        "roi": 101.62679425837321,
+        "roi_without_max": 82.2488038277512,
+        "lcb90": 0.5158700157623752,
+        "max_share": 0.1906779661016949
+      },
+      "2026": {
+        "bets": 121,
+        "races": 121,
+        "hits": 4,
+        "hit_rate": 3.3057851239669422,
+        "roi": 105.86776859504133,
+        "roi_without_max": 75.53719008264463,
+        "lcb90": 0.38144398756323894,
+        "max_share": 0.2864949258391881
+      }
+    }
+  ],
+  "best_exploratory_confirmed": [],
+  "best_validated": [
+    {
+      "condition": {
+        "bet_type": "umaren",
+        "hole_rank": "1",
+        "partner_rank": "2",
+        "venue": "笠松",
+        "gap_bin": "<.05"
+      },
+      "2024": {
+        "bets": 359,
+        "races": 359,
+        "hits": 22,
+        "hit_rate": 6.128133704735376,
+        "roi": 139.72144846796658,
+        "roi_without_max": 119.94428969359332,
+        "lcb90": 0.9077151695640886,
+        "max_share": 0.14154704944178628
+      },
+      "2025": {
+        "bets": 348,
+        "races": 348,
+        "hits": 20,
+        "hit_rate": 5.747126436781609,
+        "roi": 152.67241379310346,
+        "roi_without_max": 118.04597701149426,
+        "lcb90": 0.8829172583816525,
+        "max_share": 0.22680218332392246
+      },
+      "2026": {
+        "bets": 200,
+        "races": 200,
+        "hits": 7,
+        "hit_rate": 3.5000000000000004,
+        "roi": 96.3,
+        "roi_without_max": 62.3,
+        "lcb90": 0.41384948057271853,
+        "max_share": 0.3530633437175493
+      }
+    }
+  ],
+  "note": "2024 discovery, 2025 validation, local 2026 confirmation"
+}

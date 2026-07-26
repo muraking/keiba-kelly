@@ -1,0 +1,26 @@
+version: v2026.07.27.1
+validation:
+  method: yearly_walk_forward
+  random_split: false
+  pair_test_years:
+    jra: [2025]
+    local: [2025, 2026]
+  calibration: isotonic_inside_train_period
+axis:
+  compare: [win_probability_top2, place_probability_top2]
+hole:
+  baseline_definition: final_win_odds_gte_10_and_oos_place_probability_top3
+  max_candidates: 3
+pair_model:
+  compare: [calibrated_independent_product, calibrated_logistic, calibrated_hist_gb]
+  uses_horse_level_oos_predictions: true
+  include_wide_odds: false
+betting:
+  compare_max_bets_per_race: [1, 2, 3, 6]
+  purchase_time_wide_odds_available: false
+  ev_threshold_backtest_enabled: false
+segments:
+  late_balanced:
+    minimum_race_number: 7
+    maximum_place_top1_top2_gap: 0.05
+    minimum_win_entropy: 0.85

@@ -1,0 +1,17 @@
+{
+  "version": "v2026.07.27.1",
+  "markets": [
+    "jra",
+    "local"
+  ],
+  "purchase_time_wide_odds": false,
+  "ev_strategy_status": "blocked_by_missing_historical_purchase_odds",
+  "files": [
+    "strategy_comparison.csv",
+    "strategy_by_year.csv",
+    "strategy_by_venue.csv",
+    "current_segment_report.csv",
+    "current_six_patterns.csv",
+    "wide_pair_calibration.csv"
+  ]
+}

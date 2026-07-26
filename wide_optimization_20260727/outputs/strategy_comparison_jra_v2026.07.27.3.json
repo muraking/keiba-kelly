@@ -1,0 +1,243 @@
+{
+  "version": "v2026.07.27.3",
+  "wide_ev_status": "UNAVAILABLE_NO_PURCHASE_TIME_WIDE_ODDS",
+  "markets": [
+    {
+      "market": "jra",
+      "pair_rows": 68698,
+      "folds": [
+        {
+          "year": 2025,
+          "train_rows": 29221,
+          "test_rows": 39477,
+          "probability": {
+            "independent": {
+              "rows": 39477,
+              "hits": 3268,
+              "logloss": 0.2819965463100624,
+              "brier": 0.07528012090966146,
+              "auc": 0.6020145251525442,
+              "ece10": 0.012587949639121899
+            },
+            "logistic": {
+              "rows": 39477,
+              "hits": 3268,
+              "logloss": 0.27179322022057334,
+              "brier": 0.07334822817285228,
+              "auc": 0.6729958668823014,
+              "ece10": 0.008253104238722268
+            },
+            "hist_gb": {
+              "rows": 39477,
+              "hits": 3268,
+              "logloss": 0.2753480653334857,
+              "brier": 0.07412389552858198,
+              "auc": 0.6567443959661228,
+              "ece10": 0.005849117898870651
+            },
+            "selected_model": "logistic",
+            "purchase_wide_odds_available": false
+          },
+          "six_patterns": [
+            {
+              "axis_rank": 1,
+              "hole_rank": 1,
+              "bets": 3295,
+              "races": 3295,
+              "bets_per_race": 1.0,
+              "hits": 371,
+              "hit_rate": 11.25948406676783,
+              "investment": 329500.0,
+              "return_total": 304590.0,
+              "profit": -24910.0,
+              "roi": 92.44006069802731,
+              "median_hit_payout": 650.0,
+              "max_payout": 4160.0,
+              "roi_without_max": 91.17754172989378,
+              "max_payout_share": 0.01365770379854887,
+              "max_drawdown": 38460.0
+            },
+            {
+              "axis_rank": 1,
+              "hole_rank": 2,
+              "bets": 3309,
+              "races": 3309,
+              "bets_per_race": 1.0,
+              "hits": 302,
+              "hit_rate": 9.126624357812029,
+              "investment": 330900.0,
+              "return_total": 253420.0,
+              "profit": -77480.0,
+              "roi": 76.58507101843458,
+              "median_hit_payout": 660.0,
+              "max_payout": 5620.0,
+              "roi_without_max": 74.88667271078876,
+              "max_payout_share": 0.02217662378659932,
+              "max_drawdown": 77380.0
+            },
+            {
+              "axis_rank": 1,
+              "hole_rank": 3,
+              "bets": 3297,
+              "races": 3297,
+              "bets_per_race": 1.0,
+              "hits": 247,
+              "hit_rate": 7.4916590840157715,
+              "investment": 329700.0,
+              "return_total": 239240.0,
+              "profit": -90460.0,
+              "roi": 72.56293600242645,
+              "median_hit_payout": 770.0,
+              "max_payout": 8750.0,
+              "roi_without_max": 69.90900818926296,
+              "max_payout_share": 0.03657415147968567,
+              "max_drawdown": 95810.0
+            },
+            {
+              "axis_rank": 2,
+              "hole_rank": 1,
+              "bets": 3153,
+              "races": 3153,
+              "bets_per_race": 1.0,
+              "hits": 261,
+              "hit_rate": 8.277830637488107,
+              "investment": 315300.0,
+              "return_total": 321040.0,
+              "profit": 5740.0,
+              "roi": 101.82048842372343,
+              "median_hit_payout": 880.0,
+              "max_payout": 9850.0,
+              "roi_without_max": 98.6964795432921,
+              "max_payout_share": 0.030681535011213557,
+              "max_drawdown": 36120.0
+            },
+            {
+              "axis_rank": 2,
+              "hole_rank": 2,
+              "bets": 3213,
+              "races": 3213,
+              "bets_per_race": 1.0,
+              "hits": 222,
+              "hit_rate": 6.909430438842204,
+              "investment": 321300.0,
+              "return_total": 264260.0,
+              "profit": -57040.0,
+              "roi": 82.24712107065048,
+              "median_hit_payout": 905.0,
+              "max_payout": 7860.0,
+              "roi_without_max": 79.80080921257392,
+              "max_payout_share": 0.029743434496329373,
+              "max_drawdown": 58820.0
+            },
+            {
+              "axis_rank": 2,
+              "hole_rank": 3,
+              "bets": 3244,
+              "races": 3244,
+              "bets_per_race": 1.0,
+              "hits": 179,
+              "hit_rate": 5.517879161528977,
+              "investment": 324400.0,
+              "return_total": 267880.0,
+              "profit": -56520.0,
+              "roi": 82.577065351418,
+              "median_hit_payout": 1080.0,
+              "max_payout": 16660.0,
+              "roi_without_max": 77.44143033292232,
+              "max_payout_share": 0.06219202628042407,
+              "max_drawdown": 81350.0
+            }
+          ],
+          "strategies": {
+            "current_win_axis_max6": {
+              "bets": 19511,
+              "races": 3351,
+              "bets_per_race": 5.822441062369442,
+              "hits": 1582,
+              "hit_rate": 8.108246630106095,
+              "investment": 1951100.0,
+              "return_total": 1650430.0,
+              "profit": -300670.0,
+              "roi": 84.58971862026549,
+              "median_hit_payout": 780.0,
+              "max_payout": 16660.0,
+              "roi_without_max": 83.73584132028087,
+              "max_payout_share": 0.010094339051035186,
+              "max_drawdown": 328150.0
+            },
+            "place_axis1_max3": {
+              "bets": 10004,
+              "races": 3351,
+              "bets_per_race": 2.985377499253954,
+              "hits": 956,
+              "hit_rate": 9.556177528988405,
+              "investment": 1000400.0,
+              "return_total": 835790.0,
+              "profit": -164610.0,
+              "roi": 83.54558176729309,
+              "median_hit_payout": 690.0,
+              "max_payout": 8750.0,
+              "roi_without_max": 82.67093162734906,
+              "max_payout_share": 0.010469136984170666,
+              "max_drawdown": 175060.0
+            },
+            "place_pair_probability_top1": {
+              "bets": 3351,
+              "races": 3351,
+              "bets_per_race": 1.0,
+              "hits": 444,
+              "hit_rate": 13.249776186213072,
+              "investment": 335100.0,
+              "return_total": 286770.0,
+              "profit": -48330.0,
+              "roi": 85.57743957027753,
+              "median_hit_payout": 560.0,
+              "max_payout": 5230.0,
+              "roi_without_max": 84.01671142942405,
+              "max_payout_share": 0.018237612023572897,
+              "max_drawdown": 53710.0
+            },
+            "place_pair_probability_top2": {
+              "bets": 6702,
+              "races": 3351,
+              "bets_per_race": 2.0,
+              "hits": 798,
+              "hit_rate": 11.906893464637422,
+              "investment": 670200.0,
+              "return_total": 553540.0,
+              "profit": -116660.0,
+              "roi": 82.59325574455386,
+              "median_hit_payout": 610.0,
+              "max_payout": 5230.0,
+              "roi_without_max": 81.81289167412713,
+              "max_payout_share": 0.009448278353867832,
+              "max_drawdown": 119890.0
+            },
+            "place_pair_probability_top3": {
+              "bets": 10046,
+              "races": 3351,
+              "bets_per_race": 2.9979110713219934,
+              "hits": 1084,
+              "hit_rate": 10.790364324109099,
+              "investment": 1004600.0,
+              "return_total": 829750.0,
+              "profit": -174850.0,
+              "roi": 82.59506271152698,
+              "median_hit_payout": 650.0,
+              "max_payout": 5230.0,
+              "roi_without_max": 82.0744574955206,
+              "max_payout_share": 0.006303103344380837,
+              "max_drawdown": 180570.0
+            }
+          }
+        }
+      ],
+      "limitations": [
+        "Historical purchase-time wide odds are unavailable.",
+        "EV threshold strategies are not reported as executable backtests.",
+        "Candidate longshots reproduce the current final-win-odds>=10 baseline.",
+        "Pair-model OOS begins one year after horse-level OOS predictions."
+      ]
+    }
+  ]
+}

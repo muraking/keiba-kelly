@@ -1,0 +1,5 @@
+backups/
+__pycache__/
+outputs/*_wide_pair_dataset.csv.gz
+outputs/*_wide_pair_oos_predictions.csv.gz
+outputs/*_excluded_bets.csv.gz
