@@ -3,7 +3,7 @@
 This service does not import or launch keiba_ai.live_probs. It directly uses
 the low-level local card parser and structural feature builder.
 
-Version: v2026.07.26.4
+Version: v2026.07.27.1
 """
 
 from __future__ import annotations
@@ -45,7 +45,7 @@ from standalone_display import (
 VERSION = "v2026.07.26.4"
 MAX_TRAIN_ROWS = 350_000
 MAX_RUN_ROWS = 200_000
-MODEL_CACHE_VERSION = 1
+MODEL_CACHE_VERSION = 2
 CHECK_SECONDS = 30
 MARKS = ("◎", "○", "▲", "△", "☆", "注")
 
@@ -156,6 +156,7 @@ def train_model(data_dir: Path) -> dict:
                 runs = load_recent_runs(data_dir)
                 return {
                     "model": cached["model"],
+                    "place_model": cached["place_model"],
                     "features": cached["features"],
                     "runs": runs,
                     "last_weight": (
@@ -178,14 +179,19 @@ def train_model(data_dir: Path) -> dict:
         and str(row[1]) not in drop
         and str(row[1]) not in research.MARKET_DERIVED_COLS
     ]
-    select_columns = ", ".join(f'"{column}"' for column in features + ["is_win"])
+    select_columns = ", ".join(
+        f'"{column}"' for column in features + ["is_win", "is_place"]
+    )
     frame = pd.read_sql_query(
         f"SELECT {select_columns} FROM features "
         "WHERE win_odds > 0 AND is_win IS NOT NULL "
         "AND race_id IN (SELECT race_id FROM features WHERE tan_payout IS NOT NULL) "
         f"ORDER BY date DESC LIMIT {MAX_TRAIN_ROWS}",
         connection,
-        dtype={column: "float32" for column in features + ["is_win"]},
+        dtype={
+            column: "float32"
+            for column in features + ["is_win", "is_place"]
+        },
     )
     connection.close()
     model = research.make_model()
@@ -195,12 +201,15 @@ def train_model(data_dir: Path) -> dict:
         flush=True,
     )
     model.fit(frame[features], frame["is_win"].astype(int))
+    place_model = research.make_model()
+    place_model.fit(frame[features], frame["is_place"].astype(int))
     joblib.dump(
         {
             "service_version": VERSION,
             "model_cache_version": MODEL_CACHE_VERSION,
             "signature": signature,
             "model": model,
+            "place_model": place_model,
             "features": features,
         },
         cache_path,
@@ -213,6 +222,7 @@ def train_model(data_dir: Path) -> dict:
     runs = load_recent_runs(data_dir)
     return {
         "model": model,
+        "place_model": place_model,
         "features": features,
         "runs": runs,
         "last_weight": (
@@ -252,6 +262,9 @@ def _snapshots_from_target(
         if column not in target:
             target[column] = np.nan
     target["_raw"] = bundle["model"].predict_proba(target[bundle["features"]])[:, 1]
+    target["_place_probability"] = bundle["place_model"].predict_proba(
+        target[bundle["features"]]
+    )[:, 1]
     target["_probability"] = target["_raw"] / target.groupby("race_id")[
         "_raw"
     ].transform("sum")
@@ -264,6 +277,12 @@ def _snapshots_from_target(
         snapshots[str(race_id)] = {
             "p": {
                 str(int(row["umaban"])): round(float(row["_probability"]), 7)
+                for _, row in group.iterrows()
+            },
+            "q": {
+                str(int(row["umaban"])): round(
+                    float(row["_place_probability"]), 7
+                )
                 for _, row in group.iterrows()
             },
             "h": {str(key): value for key, value in card["names"].items()},
@@ -282,6 +301,8 @@ def _snapshots_from_target(
                 for _, row in group.iterrows()
             }),
             "w": card["weight_ok"],
+            "r": card["race_num"],
+            "d": card["distance"],
             "t": datetime.now(JST).strftime("%H:%M"),
             "version": VERSION,
         }
@@ -301,6 +322,8 @@ def calculate_all_indices(
             "names": {int(h["umaban"]): str(h.get("horse_name") or "") for h in horses},
             "ages": {int(h["umaban"]): h.get("age") for h in horses},
             "weight_ok": all(h.get("horse_weight") is not None for h in horses),
+            "race_num": int(meta["race_num"]),
+            "distance": info.get("distance"),
         }
         rows.extend(_rows_from_card(
             race_id, meta, date_iso, info, horses, bundle["runs"].columns
@@ -344,11 +367,18 @@ def recalculate_cached_index(
             float(weight) - float(previous) if previous is not None else np.nan
         )
     raw = bundle["model"].predict_proba(current[bundle["features"]])[:, 1]
+    place_probability = bundle["place_model"].predict_proba(
+        current[bundle["features"]]
+    )[:, 1]
     probability = raw / raw.sum()
     result = dict(base)
     result["p"] = {
         str(int(row["umaban"])): round(float(value), 7)
         for (_, row), value in zip(current.iterrows(), probability)
+    }
+    result["q"] = {
+        str(int(row["umaban"])): round(float(value), 7)
+        for (_, row), value in zip(current.iterrows(), place_probability)
     }
     result["w"] = actual_weight
     result["t"] = datetime.now(JST).strftime("%H:%M")
@@ -411,6 +441,12 @@ def preday(
     session, schedule: dict, date_iso: str, bundle: dict,
     webhook: str, state_path: Path, dry_run: bool,
 ) -> None:
+    del session, schedule, bundle, webhook, state_path, dry_run
+    print(
+        f"{date_iso}: 前日通知は停止中（7分前の勝2頭・穴3頭のみ通知）",
+        flush=True,
+    )
+    return
     state = load_state(state_path, date_iso)
     pending = {
         race_id: meta for race_id, meta in schedule.items()
@@ -487,7 +523,6 @@ def live_run(
                 )
                 if snapshot:
                     state["races"].setdefault(race_id, {})["t30"] = snapshot
-                    discord_send(webhook, format_index(meta, snapshot, "発走30分前"), dry_run)
                     notified_30.add(race_id)
                     save_state(state_path, state)
             if race_id not in notified_7 and (
@@ -497,9 +532,12 @@ def live_run(
                 if not snapshot:
                     snapshot = calculate_index(session, race_id, meta, date_iso, bundle)
                 odds = fetch_local_odds(session, race_id)
-                if snapshot and odds:
+                if snapshot:
                     snapshot = dict(snapshot)
-                    snapshot["o"] = {str(number): value for number, value in odds.items()}
+                    snapshot["o"] = (
+                        {str(number): value for number, value in odds.items()}
+                        if odds else {}
+                    )
                     snapshot["t"] = datetime.now(JST).strftime("%H:%M")
                     decision = evaluate_snapshot(snapshot)
                     title = f"{meta['venue']}{meta['race_num']}R"
@@ -534,6 +572,12 @@ def main() -> None:
         (now + timedelta(days=1)).strftime("%Y-%m-%d")
         if args.mode == "preday" else now.strftime("%Y-%m-%d")
     )
+    if args.mode == "preday":
+        print(
+            f"{date_iso}: 前日通知は停止中（7分前の勝2頭・穴3頭のみ通知）",
+            flush=True,
+        )
+        return
     webhook = (
         os.getenv("LOCAL_STANDALONE_WEBHOOK")
         or os.getenv("DISCORD_WEBHOOK7")

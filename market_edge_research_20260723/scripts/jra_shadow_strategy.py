@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.26.3
+Version: v2026.07.27.1
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
 
-VERSION = "v2026.07.26.3"
+VERSION = "v2026.07.27.1"
 MARKET_BLEND_ALPHA = 0.10
 MARKS = ("◎", "〇", "▲", "△", "☆", "注")
 
@@ -220,3 +220,96 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         "（ライブ計算可能条件の2025年ROI 99.3%）"
     )
     return message + f"\n{latest_index}\nVersion {VERSION}"
+
+
+def _compact_selection(snapshot: dict) -> tuple[list[int], list[int]]:
+    win = {int(k): float(v) for k, v in (snapshot.get("p") or {}).items()}
+    place = {int(k): float(v) for k, v in (snapshot.get("q") or {}).items()}
+    odds = {int(k): float(v) for k, v in (snapshot.get("o") or {}).items()}
+    winners = sorted(win, key=lambda n: (-win[n], n))[:2]
+    holes = sorted(
+        (n for n in place if odds.get(n, 0) >= 10.0),
+        key=lambda n: (-place[n], n),
+    )[:3]
+    return winners, holes
+
+
+def _entropy(values: dict[int, float]) -> float:
+    import math
+
+    positive = [value for value in values.values() if value > 0]
+    total = sum(positive)
+    if len(positive) < 2 or total <= 0:
+        return 0.0
+    return -sum(
+        (value / total) * math.log(value / total) for value in positive
+    ) / math.log(len(positive))
+
+
+def _additional_tickets(snapshot: dict, winners: list[int], holes: list[int]) -> list[str]:
+    win = {int(k): float(v) for k, v in (snapshot.get("p") or {}).items()}
+    place = {int(k): float(v) for k, v in (snapshot.get("q") or {}).items()}
+    odds = {int(k): float(v) for k, v in (snapshot.get("o") or {}).items()}
+    race_num = int(snapshot.get("r") or 0)
+    lines, used = [], set()
+
+    def add(label: str, bet_type: str, left: int, right: int, note: str) -> None:
+        pair = tuple(sorted((left, right)))
+        key = (bet_type, pair)
+        if left != right and key not in used:
+            used.add(key)
+            lines.append(
+                f"{label} {bet_type} {circled(left)}-{circled(right)} "
+                f"（{note}）"
+            )
+
+    if winners and holes:
+        product = odds.get(winners[0], 0) * odds.get(holes[0], 0)
+        if 1 <= race_num <= 3 and 100 <= product < 200:
+            add("【A・検証】", "ワイド", winners[0], holes[0], "勝1－穴1・1点")
+    if winners and len(holes) >= 3:
+        product = odds.get(winners[0], 0) * odds.get(holes[2], 0)
+        if 0.15 <= win.get(winners[0], 0) < 0.25 and 100 <= product < 200:
+            add("【A・検証】", "馬連", winners[0], holes[2], "勝1－穴3・1点")
+    place_order = sorted(place, key=lambda n: (-place[n], n))
+    if (
+        race_num >= 7 and len(place_order) >= 2 and holes
+        and place[place_order[0]] - place[place_order[1]] < 0.05
+        and _entropy(win) >= 0.85
+    ):
+        pairs = sorted(
+            {
+                tuple(sorted((a, b)))
+                for a in place_order[:2] for b in holes if a != b
+            },
+            key=lambda pair: -(place[pair[0]] * place[pair[1]]),
+        )[:2]
+        for left, right in pairs:
+            add("【B・検証】", "ワイド", left, right, "後半・均衡")
+    return lines
+
+
+# Seven-minute notification format. This intentionally overrides the legacy
+# full-board formatter above while the old evaluator remains available.
+def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
+    del decision
+    stamp = snapshot.get("t") or "--:--"
+    names = {int(k): str(v) for k, v in (snapshot.get("h") or {}).items()}
+    winners, holes = _compact_selection(snapshot)
+    lines = [f"🏇 JRA 7分前 {race_name} [{stamp}]"]
+    for rank, number in enumerate(winners, 1):
+        lines.append(f"勝{rank} {circled(number)} {names.get(number, '')}")
+    lines.append("")
+    if not snapshot.get("o"):
+        lines.append("穴馬 未確定（オッズ未取得）")
+    elif not snapshot.get("q"):
+        lines.append("穴馬 未確定（3着内確率未取得）")
+    elif not holes:
+        lines.append("穴馬 該当なし（単勝10倍以上なし）")
+    else:
+        for rank, number in enumerate(holes, 1):
+            lines.append(f"穴{rank} {circled(number)} {names.get(number, '')}")
+    lines.extend(["", "【追加買い目】"])
+    lines.extend(_additional_tickets(snapshot, winners, holes) or ["追加候補なし"])
+    lines.append(f"Version {VERSION}")
+    return "\n".join(lines)

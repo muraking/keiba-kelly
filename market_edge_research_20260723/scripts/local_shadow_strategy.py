@@ -4,12 +4,12 @@ The rules are frozen from the 2024-2026 OOS research. They are shadow
 recommendations, not automatic wagering rules, because the same period was
 used to discover the segments.
 
-Version: v2026.07.26.3
+Version: v2026.07.27.1
 """
 
 from __future__ import annotations
 
-VERSION = "v2026.07.26.3"
+VERSION = "v2026.07.27.1"
 
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
@@ -351,3 +351,55 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
             )
         message += "\n".join(lines)
     return message + f"\n{latest_index}\nVersion {VERSION}"
+
+
+def _compact_selection(snapshot: dict) -> tuple[list[int], list[int]]:
+    win = {int(k): float(v) for k, v in (snapshot.get("p") or {}).items()}
+    place = {int(k): float(v) for k, v in (snapshot.get("q") or {}).items()}
+    odds = {int(k): float(v) for k, v in (snapshot.get("o") or {}).items()}
+    winners = sorted(win, key=lambda n: (-win[n], n))[:2]
+    holes = sorted(
+        (n for n in place if odds.get(n, 0) >= 10.0),
+        key=lambda n: (-place[n], n),
+    )[:3]
+    return winners, holes
+
+
+def _additional_tickets(snapshot: dict, winners: list[int], holes: list[int]) -> list[str]:
+    odds = {int(k): float(v) for k, v in (snapshot.get("o") or {}).items()}
+    distance = float(snapshot.get("d") or 0)
+    if len(winners) < 2 or not holes:
+        return []
+    product = odds.get(winners[1], 0) * odds.get(holes[0], 0)
+    if 1601 <= distance <= 2000 and 60 <= product < 100:
+        return [
+            f"【検証候補】馬連 {circled(winners[1])}-{circled(holes[0])} "
+            "（勝2－穴1・1点）"
+        ]
+    return []
+
+
+# Seven-minute notification format. This intentionally overrides the legacy
+# full-board formatter above while the old evaluator remains available.
+def format_discord(title: str, snapshot: dict, decision: dict) -> str:
+    del decision
+    stamp = snapshot.get("t") or "--:--"
+    names = {int(k): str(v) for k, v in (snapshot.get("h") or {}).items()}
+    winners, holes = _compact_selection(snapshot)
+    lines = [f"🏇 地方 7分前 {title} [{stamp}]"]
+    for rank, number in enumerate(winners, 1):
+        lines.append(f"勝{rank} {circled(number)} {names.get(number, '')}")
+    lines.append("")
+    if not snapshot.get("o"):
+        lines.append("穴馬 未確定（オッズ未取得）")
+    elif not snapshot.get("q"):
+        lines.append("穴馬 未確定（3着内確率未取得）")
+    elif not holes:
+        lines.append("穴馬 該当なし（単勝10倍以上なし）")
+    else:
+        for rank, number in enumerate(holes, 1):
+            lines.append(f"穴{rank} {circled(number)} {names.get(number, '')}")
+    lines.extend(["", "【追加買い目】"])
+    lines.extend(_additional_tickets(snapshot, winners, holes) or ["追加候補なし"])
+    lines.append(f"Version {VERSION}")
+    return "\n".join(lines)

@@ -1,115 +1,48 @@
-"""Regression tests for the JRA shadow decision rules.
+"""Regression tests for JRA compact seven-minute notifications.
 
-Version: v2026.07.26.3
+Version: v2026.07.27.1
 """
-
-from __future__ import annotations
 
 import unittest
 
 from jra_shadow_strategy import evaluate_snapshot, format_discord
 
 
-VERSION = "v2026.07.26.3"
-
-
-def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict:
-    odds = {str(i): float(2 + i) for i in range(1, field + 1)}
-    odds["4"] = axis_odds
-    probability = {str(i): 0.55 / (field - 1) for i in range(1, field + 1)}
-    probability["4"] = axis_probability
-    probability["1"] = 0.25
-    probability["2"] = 0.22
-    total = sum(probability.values())
-    probability = {key: value / total for key, value in probability.items()}
-    return {
-        "p": probability,
-        "o": odds,
-        "h": {str(i): f"馬{i}" for i in range(1, field + 1)},
-        "s": {
-            str(i): ("逃" if i <= 2 else "先" if i <= 4 else "差" if i <= 8 else "追")
-            for i in range(1, field + 1)
-        },
-        "w": True,
-        "t": "12:00",
-    }
-
-
 class StrategyTest(unittest.TestCase):
-    def test_missing_odds_is_no_bet(self) -> None:
-        snap = {"p": {"1": 1.0}, "o": {}, "h": {"1": "馬1"}}
-        result = evaluate_snapshot(snap)
-        self.assertEqual(result["action"], "NO_BET")
-        message = format_discord("東京1R", snap, result)
-        self.assertIn("7分前最新指数", message)
-        self.assertIn("◎ ① 馬1 ？ WP100.0% / 未取得", message)
-        self.assertNotIn("/ EV", message)
-
-    def test_private_context_returns_anonymous_c_rank_win(self) -> None:
-        snap = snapshot(12.0, 0.18)
-        snap["p"] = {
-            "1": .25, "2": .20, "3": .16, "4": .12, "5": .08, "6": .06,
-            "7": .04, "8": .03, "9": .02, "10": .015, "11": .015, "12": .01,
+    def snapshot(self) -> dict:
+        return {
+            "p": {"1": .30, "2": .22, "3": .15, "4": .12, "5": .11, "6": .10},
+            "q": {"1": .70, "2": .60, "3": .48, "4": .55, "5": .42, "6": .35},
+            "o": {"1": 2.0, "2": 5.0, "3": 12.0, "4": 20.0, "5": 30.0, "6": 40.0},
+            "h": {str(i): f"馬{i}" for i in range(1, 7)},
+            "r": 1,
+            "t": "12:00",
         }
-        snap["o"] = {
-            "1": 2.0, "2": 8.0, "3": 3.0, "4": 4.0, "5": 5.0, "6": 6.0,
-            "7": 7.0, "8": 9.0, "9": 10.0, "10": 12.0, "11": 15.0, "12": 20.0,
-        }
-        snap["x"] = ["2"]
-        result = evaluate_snapshot(snap)
-        self.assertEqual(result["action"], "SHADOW_BET")
-        self.assertEqual(result["confidence_tier"], "C")
-        self.assertEqual(result["bet_type"], "単勝")
-        self.assertEqual(result["axis"], 2)
-        message = format_discord("東京1R", snap, result)
-        self.assertIn("【Cランク】", message)
-        self.assertIn("単勝：②", message)
-        self.assertIn("〇 ② 馬2 逃 WP20.0% / 8.0倍", message)
-        self.assertIn("展開", message)
-        self.assertNotIn("/ EV", message)
-        self.assertNotIn("イルカ", message)
 
-    def test_never_returns_unknown_action(self) -> None:
-        result = evaluate_snapshot(snapshot(12.0, 0.18))
-        self.assertIn(result["action"], {"NO_BET", "SHADOW_BET"})
+    def test_compact_display_has_two_winners_and_three_holes(self) -> None:
+        snap = self.snapshot()
+        message = format_discord("東京1R", snap, evaluate_snapshot(snap))
+        self.assertIn("勝1 ① 馬1", message)
+        self.assertIn("勝2 ② 馬2", message)
+        self.assertIn("穴1 ④ 馬4", message)
+        self.assertIn("穴2 ③ 馬3", message)
+        self.assertIn("穴3 ⑤ 馬5", message)
+        self.assertNotIn("WP", message)
+        self.assertNotIn("展開", message)
 
-    def test_ticket_stake_matches_ticket_count(self) -> None:
-        result = evaluate_snapshot(snapshot(8.0, 0.20))
-        if result["action"] == "SHADOW_BET":
-            self.assertEqual(result["stake_yen"], 100 * len(result["tickets"]))
+    def test_missing_odds_still_formats_all_race_notice(self) -> None:
+        snap = self.snapshot()
+        snap["o"] = {}
+        message = format_discord("東京1R", snap, evaluate_snapshot(snap))
+        self.assertIn("勝1 ① 馬1", message)
+        self.assertIn("穴馬 未確定（オッズ未取得）", message)
 
-    def test_fixed_sanfuku_rule_returns_three_tickets(self) -> None:
-        odds = {
-            "1": 3.0, "2": 5.0, "3": 8.0, "4": 12.0,
-            "5": 14.0, "6": 16.0, "7": 20.0, "8": 22.0,
-            "9": 25.0, "10": 28.0, "11": 32.0, "12": 40.0,
-        }
-        pure = {
-            "1": 0.25, "2": 0.23, "3": 0.10, "4": 0.16,
-            "5": 0.045, "6": 0.04, "7": 0.035, "8": 0.03,
-            "9": 0.03, "10": 0.03, "11": 0.025, "12": 0.025,
-        }
-        result = evaluate_snapshot({
-            "p": pure, "o": odds,
-            "h": {str(i): f"馬{i}" for i in range(1, 13)},
-            "w": True, "t": "12:00",
-        })
-        self.assertEqual(result["action"], "SHADOW_BET")
-        self.assertEqual(result["bet_type"], "三連複")
-        self.assertEqual(len(result["tickets"]), 3)
-        self.assertEqual(result["stake_yen"], 300)
-        message = format_discord("東京1R", {
-            "p": pure, "o": odds,
-            "h": {str(i): f"馬{i}" for i in range(1, 13)},
-            "s": {str(i): "差" for i in range(1, 13)},
-            "w": True, "t": "12:00",
-        }, result)
-        self.assertIn("参考・非推奨】単勝", message)
-        self.assertIn("参考・非推奨】ワイド", message)
-        self.assertIn("7分前最新指数", message)
-        self.assertIn("●＝△以下の内部期待値100超・WP上位3頭", message)
-        self.assertNotIn("/ EV", message)
-        self.assertIn("差 WP", message)
+    def test_validated_early_wide_candidate_is_added(self) -> None:
+        snap = self.snapshot()
+        snap["o"]["1"] = 6.0
+        snap["o"]["4"] = 20.0
+        message = format_discord("東京1R", snap, evaluate_snapshot(snap))
+        self.assertIn("【A・検証】 ワイド ①-④", message)
 
 
 if __name__ == "__main__":

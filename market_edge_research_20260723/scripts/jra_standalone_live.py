@@ -4,7 +4,7 @@ This process does not import or launch keiba_ai.live_probs.  It directly uses
 the low-level scraper, feature builder and odds client, then applies the
 leakage-safe research model and fixed shadow strategy.
 
-Version: v2026.07.26.4
+Version: v2026.07.27.1
 """
 
 from __future__ import annotations
@@ -177,6 +177,8 @@ def train_model(
     features = enhanced.feature_columns(frame)
     model = research.make_model()
     model.fit(frame[features], frame["is_win"].astype(int))
+    place_model = research.make_model()
+    place_model.fit(frame[features], frame["is_place"].astype(int))
     alpha, losses = research.choose_alpha(frame, features)
     father, bms, rates = pedigree_maps(raw, pedigree_path)
     workouts = enhanced.workout_features(training_path).set_index(
@@ -190,6 +192,7 @@ def train_model(
     )
     return {
         "model": model,
+        "place_model": place_model,
         "features": features,
         "alpha": alpha,
         "alpha_losses": losses,
@@ -277,6 +280,9 @@ def calculate_index(
     raw_probability = bundle["model"].predict_proba(
         target[bundle["features"]]
     )[:, 1]
+    place_probability = bundle["place_model"].predict_proba(
+        target[bundle["features"]]
+    )[:, 1]
     probability = raw_probability / raw_probability.sum()
     pure = {
         int(row.umaban): float(value)
@@ -292,6 +298,10 @@ def calculate_index(
     })
     return {
         "p": {str(key): round(value, 7) for key, value in pure.items()},
+        "q": {
+            str(int(row.umaban)): round(float(value), 7)
+            for row, value in zip(target.itertuples(), place_probability)
+        },
         "h": {str(key): value for key, value in names.items()},
         "s": styles,
         "x": [
@@ -299,6 +309,8 @@ def calculate_index(
             if getattr(row, "is_iruka", 0) > 0
         ],
         "w": actual_weight,
+        "r": int(meta["race_num"]),
+        "d": info.get("distance"),
         "t": datetime.now(JST).strftime("%H:%M"),
         "version": VERSION,
     }
@@ -323,6 +335,8 @@ def calculate_all_indices(
             "weight_ok": all(
                 horse.get("horse_weight") is not None for horse in horses
             ),
+            "race_num": int(meta["race_num"]),
+            "distance": info.get("distance"),
         }
         for horse in horses:
             row = {column: None for column in columns}
@@ -354,6 +368,9 @@ def calculate_all_indices(
     target = base_features[base_features["race_id"].isin(cards)].copy()
     target = add_live_enhancements(target, bundle)
     raw = bundle["model"].predict_proba(target[bundle["features"]])[:, 1]
+    target["_place_probability"] = bundle["place_model"].predict_proba(
+        target[bundle["features"]]
+    )[:, 1]
     target["_raw_probability"] = raw
     target["_probability"] = target["_raw_probability"] / target.groupby(
         "race_id"
@@ -367,6 +384,12 @@ def calculate_all_indices(
         card = cards[str(race_id)]
         snapshots[str(race_id)] = {
             "p": probability,
+            "q": {
+                str(int(row["umaban"])): round(
+                    float(row["_place_probability"]), 7
+                )
+                for _, row in group.iterrows()
+            },
             "h": {
                 str(key): value for key, value in card["names"].items()
             },
@@ -383,6 +406,8 @@ def calculate_all_indices(
                 if "is_iruka" in group and float(row.get("is_iruka") or 0) > 0
             ],
             "w": card["weight_ok"],
+            "r": card["race_num"],
+            "d": card["distance"],
             "t": datetime.now(JST).strftime("%H:%M"),
             "version": VERSION,
         }
@@ -432,6 +457,12 @@ def preday(
     session, schedule: dict, date_iso: str, bundle: dict,
     webhook: str, state_path: Path, dry_run: bool,
 ) -> None:
+    del session, schedule, bundle, webhook, state_path, dry_run
+    print(
+        f"{date_iso}: 前日通知は停止中（7分前の勝2頭・穴3頭のみ通知）",
+        flush=True,
+    )
+    return
     state = load_state(state_path, date_iso)
     pending = {
         race_id: meta for race_id, meta in schedule.items()
@@ -497,7 +528,6 @@ def live_run(
                 )
                 if snapshot:
                     state["races"].setdefault(race_id, {})["t30"] = snapshot
-                    discord_send(webhook, format_index(meta, snapshot, "発走30分前"), dry_run)
                     notified_30.add(race_id)
                     save_state(state_path, state)
             if race_id not in notified_7 and (
@@ -507,12 +537,12 @@ def live_run(
                 if not snapshot:
                     snapshot = calculate_index(session, race_id, meta, date_iso, bundle)
                 odds = fetch_jra_odds(session, race_id)
-                if snapshot and odds:
+                if snapshot:
                     snapshot = dict(snapshot)
                     snapshot["o"] = {
                         str(number): float(values[0])
                         for number, values in odds.items()
-                    }
+                    } if odds else {}
                     snapshot["t"] = datetime.now(JST).strftime("%H:%M")
                     decision = evaluate_snapshot(snapshot)
                     title = f"{meta['venue']}{meta['race_num']}R"
@@ -549,6 +579,12 @@ def main() -> None:
         (now + timedelta(days=1)).strftime("%Y-%m-%d")
         if args.mode == "preday" else now.strftime("%Y-%m-%d")
     )
+    if args.mode == "preday":
+        print(
+            f"{date_iso}: 前日通知は停止中（7分前の勝2頭・穴3頭のみ通知）",
+            flush=True,
+        )
+        return
     webhook = (
         os.getenv("JRA_STANDALONE_WEBHOOK")
         or os.getenv("DISCORD_WEBHOOK7")
