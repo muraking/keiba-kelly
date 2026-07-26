@@ -1,6 +1,6 @@
 """Regression tests for the independent local-racing strategy.
 
-Version: v2026.07.26.2
+Version: v2026.07.26.3
 """
 
 from __future__ import annotations
@@ -68,7 +68,7 @@ class LocalStrategyTest(unittest.TestCase):
         self.assertIn("〇 ② 馬2 逃 WP27.0% / 4.0倍", message)
         self.assertIn("◎ ① 馬1 逃 WP28.0% / 2.8倍", message)
         self.assertNotIn("/ EV", message)
-        self.assertIn("❶＝△以下の内部期待値100超・WP上位3頭", message)
+        self.assertIn("●＝△以下の内部期待値100超・WP上位3頭", message)
 
     def test_only_three_value_horses_below_top_three_are_filled(self) -> None:
         snap = {

@@ -4,12 +4,12 @@ The rules are frozen from the 2024-2026 OOS research. They are shadow
 recommendations, not automatic wagering rules, because the same period was
 used to discover the segments.
 
-Version: v2026.07.26.2
+Version: v2026.07.26.3
 """
 
 from __future__ import annotations
 
-VERSION = "v2026.07.26.2"
+VERSION = "v2026.07.26.3"
 
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
@@ -313,7 +313,7 @@ def _latest_index_block(snapshot: dict) -> str:
             f"{mark} {number_text} {names.get(number, '')} "
             f"{styles.get(number, '？')} WP{pure[number]:.1%} / {odds_text}"
         )
-    lines.append("❶＝△以下の内部期待値100超・WP上位3頭")
+    lines.append("●＝△以下の内部期待値100超・WP上位3頭")
     return "\n".join(lines)
 
 

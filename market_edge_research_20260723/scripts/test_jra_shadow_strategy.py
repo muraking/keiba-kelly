@@ -1,6 +1,6 @@
 """Regression tests for the JRA shadow decision rules.
 
-Version: v2026.07.26.2
+Version: v2026.07.26.3
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ import unittest
 from jra_shadow_strategy import evaluate_snapshot, format_discord
 
 
-VERSION = "v2026.07.26.2"
+VERSION = "v2026.07.26.3"
 
 
 def snapshot(axis_odds: float, axis_probability: float, field: int = 12) -> dict:
@@ -107,7 +107,7 @@ class StrategyTest(unittest.TestCase):
         self.assertIn("参考・非推奨】単勝", message)
         self.assertIn("参考・非推奨】ワイド", message)
         self.assertIn("7分前最新指数", message)
-        self.assertIn("❶＝△以下の内部期待値100超・WP上位3頭", message)
+        self.assertIn("●＝△以下の内部期待値100超・WP上位3頭", message)
         self.assertNotIn("/ EV", message)
         self.assertIn("差 WP", message)
 

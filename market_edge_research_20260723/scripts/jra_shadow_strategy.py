@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.26.2
+Version: v2026.07.26.3
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
 
-VERSION = "v2026.07.26.2"
+VERSION = "v2026.07.26.3"
 MARKET_BLEND_ALPHA = 0.10
 MARKS = ("◎", "〇", "▲", "△", "☆", "注")
 
@@ -59,7 +59,7 @@ def _latest_index_block(snapshot: dict) -> str:
             f"{mark} {number_text} {names.get(number, '')} "
             f"{styles.get(number, '？')} WP{pure[number]:.1%} / {odds_text}"
         )
-    lines.append("❶＝△以下の内部期待値100超・WP上位3頭")
+    lines.append("●＝△以下の内部期待値100超・WP上位3頭")
     return "\n".join(lines)
 
 
