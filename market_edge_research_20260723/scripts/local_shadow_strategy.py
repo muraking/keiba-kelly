@@ -4,12 +4,12 @@ The rules are frozen from the 2024-2026 OOS research. They are shadow
 recommendations, not automatic wagering rules, because the same period was
 used to discover the segments.
 
-Version: v2026.07.27.2
+Version: v2026.07.28.1
 """
 
 from __future__ import annotations
 
-VERSION = "v2026.07.27.2"
+VERSION = "v2026.07.28.1"
 
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
@@ -393,10 +393,10 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
     lines = [title, "", "【軸候補】"]
     for rank, number in enumerate(winners, 1):
         lines.append(
-            f"勝{circled(rank)} {circled(number)} {names.get(number, '')}　"
+            f"勝{rank} {circled(number)}{names.get(number, '')}　"
             f"WP{win[number]:.0%}　PP{place.get(number, 0):.0%}　"
             f"{odds[number]:.1f}倍" if number in odds else
-            f"勝{circled(rank)} {circled(number)} {names.get(number, '')}　"
+            f"勝{rank} {circled(number)}{names.get(number, '')}　"
             f"WP{win[number]:.0%}　PP{place.get(number, 0):.0%}　オッズ未取得"
         )
     lines.extend(["", "【穴馬】"])
@@ -410,7 +410,7 @@ def format_discord(title: str, snapshot: dict, decision: dict) -> str:
         for rank, number in enumerate(holes, 1):
             buy = "　●買い" if circled(number) in ticket_text else ""
             lines.append(
-                f"穴{circled(rank)} {circled(number)} {names.get(number, '')}　"
+                f"穴{rank} {circled(number)}{names.get(number, '')}　"
                 f"WP{win.get(number, 0):.0%}　PP{place[number]:.0%}　"
                 f"{odds[number]:.1f}倍{buy}"
             )

@@ -3,7 +3,7 @@
 This module never purchases tickets. It converts a race snapshot into a
 recommendation or NO_BET and keeps the researched rules explicit.
 
-Version: v2026.07.27.2
+Version: v2026.07.28.1
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from itertools import combinations
 from standalone_display import circled, circled_ticket, ev_circled, pace_lines
 
 
-VERSION = "v2026.07.27.2"
+VERSION = "v2026.07.28.1"
 MARKET_BLEND_ALPHA = 0.10
 MARKS = ("◎", "〇", "▲", "△", "☆", "注")
 
@@ -303,10 +303,10 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
     lines = [race_name, "", "【軸候補】"]
     for rank, number in enumerate(winners, 1):
         lines.append(
-            f"勝{circled(rank)} {circled(number)} {names.get(number, '')}　"
+            f"勝{rank} {circled(number)}{names.get(number, '')}　"
             f"WP{win[number]:.0%}　PP{place.get(number, 0):.0%}　"
             f"{odds[number]:.1f}倍" if number in odds else
-            f"勝{circled(rank)} {circled(number)} {names.get(number, '')}　"
+            f"勝{rank} {circled(number)}{names.get(number, '')}　"
             f"WP{win[number]:.0%}　PP{place.get(number, 0):.0%}　オッズ未取得"
         )
     lines.extend(["", "【穴馬】"])
@@ -320,7 +320,7 @@ def format_discord(race_name: str, snapshot: dict, decision: dict) -> str:
         for rank, number in enumerate(holes, 1):
             buy = "　●買い" if circled(number) in ticket_text else ""
             lines.append(
-                f"穴{circled(rank)} {circled(number)} {names.get(number, '')}　"
+                f"穴{rank} {circled(number)}{names.get(number, '')}　"
                 f"WP{win.get(number, 0):.0%}　PP{place[number]:.0%}　"
                 f"{odds[number]:.1f}倍{buy}"
             )
