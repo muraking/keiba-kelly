@@ -4,7 +4,7 @@ Discovery is restricted to 2024. Conditions are frozen and evaluated on
 2025, plus 2026 where payout coverage exists. All probabilities are
 walk-forward OOS. No result or payout field is used to define a condition.
 
-Version: v2026.07.28.1
+Version: v2026.07.28.2
 """
 
 from __future__ import annotations
@@ -21,11 +21,11 @@ import numpy as np
 import pandas as pd
 
 
-VERSION = "v2026.07.28.1"
+VERSION = "v2026.07.28.2"
 
 
 def canonical(values) -> str:
-    return "-".join(str(int(value)) for value in sorted(values))
+    return "-".join(str(value) for value in sorted(int(item) for item in values))
 
 
 def normalize_ticket(value: str) -> str:
@@ -250,7 +250,7 @@ def analyze(frame: pd.DataFrame, market: str) -> dict:
             rule["periods"][str(year)]["races"] >= 50
             and rule["periods"][str(year)]["roi"] >= 100
             and rule["periods"][str(year)]["roi_without_max"] >= 95
-            for year in validation_years
+            for year in years
         )
     ]
     stable = sorted(

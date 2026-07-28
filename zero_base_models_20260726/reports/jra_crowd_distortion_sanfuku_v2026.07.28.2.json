@@ -1,0 +1,3985 @@
+{
+  "version": "v2026.07.28.2",
+  "market": "jra",
+  "method": "2024 discovery; later years untouched validation",
+  "baseline": {
+    "2024": {
+      "races": 2452,
+      "tickets": 20384,
+      "hits": 251,
+      "hit_rate": 10.236541598694943,
+      "stake": 2038400,
+      "return": 1345730,
+      "roi": 66.01893642072214,
+      "roi_without_max": 63.410552147239265,
+      "max_return_share": 0.039933716272952224
+    },
+    "2025": {
+      "races": 3313,
+      "tickets": 27318,
+      "hits": 375,
+      "hit_rate": 11.319046181708421,
+      "stake": 2731800,
+      "return": 2007410,
+      "roi": 73.48305146789663,
+      "roi_without_max": 69.84766926654217,
+      "max_return_share": 0.049785544557414775
+    }
+  },
+  "failure_profiles": {
+    "both_missing": {
+      "races": 460,
+      "share": 7.97918473547268,
+      "mean_wp1": 0.1880122629992985,
+      "mean_wp_gap": 0.05004801344284815,
+      "mean_axis_pp_min": 0.2798100652179755,
+      "mean_hole1_pp": 0.18924525001700404,
+      "mean_hole_pp_sum": 0.4803777955805624,
+      "mean_hole1_market_gap": 2.9369565217391305
+    },
+    "hit": {
+      "races": 626,
+      "share": 10.858629661751952,
+      "mean_wp1": 0.27249514351069404,
+      "mean_wp_gap": 0.0944994407996323,
+      "mean_axis_pp_min": 0.44376895450078657,
+      "mean_hole1_pp": 0.2109542192554161,
+      "mean_hole_pp_sum": 0.5101061026210957,
+      "mean_hole1_market_gap": 1.8817891373801916
+    },
+    "hole_side_missing": {
+      "races": 2468,
+      "share": 42.8100607111882,
+      "mean_wp1": 0.24015195153550734,
+      "mean_wp_gap": 0.07389508556553791,
+      "mean_axis_pp_min": 0.39314200541064764,
+      "mean_hole1_pp": 0.19298160588295238,
+      "mean_hole_pp_sum": 0.47388845760332693,
+      "mean_hole1_market_gap": 2.2735008103727714
+    },
+    "overlap_or_coverage": {
+      "races": 1485,
+      "share": 25.758889852558543,
+      "mean_wp1": 0.24379159981796616,
+      "mean_wp_gap": 0.08259280004729809,
+      "mean_axis_pp_min": 0.3681741672118588,
+      "mean_hole1_pp": 0.20780472625052987,
+      "mean_hole_pp_sum": 0.5118245949877469,
+      "mean_hole1_market_gap": 2.0868686868686868
+    },
+    "win_side_missing": {
+      "races": 726,
+      "share": 12.593235039028622,
+      "mean_wp1": 0.20872842237565675,
+      "mean_wp_gap": 0.061906575069975024,
+      "mean_axis_pp_min": 0.33473399506711987,
+      "mean_hole1_pp": 0.19833975999826114,
+      "mean_hole_pp_sum": 0.492611371059252,
+      "mean_hole1_market_gap": 2.615702479338843
+    }
+  },
+  "rules_evaluated_after_discovery_floor": 3530,
+  "confirmed": [],
+  "best_stable": [
+    {
+      "rule": "axis_pp_min>=0.35 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_min",
+          ">=",
+          0.35
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 104,
+          "tickets": 936,
+          "hits": 11,
+          "hit_rate": 10.576923076923077,
+          "stake": 93600,
+          "return": 168650,
+          "roi": 180.18162393162393,
+          "roi_without_max": 123.95900755124056,
+          "max_return_share": 0.3186480877557071
+        },
+        "2025": {
+          "races": 121,
+          "tickets": 1089,
+          "hits": 15,
+          "hit_rate": 12.396694214876034,
+          "stake": 108900,
+          "return": 178930,
+          "roi": 164.3067033976125,
+          "roi_without_max": 73.13888888888889,
+          "max_return_share": 0.5585424467668921
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_sum>=0.8 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_sum",
+          ">=",
+          0.8
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 112,
+          "tickets": 988,
+          "hits": 11,
+          "hit_rate": 9.821428571428571,
+          "stake": 98800,
+          "return": 168650,
+          "roi": 170.69838056680163,
+          "roi_without_max": 117.37487231869254,
+          "max_return_share": 0.3186480877557071
+        },
+        "2025": {
+          "races": 139,
+          "tickets": 1221,
+          "hits": 15,
+          "hit_rate": 10.79136690647482,
+          "stake": 122100,
+          "return": 175480,
+          "roi": 143.71826371826373,
+          "roi_without_max": 62.32673267326733,
+          "max_return_share": 0.569523592432186
+        }
+      }
+    },
+    {
+      "rule": "axis_odds_max<=7 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_odds_max",
+          "<=",
+          7.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 156,
+          "tickets": 1404,
+          "hits": 21,
+          "hit_rate": 13.461538461538462,
+          "stake": 140400,
+          "return": 244160,
+          "roi": 173.9031339031339,
+          "roi_without_max": 136.50179211469535,
+          "max_return_share": 0.22010157273918743
+        },
+        "2025": {
+          "races": 172,
+          "tickets": 1548,
+          "hits": 19,
+          "hit_rate": 11.046511627906977,
+          "stake": 154800,
+          "return": 213680,
+          "roi": 138.0361757105943,
+          "roi_without_max": 73.90513320337882,
+          "max_return_share": 0.4677087233245975
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.35 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.35
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 100,
+          "tickets": 852,
+          "hits": 13,
+          "hit_rate": 13.0,
+          "stake": 85200,
+          "return": 179630,
+          "roi": 210.83333333333334,
+          "roi_without_max": 149.33570581257413,
+          "max_return_share": 0.2991705171741914
+        },
+        "2025": {
+          "races": 130,
+          "tickets": 1105,
+          "hits": 11,
+          "hit_rate": 8.461538461538462,
+          "stake": 110500,
+          "return": 151460,
+          "roi": 137.06787330316743,
+          "roi_without_max": 47.00729927007299,
+          "max_return_share": 0.6598441832827149
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_min>=0.3 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_min",
+          ">=",
+          0.3
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 138,
+          "tickets": 1242,
+          "hits": 16,
+          "hit_rate": 11.594202898550725,
+          "stake": 124200,
+          "return": 197850,
+          "roi": 159.29951690821255,
+          "roi_without_max": 116.87753446877535,
+          "max_return_share": 0.27161991407632047
+        },
+        "2025": {
+          "races": 157,
+          "tickets": 1413,
+          "hits": 17,
+          "hit_rate": 10.828025477707007,
+          "stake": 141300,
+          "return": 193190,
+          "roi": 136.7232837933475,
+          "roi_without_max": 66.41737891737891,
+          "max_return_share": 0.5173145607950722
+        }
+      }
+    },
+    {
+      "rule": "wp1>=0.18 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "wp1",
+          ">=",
+          0.18
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 128,
+          "tickets": 1084,
+          "hits": 13,
+          "hit_rate": 10.15625,
+          "stake": 108400,
+          "return": 174220,
+          "roi": 160.71955719557195,
+          "roi_without_max": 112.07441860465116,
+          "max_return_share": 0.30846056709907016
+        },
+        "2025": {
+          "races": 166,
+          "tickets": 1396,
+          "hits": 15,
+          "hit_rate": 9.036144578313253,
+          "stake": 139600,
+          "return": 177920,
+          "roi": 127.44985673352436,
+          "roi_without_max": 56.222062004325885,
+          "max_return_share": 0.5617131294964028
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.02 & hole1_value>=7",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.02
+        ],
+        [
+          "hole1_value",
+          ">=",
+          7.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 153,
+          "tickets": 1307,
+          "hits": 16,
+          "hit_rate": 10.457516339869281,
+          "stake": 130700,
+          "return": 164150,
+          "roi": 125.59296097934201,
+          "roi_without_max": 85.06163328197226,
+          "max_return_share": 0.32738349070971673
+        },
+        "2025": {
+          "races": 115,
+          "tickets": 967,
+          "hits": 7,
+          "hit_rate": 6.086956521739131,
+          "stake": 96700,
+          "return": 121980,
+          "roi": 126.1427094105481,
+          "roi_without_max": 23.006263048016702,
+          "max_return_share": 0.8193146417445483
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.4 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 107,
+          "tickets": 923,
+          "hits": 10,
+          "hit_rate": 9.345794392523365,
+          "stake": 92300,
+          "return": 153400,
+          "roi": 166.19718309859155,
+          "roi_without_max": 109.03719912472647,
+          "max_return_share": 0.3503259452411995
+        },
+        "2025": {
+          "races": 154,
+          "tickets": 1316,
+          "hits": 13,
+          "hit_rate": 8.441558441558442,
+          "stake": 131600,
+          "return": 162930,
+          "roi": 123.80699088145897,
+          "roi_without_max": 48.19433817903596,
+          "max_return_share": 0.6133922543423556
+        }
+      }
+    },
+    {
+      "rule": "hole_avg_odds<=50 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole_avg_odds",
+          "<=",
+          50.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 179,
+          "tickets": 1437,
+          "hits": 17,
+          "hit_rate": 9.497206703910614,
+          "stake": 143700,
+          "return": 176680,
+          "roi": 122.95059151009046,
+          "roi_without_max": 86.09243697478992,
+          "max_return_share": 0.3041657233416346
+        },
+        "2025": {
+          "races": 197,
+          "tickets": 1569,
+          "hits": 14,
+          "hit_rate": 7.1065989847715745,
+          "stake": 156900,
+          "return": 206300,
+          "roi": 131.48502230720203,
+          "roi_without_max": 68.17948717948718,
+          "max_return_share": 0.4844401357246728
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_sum>=0.7 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_sum",
+          ">=",
+          0.7
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 149,
+          "tickets": 1301,
+          "hits": 16,
+          "hit_rate": 10.738255033557047,
+          "stake": 130100,
+          "return": 197440,
+          "roi": 151.76018447348193,
+          "roi_without_max": 111.22291021671826,
+          "max_return_share": 0.2721839546191248
+        },
+        "2025": {
+          "races": 180,
+          "tickets": 1560,
+          "hits": 17,
+          "hit_rate": 9.444444444444445,
+          "stake": 156000,
+          "return": 191460,
+          "roi": 122.73076923076923,
+          "roi_without_max": 59.00709219858156,
+          "max_return_share": 0.5219889271910582
+        }
+      }
+    },
+    {
+      "rule": "axis_odds_max<=10 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_odds_max",
+          "<=",
+          10.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 199,
+          "tickets": 1786,
+          "hits": 22,
+          "hit_rate": 11.055276381909549,
+          "stake": 178600,
+          "return": 249530,
+          "roi": 139.7144456886898,
+          "roi_without_max": 110.18007878446821,
+          "max_return_share": 0.21536488598565304
+        },
+        "2025": {
+          "races": 210,
+          "tickets": 1890,
+          "hits": 21,
+          "hit_rate": 10.0,
+          "stake": 189000,
+          "return": 230900,
+          "roi": 122.16931216931216,
+          "roi_without_max": 69.62254120148857,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_min>=0.2 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_min",
+          ">=",
+          0.2
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 196,
+          "tickets": 1739,
+          "hits": 20,
+          "hit_rate": 10.204081632653061,
+          "stake": 173900,
+          "return": 240410,
+          "roi": 138.2461184588844,
+          "roi_without_max": 107.90173410404624,
+          "max_return_share": 0.22353479472567697
+        },
+        "2025": {
+          "races": 213,
+          "tickets": 1872,
+          "hits": 20,
+          "hit_rate": 9.389671361502346,
+          "stake": 187200,
+          "return": 221820,
+          "roi": 118.49358974358974,
+          "roi_without_max": 65.42136339237788,
+          "max_return_share": 0.45054548733207106
+        }
+      }
+    },
+    {
+      "rule": "field_size>=16 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          16.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 146,
+          "tickets": 1190,
+          "hits": 10,
+          "hit_rate": 6.8493150684931505,
+          "stake": 119000,
+          "return": 142520,
+          "roi": 119.76470588235294,
+          "roi_without_max": 75.17358171041491,
+          "max_return_share": 0.3770698849284311
+        },
+        "2025": {
+          "races": 188,
+          "tickets": 1508,
+          "hits": 13,
+          "hit_rate": 6.914893617021277,
+          "stake": 150800,
+          "return": 178560,
+          "roi": 118.40848806366047,
+          "roi_without_max": 52.44829886591061,
+          "max_return_share": 0.5596998207885304
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_sum>=0.6 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_sum",
+          ">=",
+          0.6
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 188,
+          "tickets": 1622,
+          "hits": 20,
+          "hit_rate": 10.638297872340425,
+          "stake": 162200,
+          "return": 246720,
+          "roi": 152.10850801479654,
+          "roi_without_max": 119.64042157470551,
+          "max_return_share": 0.2178177691309987
+        },
+        "2025": {
+          "races": 218,
+          "tickets": 1877,
+          "hits": 20,
+          "hit_rate": 9.174311926605505,
+          "stake": 187700,
+          "return": 221820,
+          "roi": 118.17794352690464,
+          "roi_without_max": 65.24625267665952,
+          "max_return_share": 0.45054548733207106
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.02 & wp_top2>=0.4",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.02
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 120,
+          "tickets": 1035,
+          "hits": 20,
+          "hit_rate": 16.666666666666664,
+          "stake": 103500,
+          "return": 209960,
+          "roi": 202.8599033816425,
+          "roi_without_max": 152.26120857699806,
+          "max_return_share": 0.25595351495522956
+        },
+        "2025": {
+          "races": 199,
+          "tickets": 1686,
+          "hits": 18,
+          "hit_rate": 9.045226130653267,
+          "stake": 168600,
+          "return": 198160,
+          "roi": 117.53262158956109,
+          "roi_without_max": 58.56887298747764,
+          "max_return_share": 0.5043399273314494
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.02 & hole1_value>=5",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.02
+        ],
+        [
+          "hole1_value",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 245,
+          "tickets": 2075,
+          "hits": 23,
+          "hit_rate": 9.387755102040817,
+          "stake": 207500,
+          "return": 243250,
+          "roi": 117.2289156626506,
+          "roi_without_max": 91.72797676669893,
+          "max_return_share": 0.22092497430626928
+        },
+        "2025": {
+          "races": 205,
+          "tickets": 1707,
+          "hits": 16,
+          "hit_rate": 7.804878048780488,
+          "stake": 170700,
+          "return": 217830,
+          "roi": 127.60984182776801,
+          "roi_without_max": 69.42873969375736,
+          "max_return_share": 0.4587981453426984
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.04 & wp_top2>=0.4",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.04
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 239,
+          "tickets": 2041,
+          "hits": 31,
+          "hit_rate": 12.97071129707113,
+          "stake": 204100,
+          "return": 241610,
+          "roi": 118.3782459578638,
+          "roi_without_max": 92.45570866141732,
+          "max_return_share": 0.22242456851951492
+        },
+        "2025": {
+          "races": 382,
+          "tickets": 3248,
+          "hits": 40,
+          "hit_rate": 10.471204188481675,
+          "stake": 324800,
+          "return": 378830,
+          "roi": 116.63485221674877,
+          "roi_without_max": 86.10373572090151,
+          "max_return_share": 0.2638122640762347
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_min>=0.25 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_min",
+          ">=",
+          0.25
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 172,
+          "tickets": 1538,
+          "hits": 17,
+          "hit_rate": 9.883720930232558,
+          "stake": 153800,
+          "return": 203990,
+          "roi": 132.6332899869961,
+          "roi_without_max": 98.26684107259646,
+          "max_return_share": 0.2634442864846316
+        },
+        "2025": {
+          "races": 188,
+          "tickets": 1682,
+          "hits": 18,
+          "hit_rate": 9.574468085106384,
+          "stake": 168200,
+          "return": 194490,
+          "roi": 115.63020214030915,
+          "roi_without_max": 56.51524208009564,
+          "max_return_share": 0.5138567535605943
+        }
+      }
+    },
+    {
+      "rule": "hole3_pp>=0.12 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole3_pp",
+          ">=",
+          0.12
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 202,
+          "tickets": 1647,
+          "hits": 17,
+          "hit_rate": 8.415841584158416,
+          "stake": 164700,
+          "return": 209870,
+          "roi": 127.42562234365514,
+          "roi_without_max": 95.31746031746032,
+          "max_return_share": 0.2560632772668795
+        },
+        "2025": {
+          "races": 188,
+          "tickets": 1539,
+          "hits": 12,
+          "hit_rate": 6.382978723404255,
+          "stake": 153900,
+          "return": 174920,
+          "roi": 113.6582196231319,
+          "roi_without_max": 49.00653594771242,
+          "max_return_share": 0.5713469014406586
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_min>=0.35 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "axis_pp_min",
+          ">=",
+          0.35
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 162,
+          "tickets": 1458,
+          "hits": 13,
+          "hit_rate": 8.024691358024691,
+          "stake": 145800,
+          "return": 180440,
+          "roi": 123.75857338820302,
+          "roi_without_max": 87.43961352657004,
+          "max_return_share": 0.29782753269784973
+        },
+        "2025": {
+          "races": 193,
+          "tickets": 1737,
+          "hits": 19,
+          "hit_rate": 9.844559585492227,
+          "stake": 173700,
+          "return": 196790,
+          "roi": 113.2930339666091,
+          "roi_without_max": 56.0474537037037,
+          "max_return_share": 0.507851008689466
+        }
+      }
+    },
+    {
+      "rule": "hole_avg_odds<=70 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole_avg_odds",
+          "<=",
+          70.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 236,
+          "tickets": 1920,
+          "hits": 22,
+          "hit_rate": 9.322033898305085,
+          "stake": 192000,
+          "return": 237750,
+          "roi": 123.828125,
+          "roi_without_max": 96.28990057561487,
+          "max_return_share": 0.22603575184016825
+        },
+        "2025": {
+          "races": 243,
+          "tickets": 1948,
+          "hits": 18,
+          "hit_rate": 7.4074074074074066,
+          "stake": 194800,
+          "return": 217300,
+          "roi": 111.55030800821355,
+          "roi_without_max": 60.52604435275916,
+          "max_return_share": 0.45991716520938797
+        }
+      }
+    },
+    {
+      "rule": "hole1_value>=7 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_value",
+          ">=",
+          7.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 236,
+          "tickets": 1956,
+          "hits": 23,
+          "hit_rate": 9.745762711864407,
+          "stake": 195600,
+          "return": 264640,
+          "roi": 135.2965235173824,
+          "roi_without_max": 108.32049306625578,
+          "max_return_share": 0.2030683192261185
+        },
+        "2025": {
+          "races": 204,
+          "tickets": 1665,
+          "hits": 14,
+          "hit_rate": 6.862745098039216,
+          "stake": 166500,
+          "return": 185070,
+          "roi": 111.15315315315316,
+          "roi_without_max": 51.40700483091788,
+          "max_return_share": 0.540011887393959
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.15 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.15
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 258,
+          "tickets": 2111,
+          "hits": 22,
+          "hit_rate": 8.527131782945736,
+          "stake": 211100,
+          "return": 236720,
+          "roi": 112.1364282330649,
+          "roi_without_max": 87.05042816365366,
+          "max_return_share": 0.2270192632646164
+        },
+        "2025": {
+          "races": 216,
+          "tickets": 1715,
+          "hits": 14,
+          "hit_rate": 6.481481481481481,
+          "stake": 171500,
+          "return": 189820,
+          "roi": 110.68221574344024,
+          "roi_without_max": 52.68464243845252,
+          "max_return_share": 0.5264987883257823
+        }
+      }
+    },
+    {
+      "rule": "axis_odds_max<=15 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_odds_max",
+          "<=",
+          15.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 225,
+          "tickets": 1960,
+          "hits": 22,
+          "hit_rate": 9.777777777777779,
+          "stake": 196000,
+          "return": 249530,
+          "roi": 127.31122448979592,
+          "roi_without_max": 100.35366478728857,
+          "max_return_share": 0.21536488598565304
+        },
+        "2025": {
+          "races": 243,
+          "tickets": 2097,
+          "hits": 21,
+          "hit_rate": 8.641975308641975,
+          "stake": 209700,
+          "return": 230900,
+          "roi": 110.10968049594659,
+          "roi_without_max": 62.72030651340996,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "favorite_odds>=2 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "favorite_odds",
+          ">=",
+          2.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 230,
+          "tickets": 1871,
+          "hits": 14,
+          "hit_rate": 6.086956521739131,
+          "stake": 187100,
+          "return": 207250,
+          "roi": 110.76964190272581,
+          "roi_without_max": 82.44360902255639,
+          "max_return_share": 0.2593003618817853
+        },
+        "2025": {
+          "races": 238,
+          "tickets": 1913,
+          "hits": 14,
+          "hit_rate": 5.88235294117647,
+          "stake": 191300,
+          "return": 208920,
+          "roi": 109.21066387872452,
+          "roi_without_max": 57.23739495798319,
+          "max_return_share": 0.47836492437296574
+        }
+      }
+    },
+    {
+      "rule": "hole1_market_gap>=6 & overlap==0",
+      "parts": [
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ],
+        [
+          "overlap",
+          "==",
+          0.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 241,
+          "tickets": 2169,
+          "hits": 23,
+          "hit_rate": 9.54356846473029,
+          "stake": 216900,
+          "return": 263280,
+          "roi": 121.38312586445366,
+          "roi_without_max": 97.00925925925925,
+          "max_return_share": 0.20411728957763597
+        },
+        "2025": {
+          "races": 237,
+          "tickets": 2133,
+          "hits": 21,
+          "hit_rate": 8.860759493670885,
+          "stake": 213300,
+          "return": 230900,
+          "roi": 108.2512892639475,
+          "roi_without_max": 61.65725047080979,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "wp_entropy>=0.8 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "wp_entropy",
+          ">=",
+          0.8
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 279,
+          "tickets": 2282,
+          "hits": 22,
+          "hit_rate": 7.885304659498208,
+          "stake": 228200,
+          "return": 257340,
+          "roi": 112.76950043821209,
+          "roi_without_max": 89.57325120985482,
+          "max_return_share": 0.20882878681899433
+        },
+        "2025": {
+          "races": 253,
+          "tickets": 2033,
+          "hits": 17,
+          "hit_rate": 6.719367588932807,
+          "stake": 203300,
+          "return": 219340,
+          "roi": 107.8898180029513,
+          "roi_without_max": 58.99209486166008,
+          "max_return_share": 0.4556396462113614
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.26 & hole3_pp>=0.18",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ],
+        [
+          "hole3_pp",
+          ">=",
+          0.18
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 238,
+          "tickets": 1902,
+          "hits": 32,
+          "hit_rate": 13.445378151260504,
+          "stake": 190200,
+          "return": 204060,
+          "roi": 107.28706624605678,
+          "roi_without_max": 95.73164289487586,
+          "max_return_share": 0.11192786435362148
+        },
+        "2025": {
+          "races": 113,
+          "tickets": 902,
+          "hits": 21,
+          "hit_rate": 18.58407079646018,
+          "stake": 90200,
+          "return": 109430,
+          "roi": 121.31929046563192,
+          "roi_without_max": 74.24276169265033,
+          "max_return_share": 0.39075207895458286
+        }
+      }
+    },
+    {
+      "rule": "axis_odds_max<=20 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_odds_max",
+          "<=",
+          20.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 251,
+          "tickets": 2096,
+          "hits": 23,
+          "hit_rate": 9.163346613545817,
+          "stake": 209600,
+          "return": 255140,
+          "roi": 121.72709923664122,
+          "roi_without_max": 96.50215620507906,
+          "max_return_share": 0.21062945833659952
+        },
+        "2025": {
+          "races": 255,
+          "tickets": 2162,
+          "hits": 21,
+          "hit_rate": 8.235294117647058,
+          "stake": 216200,
+          "return": 230900,
+          "roi": 106.79925994449583,
+          "roi_without_max": 60.82675336739433,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "favorite_odds>=1.8 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "favorite_odds",
+          ">=",
+          1.8
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 244,
+          "tickets": 1987,
+          "hits": 18,
+          "hit_rate": 7.377049180327869,
+          "stake": 198700,
+          "return": 243000,
+          "roi": 122.29491696024157,
+          "roi_without_max": 95.68250758341759,
+          "max_return_share": 0.2211522633744856
+        },
+        "2025": {
+          "races": 249,
+          "tickets": 2012,
+          "hits": 15,
+          "hit_rate": 6.024096385542169,
+          "stake": 201200,
+          "return": 213670,
+          "roi": 106.19781312127236,
+          "roi_without_max": 56.779830254618076,
+          "max_return_share": 0.4677306126269481
+        }
+      }
+    },
+    {
+      "rule": "hole3_pp>=0.1 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole3_pp",
+          ">=",
+          0.1
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 242,
+          "tickets": 1974,
+          "hits": 21,
+          "hit_rate": 8.677685950413224,
+          "stake": 197400,
+          "return": 250970,
+          "roi": 127.13779128672746,
+          "roi_without_max": 100.37150127226464,
+          "max_return_share": 0.21412917878630913
+        },
+        "2025": {
+          "races": 243,
+          "tickets": 1978,
+          "hits": 18,
+          "hit_rate": 7.4074074074074066,
+          "stake": 197800,
+          "return": 209730,
+          "roi": 106.03134479271992,
+          "roi_without_max": 55.7592686642966,
+          "max_return_share": 0.47651742716826395
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_sum>=0.5 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "axis_pp_sum",
+          ">=",
+          0.5
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 230,
+          "tickets": 1940,
+          "hits": 23,
+          "hit_rate": 10.0,
+          "stake": 194000,
+          "return": 265950,
+          "roi": 137.08762886597938,
+          "roi_without_max": 109.89642672190575,
+          "max_return_share": 0.20206805790562135
+        },
+        "2025": {
+          "races": 249,
+          "tickets": 2106,
+          "hits": 20,
+          "hit_rate": 8.032128514056225,
+          "stake": 210600,
+          "return": 221820,
+          "roi": 105.32763532763532,
+          "roi_without_max": 58.12112541726275,
+          "max_return_share": 0.45054548733207106
+        }
+      }
+    },
+    {
+      "rule": "hole1_value>=5 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_value",
+          ">=",
+          5.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 262,
+          "tickets": 2157,
+          "hits": 23,
+          "hit_rate": 8.778625954198473,
+          "stake": 215700,
+          "return": 264640,
+          "roi": 122.68891979601298,
+          "roi_without_max": 98.18435754189944,
+          "max_return_share": 0.2030683192261185
+        },
+        "2025": {
+          "races": 260,
+          "tickets": 2121,
+          "hits": 20,
+          "hit_rate": 7.6923076923076925,
+          "stake": 212100,
+          "return": 221820,
+          "roi": 104.58274398868458,
+          "roi_without_max": 57.708333333333336,
+          "max_return_share": 0.45054548733207106
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.04 & wp_top2>=0.45",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.04
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.45
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 145,
+          "tickets": 1250,
+          "hits": 19,
+          "hit_rate": 13.10344827586207,
+          "stake": 125000,
+          "return": 130720,
+          "roi": 104.576,
+          "roi_without_max": 62.030620467365026,
+          "max_return_share": 0.4111077111383109
+        },
+        "2025": {
+          "races": 265,
+          "tickets": 2270,
+          "hits": 29,
+          "hit_rate": 10.943396226415095,
+          "stake": 227000,
+          "return": 250040,
+          "roi": 110.14977973568281,
+          "roi_without_max": 72.04776647501106,
+          "max_return_share": 0.34850423932170854
+        }
+      }
+    },
+    {
+      "rule": "hole_pp_sum>=0.4 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole_pp_sum",
+          ">=",
+          0.4
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 242,
+          "tickets": 1972,
+          "hits": 20,
+          "hit_rate": 8.264462809917356,
+          "stake": 197200,
+          "return": 224400,
+          "roi": 113.79310344827586,
+          "roi_without_max": 86.93835965359145,
+          "max_return_share": 0.23948306595365418
+        },
+        "2025": {
+          "races": 218,
+          "tickets": 1748,
+          "hits": 13,
+          "hit_rate": 5.963302752293578,
+          "stake": 174800,
+          "return": 182480,
+          "roi": 104.39359267734554,
+          "roi_without_max": 47.46405980448534,
+          "max_return_share": 0.5476764576939939
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_sum>=0.8 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "axis_pp_sum",
+          ">=",
+          0.8
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 176,
+          "tickets": 1549,
+          "hits": 14,
+          "hit_rate": 7.954545454545454,
+          "stake": 154900,
+          "return": 182600,
+          "roi": 117.88250484183344,
+          "roi_without_max": 83.67532467532467,
+          "max_return_share": 0.29430449069003284
+        },
+        "2025": {
+          "races": 216,
+          "tickets": 1909,
+          "hits": 20,
+          "hit_rate": 9.25925925925926,
+          "stake": 190900,
+          "return": 198360,
+          "roi": 103.9078051335778,
+          "roi_without_max": 51.8,
+          "max_return_share": 0.5038314176245211
+        }
+      }
+    },
+    {
+      "rule": "field_size>=16 & hole1_value>=7",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          16.0
+        ],
+        [
+          "hole1_value",
+          ">=",
+          7.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 205,
+          "tickets": 1747,
+          "hits": 14,
+          "hit_rate": 6.829268292682928,
+          "stake": 174700,
+          "return": 192960,
+          "roi": 110.45220377790498,
+          "roi_without_max": 80.10356731875719,
+          "max_return_share": 0.2785033167495854
+        },
+        "2025": {
+          "races": 242,
+          "tickets": 2027,
+          "hits": 19,
+          "hit_rate": 7.851239669421488,
+          "stake": 202700,
+          "return": 209490,
+          "roi": 103.34977799703996,
+          "roi_without_max": 54.28642220019822,
+          "max_return_share": 0.4770633443123777
+        }
+      }
+    },
+    {
+      "rule": "favorite_odds>=1.5 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "favorite_odds",
+          ">=",
+          1.5
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 276,
+          "tickets": 2255,
+          "hits": 22,
+          "hit_rate": 7.971014492753622,
+          "stake": 225500,
+          "return": 257340,
+          "roi": 114.11973392461198,
+          "roi_without_max": 90.6500445235975,
+          "max_return_share": 0.20882878681899433
+        },
+        "2025": {
+          "races": 277,
+          "tickets": 2229,
+          "hits": 20,
+          "hit_rate": 7.2202166064981945,
+          "stake": 222900,
+          "return": 230240,
+          "roi": 103.29295648272767,
+          "roi_without_max": 58.693693693693696,
+          "max_return_share": 0.4340687977762335
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_sum>=0.9 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "axis_pp_sum",
+          ">=",
+          0.9
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 200,
+          "tickets": 1670,
+          "hits": 36,
+          "hit_rate": 18.0,
+          "stake": 167000,
+          "return": 172150,
+          "roi": 103.08383233532935,
+          "roi_without_max": 89.89163154726069,
+          "max_return_share": 0.1326749927388905
+        },
+        "2025": {
+          "races": 100,
+          "tickets": 825,
+          "hits": 20,
+          "hit_rate": 20.0,
+          "stake": 82500,
+          "return": 91280,
+          "roi": 110.64242424242424,
+          "roi_without_max": 59.09866017052375,
+          "max_return_share": 0.4684487291849255
+        }
+      }
+    },
+    {
+      "rule": "hole1_value>=4 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_value",
+          ">=",
+          4.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 279,
+          "tickets": 2292,
+          "hits": 24,
+          "hit_rate": 8.60215053763441,
+          "stake": 229200,
+          "return": 268890,
+          "roi": 117.31675392670157,
+          "roi_without_max": 94.24003504161192,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 277,
+          "tickets": 2249,
+          "hits": 21,
+          "hit_rate": 7.581227436823104,
+          "stake": 224900,
+          "return": 230900,
+          "roi": 102.66785237883504,
+          "roi_without_max": 58.464285714285715,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.4 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 186,
+          "tickets": 1509,
+          "hits": 32,
+          "hit_rate": 17.20430107526882,
+          "stake": 150900,
+          "return": 154490,
+          "roi": 102.37905897945659,
+          "roi_without_max": 87.76666666666667,
+          "max_return_share": 0.1478412842255162
+        },
+        "2025": {
+          "races": 98,
+          "tickets": 767,
+          "hits": 20,
+          "hit_rate": 20.408163265306122,
+          "stake": 76700,
+          "return": 91920,
+          "roi": 119.84354628422425,
+          "roi_without_max": 64.42988204456094,
+          "max_return_share": 0.4651871192341166
+        }
+      }
+    },
+    {
+      "rule": "hole_avg_odds<=100 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole_avg_odds",
+          "<=",
+          100.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 272,
+          "tickets": 2214,
+          "hits": 23,
+          "hit_rate": 8.455882352941178,
+          "stake": 221400,
+          "return": 262950,
+          "roi": 118.76693766937669,
+          "roi_without_max": 94.87981859410431,
+          "max_return_share": 0.2043734550294733
+        },
+        "2025": {
+          "races": 280,
+          "tickets": 2261,
+          "hits": 21,
+          "hit_rate": 7.5,
+          "stake": 226100,
+          "return": 230900,
+          "roi": 102.12295444493587,
+          "roi_without_max": 58.152753108348136,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.12 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.12
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 280,
+          "tickets": 2286,
+          "hits": 23,
+          "hit_rate": 8.214285714285714,
+          "stake": 228600,
+          "return": 260050,
+          "roi": 113.75765529308836,
+          "roi_without_max": 90.60606060606061,
+          "max_return_share": 0.2066525668140742
+        },
+        "2025": {
+          "races": 266,
+          "tickets": 2145,
+          "hits": 19,
+          "hit_rate": 7.142857142857142,
+          "stake": 214500,
+          "return": 217070,
+          "roi": 101.1981351981352,
+          "roi_without_max": 54.83614232209738,
+          "max_return_share": 0.4604044778182153
+        }
+      }
+    },
+    {
+      "rule": "hole_pp_sum>=0.3 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole_pp_sum",
+          ">=",
+          0.3
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 278,
+          "tickets": 2268,
+          "hits": 23,
+          "hit_rate": 8.273381294964029,
+          "stake": 226800,
+          "return": 260050,
+          "roi": 114.6604938271605,
+          "roi_without_max": 91.32802124833998,
+          "max_return_share": 0.2066525668140742
+        },
+        "2025": {
+          "races": 272,
+          "tickets": 2194,
+          "hits": 20,
+          "hit_rate": 7.352941176470589,
+          "stake": 219400,
+          "return": 221820,
+          "roi": 101.10300820419326,
+          "roi_without_max": 55.78032036613272,
+          "max_return_share": 0.45054548733207106
+        }
+      }
+    },
+    {
+      "rule": "hole3_pp>=0.05 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole3_pp",
+          ">=",
+          0.05
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 286,
+          "tickets": 2335,
+          "hits": 24,
+          "hit_rate": 8.391608391608392,
+          "stake": 233500,
+          "return": 268890,
+          "roi": 115.15631691648822,
+          "roi_without_max": 92.49785038693035,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 285,
+          "tickets": 2301,
+          "hits": 21,
+          "hit_rate": 7.368421052631578,
+          "stake": 230100,
+          "return": 230900,
+          "roi": 100.34767492394612,
+          "roi_without_max": 57.13787085514834,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.04 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.04
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 146,
+          "tickets": 1184,
+          "hits": 10,
+          "hit_rate": 6.8493150684931505,
+          "stake": 118400,
+          "return": 118680,
+          "roi": 100.23648648648648,
+          "roi_without_max": 55.268085106382976,
+          "max_return_share": 0.452814290529154
+        },
+        "2025": {
+          "races": 120,
+          "tickets": 961,
+          "hits": 9,
+          "hit_rate": 7.5,
+          "stake": 96100,
+          "return": 148850,
+          "roi": 154.89073881373568,
+          "roi_without_max": 51.37605042016807,
+          "max_return_share": 0.6714141753443064
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.26 & hole3_pp>=0.15",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ],
+        [
+          "hole3_pp",
+          ">=",
+          0.15
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 310,
+          "tickets": 2505,
+          "hits": 47,
+          "hit_rate": 15.161290322580644,
+          "stake": 250500,
+          "return": 250600,
+          "roi": 100.03992015968063,
+          "roi_without_max": 91.25,
+          "max_return_share": 0.09114126097366321
+        },
+        "2025": {
+          "races": 185,
+          "tickets": 1460,
+          "hits": 33,
+          "hit_rate": 17.83783783783784,
+          "stake": 146000,
+          "return": 149850,
+          "roi": 102.63698630136986,
+          "roi_without_max": 73.55082417582418,
+          "max_return_share": 0.28535201868535204
+        }
+      }
+    },
+    {
+      "rule": "field_size>=12 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          12.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 273,
+          "tickets": 2233,
+          "hits": 23,
+          "hit_rate": 8.424908424908425,
+          "stake": 223300,
+          "return": 262710,
+          "roi": 117.64890282131661,
+          "roi_without_max": 93.9613309352518,
+          "max_return_share": 0.20456016139469377
+        },
+        "2025": {
+          "races": 278,
+          "tickets": 2243,
+          "hits": 19,
+          "hit_rate": 6.83453237410072,
+          "stake": 224300,
+          "return": 222900,
+          "roi": 99.37583593401695,
+          "roi_without_max": 55.04028648164727,
+          "max_return_share": 0.44836249439210407
+        }
+      }
+    },
+    {
+      "rule": "axis_odds_max<=7 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "axis_odds_max",
+          "<=",
+          7.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 242,
+          "tickets": 2178,
+          "hits": 27,
+          "hit_rate": 11.15702479338843,
+          "stake": 217800,
+          "return": 261540,
+          "roi": 120.08264462809917,
+          "roi_without_max": 95.80451821115722,
+          "max_return_share": 0.20547526191022406
+        },
+        "2025": {
+          "races": 276,
+          "tickets": 2484,
+          "hits": 26,
+          "hit_rate": 9.420289855072465,
+          "stake": 248400,
+          "return": 246380,
+          "roi": 99.18679549114331,
+          "roi_without_max": 59.16767676767677,
+          "max_return_share": 0.40563357415374623
+        }
+      }
+    },
+    {
+      "rule": "hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 287,
+          "tickets": 2344,
+          "hits": 24,
+          "hit_rate": 8.362369337979095,
+          "stake": 234400,
+          "return": 268890,
+          "roi": 114.71416382252559,
+          "roi_without_max": 92.14132762312634,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "field_size>=10 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          10.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 286,
+          "tickets": 2335,
+          "hits": 24,
+          "hit_rate": 8.391608391608392,
+          "stake": 233500,
+          "return": 268890,
+          "roi": 115.15631691648822,
+          "roi_without_max": 92.49785038693035,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole1_value>=2 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_value",
+          ">=",
+          2.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 287,
+          "tickets": 2344,
+          "hits": 24,
+          "hit_rate": 8.362369337979095,
+          "stake": 234400,
+          "return": 268890,
+          "roi": 114.71416382252559,
+          "roi_without_max": 92.14132762312634,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole1_value>=3 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_value",
+          ">=",
+          3.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 285,
+          "tickets": 2331,
+          "hits": 24,
+          "hit_rate": 8.421052631578947,
+          "stake": 233100,
+          "return": 268890,
+          "roi": 115.35392535392535,
+          "roi_without_max": 92.65719207579673,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole1_market_gap>=2 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_market_gap",
+          ">=",
+          2.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 287,
+          "tickets": 2344,
+          "hits": 24,
+          "hit_rate": 8.362369337979095,
+          "stake": 234400,
+          "return": 268890,
+          "roi": 114.71416382252559,
+          "roi_without_max": 92.14132762312634,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole1_market_gap>=3 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_market_gap",
+          ">=",
+          3.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 287,
+          "tickets": 2344,
+          "hits": 24,
+          "hit_rate": 8.362369337979095,
+          "stake": 234400,
+          "return": 268890,
+          "roi": 114.71416382252559,
+          "roi_without_max": 92.14132762312634,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole1_market_gap>=4 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_market_gap",
+          ">=",
+          4.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 287,
+          "tickets": 2344,
+          "hits": 24,
+          "hit_rate": 8.362369337979095,
+          "stake": 234400,
+          "return": 268890,
+          "roi": 114.71416382252559,
+          "roi_without_max": 92.14132762312634,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole1_market_gap>=5 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 287,
+          "tickets": 2344,
+          "hits": 24,
+          "hit_rate": 8.362369337979095,
+          "stake": 234400,
+          "return": 268890,
+          "roi": 114.71416382252559,
+          "roi_without_max": 92.14132762312634,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 288,
+          "tickets": 2328,
+          "hits": 21,
+          "hit_rate": 7.291666666666667,
+          "stake": 232800,
+          "return": 230900,
+          "roi": 99.18384879725086,
+          "roi_without_max": 56.47261750754635,
+          "max_return_share": 0.4328280640970117
+        }
+      }
+    },
+    {
+      "rule": "hole3_pp>=0.08 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "hole3_pp",
+          ">=",
+          0.08
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 270,
+          "tickets": 2206,
+          "hits": 24,
+          "hit_rate": 8.88888888888889,
+          "stake": 220600,
+          "return": 268890,
+          "roi": 121.89029918404351,
+          "roi_without_max": 97.92899408284023,
+          "max_return_share": 0.1998586782699245
+        },
+        "2025": {
+          "races": 267,
+          "tickets": 2164,
+          "hits": 19,
+          "hit_rate": 7.116104868913857,
+          "stake": 216400,
+          "return": 214480,
+          "roi": 99.11275415896488,
+          "roi_without_max": 53.150812064965194,
+          "max_return_share": 0.465964192465498
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.06 & wp_top2>=0.4",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.06
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 355,
+          "tickets": 3055,
+          "hits": 46,
+          "hit_rate": 12.957746478873238,
+          "stake": 305500,
+          "return": 313130,
+          "roi": 102.49754500818331,
+          "roi_without_max": 85.15758371634931,
+          "max_return_share": 0.171622010027784
+        },
+        "2025": {
+          "races": 568,
+          "tickets": 4847,
+          "hits": 69,
+          "hit_rate": 12.147887323943662,
+          "stake": 484700,
+          "return": 480380,
+          "roi": 99.10872704765835,
+          "roi_without_max": 78.63579991732121,
+          "max_return_share": 0.20804363212456806
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.35 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.35
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 154,
+          "tickets": 1298,
+          "hits": 14,
+          "hit_rate": 9.090909090909092,
+          "stake": 129800,
+          "return": 181790,
+          "roi": 140.05392912172573,
+          "roi_without_max": 99.34057408844065,
+          "max_return_share": 0.2956158204521701
+        },
+        "2025": {
+          "races": 211,
+          "tickets": 1794,
+          "hits": 17,
+          "hit_rate": 8.056872037914692,
+          "stake": 179400,
+          "return": 177680,
+          "roi": 99.041248606466,
+          "roi_without_max": 43.55182072829132,
+          "max_return_share": 0.5624718595227375
+        }
+      }
+    },
+    {
+      "rule": "wp1>=0.22 & wp_gap<=0.04",
+      "parts": [
+        [
+          "wp1",
+          ">=",
+          0.22
+        ],
+        [
+          "wp_gap",
+          "<=",
+          0.04
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 191,
+          "tickets": 1634,
+          "hits": 27,
+          "hit_rate": 14.136125654450263,
+          "stake": 163400,
+          "return": 208490,
+          "roi": 127.59485924112607,
+          "roi_without_max": 95.23076923076923,
+          "max_return_share": 0.2577581658592738
+        },
+        "2025": {
+          "races": 325,
+          "tickets": 2795,
+          "hits": 36,
+          "hit_rate": 11.076923076923077,
+          "stake": 279500,
+          "return": 275180,
+          "roi": 98.45438282647585,
+          "roi_without_max": 67.49461593682699,
+          "max_return_share": 0.316665455338324
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.04 & wp_top2>=0.35",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.04
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.35
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 371,
+          "tickets": 3164,
+          "hits": 43,
+          "hit_rate": 11.590296495956872,
+          "stake": 316400,
+          "return": 311320,
+          "roi": 98.3944374209861,
+          "roi_without_max": 81.6418383518225,
+          "max_return_share": 0.17261981241166646
+        },
+        "2025": {
+          "races": 552,
+          "tickets": 4683,
+          "hits": 60,
+          "hit_rate": 10.869565217391305,
+          "stake": 468300,
+          "return": 466000,
+          "roi": 99.5088618407004,
+          "roi_without_max": 78.3183568677792,
+          "max_return_share": 0.21446351931330473
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.1 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.1
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 189,
+          "tickets": 1536,
+          "hits": 24,
+          "hit_rate": 12.698412698412698,
+          "stake": 153600,
+          "return": 150770,
+          "roi": 98.15755208333333,
+          "roi_without_max": 83.77865094957433,
+          "max_return_share": 0.1514890230151887
+        },
+        "2025": {
+          "races": 72,
+          "tickets": 568,
+          "hits": 9,
+          "hit_rate": 12.5,
+          "stake": 56800,
+          "return": 80090,
+          "roi": 141.00352112676057,
+          "roi_without_max": 66.18794326241135,
+          "max_return_share": 0.5338993632163815
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_min>=0.3 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "axis_pp_min",
+          ">=",
+          0.3
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 217,
+          "tickets": 1953,
+          "hits": 20,
+          "hit_rate": 9.216589861751153,
+          "stake": 195300,
+          "return": 215910,
+          "roi": 110.55299539170507,
+          "roi_without_max": 83.42078189300412,
+          "max_return_share": 0.24890000463155945
+        },
+        "2025": {
+          "races": 250,
+          "tickets": 2250,
+          "hits": 23,
+          "hit_rate": 9.2,
+          "stake": 225000,
+          "return": 220220,
+          "roi": 97.87555555555555,
+          "roi_without_max": 53.67246764837126,
+          "max_return_share": 0.4538189083643629
+        }
+      }
+    },
+    {
+      "rule": "field_size>=16 & wp_top2>=0.4",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          16.0
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 281,
+          "tickets": 2394,
+          "hits": 35,
+          "hit_rate": 12.455516014234876,
+          "stake": 239400,
+          "return": 262950,
+          "roi": 109.83709273182957,
+          "roi_without_max": 87.71907756813417,
+          "max_return_share": 0.2043734550294733
+        },
+        "2025": {
+          "races": 529,
+          "tickets": 4441,
+          "hits": 54,
+          "hit_rate": 10.207939508506616,
+          "stake": 444100,
+          "return": 433700,
+          "roi": 97.65818509344741,
+          "roi_without_max": 75.30685920577618,
+          "max_return_share": 0.23043578510491122
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.02 & hole1_market_gap>=3",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.02
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          3.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 277,
+          "tickets": 2239,
+          "hits": 21,
+          "hit_rate": 7.581227436823104,
+          "stake": 223900,
+          "return": 218330,
+          "roi": 97.51228226887004,
+          "roi_without_max": 73.80717488789237,
+          "max_return_share": 0.24614116246049558
+        },
+        "2025": {
+          "races": 280,
+          "tickets": 2213,
+          "hits": 16,
+          "hit_rate": 5.714285714285714,
+          "stake": 221300,
+          "return": 265010,
+          "roi": 119.75146859466787,
+          "roi_without_max": 74.8956442831216,
+          "max_return_share": 0.3771178446096374
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.02 & hole1_value>=4",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.02
+        ],
+        [
+          "hole1_value",
+          ">=",
+          4.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 319,
+          "tickets": 2693,
+          "hits": 28,
+          "hit_rate": 8.77742946708464,
+          "stake": 269300,
+          "return": 277500,
+          "roi": 103.04493130337913,
+          "roi_without_max": 83.36810730253353,
+          "max_return_share": 0.19365765765765766
+        },
+        "2025": {
+          "races": 300,
+          "tickets": 2487,
+          "hits": 24,
+          "hit_rate": 8.0,
+          "stake": 248700,
+          "return": 241600,
+          "roi": 97.14515480498592,
+          "roi_without_max": 57.167070217917676,
+          "max_return_share": 0.413658940397351
+        }
+      }
+    },
+    {
+      "rule": "field_size>=14 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          14.0
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 247,
+          "tickets": 2024,
+          "hits": 19,
+          "hit_rate": 7.6923076923076925,
+          "stake": 202400,
+          "return": 242600,
+          "roi": 119.86166007905139,
+          "roi_without_max": 93.72704714640199,
+          "max_return_share": 0.22151690024732068
+        },
+        "2025": {
+          "races": 248,
+          "tickets": 2013,
+          "hits": 16,
+          "hit_rate": 6.451612903225806,
+          "stake": 201300,
+          "return": 195130,
+          "roi": 96.93492300049677,
+          "roi_without_max": 47.5,
+          "max_return_share": 0.5121713729308666
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.1 & hole1_pp>=0.26",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.1
+        ],
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 352,
+          "tickets": 2888,
+          "hits": 51,
+          "hit_rate": 14.488636363636365,
+          "stake": 288800,
+          "return": 279320,
+          "roi": 96.7174515235457,
+          "roi_without_max": 89.08648836401528,
+          "max_return_share": 0.08177001288844336
+        },
+        "2025": {
+          "races": 214,
+          "tickets": 1746,
+          "hits": 30,
+          "hit_rate": 14.018691588785046,
+          "stake": 174600,
+          "return": 204470,
+          "roi": 117.10767468499428,
+          "roi_without_max": 92.48128957973518,
+          "max_return_share": 0.21435907468088228
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.4 & hole1_value>=5",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ],
+        [
+          "hole1_value",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 457,
+          "tickets": 3948,
+          "hits": 59,
+          "hit_rate": 12.910284463894966,
+          "stake": 394800,
+          "return": 385940,
+          "roi": 97.75582573454913,
+          "roi_without_max": 84.33612592028433,
+          "max_return_share": 0.1392444421412655
+        },
+        "2025": {
+          "races": 548,
+          "tickets": 4697,
+          "hits": 67,
+          "hit_rate": 12.226277372262775,
+          "stake": 469700,
+          "return": 451460,
+          "roi": 96.11667021503087,
+          "roi_without_max": 74.98293515358361,
+          "max_return_share": 0.22137066406769149
+        }
+      }
+    },
+    {
+      "rule": "hole3_pp>=0.18 & hole_avg_odds<=50",
+      "parts": [
+        [
+          "hole3_pp",
+          ">=",
+          0.18
+        ],
+        [
+          "hole_avg_odds",
+          "<=",
+          50.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 381,
+          "tickets": 3053,
+          "hits": 47,
+          "hit_rate": 12.335958005249344,
+          "stake": 305300,
+          "return": 292800,
+          "roi": 95.90566655748444,
+          "roi_without_max": 88.68593955321944,
+          "max_return_share": 0.07800546448087432
+        },
+        "2025": {
+          "races": 283,
+          "tickets": 2221,
+          "hits": 43,
+          "hit_rate": 15.19434628975265,
+          "stake": 222100,
+          "return": 218100,
+          "roi": 98.19900945520035,
+          "roi_without_max": 79.08885881822282,
+          "max_return_share": 0.19605685465382852
+        }
+      }
+    },
+    {
+      "rule": "wp1>=0.18 & hole1_pp>=0.26",
+      "parts": [
+        [
+          "wp1",
+          ">=",
+          0.18
+        ],
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 423,
+          "tickets": 3502,
+          "hits": 70,
+          "hit_rate": 16.548463356973993,
+          "stake": 350200,
+          "return": 335640,
+          "roi": 95.84237578526556,
+          "roi_without_max": 89.55052963068995,
+          "max_return_share": 0.06804910022643308
+        },
+        "2025": {
+          "races": 296,
+          "tickets": 2424,
+          "hits": 56,
+          "hit_rate": 18.91891891891892,
+          "stake": 242400,
+          "return": 231850,
+          "roi": 95.6476897689769,
+          "roi_without_max": 77.85507246376811,
+          "max_return_share": 0.18904464093163684
+        }
+      }
+    },
+    {
+      "rule": "field_size>=16 & axis_pp_sum>=0.8",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          16.0
+        ],
+        [
+          "axis_pp_sum",
+          ">=",
+          0.8
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 430,
+          "tickets": 3820,
+          "hits": 54,
+          "hit_rate": 12.558139534883722,
+          "stake": 382000,
+          "return": 364260,
+          "roi": 95.35602094240838,
+          "roi_without_max": 81.47992652847022,
+          "max_return_share": 0.14753198264975567
+        },
+        "2025": {
+          "races": 759,
+          "tickets": 6666,
+          "hits": 89,
+          "hit_rate": 11.725955204216074,
+          "stake": 666600,
+          "return": 689990,
+          "roi": 103.5088508850885,
+          "roi_without_max": 88.63602223223674,
+          "max_return_share": 0.14484267887940405
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_sum>=0.8 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "axis_pp_sum",
+          ">=",
+          0.8
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 230,
+          "tickets": 1895,
+          "hits": 38,
+          "hit_rate": 16.52173913043478,
+          "stake": 189500,
+          "return": 180030,
+          "roi": 95.00263852242745,
+          "roi_without_max": 83.3457051961824,
+          "max_return_share": 0.12686774426484476
+        },
+        "2025": {
+          "races": 112,
+          "tickets": 898,
+          "hits": 20,
+          "hit_rate": 17.857142857142858,
+          "stake": 89800,
+          "return": 91280,
+          "roi": 101.64810690423162,
+          "roi_without_max": 54.272930648769574,
+          "max_return_share": 0.4684487291849255
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.26 & hole_avg_odds<=50",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ],
+        [
+          "hole_avg_odds",
+          "<=",
+          50.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 420,
+          "tickets": 3425,
+          "hits": 64,
+          "hit_rate": 15.238095238095239,
+          "stake": 342500,
+          "return": 325280,
+          "roi": 94.97226277372263,
+          "roi_without_max": 88.53629976580797,
+          "max_return_share": 0.07021642892277423
+        },
+        "2025": {
+          "races": 299,
+          "tickets": 2406,
+          "hits": 54,
+          "hit_rate": 18.06020066889632,
+          "stake": 240600,
+          "return": 255340,
+          "roi": 106.12635078969244,
+          "roi_without_max": 88.23946599916562,
+          "max_return_share": 0.17165348163233335
+        }
+      }
+    },
+    {
+      "rule": "wp1>=0.22 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "wp1",
+          ">=",
+          0.22
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 194,
+          "tickets": 1561,
+          "hits": 32,
+          "hit_rate": 16.49484536082474,
+          "stake": 156100,
+          "return": 147850,
+          "roi": 94.71492632927611,
+          "roi_without_max": 80.54768041237114,
+          "max_return_share": 0.15448089279675348
+        },
+        "2025": {
+          "races": 101,
+          "tickets": 789,
+          "hits": 20,
+          "hit_rate": 19.801980198019802,
+          "stake": 78900,
+          "return": 91920,
+          "roi": 116.50190114068441,
+          "roi_without_max": 62.62420382165605,
+          "max_return_share": 0.4651871192341166
+        }
+      }
+    },
+    {
+      "rule": "hole_pp_sum>=0.7 & hole1_value>=4",
+      "parts": [
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ],
+        [
+          "hole1_value",
+          ">=",
+          4.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 203,
+          "tickets": 1637,
+          "hits": 31,
+          "hit_rate": 15.270935960591133,
+          "stake": 163700,
+          "return": 154710,
+          "roi": 94.50824679291387,
+          "roi_without_max": 81.0012285012285,
+          "max_return_share": 0.14763105164501325
+        },
+        "2025": {
+          "races": 92,
+          "tickets": 738,
+          "hits": 14,
+          "hit_rate": 15.217391304347828,
+          "stake": 73800,
+          "return": 98150,
+          "roi": 132.99457994579944,
+          "roi_without_max": 75.46321525885558,
+          "max_return_share": 0.4356597045338767
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.35 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.35
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 216,
+          "tickets": 1739,
+          "hits": 34,
+          "hit_rate": 15.74074074074074,
+          "stake": 173900,
+          "return": 163950,
+          "roi": 94.27832087406556,
+          "roi_without_max": 81.56647398843931,
+          "max_return_share": 0.13931076547727966
+        },
+        "2025": {
+          "races": 115,
+          "tickets": 905,
+          "hits": 21,
+          "hit_rate": 18.26086956521739,
+          "stake": 90500,
+          "return": 92710,
+          "roi": 102.44198895027624,
+          "roi_without_max": 55.438401775804664,
+          "max_return_share": 0.46122316902168053
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.02 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.02
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 133,
+          "tickets": 1074,
+          "hits": 8,
+          "hit_rate": 6.015037593984962,
+          "stake": 107400,
+          "return": 100620,
+          "roi": 93.68715083798882,
+          "roi_without_max": 44.01877934272301,
+          "max_return_share": 0.5340886503677201
+        },
+        "2025": {
+          "races": 107,
+          "tickets": 847,
+          "hits": 6,
+          "hit_rate": 5.607476635514018,
+          "stake": 84700,
+          "return": 130360,
+          "roi": 153.90791027154663,
+          "roi_without_max": 36.30071599045346,
+          "max_return_share": 0.7666462104940166
+        }
+      }
+    },
+    {
+      "rule": "wp1>=0.18 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "wp1",
+          ">=",
+          0.18
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 232,
+          "tickets": 1863,
+          "hits": 36,
+          "hit_rate": 15.517241379310345,
+          "stake": 186300,
+          "return": 174010,
+          "roi": 93.40311325818573,
+          "roi_without_max": 81.53721682847896,
+          "max_return_share": 0.13125682432044136
+        },
+        "2025": {
+          "races": 115,
+          "tickets": 905,
+          "hits": 21,
+          "hit_rate": 18.26086956521739,
+          "stake": 90500,
+          "return": 92710,
+          "roi": 102.44198895027624,
+          "roi_without_max": 55.438401775804664,
+          "max_return_share": 0.46122316902168053
+        }
+      }
+    },
+    {
+      "rule": "field_size>=12 & hole1_pp>=0.26",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          12.0
+        ],
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 302,
+          "tickets": 2508,
+          "hits": 34,
+          "hit_rate": 11.258278145695364,
+          "stake": 250800,
+          "return": 233740,
+          "roi": 93.19776714513557,
+          "roi_without_max": 84.3937575030012,
+          "max_return_share": 0.09771541028493197
+        },
+        "2025": {
+          "races": 219,
+          "tickets": 1771,
+          "hits": 31,
+          "hit_rate": 14.15525114155251,
+          "stake": 177100,
+          "return": 193130,
+          "roi": 109.05138339920948,
+          "roi_without_max": 84.73325766174801,
+          "max_return_share": 0.22694558069693987
+        }
+      }
+    },
+    {
+      "rule": "axis_pp_min>=0.25 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "axis_pp_min",
+          ">=",
+          0.25
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 244,
+          "tickets": 1991,
+          "hits": 39,
+          "hit_rate": 15.983606557377051,
+          "stake": 199100,
+          "return": 184330,
+          "roi": 92.58161727774987,
+          "roi_without_max": 81.47830474268416,
+          "max_return_share": 0.12390820810502902
+        },
+        "2025": {
+          "races": 109,
+          "tickets": 886,
+          "hits": 20,
+          "hit_rate": 18.34862385321101,
+          "stake": 88600,
+          "return": 91280,
+          "roi": 103.02483069977427,
+          "roi_without_max": 55.01133786848072,
+          "max_return_share": 0.4684487291849255
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.26 & hole3_pp>=0.12",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ],
+        [
+          "hole3_pp",
+          ">=",
+          0.12
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 404,
+          "tickets": 3281,
+          "hits": 57,
+          "hit_rate": 14.108910891089108,
+          "stake": 328100,
+          "return": 303750,
+          "roi": 92.5784821700701,
+          "roi_without_max": 85.85268948655256,
+          "max_return_share": 0.07519341563786008
+        },
+        "2025": {
+          "races": 267,
+          "tickets": 2143,
+          "hits": 49,
+          "hit_rate": 18.352059925093634,
+          "stake": 214300,
+          "return": 237710,
+          "roi": 110.9239384041064,
+          "roi_without_max": 90.85285848172447,
+          "max_return_share": 0.18438433385217282
+        }
+      }
+    },
+    {
+      "rule": "wp1>=0.18 & hole1_market_gap>=5",
+      "parts": [
+        [
+          "wp1",
+          ">=",
+          0.18
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 193,
+          "tickets": 1614,
+          "hits": 14,
+          "hit_rate": 7.253886010362693,
+          "stake": 161400,
+          "return": 176380,
+          "roi": 109.2812887236679,
+          "roi_without_max": 76.41121495327103,
+          "max_return_share": 0.30468307064293004
+        },
+        "2025": {
+          "races": 270,
+          "tickets": 2267,
+          "hits": 22,
+          "hit_rate": 8.148148148148149,
+          "stake": 226700,
+          "return": 209810,
+          "roi": 92.54962505513895,
+          "roi_without_max": 48.65810451727192,
+          "max_return_share": 0.47633573232925025
+        }
+      }
+    },
+    {
+      "rule": "field_size>=10 & hole1_pp>=0.26",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          10.0
+        ],
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 407,
+          "tickets": 3363,
+          "hits": 55,
+          "hit_rate": 13.513513513513514,
+          "stake": 336300,
+          "return": 310210,
+          "roi": 92.24204579244721,
+          "roi_without_max": 85.67978533094812,
+          "max_return_share": 0.07362754263241031
+        },
+        "2025": {
+          "races": 267,
+          "tickets": 2168,
+          "hits": 43,
+          "hit_rate": 16.10486891385768,
+          "stake": 216800,
+          "return": 229460,
+          "roi": 105.83948339483395,
+          "roi_without_max": 85.9796201945345,
+          "max_return_share": 0.19101368430227492
+        }
+      }
+    },
+    {
+      "rule": "field_size>=16 & wp_top2>=0.35",
+      "parts": [
+        [
+          "field_size",
+          ">=",
+          16.0
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.35
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 400,
+          "tickets": 3362,
+          "hits": 48,
+          "hit_rate": 12.0,
+          "stake": 336200,
+          "return": 341730,
+          "roi": 101.64485425342059,
+          "roi_without_max": 85.89024753951685,
+          "max_return_share": 0.15725865449331344
+        },
+        "2025": {
+          "races": 708,
+          "tickets": 5932,
+          "hits": 71,
+          "hit_rate": 10.028248587570623,
+          "stake": 593200,
+          "return": 547150,
+          "roi": 92.23701955495616,
+          "roi_without_max": 75.5039675839946,
+          "max_return_share": 0.18265557890889153
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.26 & hole_pp_sum>=0.6",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.6
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 403,
+          "tickets": 3282,
+          "hits": 61,
+          "hit_rate": 15.136476426799009,
+          "stake": 328200,
+          "return": 302010,
+          "roi": 92.0201096892139,
+          "roi_without_max": 85.29483654139933,
+          "max_return_share": 0.07562663487963975
+        },
+        "2025": {
+          "races": 246,
+          "tickets": 1949,
+          "hits": 46,
+          "hit_rate": 18.69918699186992,
+          "stake": 194900,
+          "return": 216270,
+          "roi": 110.96459722934839,
+          "roi_without_max": 88.88659793814433,
+          "max_return_share": 0.20266333749479817
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.08 & hole1_market_gap>=6",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.08
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          6.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 212,
+          "tickets": 1722,
+          "hits": 13,
+          "hit_rate": 6.132075471698113,
+          "stake": 172200,
+          "return": 158310,
+          "roi": 91.93379790940766,
+          "roi_without_max": 61.04495037945126,
+          "max_return_share": 0.33946055208135933
+        },
+        "2025": {
+          "races": 191,
+          "tickets": 1525,
+          "hits": 14,
+          "hit_rate": 7.329842931937172,
+          "stake": 152500,
+          "return": 181630,
+          "roi": 119.1016393442623,
+          "roi_without_max": 53.88522427440633,
+          "max_return_share": 0.5502394978803061
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.08 & hole1_pp>=0.26",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.08
+        ],
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 318,
+          "tickets": 2617,
+          "hits": 44,
+          "hit_rate": 13.836477987421384,
+          "stake": 261700,
+          "return": 240490,
+          "roi": 91.89529996178831,
+          "roi_without_max": 83.454754601227,
+          "max_return_share": 0.09497276394028857
+        },
+        "2025": {
+          "races": 187,
+          "tickets": 1528,
+          "hits": 25,
+          "hit_rate": 13.368983957219251,
+          "stake": 152800,
+          "return": 159870,
+          "roi": 104.62696335078535,
+          "roi_without_max": 76.39236339697169,
+          "max_return_share": 0.274160255207356
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.26 & hole3_pp>=0.1",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ],
+        [
+          "hole3_pp",
+          ">=",
+          0.1
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 454,
+          "tickets": 3706,
+          "hits": 69,
+          "hit_rate": 15.198237885462554,
+          "stake": 370600,
+          "return": 340380,
+          "roi": 91.84565569347005,
+          "roi_without_max": 85.89126318636733,
+          "max_return_share": 0.06710147482225748
+        },
+        "2025": {
+          "races": 303,
+          "tickets": 2437,
+          "hits": 57,
+          "hit_rate": 18.81188118811881,
+          "stake": 243700,
+          "return": 258790,
+          "roi": 106.19203939269593,
+          "roi_without_max": 88.53377265238879,
+          "max_return_share": 0.1693651222999343
+        }
+      }
+    },
+    {
+      "rule": "axis_odds_max<=5 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "axis_odds_max",
+          "<=",
+          5.0
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 125,
+          "tickets": 1125,
+          "hits": 29,
+          "hit_rate": 23.200000000000003,
+          "stake": 112500,
+          "return": 133830,
+          "roi": 118.96,
+          "roi_without_max": 99.45340501792114,
+          "max_return_share": 0.17066427557348876
+        },
+        "2025": {
+          "races": 58,
+          "tickets": 522,
+          "hits": 18,
+          "hit_rate": 31.03448275862069,
+          "stake": 52200,
+          "return": 47800,
+          "roi": 91.57088122605364,
+          "roi_without_max": 63.099415204678365,
+          "max_return_share": 0.3228033472803347
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.04 & hole1_market_gap>=3",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.04
+        ],
+        [
+          "hole1_market_gap",
+          ">=",
+          3.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 463,
+          "tickets": 3778,
+          "hits": 38,
+          "hit_rate": 8.207343412526997,
+          "stake": 377800,
+          "return": 358790,
+          "roi": 94.96823716251986,
+          "roi_without_max": 80.93658795436455,
+          "max_return_share": 0.14978120906379777
+        },
+        "2025": {
+          "races": 488,
+          "tickets": 3899,
+          "hits": 31,
+          "hit_rate": 6.352459016393443,
+          "stake": 389900,
+          "return": 355760,
+          "roi": 91.24390869453705,
+          "roi_without_max": 65.76349614395887,
+          "max_return_share": 0.2809197211603328
+        }
+      }
+    },
+    {
+      "rule": "wp1>=0.18 & wp_gap<=0.02",
+      "parts": [
+        [
+          "wp1",
+          ">=",
+          0.18
+        ],
+        [
+          "wp_gap",
+          "<=",
+          0.02
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 198,
+          "tickets": 1712,
+          "hits": 26,
+          "hit_rate": 13.131313131313133,
+          "stake": 171200,
+          "return": 246970,
+          "roi": 144.25817757009347,
+          "roi_without_max": 113.46447445684088,
+          "max_return_share": 0.21759727902174353
+        },
+        "2025": {
+          "races": 282,
+          "tickets": 2398,
+          "hits": 26,
+          "hit_rate": 9.219858156028367,
+          "stake": 239800,
+          "return": 218690,
+          "roi": 91.19683069224354,
+          "roi_without_max": 49.706990372540815,
+          "max_return_share": 0.4569939183318853
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.4 & hole1_value>=4",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ],
+        [
+          "hole1_value",
+          ">=",
+          4.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 594,
+          "tickets": 5126,
+          "hits": 75,
+          "hit_rate": 12.626262626262626,
+          "stake": 512600,
+          "return": 467450,
+          "roi": 91.19196254389388,
+          "roi_without_max": 80.8501074848544,
+          "max_return_share": 0.11496416729061931
+        },
+        "2025": {
+          "races": 739,
+          "tickets": 6346,
+          "hits": 94,
+          "hit_rate": 12.719891745602165,
+          "stake": 634600,
+          "return": 610550,
+          "roi": 96.2102111566341,
+          "roi_without_max": 80.57598232602177,
+          "max_return_share": 0.16368847760216199
+        }
+      }
+    },
+    {
+      "rule": "hole3_pp>=0.18 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "hole3_pp",
+          ">=",
+          0.18
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 248,
+          "tickets": 1992,
+          "hits": 32,
+          "hit_rate": 12.903225806451612,
+          "stake": 199200,
+          "return": 180750,
+          "roi": 90.73795180722891,
+          "roi_without_max": 79.63187090267272,
+          "max_return_share": 0.12636237897648686
+        },
+        "2025": {
+          "races": 98,
+          "tickets": 777,
+          "hits": 18,
+          "hit_rate": 18.367346938775512,
+          "stake": 77700,
+          "return": 104460,
+          "roi": 134.44015444015443,
+          "roi_without_max": 79.81888745148771,
+          "max_return_share": 0.4093432892973387
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.08 & wp_top2>=0.4",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.08
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.4
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 449,
+          "tickets": 3871,
+          "hits": 63,
+          "hit_rate": 14.03118040089087,
+          "stake": 387100,
+          "return": 374660,
+          "roi": 96.78636011366572,
+          "roi_without_max": 83.09684101501813,
+          "max_return_share": 0.14343671595579993
+        },
+        "2025": {
+          "races": 712,
+          "tickets": 6093,
+          "hits": 81,
+          "hit_rate": 11.376404494382022,
+          "stake": 609300,
+          "return": 552240,
+          "roi": 90.63515509601181,
+          "roi_without_max": 74.34253780407627,
+          "max_return_share": 0.18097204114153267
+        }
+      }
+    },
+    {
+      "rule": "favorite_odds>=1.5 & hole_pp_sum>=0.7",
+      "parts": [
+        [
+          "favorite_odds",
+          ">=",
+          1.5
+        ],
+        [
+          "hole_pp_sum",
+          ">=",
+          0.7
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 238,
+          "tickets": 1962,
+          "hits": 31,
+          "hit_rate": 13.025210084033615,
+          "stake": 196200,
+          "return": 177110,
+          "roi": 90.27013251783895,
+          "roi_without_max": 78.99129544290835,
+          "max_return_share": 0.1289594037603749
+        },
+        "2025": {
+          "races": 111,
+          "tickets": 879,
+          "hits": 20,
+          "hit_rate": 18.01801801801802,
+          "stake": 87900,
+          "return": 114910,
+          "roi": 130.72810011376563,
+          "roi_without_max": 82.45714285714286,
+          "max_return_share": 0.37211730919850317
+        }
+      }
+    },
+    {
+      "rule": "wp_gap<=0.06 & wp_top2>=0.45",
+      "parts": [
+        [
+          "wp_gap",
+          "<=",
+          0.06
+        ],
+        [
+          "wp_top2",
+          ">=",
+          0.45
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 230,
+          "tickets": 1995,
+          "hits": 30,
+          "hit_rate": 13.043478260869565,
+          "stake": 199500,
+          "return": 185410,
+          "roi": 92.93734335839599,
+          "roi_without_max": 66.29909365558912,
+          "max_return_share": 0.2898441292271183
+        },
+        "2025": {
+          "races": 388,
+          "tickets": 3327,
+          "hits": 51,
+          "hit_rate": 13.144329896907218,
+          "stake": 332700,
+          "return": 300170,
+          "roi": 90.2224226029456,
+          "roi_without_max": 64.20433996383363,
+          "max_return_share": 0.2903021621081387
+        }
+      }
+    },
+    {
+      "rule": "wp_top2>=0.35 & hole1_value>=5",
+      "parts": [
+        [
+          "wp_top2",
+          ">=",
+          0.35
+        ],
+        [
+          "hole1_value",
+          ">=",
+          5.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 586,
+          "tickets": 5026,
+          "hits": 70,
+          "hit_rate": 11.945392491467576,
+          "stake": 502600,
+          "return": 452460,
+          "roi": 90.02387584560286,
+          "roi_without_max": 79.4737891170022,
+          "max_return_share": 0.11877293020377491
+        },
+        "2025": {
+          "races": 680,
+          "tickets": 5820,
+          "hits": 83,
+          "hit_rate": 12.205882352941176,
+          "stake": 582000,
+          "return": 535310,
+          "roi": 91.97766323024055,
+          "roi_without_max": 74.92170022371364,
+          "max_return_share": 0.1866955595822981
+        }
+      }
+    },
+    {
+      "rule": "hole1_pp>=0.26 & hole_avg_odds<=70",
+      "parts": [
+        [
+          "hole1_pp",
+          ">=",
+          0.26
+        ],
+        [
+          "hole_avg_odds",
+          "<=",
+          70.0
+        ]
+      ],
+      "periods": {
+        "2024": {
+          "races": 480,
+          "tickets": 3925,
+          "hits": 73,
+          "hit_rate": 15.208333333333332,
+          "stake": 392500,
+          "return": 353160,
+          "roi": 89.97707006369427,
+          "roi_without_max": 84.35137895812053,
+          "max_return_share": 0.06467323592705855
+        },
+        "2025": {
+          "races": 328,
+          "tickets": 2647,
+          "hits": 57,
+          "hit_rate": 17.378048780487802,
+          "stake": 264700,
+          "return": 258220,
+          "roi": 97.55194559879108,
+          "roi_without_max": 81.26990144048521,
+          "max_return_share": 0.16973898226318643
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Final win odds proxy seven-minute odds.",
+    "Sanfuku odds themselves are unavailable.",
+    "JRA payout coverage currently ends in 2025."
+  ]
+}
