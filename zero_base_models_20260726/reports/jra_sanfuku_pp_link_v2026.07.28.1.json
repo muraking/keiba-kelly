@@ -1,0 +1,383 @@
+{
+  "version": "v2026.07.28.1",
+  "market": "jra",
+  "formation": [
+    "win1,win2",
+    "win1,win2,hole1,hole2,hole3",
+    "hole1,hole2,hole3"
+  ],
+  "selection": "win=top2 p_win; hole=top3 p_place among win_odds>=10",
+  "sanfuku": {
+    "overall": {
+      "races": 5831,
+      "tickets": 47936,
+      "mean_tickets_per_race": 8.220888355342137,
+      "hits": 636,
+      "hit_rate": 10.90722003086949,
+      "stake": 4793600,
+      "return": 3368680,
+      "roi": 70.27453271028037,
+      "roi_without_max_return": 68.20247459678261,
+      "max_return_share": 0.029667406818100858,
+      "races_with_win_hole_overlap": 828
+    },
+    "yearly": {
+      "2024": {
+        "races": 2482,
+        "tickets": 20489,
+        "mean_tickets_per_race": 8.255036261079775,
+        "hits": 256,
+        "hit_rate": 10.314262691377921,
+        "stake": 2048900,
+        "return": 1353490,
+        "roi": 66.05934891893212,
+        "roi_without_max_return": 63.46435546875,
+        "max_return_share": 0.0397047632416937,
+        "races_with_win_hole_overlap": 333
+      },
+      "2025": {
+        "races": 3349,
+        "tickets": 27447,
+        "mean_tickets_per_race": 8.195580770379218,
+        "hits": 380,
+        "hit_rate": 11.346670647954614,
+        "stake": 2744700,
+        "return": 2015190,
+        "roi": 73.42113892228659,
+        "roi_without_max_return": 69.80282819447481,
+        "max_return_share": 0.04959333859338325,
+        "races_with_win_hole_overlap": 495
+      },
+      "2026": {
+        "races": 0,
+        "tickets": 0,
+        "hits": 0,
+        "hit_rate": 0,
+        "stake": 0,
+        "return": 0,
+        "roi": 0
+      }
+    }
+  },
+  "pp_top2_link": {
+    "overall": {
+      "horses": 115886,
+      "pearson_pp_vs_top2": 0.4045704399036313,
+      "spearman_pp_vs_top2": 0.3658687407190631,
+      "auc_pp_for_top2": 0.7997961498972309,
+      "bands": {
+        "0-5%": {
+          "horses": 20846,
+          "mean_pp": 3.221733282428304,
+          "actual_place_rate": 2.8542646071188718,
+          "actual_top2_rate": 1.386357094886309,
+          "top2_share_among_places": 48.57142857142857
+        },
+        "5-10%": {
+          "horses": 25622,
+          "mean_pp": 7.38247683324251,
+          "actual_place_rate": 8.582468191398016,
+          "actual_top2_rate": 4.7186012020919526,
+          "top2_share_among_places": 54.979536152796726
+        },
+        "10-15%": {
+          "horses": 19890,
+          "mean_pp": 12.396251371532664,
+          "actual_place_rate": 15.188536953242835,
+          "actual_top2_rate": 8.758169934640522,
+          "top2_share_among_places": 57.66302548824892
+        },
+        "15-20%": {
+          "horses": 12780,
+          "mean_pp": 17.271913947507723,
+          "actual_place_rate": 21.838810641627543,
+          "actual_top2_rate": 12.949921752738655,
+          "top2_share_among_places": 59.29774274453601
+        },
+        "20-25%": {
+          "horses": 7752,
+          "mean_pp": 22.31476718101199,
+          "actual_place_rate": 28.85706914344685,
+          "actual_top2_rate": 18.70485036119711,
+          "top2_share_among_places": 64.81895395619132
+        },
+        "25-30%": {
+          "horses": 5461,
+          "mean_pp": 27.431710529998217,
+          "actual_place_rate": 36.49514740889947,
+          "actual_top2_rate": 23.969968870170298,
+          "top2_share_among_places": 65.67987957852483
+        },
+        "30-40%": {
+          "horses": 8562,
+          "mean_pp": 34.77514182544089,
+          "actual_place_rate": 44.05512730670404,
+          "actual_top2_rate": 30.880635365568793,
+          "top2_share_among_places": 70.09544008483563
+        },
+        "40-50%": {
+          "horses": 6706,
+          "mean_pp": 44.72366528178864,
+          "actual_place_rate": 50.50700864897107,
+          "actual_top2_rate": 36.80286310766478,
+          "top2_share_among_places": 72.86684381458518
+        },
+        "50-70%": {
+          "horses": 7213,
+          "mean_pp": 57.979030729854884,
+          "actual_place_rate": 61.11188132538472,
+          "actual_top2_rate": 46.72119783723832,
+          "top2_share_among_places": 76.45190562613429
+        },
+        "70-100%": {
+          "horses": 1054,
+          "mean_pp": 74.50852156815537,
+          "actual_place_rate": 78.4629981024668,
+          "actual_top2_rate": 65.46489563567363,
+          "top2_share_among_places": 83.4340991535671
+        }
+      }
+    },
+    "yearly": {
+      "2024": {
+        "horses": 45446,
+        "pearson_pp_vs_top2": 0.40547182777910873,
+        "spearman_pp_vs_top2": 0.36960286361818373,
+        "auc_pp_for_top2": 0.8014872808496527,
+        "bands": {
+          "0-5%": {
+            "horses": 7768,
+            "mean_pp": 3.364480744186276,
+            "actual_place_rate": 2.5746652935118437,
+            "actual_top2_rate": 1.1585993820803295,
+            "top2_share_among_places": 45.0
+          },
+          "5-10%": {
+            "horses": 9783,
+            "mean_pp": 7.35627940782064,
+            "actual_place_rate": 8.330777879995912,
+            "actual_top2_rate": 4.436266993764694,
+            "top2_share_among_places": 53.25153374233129
+          },
+          "10-15%": {
+            "horses": 7469,
+            "mean_pp": 12.413047218563026,
+            "actual_place_rate": 14.446378363904136,
+            "actual_top2_rate": 8.234034007229884,
+            "top2_share_among_places": 56.997219647822064
+          },
+          "15-20%": {
+            "horses": 5040,
+            "mean_pp": 17.350609749094563,
+            "actual_place_rate": 22.023809523809522,
+            "actual_top2_rate": 13.015873015873018,
+            "top2_share_among_places": 59.09909909909909
+          },
+          "20-25%": {
+            "horses": 3625,
+            "mean_pp": 22.370730467905133,
+            "actual_place_rate": 28.165517241379312,
+            "actual_top2_rate": 17.71034482758621,
+            "top2_share_among_places": 62.87952987267384
+          },
+          "25-30%": {
+            "horses": 2595,
+            "mean_pp": 27.38513727104474,
+            "actual_place_rate": 35.49132947976879,
+            "actual_top2_rate": 23.468208092485547,
+            "top2_share_among_places": 66.12377850162866
+          },
+          "30-40%": {
+            "horses": 3522,
+            "mean_pp": 34.65495184986206,
+            "actual_place_rate": 46.19534355479841,
+            "actual_top2_rate": 33.13458262350937,
+            "top2_share_among_places": 71.72710510141364
+          },
+          "40-50%": {
+            "horses": 2645,
+            "mean_pp": 44.75559194395431,
+            "actual_place_rate": 51.03969754253308,
+            "actual_top2_rate": 37.20226843100189,
+            "top2_share_among_places": 72.88888888888889
+          },
+          "50-70%": {
+            "horses": 2668,
+            "mean_pp": 57.80389343908384,
+            "actual_place_rate": 60.6071964017991,
+            "actual_top2_rate": 46.85157421289355,
+            "top2_share_among_places": 77.30364873222017
+          },
+          "70-100%": {
+            "horses": 331,
+            "mean_pp": 73.81884891195811,
+            "actual_place_rate": 80.06042296072508,
+            "actual_top2_rate": 67.6737160120846,
+            "top2_share_among_places": 84.52830188679246
+          }
+        }
+      },
+      "2025": {
+        "horses": 46344,
+        "pearson_pp_vs_top2": 0.4057029737942333,
+        "spearman_pp_vs_top2": 0.364270717793759,
+        "auc_pp_for_top2": 0.7987428973348057,
+        "bands": {
+          "0-5%": {
+            "horses": 8794,
+            "mean_pp": 3.172180706265488,
+            "actual_place_rate": 3.1157607459631564,
+            "actual_top2_rate": 1.5010234250625425,
+            "top2_share_among_places": 48.175182481751825
+          },
+          "5-10%": {
+            "horses": 10372,
+            "mean_pp": 7.379879801846282,
+            "actual_place_rate": 9.120709602776707,
+            "actual_top2_rate": 5.138835325877362,
+            "top2_share_among_places": 56.342494714587744
+          },
+          "10-15%": {
+            "horses": 8184,
+            "mean_pp": 12.375876217980867,
+            "actual_place_rate": 15.835777126099707,
+            "actual_top2_rate": 9.237536656891496,
+            "top2_share_among_places": 58.333333333333336
+          },
+          "15-20%": {
+            "horses": 4926,
+            "mean_pp": 17.1959574779143,
+            "actual_place_rate": 22.168087697929355,
+            "actual_top2_rate": 12.951684937068617,
+            "top2_share_among_places": 58.42490842490843
+          },
+          "20-25%": {
+            "horses": 2634,
+            "mean_pp": 22.312287810876196,
+            "actual_place_rate": 29.992406985573272,
+            "actual_top2_rate": 19.58997722095672,
+            "top2_share_among_places": 65.31645569620254
+          },
+          "25-30%": {
+            "horses": 1920,
+            "mean_pp": 27.47172279934186,
+            "actual_place_rate": 37.76041666666667,
+            "actual_top2_rate": 24.010416666666668,
+            "top2_share_among_places": 63.58620689655172
+          },
+          "30-40%": {
+            "horses": 3365,
+            "mean_pp": 34.8571317151796,
+            "actual_place_rate": 41.75334323922734,
+            "actual_top2_rate": 28.885586924219908,
+            "top2_share_among_places": 69.1814946619217
+          },
+          "40-50%": {
+            "horses": 2714,
+            "mean_pp": 44.730609350322545,
+            "actual_place_rate": 49.55784819454679,
+            "actual_top2_rate": 36.9933677229182,
+            "top2_share_among_places": 74.64684014869889
+          },
+          "50-70%": {
+            "horses": 2977,
+            "mean_pp": 58.09629037210389,
+            "actual_place_rate": 61.6392341283171,
+            "actual_top2_rate": 47.49748068525361,
+            "top2_share_among_places": 77.05722070844688
+          },
+          "70-100%": {
+            "horses": 458,
+            "mean_pp": 74.96980147176387,
+            "actual_place_rate": 78.16593886462883,
+            "actual_top2_rate": 63.1004366812227,
+            "top2_share_among_places": 80.72625698324022
+          }
+        }
+      },
+      "2026": {
+        "horses": 24096,
+        "pearson_pp_vs_top2": 0.401319164091728,
+        "spearman_pp_vs_top2": 0.3625371527625917,
+        "auc_pp_for_top2": 0.7991606836461729,
+        "bands": {
+          "0-5%": {
+            "horses": 4284,
+            "mean_pp": 3.0646144850053054,
+            "actual_place_rate": 2.824463118580766,
+            "actual_top2_rate": 1.5639589169000934,
+            "top2_share_among_places": 55.371900826446286
+          },
+          "5-10%": {
+            "horses": 5467,
+            "mean_pp": 7.434283275997918,
+            "actual_place_rate": 8.011706603255899,
+            "actual_top2_rate": 4.426559356136821,
+            "top2_share_among_places": 55.25114155251142
+          },
+          "10-15%": {
+            "horses": 4237,
+            "mean_pp": 12.405999324140184,
+            "actual_place_rate": 15.246636771300448,
+            "actual_top2_rate": 8.756195421288647,
+            "top2_share_among_places": 57.43034055727554
+          },
+          "15-20%": {
+            "horses": 2814,
+            "mean_pp": 17.263930553484823,
+            "actual_place_rate": 20.931058990760484,
+            "actual_top2_rate": 12.828713574982231,
+            "top2_share_among_places": 61.29032258064516
+          },
+          "20-25%": {
+            "horses": 1493,
+            "mean_pp": 22.183262657200906,
+            "actual_place_rate": 28.53315472203617,
+            "actual_top2_rate": 19.55793703951775,
+            "top2_share_among_places": 68.54460093896714
+          },
+          "25-30%": {
+            "horses": 946,
+            "mean_pp": 27.47825815139829,
+            "actual_place_rate": 36.680761099365746,
+            "actual_top2_rate": 25.26427061310782,
+            "top2_share_among_places": 68.87608069164266
+          },
+          "30-40%": {
+            "horses": 1675,
+            "mean_pp": 34.86314965530231,
+            "actual_place_rate": 44.17910447761194,
+            "actual_top2_rate": 30.149253731343283,
+            "top2_share_among_places": 68.24324324324324
+          },
+          "40-50%": {
+            "horses": 1347,
+            "mean_pp": 44.64698211665933,
+            "actual_place_rate": 51.37342242019302,
+            "actual_top2_rate": 35.634743875278396,
+            "top2_share_among_places": 69.36416184971098
+          },
+          "50-70%": {
+            "horses": 1568,
+            "mean_pp": 58.054403393631574,
+            "actual_place_rate": 60.96938775510205,
+            "actual_top2_rate": 45.025510204081634,
+            "top2_share_among_places": 73.84937238493724
+          },
+          "70-100%": {
+            "horses": 265,
+            "mean_pp": 74.57273082607465,
+            "actual_place_rate": 76.9811320754717,
+            "actual_top2_rate": 66.79245283018868,
+            "top2_share_among_places": 86.76470588235294
+          }
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Walk-forward OOS model probabilities are used.",
+    "Final odds proxy the seven-minute longshot threshold.",
+    "Final tote sanfuku payouts are used."
+  ]
+}
