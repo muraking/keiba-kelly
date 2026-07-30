@@ -1,0 +1,1534 @@
+{
+  "version": "v2026.07.30.2",
+  "source": "reports\\current_audit_20260730_multibet_local_bets.csv",
+  "date_min": "2024-07-01",
+  "date_max": "2026-06-30",
+  "candidates": [
+    {
+      "strategy_id": "WIN_ALL",
+      "target_set": "T8",
+      "overall": {
+        "races": 110,
+        "tickets": 470,
+        "roi": 110.47,
+        "profit": 4920
+      },
+      "without_top1_payout": {
+        "races": 109,
+        "tickets": 462,
+        "roi": 102.66,
+        "profit": 1230
+      },
+      "without_top3_payouts": {
+        "races": 107,
+        "tickets": 441,
+        "roi": 95.31,
+        "profit": -2070
+      },
+      "bootstrap_race_resampling": {
+        "p05": 91.19,
+        "median": 109.85,
+        "p95": 130.22,
+        "prob_gt_100": 0.802
+      },
+      "by_year": [
+        {
+          "year": "2024",
+          "races": 30,
+          "tickets": 120,
+          "roi": 91.33,
+          "profit": -1040
+        },
+        {
+          "year": "2025",
+          "races": 57,
+          "tickets": 252,
+          "roi": 106.9,
+          "profit": 1740
+        },
+        {
+          "year": "2026",
+          "races": 23,
+          "tickets": 98,
+          "roi": 143.06,
+          "profit": 4220
+        }
+      ],
+      "by_fold": [
+        {
+          "fold": "1",
+          "races": 12,
+          "tickets": 57,
+          "roi": 98.77,
+          "profit": -70
+        },
+        {
+          "fold": "2",
+          "races": 18,
+          "tickets": 63,
+          "roi": 84.6,
+          "profit": -970
+        },
+        {
+          "fold": "3",
+          "races": 12,
+          "tickets": 66,
+          "roi": 125.61,
+          "profit": 1690
+        },
+        {
+          "fold": "4",
+          "races": 14,
+          "tickets": 44,
+          "roi": 102.27,
+          "profit": 100
+        },
+        {
+          "fold": "5",
+          "races": 15,
+          "tickets": 77,
+          "roi": 105.58,
+          "profit": 430
+        },
+        {
+          "fold": "6",
+          "races": 16,
+          "tickets": 65,
+          "roi": 92.62,
+          "profit": -480
+        },
+        {
+          "fold": "7",
+          "races": 10,
+          "tickets": 46,
+          "roi": 188.04,
+          "profit": 4050
+        },
+        {
+          "fold": "8",
+          "races": 13,
+          "tickets": 52,
+          "roi": 103.27,
+          "profit": 170
+        }
+      ],
+      "by_half": [
+        {
+          "half": "early",
+          "races": 56,
+          "tickets": 230,
+          "roi": 103.26,
+          "profit": 750
+        },
+        {
+          "half": "late",
+          "races": 54,
+          "tickets": 240,
+          "roi": 117.38,
+          "profit": 4170
+        }
+      ],
+      "by_venue": [
+        {
+          "venue": "佐賀",
+          "races": 16,
+          "tickets": 67,
+          "roi": 98.06,
+          "profit": -130
+        },
+        {
+          "venue": "金沢",
+          "races": 13,
+          "tickets": 49,
+          "roi": 76.53,
+          "profit": -1150
+        },
+        {
+          "venue": "大井",
+          "races": 12,
+          "tickets": 51,
+          "roi": 92.55,
+          "profit": -380
+        },
+        {
+          "venue": "浦和",
+          "races": 11,
+          "tickets": 41,
+          "roi": 127.56,
+          "profit": 1130
+        },
+        {
+          "venue": "高知",
+          "races": 11,
+          "tickets": 48,
+          "roi": 187.5,
+          "profit": 4200
+        },
+        {
+          "venue": "園田",
+          "races": 8,
+          "tickets": 35,
+          "roi": 95.71,
+          "profit": -150
+        },
+        {
+          "venue": "船橋",
+          "races": 8,
+          "tickets": 43,
+          "roi": 122.09,
+          "profit": 950
+        },
+        {
+          "venue": "川崎",
+          "races": 7,
+          "tickets": 28,
+          "roi": 78.21,
+          "profit": -610
+        },
+        {
+          "venue": "名古屋",
+          "races": 6,
+          "tickets": 30,
+          "roi": 96.0,
+          "profit": -120
+        },
+        {
+          "venue": "門別",
+          "races": 6,
+          "tickets": 25,
+          "roi": 82.4,
+          "profit": -440
+        },
+        {
+          "venue": "水沢",
+          "races": 4,
+          "tickets": 23,
+          "roi": 84.35,
+          "profit": -360
+        },
+        {
+          "venue": "盛岡",
+          "races": 4,
+          "tickets": 13,
+          "roi": 70.77,
+          "profit": -380
+        },
+        {
+          "venue": "笠松",
+          "races": 4,
+          "tickets": 17,
+          "roi": 238.82,
+          "profit": 2360
+        }
+      ]
+    },
+    {
+      "strategy_id": "PLACE_ALL",
+      "target_set": "T7",
+      "overall": {
+        "races": 141,
+        "tickets": 543,
+        "roi": 130.46,
+        "profit": 16540
+      },
+      "without_top1_payout": {
+        "races": 140,
+        "tickets": 534,
+        "roi": 124.91,
+        "profit": 13300
+      },
+      "without_top3_payouts": {
+        "races": 138,
+        "tickets": 516,
+        "roi": 117.98,
+        "profit": 9280
+      },
+      "bootstrap_race_resampling": {
+        "p05": 116.95,
+        "median": 129.86,
+        "p95": 145.11,
+        "prob_gt_100": 1.0
+      },
+      "by_year": [
+        {
+          "year": "2024",
+          "races": 37,
+          "tickets": 136,
+          "roi": 113.6,
+          "profit": 1850
+        },
+        {
+          "year": "2025",
+          "races": 74,
+          "tickets": 290,
+          "roi": 141.24,
+          "profit": 11960
+        },
+        {
+          "year": "2026",
+          "races": 30,
+          "tickets": 117,
+          "roi": 123.33,
+          "profit": 2730
+        }
+      ],
+      "by_fold": [
+        {
+          "fold": "1",
+          "races": 15,
+          "tickets": 65,
+          "roi": 120.92,
+          "profit": 1360
+        },
+        {
+          "fold": "2",
+          "races": 22,
+          "tickets": 71,
+          "roi": 106.9,
+          "profit": 490
+        },
+        {
+          "fold": "3",
+          "races": 14,
+          "tickets": 70,
+          "roi": 144.86,
+          "profit": 3140
+        },
+        {
+          "fold": "4",
+          "races": 20,
+          "tickets": 55,
+          "roi": 128.73,
+          "profit": 1580
+        },
+        {
+          "fold": "5",
+          "races": 16,
+          "tickets": 81,
+          "roi": 103.46,
+          "profit": 280
+        },
+        {
+          "fold": "6",
+          "races": 24,
+          "tickets": 84,
+          "roi": 182.86,
+          "profit": 6960
+        },
+        {
+          "fold": "7",
+          "races": 14,
+          "tickets": 57,
+          "roi": 135.96,
+          "profit": 2050
+        },
+        {
+          "fold": "8",
+          "races": 16,
+          "tickets": 60,
+          "roi": 111.33,
+          "profit": 680
+        }
+      ],
+      "by_half": [
+        {
+          "half": "early",
+          "races": 71,
+          "tickets": 261,
+          "roi": 125.17,
+          "profit": 6570
+        },
+        {
+          "half": "late",
+          "races": 70,
+          "tickets": 282,
+          "roi": 135.35,
+          "profit": 9970
+        }
+      ],
+      "by_venue": [
+        {
+          "venue": "佐賀",
+          "races": 22,
+          "tickets": 84,
+          "roi": 161.43,
+          "profit": 5160
+        },
+        {
+          "venue": "金沢",
+          "races": 18,
+          "tickets": 57,
+          "roi": 95.09,
+          "profit": -280
+        },
+        {
+          "venue": "大井",
+          "races": 15,
+          "tickets": 61,
+          "roi": 101.48,
+          "profit": 90
+        },
+        {
+          "venue": "高知",
+          "races": 13,
+          "tickets": 52,
+          "roi": 150.19,
+          "profit": 2610
+        },
+        {
+          "venue": "船橋",
+          "races": 12,
+          "tickets": 52,
+          "roi": 131.15,
+          "profit": 1620
+        },
+        {
+          "venue": "名古屋",
+          "races": 11,
+          "tickets": 41,
+          "roi": 100.49,
+          "profit": 20
+        },
+        {
+          "venue": "浦和",
+          "races": 11,
+          "tickets": 50,
+          "roi": 112.4,
+          "profit": 620
+        },
+        {
+          "venue": "川崎",
+          "races": 9,
+          "tickets": 34,
+          "roi": 141.76,
+          "profit": 1420
+        },
+        {
+          "venue": "園田",
+          "races": 8,
+          "tickets": 27,
+          "roi": 104.07,
+          "profit": 110
+        },
+        {
+          "venue": "門別",
+          "races": 7,
+          "tickets": 26,
+          "roi": 121.15,
+          "profit": 550
+        },
+        {
+          "venue": "水沢",
+          "races": 5,
+          "tickets": 25,
+          "roi": 234.0,
+          "profit": 3350
+        },
+        {
+          "venue": "盛岡",
+          "races": 5,
+          "tickets": 14,
+          "roi": 135.71,
+          "profit": 500
+        },
+        {
+          "venue": "笠松",
+          "races": 5,
+          "tickets": 20,
+          "roi": 138.5,
+          "profit": 770
+        }
+      ]
+    },
+    {
+      "strategy_id": "PLACE_ALL",
+      "target_set": "T8",
+      "overall": {
+        "races": 104,
+        "tickets": 445,
+        "roi": 131.46,
+        "profit": 14000
+      },
+      "without_top1_payout": {
+        "races": 103,
+        "tickets": 436,
+        "roi": 124.68,
+        "profit": 10760
+      },
+      "without_top3_payouts": {
+        "races": 101,
+        "tickets": 414,
+        "roi": 118.29,
+        "profit": 7570
+      },
+      "bootstrap_race_resampling": {
+        "p05": 116.48,
+        "median": 130.82,
+        "p95": 147.7,
+        "prob_gt_100": 1.0
+      },
+      "by_year": [
+        {
+          "year": "2024",
+          "races": 28,
+          "tickets": 112,
+          "roi": 112.32,
+          "profit": 1380
+        },
+        {
+          "year": "2025",
+          "races": 54,
+          "tickets": 241,
+          "roi": 141.66,
+          "profit": 10040
+        },
+        {
+          "year": "2026",
+          "races": 22,
+          "tickets": 92,
+          "roi": 128.04,
+          "profit": 2580
+        }
+      ],
+      "by_fold": [
+        {
+          "fold": "1",
+          "races": 11,
+          "tickets": 53,
+          "roi": 118.68,
+          "profit": 990
+        },
+        {
+          "fold": "2",
+          "races": 17,
+          "tickets": 59,
+          "roi": 106.61,
+          "profit": 390
+        },
+        {
+          "fold": "3",
+          "races": 11,
+          "tickets": 62,
+          "roi": 157.1,
+          "profit": 3540
+        },
+        {
+          "fold": "4",
+          "races": 14,
+          "tickets": 44,
+          "roi": 135.0,
+          "profit": 1540
+        },
+        {
+          "fold": "5",
+          "races": 14,
+          "tickets": 72,
+          "roi": 96.25,
+          "profit": -270
+        },
+        {
+          "fold": "6",
+          "races": 15,
+          "tickets": 63,
+          "roi": 183.02,
+          "profit": 5230
+        },
+        {
+          "fold": "7",
+          "races": 10,
+          "tickets": 46,
+          "roi": 143.04,
+          "profit": 1980
+        },
+        {
+          "fold": "8",
+          "races": 12,
+          "tickets": 46,
+          "roi": 113.04,
+          "profit": 600
+        }
+      ],
+      "by_half": [
+        {
+          "half": "early",
+          "races": 53,
+          "tickets": 218,
+          "roi": 129.63,
+          "profit": 6460
+        },
+        {
+          "half": "late",
+          "races": 51,
+          "tickets": 227,
+          "roi": 133.22,
+          "profit": 7540
+        }
+      ],
+      "by_venue": [
+        {
+          "venue": "佐賀",
+          "races": 15,
+          "tickets": 65,
+          "roi": 137.38,
+          "profit": 2430
+        },
+        {
+          "venue": "大井",
+          "races": 12,
+          "tickets": 51,
+          "roi": 110.0,
+          "profit": 510
+        },
+        {
+          "venue": "金沢",
+          "races": 12,
+          "tickets": 45,
+          "roi": 102.44,
+          "profit": 110
+        },
+        {
+          "venue": "浦和",
+          "races": 11,
+          "tickets": 41,
+          "roi": 111.46,
+          "profit": 470
+        },
+        {
+          "venue": "高知",
+          "races": 10,
+          "tickets": 44,
+          "roi": 166.14,
+          "profit": 2910
+        },
+        {
+          "venue": "船橋",
+          "races": 8,
+          "tickets": 43,
+          "roi": 145.81,
+          "profit": 1970
+        },
+        {
+          "venue": "川崎",
+          "races": 7,
+          "tickets": 28,
+          "roi": 121.07,
+          "profit": 590
+        },
+        {
+          "venue": "名古屋",
+          "races": 6,
+          "tickets": 30,
+          "roi": 99.67,
+          "profit": -10
+        },
+        {
+          "venue": "園田",
+          "races": 6,
+          "tickets": 24,
+          "roi": 102.92,
+          "profit": 70
+        },
+        {
+          "venue": "門別",
+          "races": 5,
+          "tickets": 21,
+          "roi": 104.29,
+          "profit": 90
+        },
+        {
+          "venue": "水沢",
+          "races": 4,
+          "tickets": 23,
+          "roi": 247.39,
+          "profit": 3390
+        },
+        {
+          "venue": "盛岡",
+          "races": 4,
+          "tickets": 13,
+          "roi": 138.46,
+          "profit": 500
+        },
+        {
+          "venue": "笠松",
+          "races": 4,
+          "tickets": 17,
+          "roi": 157.06,
+          "profit": 970
+        }
+      ]
+    },
+    {
+      "strategy_id": "W4",
+      "target_set": "T7",
+      "overall": {
+        "races": 147,
+        "tickets": 490,
+        "roi": 207.39,
+        "profit": 52620
+      },
+      "without_top1_payout": {
+        "races": 146,
+        "tickets": 480,
+        "roi": 184.96,
+        "profit": 40780
+      },
+      "without_top3_payouts": {
+        "races": 144,
+        "tickets": 465,
+        "roi": 161.57,
+        "profit": 28630
+      },
+      "bootstrap_race_resampling": {
+        "p05": 156.18,
+        "median": 204.42,
+        "p95": 262.16,
+        "prob_gt_100": 1.0
+      },
+      "by_year": [
+        {
+          "year": "2024",
+          "races": 39,
+          "tickets": 122,
+          "roi": 218.52,
+          "profit": 14460
+        },
+        {
+          "year": "2025",
+          "races": 78,
+          "tickets": 266,
+          "roi": 225.64,
+          "profit": 33420
+        },
+        {
+          "year": "2026",
+          "races": 30,
+          "tickets": 102,
+          "roi": 146.47,
+          "profit": 4740
+        }
+      ],
+      "by_fold": [
+        {
+          "fold": "1",
+          "races": 16,
+          "tickets": 58,
+          "roi": 320.0,
+          "profit": 12760
+        },
+        {
+          "fold": "2",
+          "races": 23,
+          "tickets": 64,
+          "roi": 126.56,
+          "profit": 1700
+        },
+        {
+          "fold": "3",
+          "races": 15,
+          "tickets": 62,
+          "roi": 164.35,
+          "profit": 3990
+        },
+        {
+          "fold": "4",
+          "races": 19,
+          "tickets": 47,
+          "roi": 148.3,
+          "profit": 2270
+        },
+        {
+          "fold": "5",
+          "races": 19,
+          "tickets": 83,
+          "roi": 182.29,
+          "profit": 6830
+        },
+        {
+          "fold": "6",
+          "races": 25,
+          "tickets": 74,
+          "roi": 374.73,
+          "profit": 20330
+        },
+        {
+          "fold": "7",
+          "races": 14,
+          "tickets": 49,
+          "roi": 163.47,
+          "profit": 3110
+        },
+        {
+          "fold": "8",
+          "races": 16,
+          "tickets": 53,
+          "roi": 130.75,
+          "profit": 1630
+        }
+      ],
+      "by_half": [
+        {
+          "half": "early",
+          "races": 73,
+          "tickets": 231,
+          "roi": 189.7,
+          "profit": 20720
+        },
+        {
+          "half": "late",
+          "races": 74,
+          "tickets": 259,
+          "roi": 223.17,
+          "profit": 31900
+        }
+      ],
+      "by_venue": [
+        {
+          "venue": "佐賀",
+          "races": 23,
+          "tickets": 77,
+          "roi": 206.75,
+          "profit": 8220
+        },
+        {
+          "venue": "金沢",
+          "races": 19,
+          "tickets": 55,
+          "roi": 82.0,
+          "profit": -990
+        },
+        {
+          "venue": "大井",
+          "races": 15,
+          "tickets": 52,
+          "roi": 132.88,
+          "profit": 1710
+        },
+        {
+          "venue": "高知",
+          "races": 14,
+          "tickets": 46,
+          "roi": 406.74,
+          "profit": 14110
+        },
+        {
+          "venue": "船橋",
+          "races": 12,
+          "tickets": 46,
+          "roi": 359.57,
+          "profit": 11940
+        },
+        {
+          "venue": "名古屋",
+          "races": 11,
+          "tickets": 35,
+          "roi": 129.71,
+          "profit": 1040
+        },
+        {
+          "venue": "浦和",
+          "races": 11,
+          "tickets": 43,
+          "roi": 132.56,
+          "profit": 1400
+        },
+        {
+          "venue": "園田",
+          "races": 10,
+          "tickets": 31,
+          "roi": 113.55,
+          "profit": 420
+        },
+        {
+          "venue": "川崎",
+          "races": 10,
+          "tickets": 33,
+          "roi": 224.85,
+          "profit": 4120
+        },
+        {
+          "venue": "門別",
+          "races": 8,
+          "tickets": 24,
+          "roi": 133.75,
+          "profit": 810
+        },
+        {
+          "venue": "盛岡",
+          "races": 5,
+          "tickets": 12,
+          "roi": 161.67,
+          "profit": 740
+        },
+        {
+          "venue": "笠松",
+          "races": 5,
+          "tickets": 16,
+          "roi": 207.5,
+          "profit": 1720
+        },
+        {
+          "venue": "水沢",
+          "races": 4,
+          "tickets": 20,
+          "roi": 469.0,
+          "profit": 7380
+        }
+      ]
+    },
+    {
+      "strategy_id": "W4",
+      "target_set": "T8",
+      "overall": {
+        "races": 111,
+        "tickets": 404,
+        "roi": 213.79,
+        "profit": 45970
+      },
+      "without_top1_payout": {
+        "races": 110,
+        "tickets": 394,
+        "roi": 186.62,
+        "profit": 34130
+      },
+      "without_top3_payouts": {
+        "races": 108,
+        "tickets": 379,
+        "roi": 157.99,
+        "profit": 21980
+      },
+      "bootstrap_race_resampling": {
+        "p05": 156.76,
+        "median": 210.43,
+        "p95": 278.35,
+        "prob_gt_100": 1.0
+      },
+      "by_year": [
+        {
+          "year": "2024",
+          "races": 30,
+          "tickets": 102,
+          "roi": 251.18,
+          "profit": 15420
+        },
+        {
+          "year": "2025",
+          "races": 58,
+          "tickets": 220,
+          "roi": 217.32,
+          "profit": 25810
+        },
+        {
+          "year": "2026",
+          "races": 23,
+          "tickets": 82,
+          "roi": 157.8,
+          "profit": 4740
+        }
+      ],
+      "by_fold": [
+        {
+          "fold": "1",
+          "races": 12,
+          "tickets": 48,
+          "roi": 379.17,
+          "profit": 13400
+        },
+        {
+          "fold": "2",
+          "races": 18,
+          "tickets": 54,
+          "roi": 137.41,
+          "profit": 2020
+        },
+        {
+          "fold": "3",
+          "races": 12,
+          "tickets": 54,
+          "roi": 185.0,
+          "profit": 4590
+        },
+        {
+          "fold": "4",
+          "races": 14,
+          "tickets": 38,
+          "roi": 141.32,
+          "profit": 1570
+        },
+        {
+          "fold": "5",
+          "races": 16,
+          "tickets": 71,
+          "roi": 155.92,
+          "profit": 3970
+        },
+        {
+          "fold": "6",
+          "races": 16,
+          "tickets": 57,
+          "roi": 375.09,
+          "profit": 15680
+        },
+        {
+          "fold": "7",
+          "races": 10,
+          "tickets": 39,
+          "roi": 179.23,
+          "profit": 3090
+        },
+        {
+          "fold": "8",
+          "races": 13,
+          "tickets": 43,
+          "roi": 138.37,
+          "profit": 1650
+        }
+      ],
+      "by_half": [
+        {
+          "half": "early",
+          "races": 56,
+          "tickets": 194,
+          "roi": 211.24,
+          "profit": 21580
+        },
+        {
+          "half": "late",
+          "races": 55,
+          "tickets": 210,
+          "roi": 216.14,
+          "profit": 24390
+        }
+      ],
+      "by_venue": [
+        {
+          "venue": "佐賀",
+          "races": 16,
+          "tickets": 59,
+          "roi": 157.8,
+          "profit": 3410
+        },
+        {
+          "venue": "金沢",
+          "races": 13,
+          "tickets": 42,
+          "roi": 70.24,
+          "profit": -1250
+        },
+        {
+          "venue": "大井",
+          "races": 12,
+          "tickets": 43,
+          "roi": 152.33,
+          "profit": 2250
+        },
+        {
+          "venue": "浦和",
+          "races": 11,
+          "tickets": 34,
+          "roi": 144.41,
+          "profit": 1510
+        },
+        {
+          "venue": "高知",
+          "races": 11,
+          "tickets": 40,
+          "roi": 462.5,
+          "profit": 14500
+        },
+        {
+          "venue": "園田",
+          "races": 8,
+          "tickets": 29,
+          "roi": 117.59,
+          "profit": 510
+        },
+        {
+          "venue": "川崎",
+          "races": 8,
+          "tickets": 29,
+          "roi": 165.86,
+          "profit": 1910
+        },
+        {
+          "venue": "船橋",
+          "races": 8,
+          "tickets": 38,
+          "roi": 419.47,
+          "profit": 12140
+        },
+        {
+          "venue": "名古屋",
+          "races": 6,
+          "tickets": 26,
+          "roi": 86.54,
+          "profit": -350
+        },
+        {
+          "venue": "門別",
+          "races": 6,
+          "tickets": 19,
+          "roi": 168.95,
+          "profit": 1310
+        },
+        {
+          "venue": "水沢",
+          "races": 4,
+          "tickets": 19,
+          "roi": 493.68,
+          "profit": 7480
+        },
+        {
+          "venue": "盛岡",
+          "races": 4,
+          "tickets": 11,
+          "roi": 166.36,
+          "profit": 730
+        },
+        {
+          "venue": "笠松",
+          "races": 4,
+          "tickets": 15,
+          "roi": 221.33,
+          "profit": 1820
+        }
+      ]
+    },
+    {
+      "strategy_id": "U4",
+      "target_set": "T7",
+      "overall": {
+        "races": 147,
+        "tickets": 490,
+        "roi": 285.82,
+        "profit": 91050
+      },
+      "without_top1_payout": {
+        "races": 146,
+        "tickets": 484,
+        "roi": 203.51,
+        "profit": 50100
+      },
+      "without_top3_payouts": {
+        "races": 144,
+        "tickets": 466,
+        "roi": 137.7,
+        "profit": 17570
+      },
+      "bootstrap_race_resampling": {
+        "p05": 150.68,
+        "median": 274.28,
+        "p95": 458.54,
+        "prob_gt_100": 0.9985
+      },
+      "by_year": [
+        {
+          "year": "2024",
+          "races": 39,
+          "tickets": 122,
+          "roi": 271.64,
+          "profit": 20940
+        },
+        {
+          "year": "2025",
+          "races": 78,
+          "tickets": 266,
+          "roi": 343.12,
+          "profit": 64670
+        },
+        {
+          "year": "2026",
+          "races": 30,
+          "tickets": 102,
+          "roi": 153.33,
+          "profit": 5440
+        }
+      ],
+      "by_fold": [
+        {
+          "fold": "1",
+          "races": 16,
+          "tickets": 58,
+          "roi": 475.86,
+          "profit": 21800
+        },
+        {
+          "fold": "2",
+          "races": 23,
+          "tickets": 64,
+          "roi": 86.56,
+          "profit": -860
+        },
+        {
+          "fold": "3",
+          "races": 15,
+          "tickets": 62,
+          "roi": 126.94,
+          "profit": 1670
+        },
+        {
+          "fold": "4",
+          "races": 19,
+          "tickets": 47,
+          "roi": 108.72,
+          "profit": 410
+        },
+        {
+          "fold": "5",
+          "races": 19,
+          "tickets": 83,
+          "roi": 139.28,
+          "profit": 3260
+        },
+        {
+          "fold": "6",
+          "races": 25,
+          "tickets": 74,
+          "roi": 901.76,
+          "profit": 59330
+        },
+        {
+          "fold": "7",
+          "races": 14,
+          "tickets": 49,
+          "roi": 114.69,
+          "profit": 720
+        },
+        {
+          "fold": "8",
+          "races": 16,
+          "tickets": 53,
+          "roi": 189.06,
+          "profit": 4720
+        }
+      ],
+      "by_half": [
+        {
+          "half": "early",
+          "races": 73,
+          "tickets": 231,
+          "roi": 199.65,
+          "profit": 23020
+        },
+        {
+          "half": "late",
+          "races": 74,
+          "tickets": 259,
+          "roi": 362.66,
+          "profit": 68030
+        }
+      ],
+      "by_venue": [
+        {
+          "venue": "佐賀",
+          "races": 23,
+          "tickets": 77,
+          "roi": 718.05,
+          "profit": 47590
+        },
+        {
+          "venue": "金沢",
+          "races": 19,
+          "tickets": 55,
+          "roi": 49.82,
+          "profit": -2760
+        },
+        {
+          "venue": "大井",
+          "races": 15,
+          "tickets": 52,
+          "roi": 132.12,
+          "profit": 1670
+        },
+        {
+          "venue": "高知",
+          "races": 14,
+          "tickets": 46,
+          "roi": 170.87,
+          "profit": 3260
+        },
+        {
+          "venue": "船橋",
+          "races": 12,
+          "tickets": 46,
+          "roi": 540.0,
+          "profit": 20240
+        },
+        {
+          "venue": "名古屋",
+          "races": 11,
+          "tickets": 35,
+          "roi": 42.86,
+          "profit": -2000
+        },
+        {
+          "venue": "浦和",
+          "races": 11,
+          "tickets": 43,
+          "roi": 117.44,
+          "profit": 750
+        },
+        {
+          "venue": "園田",
+          "races": 10,
+          "tickets": 31,
+          "roi": 110.0,
+          "profit": 310
+        },
+        {
+          "venue": "川崎",
+          "races": 10,
+          "tickets": 33,
+          "roi": 224.55,
+          "profit": 4110
+        },
+        {
+          "venue": "門別",
+          "races": 8,
+          "tickets": 24,
+          "roi": 139.17,
+          "profit": 940
+        },
+        {
+          "venue": "盛岡",
+          "races": 5,
+          "tickets": 12,
+          "roi": 173.33,
+          "profit": 880
+        },
+        {
+          "venue": "笠松",
+          "races": 5,
+          "tickets": 16,
+          "roi": 328.75,
+          "profit": 3660
+        },
+        {
+          "venue": "水沢",
+          "races": 4,
+          "tickets": 20,
+          "roi": 720.0,
+          "profit": 12400
+        }
+      ]
+    },
+    {
+      "strategy_id": "U4",
+      "target_set": "T8",
+      "overall": {
+        "races": 111,
+        "tickets": 404,
+        "roi": 226.46,
+        "profit": 51090
+      },
+      "without_top1_payout": {
+        "races": 110,
+        "tickets": 394,
+        "roi": 178.63,
+        "profit": 30980
+      },
+      "without_top3_payouts": {
+        "races": 108,
+        "tickets": 380,
+        "roi": 136.58,
+        "profit": 13900
+      },
+      "bootstrap_race_resampling": {
+        "p05": 135.43,
+        "median": 219.7,
+        "p95": 329.25,
+        "prob_gt_100": 0.9966
+      },
+      "by_year": [
+        {
+          "year": "2024",
+          "races": 30,
+          "tickets": 102,
+          "roi": 317.55,
+          "profit": 22190
+        },
+        {
+          "year": "2025",
+          "races": 58,
+          "tickets": 220,
+          "roi": 202.14,
+          "profit": 22470
+        },
+        {
+          "year": "2026",
+          "races": 23,
+          "tickets": 82,
+          "roi": 178.41,
+          "profit": 6430
+        }
+      ],
+      "by_fold": [
+        {
+          "fold": "1",
+          "races": 12,
+          "tickets": 48,
+          "roi": 575.0,
+          "profit": 22800
+        },
+        {
+          "fold": "2",
+          "races": 18,
+          "tickets": 54,
+          "roi": 88.7,
+          "profit": -610
+        },
+        {
+          "fold": "3",
+          "races": 12,
+          "tickets": 54,
+          "roi": 145.74,
+          "profit": 2470
+        },
+        {
+          "fold": "4",
+          "races": 14,
+          "tickets": 38,
+          "roi": 97.63,
+          "profit": -90
+        },
+        {
+          "fold": "5",
+          "races": 16,
+          "tickets": 71,
+          "roi": 120.85,
+          "profit": 1480
+        },
+        {
+          "fold": "6",
+          "races": 16,
+          "tickets": 57,
+          "roi": 426.49,
+          "profit": 18610
+        },
+        {
+          "fold": "7",
+          "races": 10,
+          "tickets": 39,
+          "roi": 118.21,
+          "profit": 710
+        },
+        {
+          "fold": "8",
+          "races": 13,
+          "tickets": 43,
+          "roi": 233.02,
+          "profit": 5720
+        }
+      ],
+      "by_half": [
+        {
+          "half": "early",
+          "races": 56,
+          "tickets": 194,
+          "roi": 226.65,
+          "profit": 24570
+        },
+        {
+          "half": "late",
+          "races": 55,
+          "tickets": 210,
+          "roi": 226.29,
+          "profit": 26520
+        }
+      ],
+      "by_venue": [
+        {
+          "venue": "佐賀",
+          "races": 16,
+          "tickets": 59,
+          "roi": 217.63,
+          "profit": 6940
+        },
+        {
+          "venue": "金沢",
+          "races": 13,
+          "tickets": 42,
+          "roi": 46.43,
+          "profit": -2250
+        },
+        {
+          "venue": "大井",
+          "races": 12,
+          "tickets": 43,
+          "roi": 146.05,
+          "profit": 1980
+        },
+        {
+          "venue": "浦和",
+          "races": 11,
+          "tickets": 34,
+          "roi": 74.71,
+          "profit": -860
+        },
+        {
+          "venue": "高知",
+          "races": 11,
+          "tickets": 40,
+          "roi": 186.75,
+          "profit": 3470
+        },
+        {
+          "venue": "園田",
+          "races": 8,
+          "tickets": 29,
+          "roi": 113.1,
+          "profit": 380
+        },
+        {
+          "venue": "川崎",
+          "races": 8,
+          "tickets": 29,
+          "roi": 240.0,
+          "profit": 4060
+        },
+        {
+          "venue": "船橋",
+          "races": 8,
+          "tickets": 38,
+          "roi": 640.79,
+          "profit": 20550
+        },
+        {
+          "venue": "名古屋",
+          "races": 6,
+          "tickets": 26,
+          "roi": 32.69,
+          "profit": -1750
+        },
+        {
+          "venue": "門別",
+          "races": 6,
+          "tickets": 19,
+          "roi": 175.79,
+          "profit": 1440
+        },
+        {
+          "venue": "水沢",
+          "races": 4,
+          "tickets": 19,
+          "roi": 757.89,
+          "profit": 12500
+        },
+        {
+          "venue": "盛岡",
+          "races": 4,
+          "tickets": 11,
+          "roi": 179.09,
+          "profit": 870
+        },
+        {
+          "venue": "笠松",
+          "races": 4,
+          "tickets": 15,
+          "roi": 350.67,
+          "profit": 3760
+        }
+      ]
+    }
+  ]
+}
