@@ -1,8 +1,11 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.07.14.5
+  v2026.08.08.1
 
   変更履歴:
+    v2026.08.08.1 - PWAのレース指数を手動アップロード値からSol-TI新指数へ変更。
+                   note_indexをレース情報源、ai_index_liveを当日勝率の優先値として利用。
+                   indices.jsonは設定・オッズ用に限定し、新指数未生成日のみ旧指数へフォールバック。
     v2026.07.14.5 - 「指数」タブが note_index（--noteで作った前日/当日指数）も読むように。ai_live_archiveと
                    統合し、ノート作成直後から指数タブに表示（前日は純%のみ→ライブでオッズ/EV/脚質が埋まる）。
     v2026.07.14.4 - 「指数」タブに脚質タグ（［逃/先/差/追/転］）と展開行（脚質構成→前残り/差し有利）を追加。
@@ -336,7 +339,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.07.14.5</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.08.08.1</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -776,7 +779,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.07.14.5</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.08.08.1</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -2559,6 +2562,13 @@ function loadSoftmaxSettings() {
 }
 
 function softmaxNorm(horses, temperature, minPct) {
+  // Sol-TI WPは既にレース内合計1の勝率。再softmaxせず、そのまま購入判断へ使う。
+  if(horses.length && horses.every(h => Number.isFinite(Number(h.newNorm)))){
+    const total = horses.reduce((s,h) => s + Number(h.newNorm), 0);
+    const direct = {};
+    horses.forEach(h => { direct[h.num] = total > 0 ? Number(h.newNorm) / total : 0; });
+    return direct;
+  }
   const T = temperature || 15;
   const minP = (minPct !== undefined) ? minPct : 3.0;
   const valid = horses.filter(h => h.pct >= minP);
@@ -3181,7 +3191,7 @@ function showIndexRace(date, key){
   if(!detail) return;
   const preCss = 'white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;line-height:1.75;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:0';
   if(!rec){ detail.textContent = 'データなし'; return; }
-  const p = rec.p || {}, n = rec.n || rec.p || {}, o = rec.o || {}, h = rec.h || {};
+  const p = rec.sw || rec.p || {}, n = rec.sw || rec.n || rec.p || {}, o = rec.o || {}, h = rec.h || {};
   const dol = new Set((rec.d||[]).map(x=>String(x)));
   const styl = rec.s || {};                      // 脚質(逃/先/差/追/？)
   const xf = new Set((rec.x||[]).map(x=>String(x)));   // 中央転入馬
@@ -3383,6 +3393,79 @@ let currentRaceName = '';
 let currentRaceClass = '';
 let currentStartTime = '';
 
+function _splitNewIndexKey(key){
+  const m = String(key).match(/^(.+?)(\d+)$/);
+  return m ? {venue:m[1], raceNum:parseInt(m[2],10)} : null;
+}
+
+function _newIndexRace(key, rec, liveProb, oldRace){
+  const part = _splitNewIndexKey(key);
+  if(!part || !rec) return null;
+  const probs = liveProb || rec.sw || rec.p || {};
+  const names = rec.h || {};
+  const nums = Object.keys(probs).filter(n => Number(probs[n]) >= 0);
+  if(!nums.length) return null;
+  const oldByNum = {};
+  for(const h of (oldRace?.horses || [])) oldByNum[String(h.num)] = h;
+  const horses = nums.map(n => {
+    const p = Number(probs[n]);
+    return {
+      ...(oldByNum[n] || {}), num:parseInt(n,10),
+      name:String(names[n] || oldByNum[n]?.name || ''),
+      pct:p * 100, newNorm:p
+    };
+  });
+  return {
+    ...(oldRace || {}), venue:part.venue, raceNum:`${part.raceNum}R`,
+    startTime:String(rec.t || oldRace?.startTime || ''),
+    raceName:String(rec.rn || rec.race_name || oldRace?.raceName || `${part.venue}${part.raceNum}R`),
+    raceClass:String(rec.rc || rec.race_class || oldRace?.raceClass || ''),
+    horses, newIndexBootstrap:true,
+    indexSource:liveProb ? 'Sol-TI live' : (rec.src === 'sol_ti' || rec.sw ? 'Sol-TI' : 'new-index archive')
+  };
+}
+
+async function _mergeNewIndexIntoGhData(token){
+  const ym = getTodayJST().slice(0,7).replace('-','_');
+  const [note, live] = await Promise.all([
+    _idxFetchFile(`data/note_index_${ym}.json`, token),
+    _idxFetchFile('data/ai_index_live.json', token)
+  ]);
+  let replaced = 0;
+  for(const [date, records] of Object.entries(note || {})){
+    const oldDay = ghData[date] || {};
+    const oldMap = {};
+    for(const race of (oldDay.races || [])){
+      const n = parseInt(String(race.raceNum || '').replace(/\D/g,''),10);
+      if(race.venue && n) oldMap[`${race.venue}${n}`] = race;
+    }
+    const liveRaces = live?.date === date ? (live.races || {}) : {};
+    const races = Object.entries(records || {}).map(([key,rec]) =>
+      _newIndexRace(key, rec, liveRaces[key], oldMap[key])
+    ).filter(Boolean).sort((a,b) =>
+      String(a.startTime).localeCompare(String(b.startTime)) ||
+      a.venue.localeCompare(b.venue) || parseInt(a.raceNum)-parseInt(b.raceNum)
+    );
+    if(races.length){
+      ghData[date] = {...oldDay, races, index_source:'Sol-TI'};
+      replaced += races.length;
+    }
+  }
+  // note未収録でも、当日live値と旧メタデータがあれば勝率だけはSol-TIへ差し替える。
+  if(live?.date && ghData[live.date]?.races){
+    for(const race of ghData[live.date].races){
+      const n = parseInt(String(race.raceNum || '').replace(/\D/g,''),10);
+      const probs = live.races?.[`${race.venue}${n}`];
+      if(!probs) continue;
+      race.horses = (race.horses || []).map(h => probs[String(h.num)] == null ? h :
+        ({...h, pct:Number(probs[String(h.num)])*100, newNorm:Number(probs[String(h.num)])}));
+      race.newIndexBootstrap = true;
+      race.indexSource = 'Sol-TI live';
+    }
+  }
+  return replaced;
+}
+
 // 中央(JRA)のイルカ推奨馬を月別ファイルからまとめて取得（プライベートリポジトリ・token必須／失敗時は静かにスキップ）
 async function loadIrukaPicks(token){
   if(!ghData) return;
@@ -3458,6 +3541,9 @@ async function fetchRaceList(){
       throw new Error('レースデータが空です。共有タブから保存してください。');
     }
 
+    // レースと勝率はSol-TIを優先。indices.jsonは設定・オッズ・旧日フォールバックとして保持する。
+    const newIndexRaces = await _mergeNewIndexIntoGhData(token);
+
     const ds = document.getElementById('date-select');
     ds.innerHTML = '<option value="">-- 日付を選択 --</option>';
     Object.keys(ghData).sort().reverse().forEach(d => {
@@ -3474,7 +3560,7 @@ async function fetchRaceList(){
     if(dates.length === 1){ ds.value = dates[0]; onDateChange(); }
 
     document.getElementById('date-area').style.display = 'block';
-    st.innerHTML = `<div class="status st-ok">✓ ${dates.length}日分のデータを取得しました</div>`;
+    st.innerHTML = `<div class="status st-ok">✓ ${dates.length}日分を取得（Sol-TI新指数 ${newIndexRaces}R）</div>`;
 
     // パフォーマンス指標パネルを自動更新
     updatePerfPanel(data._perf_local || {}, data._perf_jra || {});
