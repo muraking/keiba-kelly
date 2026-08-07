@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.08.08.1
+  v2026.08.08.2
 
   変更履歴:
+    v2026.08.08.2 - 新指数切替後のPWA表示を修正。レース選択へ会場・R番号を復元し、
+                   オッズ更新時もSol-TIマージと選択レースを維持。結果の全馬一覧を勝率順へ変更。
     v2026.08.08.1 - PWAのレース指数を手動アップロード値からSol-TI新指数へ変更。
                    note_indexをレース情報源、ai_index_liveを当日勝率の優先値として利用。
                    indices.jsonは設定・オッズ用に限定し、新指数未生成日のみ旧指数へフォールバック。
@@ -339,7 +341,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.08.08.1</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.08.08.2</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -779,7 +781,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.08.08.1</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.08.08.2</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -2653,7 +2655,10 @@ function calcAll(){
   }
 
   const fund=parseInt(document.getElementById('fund').value)||0;
-  const rname=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
+  const _racePrefix = currentRace ? `${currentRace.venue || ''}${currentRace.raceNum || ''}` : '';
+  const _plainRaceName=(typeof currentRaceName!=='undefined'&&currentRaceName)||'レース分析';
+  const rname = _racePrefix && !_plainRaceName.includes(_racePrefix)
+    ? `${_racePrefix} ${_plainRaceName}` : _plainRaceName;
   if(!fund){alert('資金を入力してください');sw('setup');return;}
 
   const _baseMaxBets = parseInt(localStorage.getItem('max_bets') || document.getElementById('max-bets')?.value || '4') || 4;
@@ -2926,7 +2931,7 @@ function calcAll(){
         <th style="padding:6px 10px;text-align:right;font-size:10px;color:var(--text3);font-weight:500">期待値</th>
       </tr></thead><tbody>`;
 
-  const allS=[...horses].sort((a,b)=>(b.tanEV||0)-(a.tanEV||0));
+  const allS=[...horses].sort((a,b)=>(b.norm||0)-(a.norm||0));
   for(const h of allS){
     const ev=h.tanEV,ec=ev>=150?'var(--green)':ev>=100?'var(--amber)':'var(--text3)';
     html+=`<tr style="border-bottom:0.5px solid var(--border)">
@@ -3615,7 +3620,9 @@ function onDateChange(){
     const timeStr = race.startTime ? ` ${race.startTime}` : '';
     const classStr = race.raceClass ? ` ${race.raceClass}` : '';
     const histTag = isInHistory(race) ? '✅ ' : '';
-    opt.textContent = `${histTag}${race.raceName}${timeStr}${classStr}`;
+    const venueRace = `${race.venue || ''}${race.raceNum || ''}`;
+    const raceName = race.raceName && !String(race.raceName).includes(venueRace) ? ` ${race.raceName}` : (race.raceName || '');
+    opt.textContent = `${histTag}${venueRace}${timeStr}${raceName}${classStr}`;
     rs.appendChild(opt);
   });
   if(savedIdx !== '' && savedIdx !== undefined && rs.querySelector(`option[value="${savedIdx}"]`)) {
@@ -3945,7 +3952,7 @@ function selectNearestRace(silent=false){
     onRaceChange();
     const diffStr = `発走${best.diff}分前`;
     document.getElementById('fetch-status').innerHTML =
-      `<div class="status st-ok">⏱ ${best.race.raceName} ${best.race.startTime}（${diffStr}）を選択しました</div>`;
+      `<div class="status st-ok">⏱ ${best.race.venue || ''}${best.race.raceNum || ''} ${best.race.startTime} ${best.race.raceName || ''}（${diffStr}）を選択しました</div>`;
   }, 150);
 }
 
@@ -3965,6 +3972,8 @@ async function refreshOdds(){
 
   (async () => {
     try {
+      const selectedVenue = currentRace?.venue;
+      const selectedRaceNum = currentRace?.raceNum;
       // GitHub API経由で最新データを取得（キャッシュなし）
       const token = loadToken();
       const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
@@ -3974,6 +3983,9 @@ async function refreshOdds(){
       if(data.dates){
         ghData = data.dates;
         ghData._settings = data._settings || {};  // _settingsも更新
+        await _mergeNewIndexIntoGhData(token);
+        const restored = ghData[date]?.races?.findIndex(r => r.venue === selectedVenue && r.raceNum === selectedRaceNum);
+        if(restored >= 0) document.getElementById('race-select').value = String(restored);
       }
 
       // 現在選択中のレースを再表示
@@ -4163,10 +4175,18 @@ function startAutoRefresh(){
     const idx = document.getElementById('race-select')?.value;
     if(!date || idx === '') return;
     try {
+      const selectedVenue = currentRace?.venue;
+      const selectedRaceNum = currentRace?.raceNum;
       const token = loadToken();
       const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
       const data = await fetchGHContent(apiUrl, token);
-      if(data.dates){ ghData = data.dates; ghData._settings = data._settings || {}; }
+      if(data.dates){
+        ghData = data.dates;
+        ghData._settings = data._settings || {};
+        await _mergeNewIndexIntoGhData(token);
+        const restored = ghData[date]?.races?.findIndex(r => r.venue === selectedVenue && r.raceNum === selectedRaceNum);
+        if(restored >= 0) document.getElementById('race-select').value = String(restored);
+      }
       // オッズ更新時刻を比較して変化を検知
       const prevUpdated = ghData[date]?.odds_updated;
       onRaceChange();
