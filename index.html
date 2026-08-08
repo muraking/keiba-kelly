@@ -1,8 +1,10 @@
 <!--
   keiba-kelly PWA index.html
-  v2026.08.08.3
+  v2026.08.08.4
 
   変更履歴:
+    v2026.08.08.4 - 非管理者も新指数を表示できるよう、公開note_indexを使用し、
+                   ai_index_liveを読めない場合は公開ai_live_archiveのSol-TIへフォールバック。
     v2026.08.08.3 - 指数タブのアーカイブにイルカ馬番dが無い場合、iruka_picksを読み、
                    会場・R番号・馬名照合で🐬を補完表示。
     v2026.08.08.2 - 新指数切替後のPWA表示を修正。レース選択へ会場・R番号を復元し、
@@ -343,7 +345,7 @@ textarea:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
-<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.08.08.3</div>
+<div style="position:fixed;bottom:4px;right:8px;font-size:9px;color:rgba(128,128,128,0.5);z-index:9999;pointer-events:none;font-family:monospace">v2026.08.08.4</div>
 
 <div id="pw-screen">
   <div class="pw-icon">
@@ -783,7 +785,7 @@ textarea:focus{border-color:var(--gold)}
     </div>
 
       <div style="margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border2);text-align:center">
-        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.08.08.3</span></div>
+        <div style="font-size:11px;color:var(--text3)">keiba-kelly PWA <span style="font-weight:600;color:var(--text2)">v2026.08.08.4</span></div>
       </div>
     </div><!-- /subtab-common -->
 
@@ -3444,9 +3446,10 @@ function _newIndexRace(key, rec, liveProb, oldRace){
 
 async function _mergeNewIndexIntoGhData(token){
   const ym = getTodayJST().slice(0,7).replace('-','_');
-  const [note, live] = await Promise.all([
+  const [note, live, archive] = await Promise.all([
     _idxFetchFile(`data/note_index_${ym}.json`, token),
-    _idxFetchFile('data/ai_index_live.json', token)
+    _idxFetchFile('data/ai_index_live.json', token),
+    _idxFetchFile(`data/ai_live_archive_${ym}.json`, token)
   ]);
   let replaced = 0;
   for(const [date, records] of Object.entries(note || {})){
@@ -3457,8 +3460,9 @@ async function _mergeNewIndexIntoGhData(token){
       if(race.venue && n) oldMap[`${race.venue}${n}`] = race;
     }
     const liveRaces = live?.date === date ? (live.races || {}) : {};
+    const archiveRaces = archive?.[date] || {};
     const races = Object.entries(records || {}).map(([key,rec]) =>
-      _newIndexRace(key, rec, liveRaces[key], oldMap[key])
+      _newIndexRace(key, rec, liveRaces[key] || archiveRaces[key]?.sw, oldMap[key])
     ).filter(Boolean).sort((a,b) =>
       String(a.startTime).localeCompare(String(b.startTime)) ||
       a.venue.localeCompare(b.venue) || parseInt(a.raceNum)-parseInt(b.raceNum)
