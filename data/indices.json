@@ -31920,7 +31920,64 @@
           }
         }
       },
-      "jra_odds_updated": "2026-08-15T14:18:24.921265+09:00"
+      "jra_odds_updated": "2026-08-15T14:18:24.921265+09:00",
+      "odds": {
+        "03": {
+          "1": {
+            "1": {
+              "tan": 17.4,
+              "fuku_min": 3.8,
+              "fuku_max": 7.8
+            },
+            "2": {
+              "tan": 6.8,
+              "fuku_min": 1.7,
+              "fuku_max": 3.2
+            },
+            "3": {
+              "tan": 15.9,
+              "fuku_min": 2.7,
+              "fuku_max": 5.5
+            },
+            "4": {
+              "tan": 10.1,
+              "fuku_min": 2,
+              "fuku_max": 3.8
+            },
+            "5": {
+              "tan": 17,
+              "fuku_min": 5.1,
+              "fuku_max": 10.7
+            },
+            "6": {
+              "tan": 8.2,
+              "fuku_min": 1.8,
+              "fuku_max": 3.4
+            },
+            "7": {
+              "tan": 2.1,
+              "fuku_min": 1,
+              "fuku_max": 1
+            },
+            "8": {
+              "tan": 20.9,
+              "fuku_min": 5.1,
+              "fuku_max": 10.7
+            },
+            "9": {
+              "tan": 9.4,
+              "fuku_min": 2.6,
+              "fuku_max": 5.2
+            },
+            "10": {
+              "tan": 10.8,
+              "fuku_min": 2,
+              "fuku_max": 4
+            }
+          }
+        }
+      },
+      "odds_updated": "2026-08-15T14:38:14.252424+09:00"
     }
   },
   "_settings": {
