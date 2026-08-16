@@ -33893,6 +33893,73 @@
               "fuku_min": 13.6,
               "fuku_max": 22.5
             }
+          },
+          "4": {
+            "1": {
+              "tan": 16.8,
+              "fuku_min": 2.4,
+              "fuku_max": 4.0
+            },
+            "2": {
+              "tan": 49.3,
+              "fuku_min": 7.0,
+              "fuku_max": 12.6
+            },
+            "3": {
+              "tan": 93.3,
+              "fuku_min": 8.5,
+              "fuku_max": 15.6
+            },
+            "4": {
+              "tan": 7.9,
+              "fuku_min": 1.7,
+              "fuku_max": 2.8
+            },
+            "5": {
+              "tan": 64.4,
+              "fuku_min": 6.9,
+              "fuku_max": 12.4
+            },
+            "6": {
+              "tan": 31.0,
+              "fuku_min": 3.8,
+              "fuku_max": 6.7
+            },
+            "7": {
+              "tan": 23.1,
+              "fuku_min": 2.7,
+              "fuku_max": 4.6
+            },
+            "8": {
+              "tan": 109.7,
+              "fuku_min": 9.2,
+              "fuku_max": 16.7
+            },
+            "9": {
+              "tan": 2.4,
+              "fuku_min": 1.2,
+              "fuku_max": 1.7
+            },
+            "10": {
+              "tan": 20.8,
+              "fuku_min": 3.3,
+              "fuku_max": 5.7
+            },
+            "11": {
+              "tan": 2.6,
+              "fuku_min": 1.2,
+              "fuku_max": 1.5
+            },
+            "12": {
+              "tan": 12.0,
+              "fuku_min": 2.0,
+              "fuku_max": 3.3
+            },
+            "13": {
+              "tan": 105.9,
+              "fuku_min": 10.5,
+              "fuku_max": 19.2
+            }
           }
         },
         "中京(日)": {
@@ -34242,7 +34309,7 @@
           }
         }
       },
-      "jra_odds_updated": "2026-08-16T10:53:26.238153+09:00"
+      "jra_odds_updated": "2026-08-16T11:03:26.135232+09:00"
     }
   },
   "_settings": {
