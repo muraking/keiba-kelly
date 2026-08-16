@@ -33730,9 +33730,63 @@
               "fuku_max": 106.3
             }
           }
+        },
+        "中京(日)": {
+          "1": {
+            "1": {
+              "tan": 12.5,
+              "fuku_min": 2.7,
+              "fuku_max": 4.0
+            },
+            "2": {
+              "tan": 6.8,
+              "fuku_min": 1.8,
+              "fuku_max": 2.6
+            },
+            "3": {
+              "tan": 237.5,
+              "fuku_min": 21.7,
+              "fuku_max": 33.9
+            },
+            "4": {
+              "tan": 19.2,
+              "fuku_min": 3.6,
+              "fuku_max": 5.5
+            },
+            "5": {
+              "tan": 3.9,
+              "fuku_min": 1.4,
+              "fuku_max": 1.9
+            },
+            "6": {
+              "tan": 7.7,
+              "fuku_min": 1.8,
+              "fuku_max": 2.6
+            },
+            "7": {
+              "tan": 33.1,
+              "fuku_min": 5.1,
+              "fuku_max": 8.0
+            },
+            "8": {
+              "tan": 3.5,
+              "fuku_min": 1.4,
+              "fuku_max": 2.0
+            },
+            "9": {
+              "tan": 3.7,
+              "fuku_min": 1.3,
+              "fuku_max": 1.7
+            },
+            "10": {
+              "tan": 93.6,
+              "fuku_min": 10.5,
+              "fuku_max": 16.4
+            }
+          }
         }
       },
-      "jra_odds_updated": "2026-08-16T09:37:20.518990+09:00"
+      "jra_odds_updated": "2026-08-16T09:43:21.906367+09:00"
     }
   },
   "_settings": {
