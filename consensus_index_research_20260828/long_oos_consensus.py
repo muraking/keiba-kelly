@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-VERSION = "v2026.08.28.2"
+VERSION = "v2026.08.28.3"
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE))
 
@@ -79,6 +79,9 @@ def run(tag: str):
     common["consensus_score"] = z[["normal_q", "energy_q"]].mean(axis=1)
     one = (common.sort_values(["race_id", "taichi_proxy"], ascending=[True, False])
            .drop_duplicates("race_id"))
+    odds10 = common[common.win_odds.ge(10)].copy()
+    odds10_one = (odds10.sort_values(["race_id", "taichi_proxy"], ascending=[True, False])
+                  .drop_duplicates("race_id"))
 
     result = {"version": VERSION, "market": tag, "cuts": cuts,
               "warning": "Taichi is a historical fixed-weight proxy; live Sol-TI model output and trouble +/- are unavailable historically",
@@ -86,11 +89,15 @@ def run(tag: str):
     for part in ("select", "oos"):
         x = common[common.split.eq(part)]
         x1 = one[one.split.eq(part)]
+        x10 = odds10[odds10.split.eq(part)]
+        x10one = odds10_one[odds10_one.split.eq(part)]
         result["rules"][part] = {
             "buy_all_common": metrics(x),
             "one_best_common_per_race": metrics(x1),
             "buy_all_common_nonfav": metrics(x[x.popularity.gt(1)]),
             "one_best_common_nonfav": metrics(x1[x1.popularity.gt(1)]),
+            "buy_all_common_odds10plus": metrics(x10),
+            "one_best_common_odds10plus": metrics(x10one),
             "all_common_odds2_10": metrics(x[x.win_odds.between(2, 10, inclusive="left")]),
             "one_best_odds2_10": metrics(x1[x1.win_odds.between(2, 10, inclusive="left")]),
         }

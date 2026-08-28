@@ -11,7 +11,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-VERSION = "v2026.08.28.2"
+VERSION = "v2026.08.28.3"
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE))
 
@@ -100,6 +100,7 @@ def main():
         "period": [str(completed.date.min().date()), str(completed.date.max().date())],
         "all_three_top3": metrics(completed[completed.agree.eq(3)]),
         "all_three_top3_nonfav": metrics(completed[completed.agree.eq(3) & completed.popularity.gt(1)]),
+        "all_three_top3_odds10plus": metrics(completed[completed.agree.eq(3) & completed.win_odds.ge(10)]),
         "at_least_two_top3": metrics(completed),
         "by_market_all_three": {
             "jra": metrics(completed[completed.agree.eq(3) & completed.venue.isin(JRA_VENUES)]),
