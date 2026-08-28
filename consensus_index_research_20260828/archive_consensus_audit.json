@@ -1,0 +1,115 @@
+{
+  "version": "v2026.08.28.1",
+  "mode": "exact current live-cache replay",
+  "period": [
+    "2026-08-22",
+    "2026-08-27"
+  ],
+  "all_three_top3": {
+    "bets": 267,
+    "races": 169,
+    "win_rate": 0.299625468164794,
+    "place_rate": 0.6367041198501873,
+    "win_roi": 0.9344569288389513,
+    "place_roi": 0.8258426966292135,
+    "win_roi_trim_largest": 0.8183520599250936,
+    "place_roi_trim_largest": 0.8101123595505618,
+    "avg_odds": 6.591385767790261
+  },
+  "at_least_two_top3": {
+    "bets": 561,
+    "races": 192,
+    "win_rate": 0.2549019607843137,
+    "place_rate": 0.5989304812834224,
+    "win_roi": 0.8989304812834225,
+    "place_roi": 0.8262032085561497,
+    "win_roi_trim_largest": 0.8436720142602495,
+    "place_roi_trim_largest": 0.8176470588235294,
+    "avg_odds": 7.507130124777183
+  },
+  "by_market_all_three": {
+    "jra": {
+      "bets": 0,
+      "races": 0
+    },
+    "local": {
+      "bets": 267,
+      "races": 169,
+      "win_rate": 0.299625468164794,
+      "place_rate": 0.6367041198501873,
+      "win_roi": 0.9344569288389513,
+      "place_roi": 0.8258426966292135,
+      "win_roi_trim_largest": 0.8183520599250936,
+      "place_roi_trim_largest": 0.8101123595505618,
+      "avg_odds": 6.591385767790261
+    }
+  },
+  "by_day_all_three": {
+    "2026-08-22": {
+      "bets": 17,
+      "races": 10,
+      "win_rate": 0.35294117647058826,
+      "place_rate": 0.5882352941176471,
+      "win_roi": 0.6588235294117647,
+      "place_roi": 0.7352941176470589,
+      "win_roi_trim_largest": 0.4647058823529412,
+      "place_roi_trim_largest": 0.6235294117647059,
+      "avg_odds": 4.999999999999999
+    },
+    "2026-08-23": {
+      "bets": 45,
+      "races": 28,
+      "win_rate": 0.24444444444444444,
+      "place_rate": 0.6444444444444445,
+      "win_roi": 0.6377777777777778,
+      "place_roi": 0.78,
+      "win_roi_trim_largest": 0.4577777777777778,
+      "place_roi_trim_largest": 0.7288888888888889,
+      "avg_odds": 5.584444444444445
+    },
+    "2026-08-24": {
+      "bets": 5,
+      "races": 3,
+      "win_rate": 0.2,
+      "place_rate": 0.4,
+      "win_roi": 6.2,
+      "place_roi": 1.06,
+      "win_roi_trim_largest": 0.0,
+      "place_roi_trim_largest": 0.22,
+      "avg_odds": 22.36
+    },
+    "2026-08-25": {
+      "bets": 73,
+      "races": 49,
+      "win_rate": 0.2876712328767123,
+      "place_rate": 0.6301369863013698,
+      "win_roi": 0.7712328767123288,
+      "place_roi": 0.9013698630136986,
+      "win_roi_trim_largest": 0.6465753424657534,
+      "place_roi_trim_largest": 0.8534246575342466,
+      "avg_odds": 7.119178082191781
+    },
+    "2026-08-26": {
+      "bets": 72,
+      "races": 43,
+      "win_rate": 0.2638888888888889,
+      "place_rate": 0.5833333333333334,
+      "win_roi": 0.6652777777777777,
+      "place_roi": 0.7097222222222223,
+      "win_roi_trim_largest": 0.5805555555555556,
+      "place_roi_trim_largest": 0.6819444444444445,
+      "avg_odds": 6.270833333333333
+    },
+    "2026-08-27": {
+      "bets": 55,
+      "races": 36,
+      "win_rate": 0.4,
+      "place_rate": 0.7454545454545455,
+      "win_roi": 1.3527272727272728,
+      "place_roi": 0.9218181818181819,
+      "win_roi_trim_largest": 1.0272727272727273,
+      "place_roi_trim_largest": 0.850909090909091,
+      "avg_odds": 6.192727272727271
+    }
+  }
+}

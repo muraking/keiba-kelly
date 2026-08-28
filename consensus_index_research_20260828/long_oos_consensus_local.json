@@ -1,0 +1,104 @@
+{
+  "version": "v2026.08.28.1",
+  "market": "local",
+  "cuts": [
+    "2025-03-01",
+    "2025-08-14",
+    "2026-01-27"
+  ],
+  "warning": "Taichi is a historical fixed-weight proxy; live Sol-TI model output and trouble +/- are unavailable historically",
+  "rules": {
+    "select": {
+      "buy_all_common": {
+        "bets": 9671,
+        "races": 5672,
+        "win_rate": 0.270602822303772,
+        "place_rate": 0.6174128651618958,
+        "win_roi": 0.7723503112792969,
+        "place_roi": 0.815737783908844,
+        "win_roi_trim_largest": 0.7673043012619019,
+        "place_roi_trim_largest": 0.8144866228103638,
+        "avg_odds": 6.204549789428711
+      },
+      "one_best_common_per_race": {
+        "bets": 5672,
+        "races": 5672,
+        "win_rate": 0.3351551592350006,
+        "place_rate": 0.6660789847373962,
+        "win_roi": 0.7871650457382202,
+        "place_roi": 0.8340973258018494,
+        "win_roi_trim_largest": 0.7799365520477295,
+        "place_roi_trim_largest": 0.8325987458229065,
+        "avg_odds": 4.566360950469971
+      },
+      "all_common_odds2_10": {
+        "bets": 5963,
+        "races": 4410,
+        "win_rate": 0.19973167777061462,
+        "place_rate": 0.5872882604598999,
+        "win_roi": 0.7461345195770264,
+        "place_roi": 0.7947677373886108,
+        "win_roi_trim_largest": 0.7444742321968079,
+        "place_roi_trim_largest": 0.7939963340759277,
+        "avg_odds": 4.517407417297363
+      },
+      "one_best_odds2_10": {
+        "bets": 3286,
+        "races": 3286,
+        "win_rate": 0.21545952558517456,
+        "place_rate": 0.5952525734901428,
+        "win_roi": 0.7614729404449463,
+        "place_roi": 0.8000304102897644,
+        "win_roi_trim_largest": 0.7584601044654846,
+        "place_roi_trim_largest": 0.798874020576477,
+        "avg_odds": 4.112873077392578
+      }
+    },
+    "oos": {
+      "buy_all_common": {
+        "bets": 10337,
+        "races": 5837,
+        "win_rate": 0.2624552547931671,
+        "place_rate": 0.6050111055374146,
+        "win_roi": 0.7405823469161987,
+        "place_roi": 0.8166489601135254,
+        "win_roi_trim_largest": 0.7380381226539612,
+        "place_roi_trim_largest": 0.8155074119567871,
+        "avg_odds": 6.101102828979492
+      },
+      "one_best_common_per_race": {
+        "bets": 5837,
+        "races": 5837,
+        "win_rate": 0.33167722821235657,
+        "place_rate": 0.6565016508102417,
+        "win_roi": 0.7700702548027039,
+        "place_roi": 0.8369196653366089,
+        "win_roi_trim_largest": 0.7661470174789429,
+        "place_roi_trim_largest": 0.8357032537460327,
+        "avg_odds": 4.3942952156066895
+      },
+      "all_common_odds2_10": {
+        "bets": 6423,
+        "races": 4561,
+        "win_rate": 0.20379884541034698,
+        "place_rate": 0.5930250883102417,
+        "win_roi": 0.7366183996200562,
+        "place_roi": 0.8181068301200867,
+        "win_roi_trim_largest": 0.7350770831108093,
+        "place_roi_trim_largest": 0.8172349333763123,
+        "avg_odds": 4.493648052215576
+      },
+      "one_best_odds2_10": {
+        "bets": 3356,
+        "races": 3356,
+        "win_rate": 0.2219904661178589,
+        "place_rate": 0.5968414545059204,
+        "win_roi": 0.7477651834487915,
+        "place_roi": 0.8189809322357178,
+        "win_roi_trim_largest": 0.7448450326919556,
+        "place_roi_trim_largest": 0.8173123002052307,
+        "avg_odds": 4.1143622398376465
+      }
+    }
+  }
+}
