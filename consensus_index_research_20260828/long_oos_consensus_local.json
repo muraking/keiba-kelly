@@ -1,5 +1,5 @@
 {
-  "version": "v2026.08.28.1",
+  "version": "v2026.08.28.2",
   "market": "local",
   "cuts": [
     "2025-03-01",
@@ -30,6 +30,28 @@
         "win_roi_trim_largest": 0.7799365520477295,
         "place_roi_trim_largest": 0.8325987458229065,
         "avg_odds": 4.566360950469971
+      },
+      "buy_all_common_nonfav": {
+        "bets": 6221,
+        "races": 4796,
+        "win_rate": 0.14692172408103943,
+        "place_rate": 0.509885847568512,
+        "win_roi": 0.7538819909095764,
+        "place_roi": 0.7659540176391602,
+        "win_roi_trim_largest": 0.7460376024246216,
+        "place_roi_trim_largest": 0.7640089988708496,
+        "avg_odds": 8.635749816894531
+      },
+      "one_best_common_nonfav": {
+        "bets": 2883,
+        "races": 2883,
+        "win_rate": 0.16892126202583313,
+        "place_rate": 0.5237599611282349,
+        "win_roi": 0.7715227007865906,
+        "place_roi": 0.7688865661621094,
+        "win_roi_trim_largest": 0.7573014497756958,
+        "place_roi_trim_largest": 0.7659382820129395,
+        "avg_odds": 7.264654636383057
       },
       "all_common_odds2_10": {
         "bets": 5963,
@@ -76,6 +98,28 @@
         "win_roi_trim_largest": 0.7661470174789429,
         "place_roi_trim_largest": 0.8357032537460327,
         "avg_odds": 4.3942952156066895
+      },
+      "buy_all_common_nonfav": {
+        "bets": 6662,
+        "races": 5037,
+        "win_rate": 0.14320023357868195,
+        "place_rate": 0.5031521916389465,
+        "win_roi": 0.7085559964179993,
+        "place_roi": 0.7749174237251282,
+        "win_roi_trim_largest": 0.7046082019805908,
+        "place_roi_trim_largest": 0.7731462121009827,
+        "avg_odds": 8.447672843933105
+      },
+      "one_best_common_nonfav": {
+        "bets": 2886,
+        "races": 2886,
+        "win_rate": 0.16528066992759705,
+        "place_rate": 0.5155925154685974,
+        "win_roi": 0.7455301284790039,
+        "place_roi": 0.7825363874435425,
+        "win_roi_trim_largest": 0.73759526014328,
+        "place_roi_trim_largest": 0.7800762057304382,
+        "avg_odds": 7.063305854797363
       },
       "all_common_odds2_10": {
         "bets": 6423,

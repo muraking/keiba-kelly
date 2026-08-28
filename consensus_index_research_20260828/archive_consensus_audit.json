@@ -1,5 +1,5 @@
 {
-  "version": "v2026.08.28.1",
+  "version": "v2026.08.28.2",
   "mode": "exact current live-cache replay",
   "period": [
     "2026-08-22",
@@ -15,6 +15,17 @@
     "win_roi_trim_largest": 0.8183520599250936,
     "place_roi_trim_largest": 0.8101123595505618,
     "avg_odds": 6.591385767790261
+  },
+  "all_three_top3_nonfav": {
+    "bets": 166,
+    "races": 132,
+    "win_rate": 0.18674698795180722,
+    "place_rate": 0.5180722891566265,
+    "win_roi": 1.0060240963855422,
+    "place_roi": 0.766867469879518,
+    "win_roi_trim_largest": 0.8192771084337349,
+    "place_roi_trim_largest": 0.7415662650602409,
+    "avg_odds": 9.432530120481928
   },
   "at_least_two_top3": {
     "bets": 561,

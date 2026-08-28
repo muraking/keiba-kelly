@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-VERSION = "v2026.08.28.1"
+VERSION = "v2026.08.28.2"
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE))
 
@@ -89,6 +89,8 @@ def run(tag: str):
         result["rules"][part] = {
             "buy_all_common": metrics(x),
             "one_best_common_per_race": metrics(x1),
+            "buy_all_common_nonfav": metrics(x[x.popularity.gt(1)]),
+            "one_best_common_nonfav": metrics(x1[x1.popularity.gt(1)]),
             "all_common_odds2_10": metrics(x[x.win_odds.between(2, 10, inclusive="left")]),
             "one_best_odds2_10": metrics(x1[x1.win_odds.between(2, 10, inclusive="left")]),
         }

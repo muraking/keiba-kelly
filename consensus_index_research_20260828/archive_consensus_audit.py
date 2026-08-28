@@ -11,7 +11,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-VERSION = "v2026.08.28.1"
+VERSION = "v2026.08.28.2"
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE))
 
@@ -43,7 +43,7 @@ def outcomes(race_ids: list[str]) -> pd.DataFrame:
         path = BASE / "data" / f"keiba_{tag}.sqlite"
         with sqlite3.connect(path) as con:
             have = {r[1] for r in con.execute("pragma table_info(runs)")}
-            wanted = ["race_id", "umaban", "finish_pos", "win_odds", "tan_payout", "place_payout"]
+            wanted = ["race_id", "umaban", "finish_pos", "win_odds", "popularity", "tan_payout", "place_payout"]
             cols = [c for c in wanted if c in have]
             for i in range(0, len(race_ids), 700):
                 part = race_ids[i:i + 700]
@@ -58,7 +58,7 @@ def outcomes(race_ids: list[str]) -> pd.DataFrame:
     d = pd.concat(frames, ignore_index=True)
     d["race_id"] = d.race_id.astype(str)
     d["umaban"] = pd.to_numeric(d.umaban, errors="coerce")
-    for c in ("finish_pos", "win_odds", "tan_payout", "place_payout"):
+    for c in ("finish_pos", "win_odds", "popularity", "tan_payout", "place_payout"):
         d[c] = pd.to_numeric(d[c], errors="coerce")
     return d.drop_duplicates(["race_id", "umaban"], keep="last")
 
@@ -99,6 +99,7 @@ def main():
         "version": VERSION, "mode": "exact current live-cache replay",
         "period": [str(completed.date.min().date()), str(completed.date.max().date())],
         "all_three_top3": metrics(completed[completed.agree.eq(3)]),
+        "all_three_top3_nonfav": metrics(completed[completed.agree.eq(3) & completed.popularity.gt(1)]),
         "at_least_two_top3": metrics(completed),
         "by_market_all_three": {
             "jra": metrics(completed[completed.agree.eq(3) & completed.venue.isin(JRA_VENUES)]),
