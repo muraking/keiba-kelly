@@ -1,0 +1,685 @@
+{
+  "version": "v2026.08.28.1",
+  "market": "jra",
+  "cuts": [
+    "2024-09-16",
+    "2025-04-20",
+    "2025-11-24"
+  ],
+  "policy": "consensus best axis; predefined partner families; equal 100-yen tickets",
+  "strategies": {
+    "model1_umaren": {
+      "select": {
+        "bets": 1714,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 26.369230769230768,
+        "hit": 0.1411901983663944,
+        "roi": 0.8424737456242707,
+        "trim_roi": 0.7974329054842474,
+        "largest_share": 0.05346260387811634,
+        "avg_odds": 5.231330394744873,
+        "positive_months": 1,
+        "months": 8
+      },
+      "oos": {
+        "bets": 261,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 23.727272727272727,
+        "hit": 0.16091954022988506,
+        "roi": 1.0279693486590038,
+        "trim_roi": 0.9011494252873563,
+        "largest_share": 0.1233693626537458,
+        "avg_odds": 6.027203559875488,
+        "positive_months": 1,
+        "months": 2
+      }
+    },
+    "model1_wide": {
+      "select": {
+        "bets": 1714,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 26.369230769230768,
+        "hit": 0.28413068844807465,
+        "roi": 0.8263127187864644,
+        "trim_roi": 0.8091015169194866,
+        "largest_share": 0.02082892042646332,
+        "avg_odds": 5.231330394744873,
+        "positive_months": 1,
+        "months": 8
+      },
+      "oos": {
+        "bets": 261,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 23.727272727272727,
+        "hit": 0.24521072796934865,
+        "roi": 0.671647509578544,
+        "trim_roi": 0.6306513409961686,
+        "largest_share": 0.061038220193953226,
+        "avg_odds": 6.027203559875488,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "model2_umaren": {
+      "select": {
+        "bets": 3428,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 52.738461538461536,
+        "hit": 0.11085180863477247,
+        "roi": 0.7923278879813302,
+        "trim_roi": 0.7698074679113186,
+        "largest_share": 0.02842310666028497,
+        "avg_odds": 7.2563886642456055,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 522,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 47.45454545454545,
+        "hit": 0.1111111111111111,
+        "roi": 0.7517241379310344,
+        "trim_roi": 0.6883141762452107,
+        "largest_share": 0.08435270132517839,
+        "avg_odds": 7.575096130371094,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "model2_wide": {
+      "select": {
+        "bets": 3428,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 52.738461538461536,
+        "hit": 0.2485414235705951,
+        "roi": 0.8242415402567095,
+        "trim_roi": 0.8156359393232205,
+        "largest_share": 0.010440629976995222,
+        "avg_odds": 7.2563886642456055,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 522,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 47.45454545454545,
+        "hit": 0.2164750957854406,
+        "roi": 0.7078544061302682,
+        "trim_roi": 0.6873563218390805,
+        "largest_share": 0.02895805142083897,
+        "avg_odds": 7.575096130371094,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "taichi1_umaren": {
+      "select": {
+        "bets": 1714,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 26.369230769230768,
+        "hit": 0.1306884480746791,
+        "roi": 0.7322637106184364,
+        "trim_roi": 0.7079929988331388,
+        "largest_share": 0.033144769341088356,
+        "avg_odds": 5.628121852874756,
+        "positive_months": 2,
+        "months": 8
+      },
+      "oos": {
+        "bets": 261,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 23.727272727272727,
+        "hit": 0.1532567049808429,
+        "roi": 0.9735632183908046,
+        "trim_roi": 0.8467432950191571,
+        "largest_share": 0.13026367571822117,
+        "avg_odds": 5.506896495819092,
+        "positive_months": 1,
+        "months": 2
+      }
+    },
+    "taichi1_wide": {
+      "select": {
+        "bets": 1714,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 26.369230769230768,
+        "hit": 0.2765460910151692,
+        "roi": 0.7752042007001166,
+        "trim_roi": 0.7676779463243874,
+        "largest_share": 0.009708737864077669,
+        "avg_odds": 5.628121852874756,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 261,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 23.727272727272727,
+        "hit": 0.2720306513409962,
+        "roi": 0.8076628352490421,
+        "trim_roi": 0.7666666666666667,
+        "largest_share": 0.05075901328273245,
+        "avg_odds": 5.506896495819092,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "taichi2_umaren": {
+      "select": {
+        "bets": 3428,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 52.738461538461536,
+        "hit": 0.10472578763127188,
+        "roi": 0.709247374562427,
+        "trim_roi": 0.6867269544924154,
+        "largest_share": 0.03175256035865586,
+        "avg_odds": 7.642211437225342,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 522,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 47.45454545454545,
+        "hit": 0.10919540229885058,
+        "roi": 0.8268199233716476,
+        "trim_roi": 0.7599616858237548,
+        "largest_share": 0.08086190917516219,
+        "avg_odds": 8.036782264709473,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "taichi2_wide": {
+      "select": {
+        "bets": 3428,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 52.738461538461536,
+        "hit": 0.23774795799299883,
+        "roi": 0.7843348891481914,
+        "trim_roi": 0.7752042007001166,
+        "largest_share": 0.011641313645999926,
+        "avg_odds": 7.642211437225342,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 522,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 47.45454545454545,
+        "hit": 0.21455938697318008,
+        "roi": 0.746743295019157,
+        "trim_roi": 0.7218390804597701,
+        "largest_share": 0.033350436121087734,
+        "avg_odds": 8.036782264709473,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "market1_umaren": {
+      "select": {
+        "bets": 1714,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 26.369230769230768,
+        "hit": 0.15460910151691948,
+        "roi": 0.7744457409568262,
+        "trim_roi": 0.761610268378063,
+        "largest_share": 0.01657375320174778,
+        "avg_odds": 3.4823222160339355,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 261,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 23.727272727272727,
+        "hit": 0.1839080459770115,
+        "roi": 1.142911877394636,
+        "trim_roi": 1.0160919540229885,
+        "largest_share": 0.11096211867247738,
+        "avg_odds": 3.4394633769989014,
+        "positive_months": 2,
+        "months": 2
+      }
+    },
+    "market1_wide": {
+      "select": {
+        "bets": 1714,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 26.369230769230768,
+        "hit": 0.30688448074679114,
+        "roi": 0.7812135355892649,
+        "trim_roi": 0.7741540256709452,
+        "largest_share": 0.009036594473487678,
+        "avg_odds": 3.4823222160339355,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 261,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 23.727272727272727,
+        "hit": 0.30268199233716475,
+        "roi": 0.8444444444444444,
+        "trim_roi": 0.803448275862069,
+        "largest_share": 0.048548094373865695,
+        "avg_odds": 3.4394633769989014,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "market2_umaren": {
+      "select": {
+        "bets": 3428,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 52.738461538461536,
+        "hit": 0.11901983663943991,
+        "roi": 0.7777421236872812,
+        "trim_roi": 0.7658401400233372,
+        "largest_share": 0.01530325194103747,
+        "avg_odds": 4.737893581390381,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 522,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 47.45454545454545,
+        "hit": 0.13026819923371646,
+        "roi": 0.9237547892720307,
+        "trim_roi": 0.8603448275862069,
+        "largest_share": 0.06864371630029034,
+        "avg_odds": 4.604598045349121,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "market2_wide": {
+      "select": {
+        "bets": 3428,
+        "races": 1714,
+        "days": 65,
+        "bets_per_day": 52.738461538461536,
+        "hit": 0.2660443407234539,
+        "roi": 0.8113477246207701,
+        "trim_roi": 0.8067677946324388,
+        "largest_share": 0.005644842339912991,
+        "avg_odds": 4.737893581390381,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 522,
+        "races": 261,
+        "days": 11,
+        "bets_per_day": 47.45454545454545,
+        "hit": 0.24329501915708812,
+        "roi": 0.7913793103448276,
+        "trim_roi": 0.7708812260536398,
+        "largest_share": 0.02590171871217623,
+        "avg_odds": 4.604598045349121,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "underbet1_umaren": {
+      "select": {
+        "bets": 1692,
+        "races": 1692,
+        "days": 65,
+        "bets_per_day": 26.03076923076923,
+        "hit": 0.020685579196217493,
+        "roi": 0.3575059101654846,
+        "trim_roi": 0.315839243498818,
+        "largest_share": 0.11654818978343529,
+        "avg_odds": 74.88268280029297,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 257,
+        "races": 257,
+        "days": 11,
+        "bets_per_day": 23.363636363636363,
+        "hit": 0.027237354085603113,
+        "roi": 0.490272373540856,
+        "trim_roi": 0.17003891050583658,
+        "largest_share": 0.6531746031746032,
+        "avg_odds": 78.03890991210938,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "underbet1_wide": {
+      "select": {
+        "bets": 1692,
+        "races": 1692,
+        "days": 65,
+        "bets_per_day": 26.03076923076923,
+        "hit": 0.07742316784869976,
+        "roi": 0.5618203309692671,
+        "trim_roi": 0.5335106382978724,
+        "largest_share": 0.05038922785609089,
+        "avg_odds": 74.88268280029297,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 257,
+        "races": 257,
+        "days": 11,
+        "bets_per_day": 23.363636363636363,
+        "hit": 0.05058365758754864,
+        "roi": 0.4260700389105058,
+        "trim_roi": 0.3416342412451362,
+        "largest_share": 0.19817351598173516,
+        "avg_odds": 78.03890991210938,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "underbet2_umaren": {
+      "select": {
+        "bets": 3299,
+        "races": 1692,
+        "days": 65,
+        "bets_per_day": 50.753846153846155,
+        "hit": 0.022734161867232493,
+        "roi": 0.4063655653228251,
+        "trim_roi": 0.36450439527129436,
+        "largest_share": 0.10301357601074146,
+        "avg_odds": 73.1705322265625,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 509,
+        "races": 257,
+        "days": 11,
+        "bets_per_day": 46.27272727272727,
+        "hit": 0.023575638506876228,
+        "roi": 0.35834970530451865,
+        "trim_roi": 0.19666011787819254,
+        "largest_share": 0.4512061403508772,
+        "avg_odds": 86.20764923095703,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "underbet2_wide": {
+      "select": {
+        "bets": 3299,
+        "races": 1692,
+        "days": 65,
+        "bets_per_day": 50.753846153846155,
+        "hit": 0.07396180660806305,
+        "roi": 0.5498635950287966,
+        "trim_roi": 0.5353440436495908,
+        "largest_share": 0.026405733186328554,
+        "avg_odds": 73.1705322265625,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 509,
+        "races": 257,
+        "days": 11,
+        "bets_per_day": 46.27272727272727,
+        "hit": 0.05304518664047151,
+        "roi": 0.40923379174852653,
+        "trim_roi": 0.36660117878192533,
+        "largest_share": 0.1041766682669227,
+        "avg_odds": 86.20764923095703,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "value_hole1_umaren": {
+      "select": {
+        "bets": 1707,
+        "races": 1707,
+        "days": 65,
+        "bets_per_day": 26.26153846153846,
+        "hit": 0.02753368482718219,
+        "roi": 0.7538957234915056,
+        "trim_roi": 0.683186877562976,
+        "largest_share": 0.09379128137384413,
+        "avg_odds": 28.888519287109375,
+        "positive_months": 3,
+        "months": 8
+      },
+      "oos": {
+        "bets": 260,
+        "races": 260,
+        "days": 11,
+        "bets_per_day": 23.636363636363637,
+        "hit": 0.019230769230769232,
+        "roi": 0.48423076923076924,
+        "trim_roi": 0.27115384615384613,
+        "largest_share": 0.4400317712470214,
+        "avg_odds": 27.699617385864258,
+        "positive_months": 1,
+        "months": 2
+      }
+    },
+    "value_hole1_wide": {
+      "select": {
+        "bets": 1707,
+        "races": 1707,
+        "days": 65,
+        "bets_per_day": 26.26153846153846,
+        "hit": 0.0837727006444054,
+        "roi": 0.7705916813122436,
+        "trim_roi": 0.744522554188635,
+        "largest_share": 0.03383001368405048,
+        "avg_odds": 28.888519287109375,
+        "positive_months": 1,
+        "months": 8
+      },
+      "oos": {
+        "bets": 260,
+        "races": 260,
+        "days": 11,
+        "bets_per_day": 23.636363636363637,
+        "hit": 0.08461538461538462,
+        "roi": 0.7680769230769231,
+        "trim_roi": 0.681923076923077,
+        "largest_share": 0.11216825237856785,
+        "avg_odds": 27.699617385864258,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "value_hole2_umaren": {
+      "select": {
+        "bets": 3366,
+        "races": 1707,
+        "days": 65,
+        "bets_per_day": 51.784615384615385,
+        "hit": 0.027926322043969103,
+        "roi": 0.7978609625668449,
+        "trim_roi": 0.7620023767082591,
+        "largest_share": 0.0449434018468871,
+        "avg_odds": 27.07305335998535,
+        "positive_months": 2,
+        "months": 8
+      },
+      "oos": {
+        "bets": 516,
+        "races": 260,
+        "days": 11,
+        "bets_per_day": 46.90909090909091,
+        "hit": 0.013565891472868217,
+        "roi": 0.28391472868217055,
+        "trim_roi": 0.17655038759689923,
+        "largest_share": 0.3781569965870307,
+        "avg_odds": 25.77984619140625,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "value_hole2_wide": {
+      "select": {
+        "bets": 3366,
+        "races": 1707,
+        "days": 65,
+        "bets_per_day": 51.784615384615385,
+        "hit": 0.08645276292335116,
+        "roi": 0.7589126559714795,
+        "trim_roi": 0.7456922162804516,
+        "largest_share": 0.017420238794284598,
+        "avg_odds": 27.07305335998535,
+        "positive_months": 0,
+        "months": 8
+      },
+      "oos": {
+        "bets": 516,
+        "races": 260,
+        "days": 11,
+        "bets_per_day": 46.90909090909091,
+        "hit": 0.07751937984496124,
+        "roi": 0.6751937984496124,
+        "trim_roi": 0.6317829457364341,
+        "largest_share": 0.0642939150401837,
+        "avg_odds": 25.77984619140625,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "lap_hole1_umaren": {
+      "select": {
+        "bets": 1622,
+        "races": 1622,
+        "days": 65,
+        "bets_per_day": 24.953846153846154,
+        "hit": 0.035758323057953144,
+        "roi": 0.8347718865598027,
+        "trim_roi": 0.7540073982737361,
+        "largest_share": 0.0967503692762186,
+        "avg_odds": 20.026077270507812,
+        "positive_months": 2,
+        "months": 8
+      },
+      "oos": {
+        "bets": 253,
+        "races": 253,
+        "days": 11,
+        "bets_per_day": 23.0,
+        "hit": 0.043478260869565216,
+        "roi": 0.8114624505928854,
+        "trim_roi": 0.6292490118577075,
+        "largest_share": 0.22454943984413053,
+        "avg_odds": 20.664823532104492,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "lap_hole1_wide": {
+      "select": {
+        "bets": 1622,
+        "races": 1622,
+        "days": 65,
+        "bets_per_day": 24.953846153846154,
+        "hit": 0.10850801479654747,
+        "roi": 0.78865598027127,
+        "trim_roi": 0.7665844636251541,
+        "largest_share": 0.027986241400875547,
+        "avg_odds": 20.026077270507812,
+        "positive_months": 1,
+        "months": 8
+      },
+      "oos": {
+        "bets": 253,
+        "races": 253,
+        "days": 11,
+        "bets_per_day": 23.0,
+        "hit": 0.09881422924901186,
+        "roi": 0.6636363636363637,
+        "trim_roi": 0.5972332015810277,
+        "largest_share": 0.10005955926146516,
+        "avg_odds": 20.664823532104492,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "lap_hole2_umaren": {
+      "select": {
+        "bets": 2967,
+        "races": 1622,
+        "days": 65,
+        "bets_per_day": 45.646153846153844,
+        "hit": 0.03505224132119986,
+        "roi": 0.836231884057971,
+        "trim_roi": 0.7920795416245365,
+        "largest_share": 0.05279916166216597,
+        "avg_odds": 20.62079429626465,
+        "positive_months": 2,
+        "months": 8
+      },
+      "oos": {
+        "bets": 464,
+        "races": 253,
+        "days": 11,
+        "bets_per_day": 42.18181818181818,
+        "hit": 0.02586206896551724,
+        "roi": 0.5079741379310345,
+        "trim_roi": 0.4086206896551724,
+        "largest_share": 0.19558761137038608,
+        "avg_odds": 21.24698257446289,
+        "positive_months": 0,
+        "months": 2
+      }
+    },
+    "lap_hole2_wide": {
+      "select": {
+        "bets": 2967,
+        "races": 1622,
+        "days": 65,
+        "bets_per_day": 45.646153846153844,
+        "hit": 0.10279743849005729,
+        "roi": 0.7863498483316481,
+        "trim_roi": 0.7722952477249747,
+        "largest_share": 0.017873215893017873,
+        "avg_odds": 20.62079429626465,
+        "positive_months": 1,
+        "months": 8
+      },
+      "oos": {
+        "bets": 464,
+        "races": 253,
+        "days": 11,
+        "bets_per_day": 42.18181818181818,
+        "hit": 0.09267241379310345,
+        "roi": 0.7025862068965517,
+        "trim_roi": 0.6543103448275862,
+        "largest_share": 0.0687116564417178,
+        "avg_odds": 21.24698257446289,
+        "positive_months": 0,
+        "months": 2
+      }
+    }
+  },
+  "selection_candidates": []
+}
