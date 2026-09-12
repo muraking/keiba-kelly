@@ -5,8 +5,8 @@
   変更履歴:
     v2026.08.08.4 - 非管理者も新指数を表示できるよう、公開note_indexを使用し、
                    ai_index_liveを読めない場合は公開ai_live_archiveのSol-TIへフォールバック。
-    v2026.08.08.3 - 指数タブのアーカイブにイルカ馬番dが無い場合、iruka_picksを読み、
-                   会場・R番号・馬名照合で🐬を補完表示。
+    v2026.08.08.3 - 指数タブのアーカイブに前走不利馬番dが無い場合、iruka_picksを読み、
+                   会場・R番号・馬名照合で[前走不利]を補完表示。
     v2026.08.08.2 - 新指数切替後のPWA表示を修正。レース選択へ会場・R番号を復元し、
                    オッズ更新時もSol-TIマージと選択レースを維持。結果の全馬一覧を勝率順へ変更。
     v2026.08.08.1 - PWAのレース指数を手動アップロード値からSol-TI新指数へ変更。
@@ -16,7 +16,7 @@
                    統合し、ノート作成直後から指数タブに表示（前日は純%のみ→ライブでオッズ/EV/脚質が埋まる）。
     v2026.07.14.4 - 「指数」タブに脚質タグ（［逃/先/差/追/転］）と展開行（脚質構成→前残り/差し有利）を追加。
     v2026.07.14.3 - 「指数」タブ改良: レース選択をプルダウン化(下スクロール不要)。馬名・EV(合成×オッズ)・
-                   穴🕳️・妙・🐬(前走不利)を表示。荒度はエントロピーから算出。live_probsが馬名h/イルカdを保存。
+                   穴🕳️・妙・[前走不利](前走不利)を表示。荒度はエントロピーから算出。live_probsが馬名h/前走不利dを保存。
     v2026.07.14.2 - 「指数」タブを非管理者にも公開。private取得失敗時は公開リポジトリ(keiba-kelly)へ
                    フォールバック（トークン無しでも閲覧可）。live_probsがアーカイブをpublicへも同期。
     v2026.07.14.1 - 「指数」タブを新設。ai_live_archive_YYYY_MM.json を読み、WEBHOOK6と同じAI指数表示
@@ -32,15 +32,15 @@
     v2026.06.28.1 - 複勝購入設定に「独立複勝モード/勝率下限%/最大点数」を地方・中央へ追加。
                    独立ONで単勝発火に関係なく全馬から複勝候補を選択(_settings_*の
                    place_bet_independent/place_bet_winrate_filter/place_bet_max_n に保存)。
-    v2026.06.27.3 - getIrukaPick: イルカ推奨の保存形式が文字列(旧)でも {name,num}(新) でも
+    v2026.06.27.3 - getIrukaPick: 前走不利推奨の保存形式が文字列(旧)でも {name,num}(新) でも
                    馬名を返すよう両対応化（スケジューラ側で馬番付き保存に変更したため）。
     v2026.06.27.2 - calcAll: 本/穴・単勝推奨のフィルタ値を会場別キー(jra_*/local_*)優先で読むよう修正。
                    従来は ev_min/ev_max/odds_min/odds_max/sm_winrate_filter を共通キーだけで判定していたため、
                    中央レースでPWAの自動購入対象が通知(スケジューラ)とズレていた（例: 勝率7.7%の馬を
                    共通フィルタ5%では対象化するが中央フィルタ10%では除外）。max_bets同様に会場別へ統一。
-    v2026.06.27.1 - 中央(JRA)の本/穴表示に、イルカ推奨馬と馬名一致した馬へ🐬マークを追加。
+    v2026.06.27.1 - 中央(JRA)の本/穴表示に、前走不利推奨馬と馬名一致した馬へ[前走不利]マークを追加。
                    data/iruka_picks_YYYY_MM.json を起動時にバックグラウンド取得（token必須・失敗時は静かにスキップ）。
-                   会場+R番号でその日の推奨馬名を引き、本/穴の馬名と一致したらバッジ右に🐬を表示。
+                   会場+R番号でその日の推奨馬名を引き、本/穴の馬名と一致したらバッジ右に[前走不利]を表示。
     v2026.06.26.7 - 緑バッジ（自動購入対象）の判定を通知（スケジューラ）と一致させる修正。
                    旧: betMap（勝率降順で選定）由来→通知のEV降順とズレて別の馬が緑になっていた。
                    新: autoBuyList（EV降順・max_bets頭）からbuyNums2を算出。単勝推奨と完全一致。
@@ -2828,7 +2828,7 @@ function calcAll(){
         .sort((a,b)=>b.tanEV-a.tanEV)
         .slice(0, maxBets);
       const buyNums2 = new Set(autoBuyList.map(h=>h.num));
-      // 中央(JRA)のみ：イルカ推奨馬（馬名一致）の馬番を集める → 本/穴で🐬表示
+      // 中央(JRA)のみ：前走不利推奨馬（馬名一致）の馬番を集める → 本/穴で[前走不利]表示
       const irukaNums2 = new Set();
       if(isJraVn){
         const _date2 = document.getElementById('date-select')?.value;
@@ -2871,7 +2871,7 @@ function calcAll(){
           if(aB!==bB) return aB-bB;
           return sortByEv ? (b.tanEV||0)-(a.tanEV||0) : (b.norm||0)-(a.norm||0);
         });
-        return `<span style="display:inline-flex;gap:4px;align-items:center">${s.map(h=>`<span style="display:inline-flex;align-items:center">${_numBadge(h.num, buyNums.has(h.num))}${irukaNums.has(h.num)?'<span title="イルカ推奨" style="font-size:13px;margin-left:1px">🐬</span>':''}</span>`).join('')}</span>`
+        return `<span style="display:inline-flex;gap:4px;align-items:center">${s.map(h=>`<span style="display:inline-flex;align-items:center">${_numBadge(h.num, buyNums.has(h.num))}${irukaNums.has(h.num)?'<span title="前走不利推奨" style="font-size:13px;margin-left:1px">[前走不利]</span>':''}</span>`).join('')}</span>`
           +` <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text3)">(${s.map(h=>Math.round(h.tanEV||0)).join('/')})</span>`;
       }
       if(skipReason2){
@@ -3157,7 +3157,7 @@ function renderIndexDates(){
   renderIndexRaces();
 }
 
-function _idxEsc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function _idxEsc(s){ return String(s).replace(/\u30a4\u30eb\u30ab|iruka/gi,'前走不利').replace(/\u{1f42c}/gu,'').replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 
 function renderIndexRaces(){
   const sel = document.getElementById('idx-date');
@@ -3194,7 +3194,7 @@ function _idxBand(H, venue){
   return '激荒';
 }
 
-// アーカイブ(p純/n合成/o オッズ/h馬名/d🐬)から、馬名・EV・穴🕳️・妙・🐬付きで表示
+// アーカイブ(p純/n合成/o オッズ/h馬名/d[前走不利])から、馬名・EV・穴🕳️・妙・[前走不利]付きで表示
 function showIndexRace(date, key){
   const detail = document.getElementById('idx-detail');
   const rec = idxArchive && idxArchive[date] && idxArchive[date][key];
@@ -3241,7 +3241,7 @@ function showIndexRace(date, key){
     let suf = '';
     if(e!=null && e>=1.0) suf += '妙';
     if(ana.has(u)) suf += '🕳️';
-    if(dol.has(u)) suf += '🐬';
+    if(dol.has(u)) suf += '[前走不利]';
     return `${mk}${_idxCirc(u)}${nm}${tag} ${(p[u]*100).toFixed(1)}%${od}${evs}${suf}`;
   }).join('\n');
   // 展開（脚質構成＋前残り/差し有利の判定）。脚質未保存の過去分は出さない。
@@ -3256,7 +3256,7 @@ function showIndexRace(date, key){
     const verdict = nKnown<3 ? '判定不可' : (nNige>=2 ? '差し有利（前が競る）' : (nNige<=1 && nFront<=3 ? '前残り濃厚' : 'やや前残り'));
     pace = `\n🏇展開: ${line} → ${verdict}`;
   }
-  const head = `【${venue}${num}R】${rec.t||''}　荒度:${band}（${nums.length}頭）${pace}\nEV=合成勝率×オッズ ／ 🕳️穴 妙=EV1.0+ 🐬前走不利`;
+  const head = `【${venue}${num}R】${rec.t||''}　荒度:${band}（${nums.length}頭）${pace}\nEV=合成勝率×オッズ ／ 🕳️穴 妙=EV1.0+ [前走不利]前走不利`;
   const noname = Object.keys(h).length===0 ? '\n※この日は馬名未保存（今後のレースから表示）' : '';
   detail.innerHTML = `<pre style="${preCss}">${_idxEsc(head)}\n${'─'.repeat(22)}\n${_idxEsc(rows)}${_idxEsc(noname)}</pre>`;
 }
@@ -3407,7 +3407,7 @@ async function loadDateList(){
 // ---- GitHub レース選択（設定タブ）----
 let ghData = null;
 let ghHistory = [];
-let irukaPicks = {};   // {'YYYY_MM': {'YYYY-MM-DD': {'東京1': '馬名', ...}}}  中央のイルカ推奨馬
+let irukaPicks = {};   // {'YYYY_MM': {'YYYY-MM-DD': {'東京1': '馬名', ...}}}  中央の前走不利推奨馬
 let currentRaceName = '';
 let currentRaceClass = '';
 let currentStartTime = '';
@@ -3487,7 +3487,7 @@ async function _mergeNewIndexIntoGhData(token){
   return replaced;
 }
 
-// 中央(JRA)のイルカ推奨馬を月別ファイルからまとめて取得（プライベートリポジトリ・token必須／失敗時は静かにスキップ）
+// 中央(JRA)の前走不利推奨馬を月別ファイルからまとめて取得（プライベートリポジトリ・token必須／失敗時は静かにスキップ）
 async function loadIrukaPicks(token){
   if(!ghData) return;
   const months = new Set(
@@ -3511,7 +3511,7 @@ async function loadIrukaMonth(ym, token){
   return irukaPicks[ym];
 }
 
-// 指定レースのイルカ推奨馬名を返す（中央のみ。なければ null）
+// 指定レースの前走不利推奨馬名を返す（中央のみ。なければ null）
 // 保存形式が文字列(旧)でも {name,num}(新) でも馬名を返す
 function getIrukaPick(date, venue, raceNum){
   if(!date || !venue) return null;
@@ -3594,7 +3594,7 @@ async function fetchRaceList(){
     // 読み込み後に直近レースを自動選択
     selectNearestRace(true);
 
-    // 中央のイルカ推奨馬をバックグラウンドで取得（本/穴の🐬表示用）
+    // 中央の前走不利推奨馬をバックグラウンドで取得（本/穴の[前走不利]表示用）
     loadIrukaPicks(token).catch(() => {});
 
     // race_historyをバックグラウンドで取得してセレクタに取込済みバッジを表示
