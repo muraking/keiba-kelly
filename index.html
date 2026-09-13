@@ -3123,9 +3123,10 @@ async function loadIndexTab(force){
   const token = loadToken();
   // note_index（--noteで作った当日/翌日の指数）＋ ai_live_archive（ライブ7分前指数）を両方読んで統合。
   //   同じレースが両方にあれば、情報の多いライブ(オッズ有り)を優先。
-  const [ni, la] = await Promise.all([
+  const [ni, la, latestOdds] = await Promise.all([
     _idxFetchFile(`data/note_index_${month}.json`, token),
-    _idxFetchFile(`data/ai_live_archive_${month}.json`, token)
+    _idxFetchFile(`data/ai_live_archive_${month}.json`, token),
+    _idxFetchFile('data/indices.json', token)
   ]);
   if(!ni && !la){
     idxArchive = null;
@@ -3140,6 +3141,24 @@ async function loadIndexTab(force){
     } } };
   addSrc(ni);          // まず note_index（純%のみ・前日/当日）
   addSrc(la);          // 次に ai_live_archive（オッズ/EV/脚質…）で上書き
+  // Current JRA quotes live in indices.json, not the immutable index archive.
+  for(const [date,day] of Object.entries(merged)){
+    if(date!==getTodayJST())continue;
+    const quotes=latestOdds?.dates?.[date];
+    if(!quotes)continue;
+    for(const [key,rec] of Object.entries(day)){
+      const [venue,rn]=_idxVenue(key);
+      if(!IDX_JRA_VENUES.has(venue))continue;
+      const course=Object.keys(quotes.jra_odds||{}).find(k=>k.split('(')[0]===venue);
+      const block=quotes.jra_odds?.[course]?.[String(Number(rn))];
+      if(!block)continue;
+      const stamp=quotes.jra_odds_observed_at?.[course]?.[String(Number(rn))];
+      if(!stamp)continue;
+      rec.o={...rec.o};
+      for(const [num,q] of Object.entries(block))if(Number.isFinite(q?.tan)&&q.tan>=1)rec.o[num]=q.tan;
+      rec.currentOddsAt=stamp;
+    }
+  }
   idxArchive = merged;
   idxMonth = month;
   await loadIrukaMonth(month, token);
@@ -3257,7 +3276,7 @@ function showIndexRace(date, key){
     pace = `\n🏇展開: ${line} → ${verdict}`;
   }
   const head = `【${venue}${num}R】${rec.t||''}　荒度:${band}（${nums.length}頭）${pace}\nEV=合成勝率×オッズ ／ 🕳️穴 妙=EV1.0+ [前走不利]前走不利`;
-  const noname = Object.keys(h).length===0 ? '\n※この日は馬名未保存（今後のレースから表示）' : '';
+  const noname = (Object.keys(h).length===0 ? '\n※この日は馬名未保存（今後のレースから表示）' : '')+(rec.currentOddsAt?'\nオッズ取得：'+new Date(rec.currentOddsAt).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})+'（取得時点）':'');
   detail.innerHTML = `<pre style="${preCss}">${_idxEsc(head)}\n${'─'.repeat(22)}\n${_idxEsc(rows)}${_idxEsc(noname)}</pre>`;
 }
 
