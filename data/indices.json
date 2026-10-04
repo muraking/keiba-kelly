@@ -127956,85 +127956,85 @@
             }
           },
           "3": {
-            "15": {
-              "tan": 6.9,
+            "1": {
+              "tan": 5.3,
+              "fuku_min": 1.8,
+              "fuku_max": 2.5
+            },
+            "2": {
+              "tan": 39.6,
+              "fuku_min": 8.5,
+              "fuku_max": 12.5
+            },
+            "3": {
+              "tan": 48.6,
+              "fuku_min": 10.2,
+              "fuku_max": 15.1
+            },
+            "4": {
+              "tan": 11.4,
               "fuku_min": 2.6,
-              "fuku_max": 3.3
+              "fuku_max": 3.7
             },
             "5": {
-              "tan": 7.3,
-              "fuku_min": 2.6,
-              "fuku_max": 3.4
+              "tan": 6.1,
+              "fuku_min": 2.0,
+              "fuku_max": 2.7
             },
-            "1": {
-              "tan": 5.2,
-              "fuku_min": 1.9,
-              "fuku_max": 2.3
+            "6": {
+              "tan": 23.1,
+              "fuku_min": 4.9,
+              "fuku_max": 7.1
             },
-            "13": {
-              "tan": 40.8,
-              "fuku_min": 6.7,
-              "fuku_max": 8.9
+            "7": {
+              "tan": 107.4,
+              "fuku_min": 18.5,
+              "fuku_max": 27.6
+            },
+            "8": {
+              "tan": 15.2,
+              "fuku_min": 3.0,
+              "fuku_max": 4.2
+            },
+            "9": {
+              "tan": 56.4,
+              "fuku_min": 10.7,
+              "fuku_max": 15.8
+            },
+            "10": {
+              "tan": 37.2,
+              "fuku_min": 6.9,
+              "fuku_max": 10.2
             },
             "11": {
               "tan": 6.5,
-              "fuku_min": 2.4,
-              "fuku_max": 3.1
-            },
-            "8": {
-              "tan": 14.0,
-              "fuku_min": 3.0,
-              "fuku_max": 3.9
-            },
-            "6": {
-              "tan": 20.6,
-              "fuku_min": 4.2,
-              "fuku_max": 5.5
-            },
-            "14": {
-              "tan": 4.1,
-              "fuku_min": 1.8,
-              "fuku_max": 2.2
-            },
-            "4": {
-              "tan": 11.5,
-              "fuku_min": 3.8,
-              "fuku_max": 4.9
-            },
-            "2": {
-              "tan": 35.7,
-              "fuku_min": 6.3,
-              "fuku_max": 8.3
-            },
-            "7": {
-              "tan": 80.5,
-              "fuku_min": 9.5,
-              "fuku_max": 12.7
-            },
-            "3": {
-              "tan": 32.8,
-              "fuku_min": 4.7,
-              "fuku_max": 6.2
+              "fuku_min": 1.9,
+              "fuku_max": 2.6
             },
             "12": {
-              "tan": 101.6,
-              "fuku_min": 10.3,
-              "fuku_max": 13.8
+              "tan": 136.1,
+              "fuku_min": 23.4,
+              "fuku_max": 34.9
             },
-            "10": {
-              "tan": 27.8,
-              "fuku_min": 5.0,
-              "fuku_max": 6.5
+            "13": {
+              "tan": 56.5,
+              "fuku_min": 13.8,
+              "fuku_max": 20.5
+            },
+            "14": {
+              "tan": 3.6,
+              "fuku_min": 1.4,
+              "fuku_max": 1.7
+            },
+            "15": {
+              "tan": 7.1,
+              "fuku_min": 2.2,
+              "fuku_max": 3.1
             },
             "16": {
-              "tan": 79.2,
-              "fuku_min": 9.9,
-              "fuku_max": 13.2
-            },
-            "9": {
-              "tan": 41.5,
-              "fuku_min": 5.4,
-              "fuku_max": 7.1
+              "tan": 117.2,
+              "fuku_min": 21.6,
+              "fuku_max": 32.3
             }
           },
           "4": {
@@ -129741,7 +129741,7 @@
           "3": "2026-10-04T10:39:19.951393+09:00"
         }
       },
-      "jra_odds_updated": "2026-10-04T10:40:27.533728+09:00"
+      "jra_odds_updated": "2026-10-04T10:43:46.760548+09:00"
     }
   },
   "_settings": {
