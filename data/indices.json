@@ -133817,10 +133817,77 @@
               "fuku_min": 1.2,
               "fuku_max": 2.8
             }
+          },
+          "5": {
+            "1": {
+              "tan": 3,
+              "fuku_min": 1.4,
+              "fuku_max": 2
+            },
+            "2": {
+              "tan": 44.4,
+              "fuku_min": 3.4,
+              "fuku_max": 5.8
+            },
+            "3": {
+              "tan": 77.5,
+              "fuku_min": 22,
+              "fuku_max": 39.9
+            },
+            "4": {
+              "tan": 18.5,
+              "fuku_min": 4.1,
+              "fuku_max": 7.1
+            },
+            "5": {
+              "tan": 13.8,
+              "fuku_min": 2.6,
+              "fuku_max": 4.3
+            },
+            "6": {
+              "tan": 18.5,
+              "fuku_min": 2.4,
+              "fuku_max": 4
+            },
+            "7": {
+              "tan": 60.2,
+              "fuku_min": 5.5,
+              "fuku_max": 9.7
+            },
+            "8": {
+              "tan": 18.8,
+              "fuku_min": 3.4,
+              "fuku_max": 5.9
+            },
+            "9": {
+              "tan": 110.8,
+              "fuku_min": 13.5,
+              "fuku_max": 24.4
+            },
+            "10": {
+              "tan": 3,
+              "fuku_min": 1.1,
+              "fuku_max": 1.4
+            },
+            "11": {
+              "tan": 6.9,
+              "fuku_min": 2.3,
+              "fuku_max": 3.8
+            },
+            "12": {
+              "tan": 6.7,
+              "fuku_min": 1.7,
+              "fuku_max": 2.7
+            },
+            "13": {
+              "tan": 152.1,
+              "fuku_min": 15.7,
+              "fuku_max": 28.3
+            }
           }
         }
       },
-      "odds_updated": "2026-10-05T17:33:17.583044+09:00"
+      "odds_updated": "2026-10-05T17:38:15.687357+09:00"
     }
   },
   "_settings": {
