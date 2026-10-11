@@ -3526,8 +3526,7 @@ async function loadIrukaPicks(token){
 async function loadIrukaMonth(ym, token){
   if(irukaPicks[ym]) return irukaPicks[ym];
   try {
-    const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data/iruka_picks_${ym}.json`;
-    irukaPicks[ym] = await fetchGHContent(url, token) || {};
+    irukaPicks[ym] = await _idxFetchFile(`data/iruka_picks_${ym}.json`, token) || {};
   } catch(e){
     irukaPicks[ym] = {};  // 未取得・404でも指数表示は継続
   }
