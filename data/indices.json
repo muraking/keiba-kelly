@@ -160628,85 +160628,85 @@
             }
           },
           "6": {
-            "11": {
-              "tan": 12.0,
-              "fuku_min": 3.3,
+            "1": {
+              "tan": 17.3,
+              "fuku_min": 4.2,
+              "fuku_max": 5.7
+            },
+            "2": {
+              "tan": 9.9,
+              "fuku_min": 3.1,
+              "fuku_max": 4.2
+            },
+            "3": {
+              "tan": 62.2,
+              "fuku_min": 13.3,
+              "fuku_max": 18.6
+            },
+            "4": {
+              "tan": 7.5,
+              "fuku_min": 2.6,
+              "fuku_max": 3.5
+            },
+            "5": {
+              "tan": 14.9,
+              "fuku_min": 3.1,
+              "fuku_max": 4.2
+            },
+            "6": {
+              "tan": 8.8,
+              "fuku_min": 3.0,
               "fuku_max": 4.0
+            },
+            "7": {
+              "tan": 19.2,
+              "fuku_min": 3.7,
+              "fuku_max": 5.1
+            },
+            "8": {
+              "tan": 21.3,
+              "fuku_min": 5.6,
+              "fuku_max": 7.7
+            },
+            "9": {
+              "tan": 139.3,
+              "fuku_min": 35.0,
+              "fuku_max": 48.6
+            },
+            "10": {
+              "tan": 53.2,
+              "fuku_min": 9.0,
+              "fuku_max": 12.5
+            },
+            "11": {
+              "tan": 13.3,
+              "fuku_min": 4.2,
+              "fuku_max": 5.7
+            },
+            "12": {
+              "tan": 22.8,
+              "fuku_min": 5.0,
+              "fuku_max": 6.8
+            },
+            "13": {
+              "tan": 5.3,
+              "fuku_min": 1.8,
+              "fuku_max": 2.3
             },
             "14": {
               "tan": 6.8,
-              "fuku_min": 2.2,
-              "fuku_max": 2.5
-            },
-            "6": {
-              "tan": 9.4,
-              "fuku_min": 3.2,
-              "fuku_max": 3.9
-            },
-            "16": {
-              "tan": 6.5,
-              "fuku_min": 2.6,
-              "fuku_max": 3.2
-            },
-            "13": {
-              "tan": 5.4,
-              "fuku_min": 3.0,
-              "fuku_max": 3.6
-            },
-            "2": {
-              "tan": 10.9,
-              "fuku_min": 3.4,
-              "fuku_max": 4.1
-            },
-            "12": {
-              "tan": 19.7,
-              "fuku_min": 4.1,
-              "fuku_max": 5.0
-            },
-            "1": {
-              "tan": 16.1,
-              "fuku_min": 3.5,
-              "fuku_max": 4.2
-            },
-            "5": {
-              "tan": 15.6,
-              "fuku_min": 3.5,
-              "fuku_max": 4.2
-            },
-            "7": {
-              "tan": 17.2,
-              "fuku_min": 6.0,
-              "fuku_max": 7.4
-            },
-            "4": {
-              "tan": 7.0,
-              "fuku_min": 2.7,
-              "fuku_max": 3.3
-            },
-            "10": {
-              "tan": 48.3,
-              "fuku_min": 5.8,
-              "fuku_max": 7.2
-            },
-            "8": {
-              "tan": 19.7,
-              "fuku_min": 4.3,
-              "fuku_max": 5.3
+              "fuku_min": 2.4,
+              "fuku_max": 3.1
             },
             "15": {
-              "tan": 68.3,
-              "fuku_min": 10.3,
-              "fuku_max": 12.7
+              "tan": 61.5,
+              "fuku_min": 10.7,
+              "fuku_max": 15.0
             },
-            "9": {
-              "tan": 141.1,
-              "fuku_min": 24.9,
-              "fuku_max": 30.4
-            },
-            "3": {
-              "tan": 58.4,
-              "fuku_min": 7.8,
-              "fuku_max": 9.7
+            "16": {
+              "tan": 5.8,
+              "fuku_min": 1.7,
+              "fuku_max": 2.1
             }
           },
           "7": {
@@ -162854,7 +162854,7 @@
           "12": "2026-11-07T09:37:31.167026+09:00"
         }
       },
-      "jra_odds_updated": "2026-11-07T12:24:21.416095+09:00"
+      "jra_odds_updated": "2026-11-07T12:28:40.239125+09:00"
     }
   },
   "_settings": {
