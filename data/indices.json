@@ -170199,45 +170199,45 @@
             }
           },
           "9": {
+            "1": {
+              "tan": 19.3,
+              "fuku_min": 1.7,
+              "fuku_max": 7.7
+            },
+            "2": {
+              "tan": 65.2,
+              "fuku_min": 5.4,
+              "fuku_max": 30.3
+            },
             "3": {
               "tan": 1.8,
               "fuku_min": 1.1,
               "fuku_max": 1.1
             },
-            "7": {
-              "tan": 2.7,
-              "fuku_min": 1.1,
-              "fuku_max": 2.0
-            },
-            "6": {
-              "tan": 11.6,
-              "fuku_min": 1.6,
-              "fuku_max": 3.2
-            },
             "4": {
-              "tan": 5.8,
-              "fuku_min": 1.2,
-              "fuku_max": 2.2
-            },
-            "1": {
-              "tan": 17.2,
-              "fuku_min": 2.0,
-              "fuku_max": 4.2
-            },
-            "2": {
-              "tan": 56.2,
-              "fuku_min": 3.3,
-              "fuku_max": 7.5
+              "tan": 5.0,
+              "fuku_min": 1.1,
+              "fuku_max": 4.4
             },
             "5": {
-              "tan": 123.1,
-              "fuku_min": 7.2,
-              "fuku_max": 16.8
+              "tan": 146.1,
+              "fuku_min": 10.4,
+              "fuku_max": 60.4
+            },
+            "6": {
+              "tan": 11.7,
+              "fuku_min": 1.5,
+              "fuku_max": 6.8
+            },
+            "7": {
+              "tan": 2.8,
+              "fuku_min": 1.1,
+              "fuku_max": 1.8
             },
             "8": {
-              "tan": 117.2,
-              "fuku_min": 5.1,
-              "fuku_max": 11.8
+              "tan": 141.0,
+              "fuku_min": 10.1,
+              "fuku_max": 58.5
             }
           },
           "10": {
@@ -170498,7 +170498,7 @@
           "12": "2026-11-21T09:28:18.397850+09:00"
         }
       },
-      "jra_odds_updated": "2026-11-21T14:16:51.428714+09:00"
+      "jra_odds_updated": "2026-11-21T14:18:38.157283+09:00"
     }
   },
   "_settings": {
